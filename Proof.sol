@@ -149,12 +149,6 @@ contract Token is Crowdsale {
     string  public symbol      = "PF";
     uint8   public decimals    = 0;
 
-    uint lastDivideRewardTime;
-    uint totalForWithdraw;
-    uint restForWithdraw;
-
-    uint totalReward;
-
     modifier onlyTokenHolders {
         if (balanceOf[msg.sender] == 0) throw;
         _;
@@ -213,9 +207,9 @@ contract Token is Crowdsale {
     }
 }
 
-contract Proof is Token {
+contract ProofBase is Token {
 
-    function Proof() Token() {}
+    function ProofBase() Token() {}
 
     event VotingStarted(uint weiReqFund);
     event Voted(address indexed voter, bool inSupport);
@@ -290,5 +284,61 @@ contract Proof is Token {
         votingDeadline = 0;
         delete votes;
         numberOfVotes = 0;
+    }
+}
+
+contract Proof is ProofBase {
+
+    struct Swype {
+        uint16  swype;
+        uint    timestampSwype;
+    }
+    
+    struct Video {
+        uint16  swype;
+        uint    timestampSwype;
+        uint    timestampHash;
+        address owner;
+    }
+
+    mapping (address => Swype) swypes;
+    mapping (bytes32 => Video) videos;
+
+    uint priceWei;
+
+    function Proof() ProofBase() {}
+
+    function setPrice(uint _priceWei) public onlyOwner {
+        priceWei = _priceWei;
+    }
+
+    function swypeCode() public noEther returns (uint16 _swype) {
+        bytes32 blockHash = block.blockhash(block.number - 1);
+        bytes32 shaTemp = sha3(msg.sender, blockHash);
+        _swype = uint16(uint256(shaTemp)%10000);
+        swypes[msg.sender] = Swype({swype: _swype, timestampSwype: now});
+    }
+    
+    function setHash(uint16 _swype, bytes32 _hash) payable public  {
+        uint tokensProportion = balanceOf[msg.sender] * 100 / totalSupply;
+        if (tokensProportion < 10) {
+            if (tokensProportion < 5) {
+                if (msg.value < priceWei) throw;
+            } else {
+                if (msg.value < (priceWei / 2)) throw;
+            }
+        }
+        if (swypes[msg.sender].timestampSwype == 0) throw;
+        if (swypes[msg.sender].swype != _swype) throw;
+        videos[_hash] = Video({swype: _swype, timestampSwype:swypes[msg.sender].timestampSwype, 
+            timestampHash: now, owner: msg.sender});
+        delete swypes[msg.sender];
+    }
+    
+    function proveVideo(bytes32 _hash) public constant noEther 
+        returns(uint16 swype, uint timestampSwype, uint timestampHash) {
+        swype = videos[_hash].swype;
+        timestampSwype = videos[_hash].timestampSwype;
+        timestampHash = videos[_hash].timestampHash;
     }
 }
