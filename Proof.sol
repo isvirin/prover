@@ -41,10 +41,10 @@ contract Crowdsale is owned {
     mapping (address => uint256) public balanceOf;
 
     enum State { Disabled, PreICO, CompletePreICO, Crowdsale, Enabled }
-    State public state = State.Disabled;
     event NewState(State state);
-    uint public crowdsaleStartTime;
-    uint public crowdsaleFinishTime;
+    State public state = State.Disabled;
+    uint  public crowdsaleStartTime;
+    uint  public crowdsaleFinishTime;
 
     modifier enabledState {
         if (state != State.Enabled) throw;
@@ -56,7 +56,7 @@ contract Crowdsale is owned {
         uint    amount;
     }
     Investor[] public investors;
-    uint public       numberOfInvestors;
+    uint       public numberOfInvestors;
     
     function () payable {
         if (state == State.Disabled) throw;
@@ -72,7 +72,7 @@ contract Crowdsale is owned {
                 tokensPerEther = 1000;
             }
         }
-        if (tokens > 0) {
+        if (tokensPerEther > 0) {
             uint256 tokens = tokensPerEther * msg.value / 1000000000000000000;
             if (balanceOf[msg.sender] + tokens < balanceOf[msg.sender]) throw; // overflow
             balanceOf[msg.sender] += tokens;
@@ -126,6 +126,7 @@ contract Crowdsale is owned {
         } else {
             if (state == State.PreICO) {
                 if (!msg.sender.send(this.balance)) throw;
+                state = State.CompletePreICO;
             } else {
                 if (!msg.sender.send(500 ether)) throw;
                 // Emit additional tokens for owner (20% of complete totalSupply)
@@ -168,7 +169,7 @@ contract Token is Crowdsale {
     function Token() Crowdsale() {}
 
     function transfer(address _to, uint256 _value) public noEther enabledState {
-        if (balanceOf[msg.sender] < _value || _value <= 0) throw;
+        if (balanceOf[msg.sender] < _value) throw;
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // overflow
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
@@ -176,7 +177,7 @@ contract Token is Crowdsale {
     }
     
     function transferFrom(address _from, address _to, uint256 _value) public noEther {
-        if (balanceOf[_from] < _value || _value <= 0) throw;
+        if (balanceOf[_from] < _value) throw;
         if (balanceOf[_to] + _value < balanceOf[_to]) throw; // overflow
         if (allowed[_from][msg.sender] < _value) throw;
         balanceOf[_from] -= _value;
@@ -196,13 +197,18 @@ contract Token is Crowdsale {
     }
 
     function burn(uint256 _value) public enabledState {
-        if (balanceOf[msg.sender] < _value || _value <= 0) throw;
+        if (balanceOf[msg.sender] < _value) throw;
         balanceOf[msg.sender] -= _value;
         totalSupply -= _value;
         Burned(msg.sender, _value);
 
         // Send ether to caller
-        uint amount = (this.balance * _value) / totalSupply;
+        uint amount;
+        if (totalSupply == 0) {
+            amount = this.balance;
+        } else {
+            amount = (this.balance * _value) / totalSupply;
+        }
         if (!msg.sender.send(amount)) throw;
     }
 }
@@ -233,7 +239,7 @@ contract ProofBase is Token {
         VotingStarted(_weiReqFund);
     }
     
-    function votingInfo() enabledState public 
+    function votingInfo() public constant enabledState 
         returns(uint _weiReqFund, uint _timeToFinish) {
         _weiReqFund = weiReqFund;
         if (votingDeadline <= now) {
@@ -315,7 +321,7 @@ contract Proof is ProofBase {
     function swypeCode() public noEther returns (uint16 _swype) {
         bytes32 blockHash = block.blockhash(block.number - 1);
         bytes32 shaTemp = sha3(msg.sender, blockHash);
-        _swype = uint16(uint256(shaTemp)%10000);
+        _swype = uint16(uint256(shaTemp)%50000);
         swypes[msg.sender] = Swype({swype: _swype, timestampSwype: now});
     }
     
