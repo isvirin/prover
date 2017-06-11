@@ -307,8 +307,8 @@ contract Proof is ProofBase {
         address owner;
     }
 
-    mapping (address => Swype) swypes;
-    mapping (bytes32 => Video) videos;
+    mapping (address => Swype) public swypes;
+    mapping (bytes32 => Video) public videos;
 
     uint priceWei;
 
@@ -339,12 +339,5 @@ contract Proof is ProofBase {
         videos[_hash] = Video({swype: _swype, timestampSwype:swypes[msg.sender].timestampSwype, 
             timestampHash: now, owner: msg.sender});
         delete swypes[msg.sender];
-    }
-    
-    function proveVideo(bytes32 _hash) public constant noEther 
-        returns(uint16 swype, uint timestampSwype, uint timestampHash) {
-        swype = videos[_hash].swype;
-        timestampSwype = videos[_hash].timestampSwype;
-        timestampHash = videos[_hash].timestampHash;
     }
 }
