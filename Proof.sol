@@ -62,9 +62,15 @@ contract Crowdsale is owned {
         if (state == State.Disabled) throw;
         uint256 tokensPerEther = 0;
         if (state == State.PreICO) {
-            tokensPerEther = 2000;
+            if (msg.value >= 100 ether) {
+                tokensPerEther = 2500;
+            } else {
+                tokensPerEther = 2000;
+            }
         } else if (state == State.Crowdsale) {
-            if (now < crowdsaleStartTime + 1 days) {
+            if (msg.value >= 100 ether) {
+                tokensPerEther = 1750;
+            } else if (now < crowdsaleStartTime + 1 days) {
                 tokensPerEther = 1500;
             } else if (now < crowdsaleStartTime + 1 weeks) {
                 tokensPerEther = 1250;
