@@ -203,6 +203,7 @@ contract Token is Crowdsale {
     }
 
     function burn(uint256 _value) public enabledState {
+        if (now < crowdsaleFinishTime + 1 years) throw;
         if (balanceOf[msg.sender] < _value) throw;
         balanceOf[msg.sender] -= _value;
         totalSupply -= _value;
