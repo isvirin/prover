@@ -142,9 +142,6 @@ contract Crowdsale is owned {
             }
         }
         delete investors;
-        numberOfInvestors = 0;
-        crowdsaleStartTime = 0;
-        crowdsaleFinishTime = 0;
         NewState(state);
     }
 }
