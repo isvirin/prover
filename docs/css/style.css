@@ -26,10 +26,6 @@ body {
     height: 250px;
 }
 
-.contacts {
-    height: 250px;
-}
-
 #sidebar-wrapper .sidebar-nav li a,
 #sidebar-wrapper .navbar-brand {
     color: #ffffff;
@@ -73,6 +69,73 @@ body {
     text-align: center;
 }
 
-footer {
+footer .footer-content,
+footer .copyright-content {
     background: #121212;
+    color: #999999;
+    padding: 15px 0;
+}
+
+footer .copyright-content {
+    background: #121212;
+    color: #999999;
+    border-top: 1px solid #383838;
+    padding: 10px 0;
+}
+
+footer .footer-content h4 {
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.footer-content .contacts ul,
+.footer-content .source ul {
+    padding: 0;
+}
+
+.footer-content .contacts ul li,
+.footer-content .source ul li {
+    list-style: none;
+    margin: 10px 0;
+}
+
+.footer-content .contacts-list i {
+    width: 20px;
+}
+
+.footer-content .contacts-list strong {
+    font-weight: 400;
+}
+
+.footer-content .contacts-list a,
+.footer-content .source-list a {
+    color: #999999;
+}
+
+.footer-content .contacts-list a:hover,
+.footer-content .source-list a:hover {
+    color: #ffffff;
+}
+
+.copyright-content .social-icons ul {
+    margin: 0;
+}
+
+.copyright-content .social-icons ul li {
+    list-style: none;
+    float: right;
+}
+
+.copyright-content .social-icons ul a i {
+    color: #999999;
+    font-size: 14px;
+    margin: 0 6px;
+}
+
+.copyright-content .social-icons ul a i:hover {
+    color: #ffffff;
+}
+
+.copyright-content .copyright-text {
+    font-size: 14px;
 }
