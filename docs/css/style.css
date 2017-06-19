@@ -1,0 +1,78 @@
+body {
+    font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+}
+
+.home {
+    height: 250px;
+}
+
+.blog {
+    height: 250px;
+}
+
+.ico-details {
+    height: 250px;
+}
+
+.whitepaper {
+    height: 250px;
+}
+
+.team {
+    height: 250px;
+}
+
+.github {
+    height: 250px;
+}
+
+.contacts {
+    height: 250px;
+}
+
+#sidebar-wrapper .sidebar-nav li a,
+#sidebar-wrapper .navbar-brand {
+    color: #ffffff;
+}
+
+#sidebar-wrapper .sidebar-nav li a {
+    height: 60px;
+    font-size: 16px;
+    padding: 15px;
+    line-height: 30px;
+    border-bottom: 1px solid #383838;
+}
+
+.sidebar-nav li a:hover {
+    background: none;
+    text-decoration: underline;
+}
+
+#sidebar-wrapper .navbar-brand {
+    width: 100%;
+    text-align: center;
+    float: none;
+    height: 89px;
+    display: inline-block;
+    padding: 35px 15px 15px;
+}
+
+#sidebar-wrapper .navbar-brand > h1 {
+    margin: 0;
+    font-weight: 400
+}
+
+#sidebar-wrapper p {
+    color: #ffffff;
+}
+
+#sidebar-wrapper > p {
+    font-size: 15px;
+    line-height: 17px;
+    margin: 0;
+    text-align: center;
+}
+
+footer {
+    background: #121212;
+}
