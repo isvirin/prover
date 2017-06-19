@@ -2,6 +2,10 @@ body {
     font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
 }
 
+section {
+    margin-bottom: 30px;
+}
+
 #home {
     position: relative;
 }
@@ -38,32 +42,19 @@ body {
 }
 
 .about {
-    padding: 0 0 0 15px;
+    padding: 0 15px;
     text-align: justify;
 }
 
-.about h1 {
+.about h1,
+.use-cases h1,
+.for-client h1 {
     text-align: center;
 }
 
-.blog {
-    height: 250px;
-}
-
-.ico-details {
-    height: 250px;
-}
-
-.whitepaper {
-    height: 250px;
-}
-
-.team {
-    height: 250px;
-}
-
-.github {
-    height: 250px;
+hr {
+    border-top: 1px solid #383838;
+    width: 50%;
 }
 
 #sidebar-wrapper .sidebar-nav li a,
