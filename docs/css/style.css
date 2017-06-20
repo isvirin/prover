@@ -10,6 +10,24 @@ section {
     text-align: center;
 }
 
+#wrapper.toggled .wrapper-background {
+    opacity: 0.5;
+    z-index: 1001;
+}
+
+.wrapper-background {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    background: #000000;
+    z-index: 999;
+    opacity: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
 .background {
     position: absolute;
     top: 0;
@@ -47,7 +65,6 @@ section {
 
 .about {
     padding: 0 15px;
-    text-align: justify;
 }
 
 #how-it-work h1,
@@ -61,38 +78,6 @@ hr {
     width: 50%;
 }
 
-#sidebar-wrapper .sidebar-nav li a,
-#sidebar-wrapper .navbar-brand {
-    color: #ffffff;
-}
-
-#sidebar-wrapper .sidebar-nav li a {
-    height: 60px;
-    font-size: 16px;
-    padding: 15px;
-    line-height: 30px;
-    border-bottom: 1px solid #383838;
-}
-
-.sidebar-nav li a:hover {
-    background: none;
-    text-decoration: underline;
-}
-
-#sidebar-wrapper .navbar-brand {
-    width: 100%;
-    text-align: center;
-    float: none;
-    height: 89px;
-    display: inline-block;
-    padding: 35px 15px 15px;
-}
-
-#sidebar-wrapper .navbar-brand > h1 {
-    margin: 0;
-    font-weight: 400
-}
-
 #sidebar-wrapper p {
     color: #ffffff;
 }
@@ -102,6 +87,26 @@ hr {
     line-height: 17px;
     margin: 0;
     text-align: center;
+}
+
+.use-cases-title {
+    text-align: center;
+}
+
+.use-cases .text {
+
+}
+
+.use-cases-title h4 {
+
+}
+
+.use-cases-title:before {
+    content: "";
+}
+
+.use-cases p {
+
 }
 
 footer .footer-content,
@@ -120,7 +125,7 @@ footer .copyright-content {
 
 footer .footer-content h4 {
     font-weight: 400;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .footer-content .contacts ul,
@@ -154,6 +159,7 @@ footer .footer-content h4 {
 
 .copyright-content .social-icons ul {
     margin: 0;
+    padding: 0;
 }
 
 .copyright-content .social-icons ul li {

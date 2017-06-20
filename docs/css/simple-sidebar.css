@@ -1,133 +1,228 @@
-/*!
- * Start Bootstrap - Simple Sidebar (http://startbootstrap.com/)
- * Copyright 2013-2016 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
- */
-
- body {
+body {
     overflow-x: hidden;
- }
-
-/* Toggle Styles */
-
-@media(min-width:992px) {
-    #wrapper {
-        padding-left: 0;
-        -webkit-transition: all 0.5s ease;
-        -moz-transition: all 0.5s ease;
-        -o-transition: all 0.5s ease;
-        transition: all 0.5s ease;
-    }
-
-    #wrapper.toggled {
-        padding-left: 250px;
-    }
-
-    #sidebar-wrapper {
-        z-index: 1000;
-        position: fixed;
-        left: 250px;
-        width: 0;
-        height: 100%;
-        margin-left: -250px;
-        overflow-y: auto;
-        background: #222222;
-        -webkit-transition: all 0.5s ease;
-        -moz-transition: all 0.5s ease;
-        -o-transition: all 0.5s ease;
-        transition: all 0.5s ease;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 250px;
-    }
-
-    #page-content-wrapper {
-        width: 100%;
-        position: absolute;
-        padding: 15px;
-    }
-
-    #wrapper.toggled #page-content-wrapper {
-        position: absolute;
-        margin-right: -250px;
-    }
 }
 
-/* Sidebar Styles */
+#top-menu {
+    position: fixed;
+    width: 100%;
+    height: 45px;
+    background: #121212;
+    z-index: 1005;
+    display: none;
+}
 
-.sidebar-nav {
+#top-menu h1 {
+    font-size: 30px;
+    margin: 0;
+    line-height: 1.5;
+    padding: 0 40px;
+    text-align: center;
+    color: #ffffff;
+}
+
+#top-menu .lines-button {
+    float: left;
+    height: 45px;
+    width: 40px;
+    border: none;
+    background: none;
+}
+
+#top-menu .lines-button:focus {
+    outline: 0;
+}
+
+#top-menu .lines-button .lines {
+    vertical-align: middle;
+    background-color: #ffffff;
+    display: inline-block;
+    height: 2px;
+    width: 25px;
+    border-radius: 4px;
+    transition: .3s;
+    position: relative;
+}
+
+#top-menu .lines-button .lines:before,
+#top-menu .lines-button .lines:after {
+    background-color: #ffffff;
+    display: inline-block;
+    height: 2px;
+    width: 20px;
+    border-radius: 4px;
+    transition: .3s;
+    content: '';
+    position: absolute;
+    left: 0;
+    -webkit-transform-origin: 2.85714px center;
+    transform-origin: 2.85714px center;
+    width: 100%;
+}
+
+#top-menu .lines-button .lines:before {
+    top: 5px;
+}
+
+#top-menu .lines-button .lines:after {
+    top: -5px;
+}
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#sidebar-wrapper {
+    left: 320px;
+    width: 320px;
+    margin-left: -320px;
+    overflow-x: hidden;
+    z-index: 1005;
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+    background: #222222;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#page-content-wrapper {
+    z-index: 1000;
+    width: 100%;
+    position: relative;
+}
+
+#wrapper {
+    position: relative;
+    padding-left: 320px;
+}
+
+.sidebar-nav,
+.footer-sidebar-nav {
     width: 290px;
     margin: 15px auto;
     padding: 0;
     list-style: none;
 }
 
-.sidebar-nav li {
+.footer-sidebar-nav {
+    position: absolute;
+    left: 50%;
+    margin: 0 0 0 -145px;
+    bottom: 0;
+}
+
+.sidebar-nav li,
+.footer-sidebar-nav li {
     text-indent: 20px;
     line-height: 40px;
 }
 
-.sidebar-nav li a {
+.sidebar-nav li a,
+.footer-sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: #ffffff;
 }
 
-.sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
+.sidebar-nav li a:hover,
+.footer-sidebar-nav li a:hover {
+    background: none;
+    text-decoration: underline;
 }
 
 .sidebar-nav li a:active,
-.sidebar-nav li a:focus {
+.sidebar-nav li a:focus,
+.footer-sidebar-nav li a:active,
+.footer-sidebar-nav li a:focus {
     text-decoration: none;
 }
 
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
+.sidebar-nav li a {
+    border-bottom: 1px solid #383838;
 }
 
-.sidebar-nav > .sidebar-brand a {
-    color: #999999;
+.footer-sidebar-nav li a {
+    border-top: 1px solid #383838;
 }
 
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
+.sidebar-nav li a,
+.footer-sidebar-nav li a {
+    height: 60px;
+    font-size: 16px;
+    padding: 15px;
+    line-height: 30px;
 }
 
 #wrapper.toggled #page-content-wrapper {
     padding: 0;
 }
 
-@media(min-width:992px) {
+@media(max-width: 992px) {
+    #sidebar-wrapper {
+        left: 250px;
+        width: 250px;
+        margin-left: -250px;
+    }
+
+    .sidebar-nav,
+    .footer-sidebar-nav {
+        width: 220px;
+    }
+
+    #wrapper {
+        padding-left: 250px;
+    }
+
+    .sidebar-nav li a,
+    .footer-sidebar-nav li a {
+        padding: 15px 0;
+    }
+
+    .footer-sidebar-nav {
+        left: 50%;
+        margin: 0 0 0 -110px;
+    }
+}
+
+@media(max-width: 768px) {
+    #top-menu {
+        display: block;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        left: 250px;
+        width: 250px;
+        margin-left: -250px;
+    }
+
+    #wrapper #sidebar-wrapper {
+        left: 0;
+    }
+
     #wrapper {
         padding-left: 0;
     }
 
+    .sidebar-nav {
+        margin: 15px auto;
+    }
+
+    .sidebar-nav,
+    .footer-sidebar-nav {
+        width: 220px;
+    }
+
     #wrapper.toggled {
-        padding-left: 320px;
+        padding-left: 0;
     }
 
-    #sidebar-wrapper {
-        width: 0;
-    }
-
-    #wrapper.toggled #sidebar-wrapper {
-        width: 320px;
-    }
-
-    #page-content-wrapper {
-        padding: 20px;
-        position: relative;
-    }
-
-    #wrapper.toggled #page-content-wrapper {
-        position: relative;
-        margin-right: 0;
+    #sm-header {
+        padding-top: 30px;
     }
 }
