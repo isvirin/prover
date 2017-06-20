@@ -4,9 +4,9 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
- body {
+body {
     overflow-x: hidden;
- }
+}
 
 /* Toggle Styles */
 
@@ -56,48 +56,61 @@
 
 /* Sidebar Styles */
 
-.sidebar-nav {
+.sidebar-nav,
+.footer-sidebar-nav {
     width: 290px;
     margin: 15px auto;
     padding: 0;
     list-style: none;
 }
 
-.sidebar-nav li {
+.footer-sidebar-nav {
+    position: absolute;
+    left: 50%;
+    margin: 0 0 0 -145px;
+    bottom: 0;
+}
+
+.sidebar-nav li,
+.footer-sidebar-nav li {
     text-indent: 20px;
     line-height: 40px;
 }
 
-.sidebar-nav li a {
+.sidebar-nav li a,
+.footer-sidebar-nav li a {
     display: block;
     text-decoration: none;
-    color: #999999;
+    color: #ffffff;
 }
 
-.sidebar-nav li a:hover {
-    text-decoration: none;
-    color: #fff;
-    background: rgba(255,255,255,0.2);
+.sidebar-nav li a:hover,
+.footer-sidebar-nav li a:hover {
+    background: none;
+    text-decoration: underline;
 }
 
 .sidebar-nav li a:active,
-.sidebar-nav li a:focus {
+.sidebar-nav li a:focus,
+.footer-sidebar-nav li a:active,
+.footer-sidebar-nav li a:focus {
     text-decoration: none;
 }
 
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
+.sidebar-nav li a {
+    border-bottom: 1px solid #383838;
 }
 
-.sidebar-nav > .sidebar-brand a {
-    color: #999999;
+.footer-sidebar-nav li a {
+    border-top: 1px solid #383838;
 }
 
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
+.sidebar-nav li a,
+.footer-sidebar-nav li a {
+    height: 60px;
+    font-size: 16px;
+    padding: 15px;
+    line-height: 30px;
 }
 
 #wrapper.toggled #page-content-wrapper {
