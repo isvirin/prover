@@ -7,4 +7,14 @@ $(document).ready(function(){
             $('body,html').animate({scrollTop: top}, 750);
         }
     });
+
+    $(document).click(function(event) {
+        if ($(event.target).closest("#sidebar-wrapper").length || $(event.target).closest("#top-menu .lines-button").length) return;
+        $("#wrapper").removeClass("toggled");
+        event.stopPropagation();
+    });
+
+    $("#top-menu .lines-button").click(function () {
+        $("#wrapper").toggleClass("toggled");
+    });
 });
