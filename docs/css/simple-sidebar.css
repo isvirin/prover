@@ -5,7 +5,7 @@ body {
 #top-menu {
     position: fixed;
     width: 100%;
-    height: 30px;
+    height: 45px;
     background: #222222;
     z-index: 1010;
     display: none;
@@ -13,26 +13,20 @@ body {
 
 #top-menu .brand {
     display: inline-block;
-    width: 250px;
     color: #ffffff;
-    text-align: center;
-    height: 100%;
 }
 
 #top-menu .brand h1 {
-    font-size: 24px;
+    font-size: 30px;
     margin: 0;
-    line-height: 1.3;
+    line-height: 1.5;
 }
 
 #top-menu .lines-button {
     float: right;
-    height: 100%;
-    width: 30px;
+    height: 45px;
+    width: 40px;
     border: none;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
     background: none;
 }
 
@@ -41,10 +35,11 @@ body {
 }
 
 #top-menu .lines-button .lines {
+    vertical-align: middle;
     background-color: #ffffff;
     display: inline-block;
     height: 2px;
-    width: 20px;
+    width: 25px;
     border-radius: 4px;
     transition: .3s;
     position: relative;
@@ -87,7 +82,7 @@ body {
     width: 320px;
     margin-left: -320px;
     overflow-x: hidden;
-    z-index: 1000;
+    z-index: 1005;
     position: fixed;
     height: 100%;
     overflow-y: auto;
@@ -104,6 +99,7 @@ body {
 }
 
 #wrapper {
+    position: relative;
     padding-left: 320px;
 }
 

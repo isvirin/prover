@@ -10,6 +10,23 @@ section {
     text-align: center;
 }
 
+#wrapper.toggled .wrapper-background {
+    opacity: 0.5;
+}
+
+.wrapper-background {
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    background: #000000;
+    z-index: 1000;
+    opacity: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
 .background {
     position: absolute;
     top: 0;
