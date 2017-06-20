@@ -102,6 +102,20 @@ body {
     padding-left: 320px;
 }
 
+.sidebar-header {
+    text-align: center;
+}
+
+.sidebar-header a {
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.sidebar-header a:hover {
+    text-decoration: none;
+}
+
+.sidebar-header,
 .sidebar-nav,
 .footer-sidebar-nav {
     width: 290px;
@@ -170,6 +184,7 @@ body {
         margin-left: -250px;
     }
 
+    .sidebar-header,
     .sidebar-nav,
     .footer-sidebar-nav {
         width: 220px;
@@ -213,6 +228,7 @@ body {
         margin: 15px auto;
     }
 
+    .sidebar-header,
     .sidebar-nav,
     .footer-sidebar-nav {
         width: 220px;
