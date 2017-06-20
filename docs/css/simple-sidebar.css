@@ -6,24 +6,22 @@ body {
     position: fixed;
     width: 100%;
     height: 45px;
-    background: #222222;
-    z-index: 1010;
+    background: #121212;
+    z-index: 1005;
     display: none;
 }
 
-#top-menu .brand {
-    display: inline-block;
-    color: #ffffff;
-}
-
-#top-menu .brand h1 {
+#top-menu h1 {
     font-size: 30px;
     margin: 0;
     line-height: 1.5;
+    padding: 0 40px;
+    text-align: center;
+    color: #ffffff;
 }
 
 #top-menu .lines-button {
-    float: right;
+    float: left;
     height: 45px;
     width: 40px;
     border: none;
@@ -211,7 +209,7 @@ body {
     }
 
     .sidebar-nav {
-        margin: 45px auto;
+        margin: 15px auto;
     }
 
     .sidebar-nav,
