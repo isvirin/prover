@@ -44,7 +44,10 @@ i.fa {
 }
 
 #prover {
-    background: #ffffff; text-align: left; padding: 0 15px; margin-bottom: 0;
+    background: #ffffff;
+    text-align: left;
+    padding: 0 15px;
+    margin-bottom: 0;
 }
 
 #how-it-work img {
@@ -105,21 +108,15 @@ hr {
     text-align: center;
 }
 
-.use-cases .text {
+.use-cases .text {}
 
-}
-
-.use-cases-title h4 {
-
-}
+.use-cases-title h4 {}
 
 .use-cases-title:before {
     content: "";
 }
 
-.use-cases p {
-
-}
+.use-cases p {}
 
 footer .footer-content,
 footer .copyright-content {
