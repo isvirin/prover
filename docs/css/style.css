@@ -3,11 +3,7 @@ body {
 }
 
 section {
-    margin-bottom: 30px;
-}
-
-#sm-header .jumbotron {
-    text-align: center;
+    /*margin-bottom: 30px;*/
 }
 
 #wrapper.toggled .wrapper-background {
@@ -37,6 +33,20 @@ section {
     padding-right: 30px;
 }
 
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+i.fa {
+    text-indent: 0;
+}
+
+#prover {
+    background: #ffffff; text-align: left; padding: 0 15px; margin-bottom: 0;
+}
+
 #how-it-work img {
     width: 100%;
 }
@@ -64,13 +74,15 @@ section {
 }
 
 .about {
-    padding: 0 15px;
+    padding: 0;
 }
 
 #how-it-work h1,
 .use-cases h1,
 .for-client h1 {
-    text-align: center;
+    padding-top: 30px;
+    /* text-align: center; */
+    /*padding-left: 15px;*/
 }
 
 hr {
