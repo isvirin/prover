@@ -4,13 +4,17 @@ $(document).ready(function(){
         var id  = $(this).attr('href');
         $("#wrapper").removeClass("toggled");
         if (id && id[0] === '#' && $(id)) {
-            var top = $(id).offset().top - 45;
+            var top = $(id).offset().top - $('#top-menu:visible').height();
             $('body,html').animate({
                 scrollTop: top
-            }, 750);
-            setTimeout(function () {
-                window.location = id;
-            }, 750);
+            }, {
+                duration: 750,
+                complete: function () {
+                    var y = window.scrollY;
+                    window.location = id;
+                    window.scrollTo(window.scrollX, y);
+                }
+            });
         }
     });
 
