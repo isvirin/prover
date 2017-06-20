@@ -1,13 +1,348 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     <title>Prover</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <link href="./css/simple-sidebar.css" rel="stylesheet">
+    <link href="./css/style.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        .vcenter {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+        }
+        i.fa {
+            text-indent: 0;
+        }
+    </style>
+
 </head>
 
 <body>
-    <a href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">WhitePaper PROVER (rus) pdf</a>
-</body>
 
-</html>
+    <div id="wrapper" class="toggled">
+
+        <!--<nav class="navbar navbar-default">-->
+            <!--<div class="container-fluid">-->
+                <!--<div class="navbar-header">-->
+                    <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">-->
+                        <!--<span class="sr-only">Navigation</span>-->
+                        <!--<span class="icon-bar"></span>-->
+                        <!--<span class="icon-bar"></span>-->
+                        <!--<span class="icon-bar"></span>-->
+                    <!--</button>-->
+                    <!--<a class="navbar-brand" href="#">Prover</a>-->
+                <!--</div>-->
+
+                <!--<div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">-->
+                    <!--<ul class="nav navbar-nav">-->
+                        <!--<li class="active"><a href="#">Link</a></li>-->
+                        <!--<li><a href="#">Link</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</nav>-->
+
+        <div id="sidebar-wrapper" class="hidden-xs hidden-sm">
+            <!--
+            <a class="navbar-brand" href="#">
+                <h1>Prover</h1>
+            </a>
+            <p>Технология, позволяющая подтверждать подлинность создания видеоматериалов</p>
+            -->
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="active" href="#how-it-work">Как это работает</a>
+                </li>
+                <li>
+                    <a href="#use-cases">Области применения</a>
+                </li>
+                <li>
+                    <a href="#for-clients-investors">Для клиентов/инвесторов</a>
+                </li>
+                <!--
+                <li>
+                    <a href="#">Blog</a>
+                </li>
+                <li>
+                    <a href="#">ICO details</a>
+                </li>
+                <li>
+                    <a href="#">Team</a>
+                </li>
+                -->
+                <li>
+                    <a href="#contacts">Контакты</a>
+                </li>
+                <li>
+                    <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                </li>
+                <li>
+                    <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="page-content-wrapper">
+            <section id="sm-header" class="">
+                <div class="row">
+                    <div class="col-md-12 jumbotron">
+                        <h1>Prover</h1>
+                        <p>Технология, позволяющая подтверждать подлинность создания видеоматериалов</p>
+                    </div>
+                </div>
+            </section>
+            <section id="how-it-work">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1>Как это работает</h1>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6 vcenter">
+                                <div class="about">
+                                    <p>При включении видеокамеры смартфон пользователя обращается через сеть
+                                        Интернет к блокчейну для получения swype кода - проверочного задания, которое
+                                        должен выполнить пользователь при осуществлении записи видеоданных. Ввод swype
+                                        кода осуществляется путем движения смартфона с включенным режимом
+                                        видеозаписи в пространстве виртуальных точек 3 на 3 точки по сгенерированной
+                                        случайным образом (в блокчейне или на основе данных из блокчейна) траектории.
+                                        Далее, пользователь осуществляет видеозапись с помощью камеры своего
+                                        смартфона и в любой момент времени записи осуществляет “ввод” swype кода. При
+                                        вводе swype кода пользователю отображаются подсказки в виде виртуальных точек 3
+                                        на 3 и распознанного движения смартфона. Для дополнительного подтверждения
+                                        достоверности осуществляется синхронная с видео запись последовательности
+                                        измерений с датчиков (акселерометр и магнитометр), встроенных в смартфон.
+                                        После завершения видеозаписи осуществляется вычисление хеша полученного
+                                        видеофайла. Полученный хэш сохраняется в блокчейне.
+                                        Записанные видеоданные хранятся у пользователя на персональном устройстве или
+                                        облачном диске и могут быть предъявлены на проверку подлинности при
+                                        необходимости</p>
+                                </div>
+                            </div><!--
+                         --><div class="col-md-6 vcenter">
+                                <div class="overlay">
+                                    <img src="./images/prover-example-image.png">
+                                    <!-- пока видео нет
+                                    <video id="video" width="100%" height="auto" loop="loop" autoplay="autoplay" preload="auto" muted="muted">
+                                        <source src="./video/it_technology.mp4"></source>
+                                    </video>
+                                    -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="use-cases">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="use-cases">
+                                <h1>Области применения</h1>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h4>Автострахование (КАСКО)</h4>
+                                        <p>Клиент осуществляет видеозапись состояния своего автомобиля для заключения договора страхования с целью предоставления этой, заверенной системой PROVER, видеозаписи в качестве доказательства в случае наступления страхового случая</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Подтверждение авторства оригинального видео</h4>
+                                        <p>Пользователь, ведя запись видео (с помощью камеры мобильного телефона или
+                                            планшета), может еще и зарегистрировать при этом свое авторство и иметь
+                                            возможность его подтвердить. Это может быть интересно как мобильным репортерам,
+                                            внештатным корреспондентам (стрингерам), блогерам, так и
+                                            спортсменам-экстремалам, путешественникам, музыкантам, композиторам и другим
+                                            людям, занимающимся творчеством.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Удаленный контроль пациентов</h4>
+                                        <p>пациент устанавливает приложение клиники или фармацевтической компании, куда встроена
+                                            технология PROVER. У него есть "аптечка" и график приема лекарств. В нужное время
+                                            на телефоне всплывает уведомление, и он, чтобы выпить таблетку, включает
+                                            приложение и под запись достает таблетку из упаковки и пьет, заверяя подлинность с
+                                            помощью swype кода.
+                                            Для клиники и страховой компании это может служить подтверждением, что больной
+                                            получил должную терапию в полном объеме.
+                                            Для пациента - доказательством, что он надлежащим образом выполнил все
+                                            предписания врачей, и лечение будет оплачено страховой компанией.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Онлайн игры и квесты</h4>
+                                        <p>В мобильное приложение игры встраивается технология PROVER, которая позволяет
+                                            регистрировать наступление игровых событий, например обнаружение закладки
+                                            тайников и кладов с призами, достижение какого-то уровня, географической точки и
+                                            т.п.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Отчеты о проделанной работе</h4>
+                                        <p>С технологией PROVER будет легко осуществима удаленная проверка производства
+                                            работ (строительство, монтаж, уборка, патрулирование, курьерская доставка,
+                                            выкладка товара в магазине, размещение наружней рекламы и т.п.). Видео
+                                            беспристрастно фиксирует процесс или результат процесса - факт, а сервис PROVER
+                                            объективно заверяет дату и время записи видео.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Фиксация нарушений ПДД и общественного порядка</h4>
+                                        <p>Технология PROVER может применяться в области охраны общественного порядка. С
+                                            ее помощью можно беспристрастно зафиксировать время, дату и место видео
+                                            свидетельства для предоставления правоохранительным органам и обеспечить
+                                            объективное доказательство подлинности. Данные могут быть использованы в
+                                            качестве доказательства в ходе разбирательства, может быть заявлена техническая
+                                            экспертиза, и эксперт сможет восстановить информацию о синхронизации и
+                                            геопозиции и подтвердить ее достоверность.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Образовательные проекты</h4>
+                                        <p>Для образовательных проектов технология PROVER может выполнить функцию по
+                                            удаленной идентификации пользователей и верификации их действий внутри
+                                            образовательной платформы. На сегодняшний день в мире набрали популярность
+                                            Массовые Открытые Образовательные Курсы (MOOC), например Coursera, Udemy,
+                                            Udacity, edX и другие. Уязвимым звеном данных сервисов является невозможность
+                                            100% подтверждения личности обучающегося и верификации полученных знаний. В
+                                            настоящий момент на платформе Coursera после сдачи тестов требует сделать
+                                            селфи, но этот подход совершенно не защищен от подлога. Можно интегрировать
+                                            технологию PROVER в приложение для дистанционного обучения и вести видеозапись
+                                            сдачи экзамена пользователем, чтобы убедиться, что экзамен сдает именно он -
+                                            человек на видео, и что он не пользовался шпаргалками, не выходил из комнаты и т.п.
+                                            Этот подход позволит выдавать именные сертификаты с фото и быть уверенными в
+                                            том, что человек изображенный на фото на сертификате, является именно тем
+                                            человеком, что сдавал экзамены. Протоколы экзаменов можно будет также хранить
+                                            для подтверждения.</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4>Защищенные видео заявления - подтвержденные видеосообщения юридического характера</h4>
+                                        <p>Технология PROVER дает возможность защитить и подтвердить видеосообщения
+                                            юридического характера без очного визита к каким-либо должностным лицам.
+                                            Удаленное видео заявление о совершении какой-либо сделки, дача показаний,
+                                            объяснение, отчет, интервью и т.п. станут объективными и легитимными
+                                            свидетельствами. Система подтверждает дату и место съемки, должностное лицо
+                                            сличает видео с имеющимся в базе фото или видео и подтверждает, что это тот же
+                                            самый человек. Например так могут работать удаленные приемные государственных,
+                                            муниципальных и корпоративных должностных лиц, рассматривая записанные
+                                            обращения граждан/клиентов.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="for-clients-investors">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="for-client">
+                                <h1>Для клиентов/инвесторов</h1>
+                                <hr>
+                                <p>Чтобы финансировать разработку и функционирование системы PROVER, будет
+                                    проводиться фаза сбора средств, известная как crowdsale. Проведение crowdsale
+                                    будет осуществляться в рамках экосистемы Ethereum. Во время crowdsale люди могут
+                                    приобретать токены PROOF по фиксированной ставке, которая предоставляет
+                                    правообладателю право пользоваться услугами сервиса бесплатно или со скидками, а
+                                    также претендовать на часть накопленных смартконтрактом PROOF средств,
+                                    пропорционально количеству токенов в общей эмиссии, путем их сжигания.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer id="contacts">
+                <div class="footer-content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="contacts">
+                                    <h4 class="contacts-title">Контакты</h4>
+                                    <ul class="contacts-list">
+                                        <!--<li>
+                                            <i class="fa fa-facebook"></i>
+                                            <strong>Facebook:</strong>
+                                            <a href="#" target="_blank" title="Connect with Prover on Facebook">Facebook.com</a>
+                                        </li>-->
+                                        <li>
+                                            <i class="fa fa-envelope"></i>
+                                            <strong>Email:</strong>
+                                            <a href="mailto:info@prover.io" title="E-Mail Prover">info@prover.io</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="source">
+                                    <h4 class="source-title">Ресурсы</h4>
+                                    <ul class="source-list">
+                                        <li>
+                                            <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                                        </li>
+                                        <li>
+                                            <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyright-content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="copyright-text col-md-6">
+                                Prover ® 2017
+                            </div>
+                            <div class="col-md-6">
+                                <div class="social-icons">
+                                    <ul>
+                                        <li class="social-email">
+                                            <a href="#" target="_blank">
+                                                <i class="fa fa-envelope" title="E-Mail Prover"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-github">
+                                            <a href="#" target="_blank" title="Join Prover on Github">
+                                                <i class="fa fa-github"></i>
+                                            </a>
+                                        </li>
+                                        <li class="social-facebook">
+                                            <a href="#" target="_blank" title="Connect with Prover on Facebook">
+                                                <i class="fa fa-facebook"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+    </div>
+
+    <script src="./js/jquery.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/script.js"></script>
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body></html>
