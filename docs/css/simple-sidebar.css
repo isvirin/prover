@@ -92,6 +92,7 @@ body {
 }
 
 #page-content-wrapper {
+    z-index: 1000;
     width: 100%;
     position: relative;
 }
