@@ -6,8 +6,10 @@ section {
     margin-bottom: 30px;
 }
 
-#home {
-    position: relative;
+#sm-header .jumbotron {
+    text-align: center;
+    background: #000000;
+    color: #ffffff;
 }
 
 .background {
