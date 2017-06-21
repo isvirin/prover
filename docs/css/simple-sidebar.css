@@ -1,5 +1,7 @@
-body {
+body,
+html {
     overflow-x: hidden;
+    height: 100%;
 }
 
 #top-menu {
@@ -91,6 +93,16 @@ body {
     transition: all 0.5s ease;
 }
 
+.sidebar-content {
+    box-sizing: border-box;
+    min-height: 100%;
+    padding-bottom: 80px;
+}
+.sidebar-footer {
+    height: 80px;
+    margin-top: -80px;
+}
+
 #page-content-wrapper {
     z-index: 1000;
     width: 100%;
@@ -137,10 +149,7 @@ body {
 }
 
 .footer-sidebar-nav {
-    position: absolute;
-    left: 50%;
-    margin: 0 0 0 -145px;
-    bottom: 0;
+    margin: 0;
 }
 
 .sidebar-nav li,
@@ -196,11 +205,6 @@ body {
 
     #wrapper {
         padding-left: 250px;
-    }
-
-    .footer-sidebar-nav {
-        left: 50%;
-        margin: 0 0 0 -110px;
     }
 }
 
