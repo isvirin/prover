@@ -198,11 +198,6 @@ body {
         padding-left: 250px;
     }
 
-    .sidebar-nav li a,
-    .footer-sidebar-nav li a {
-        padding: 15px 0;
-    }
-
     .footer-sidebar-nav {
         left: 50%;
         margin: 0 0 0 -110px;
@@ -237,6 +232,6 @@ body {
     }
 
     #sm-header {
-        padding-top: 30px;
+        padding-top: 45px;
     }
 }

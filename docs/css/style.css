@@ -6,6 +6,10 @@ section {
     /*margin-bottom: 30px;*/
 }
 
+section:nth-child(2n) {
+    background: #eeeeee;
+}
+
 #wrapper.toggled .wrapper-background {
     opacity: 0.5;
     z-index: 1001;
@@ -43,14 +47,8 @@ i.fa {
     text-indent: 0;
 }
 
-#prover:before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
-
 #prover {
+    display: table;
     height: 120px;
     background: #ffffff;
     text-align: left;
@@ -63,7 +61,7 @@ i.fa {
 }
 
 .jumbotron p {
-    display: inline-block;
+    display: table-cell;
     vertical-align: middle;
     margin: 0;
     font-weight: 300;
@@ -92,8 +90,16 @@ i.fa {
     position: relative;
 }
 
-.about {
+#how-it-work {
+    padding-bottom: 30px;
+}
+
+#how-it-work .about {
     padding: 0;
+}
+
+#how-it-work .about p {
+    font-size: 22px;
 }
 
 #how-it-work h1,
@@ -119,6 +125,82 @@ hr {
     margin: 0;
     text-align: center;
 }
+
+.social {
+    padding: 20px 0;
+}
+
+.social .btn-whitepaper {
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    border: 0;
+    line-height: 40px;
+    padding: 0px 70px;
+    color: #ffffff;
+    background: #222222;
+}
+
+.social .social-icons ul {
+    margin: 0;
+    padding: 0;
+}
+
+.social .social-icons ul li {
+    float: right;
+    list-style: none;
+    margin: 0 0 0 15px;
+}
+
+.social .social-icons ul li a {
+    color: #222222;
+    font-size: 28px;
+}
+
+.social .social-icons ul li a:hover {
+    color: #383838;
+}
+
+.email {
+    color: #222222;
+}
+
+.email input[type="text"] {
+    font-size: 16px;
+    line-height: 40px;
+    display: inline-block;
+    border: 0;
+    margin: 0;
+    background: #eeeeee;
+    padding: 0;
+    width: 100%;
+}
+
+.email input[type="text"]:focus {
+    outline: none;
+}
+
+.email .btn-submit {
+    float: right;
+    margin: 0;
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    border: 0;
+    line-height: 40px;
+    padding: 0px 70px;
+    color: #ffffff;
+    background: #222222;
+}
+
+.email .btn-submit:hover {
+    text-decoration: underline;
+}
+
+.email input::-webkit-input-placeholder {color:#222222;}
+.email input::-moz-placeholder          {color:#222222;}
+.email input:-moz-placeholder           {color:#222222;}
+.email input:-ms-input-placeholder      {color:#222222;}
 
 .use-cases-title {
     text-align: center;
@@ -204,4 +286,34 @@ footer .footer-content h4 {
 
 .copyright-content .copyright-text {
     font-size: 14px;
+}
+
+@media(max-width: 768px) {
+    .social {
+        text-align: center;
+    }
+
+    .social .social-icons ul {
+        margin-top: 10px;
+        display: inline-block;
+    }
+
+    .social .social-icons ul li:last-child {
+        margin: 0;
+    }
+
+    .email {
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .email .btn-submit {
+        margin-top: 10px;
+        float: none;
+    }
+
+    .email input[type="text"] {
+        width: 234px;
+        border-bottom: solid 1px;
+    }
 }
