@@ -43,7 +43,15 @@ i.fa {
     text-indent: 0;
 }
 
+#prover:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
 #prover {
+    height: 120px;
     background: #ffffff;
     text-align: left;
     padding: 0 15px;
@@ -52,6 +60,14 @@ i.fa {
 
 #how-it-work img {
     width: 100%;
+}
+
+.jumbotron p {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    font-weight: 300;
+    font-size: 22px;
 }
 
 .video {
