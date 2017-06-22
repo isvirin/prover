@@ -115,7 +115,7 @@ contract Crowdsale is owned {
         require(state == State.PreICO || state == State.Crowdsale);
         require(now >= crowdsaleFinishTime);
         if ((this.balance < 400 ether && state == State.PreICO) ||
-            (this.balance < 1500 ether && state == State.Crowdsale)) {
+            (this.balance < 1000 ether && state == State.Crowdsale)) {
             // Crowdsale failed. Need to return ether to investors
             for (uint i = 0; i <  investors.length; ++i) {
                 Investor inv = investors[i];
@@ -134,7 +134,7 @@ contract Crowdsale is owned {
                 if (!msg.sender.send(this.balance)) throw;
                 state = State.CompletePreICO;
             } else {
-                if (!msg.sender.send(500 ether)) throw;
+                if (!msg.sender.send(1000 ether)) throw;
                 // Emit additional tokens for owner (20% of complete totalSupply)
                 balanceOf[msg.sender] = totalSupply / 4;
                 totalSupply += totalSupply / 4;
