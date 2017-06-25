@@ -62,7 +62,7 @@ i.fa {
     text-indent: 0;
 }
 
-#prover {
+.about-prover-block {
     display: table;
     background: #ffffff;
     text-align: left;
@@ -74,7 +74,7 @@ i.fa {
     width: 100%;
 }
 
-#sm-header p {
+#prover p {
     display: table-cell;
     vertical-align: middle;
     margin: 0;
