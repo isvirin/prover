@@ -218,6 +218,10 @@ hr {
     background: #eee;
 }
 
+.use-cases > div.row {
+    margin-left: -30px;
+}
+
 .use-cases h1 {
     margin-top: 0;
 }
