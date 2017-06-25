@@ -146,6 +146,10 @@ hr {
     background: rgba(255, 0, 0, .7);
 }
 
+#whitepaper .btn-whitepaper:hover {
+    background: rgba(255, 0, 0, .5);
+}
+
 #social {
     padding-top: 8px;
 }
