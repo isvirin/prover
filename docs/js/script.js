@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#sidebar-wrapper").on("click","a[target!='_blank']", function (event) {
+    $("body").on("click","a[target!='_blank']", function(event) {
         event.preventDefault();
         var id  = $(this).attr('href');
         $("#wrapper").removeClass("toggled");
@@ -19,12 +19,20 @@ $(document).ready(function(){
     });
 
     $(document).click(function(event) {
-        if ($(event.target).closest("#sidebar-wrapper").length || $(event.target).closest("#top-menu .lines-button").length) return;
+        var t = $(event.target);
+        if (t.closest("#sidebar-wrapper").length || t.closest("#top-menu .lines-button").length) {
+            return;
+        }
         $("#wrapper").removeClass("toggled");
         event.stopPropagation();
     });
 
     $("#top-menu .lines-button").click(function () {
+        $("#wrapper").toggleClass("toggled");
+    });
+
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
 });

@@ -1,5 +1,7 @@
-body {
+body,
+html {
     overflow-x: hidden;
+    height: 100%;
 }
 
 #top-menu {
@@ -91,6 +93,16 @@ body {
     transition: all 0.5s ease;
 }
 
+.sidebar-content {
+    box-sizing: border-box;
+    min-height: 100%;
+    padding-bottom: 80px;
+}
+.sidebar-footer {
+    height: 80px;
+    margin-top: -80px;
+}
+
 #page-content-wrapper {
     z-index: 1000;
     width: 100%;
@@ -108,27 +120,36 @@ body {
 
 .sidebar-header a {
     color: #ffffff;
-    font-size: 30px;
+    font-size: 63px;
+    font-weight: 300;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 15px;
 }
 
 .sidebar-header a:hover {
     text-decoration: none;
 }
 
-.sidebar-header,
+.sidebar-header:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.sidebar-header {
+    height: 120px;
+}
+
 .sidebar-nav,
 .footer-sidebar-nav {
-    width: 290px;
-    margin: 15px auto;
     padding: 0;
     list-style: none;
 }
 
 .footer-sidebar-nav {
-    position: absolute;
-    left: 50%;
-    margin: 0 0 0 -145px;
-    bottom: 0;
+    margin: 0;
 }
 
 .sidebar-nav li,
@@ -144,10 +165,13 @@ body {
     color: #ffffff;
 }
 
-.sidebar-nav li a:hover,
+.sidebar-nav li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .footer-sidebar-nav li a:hover {
-    background: none;
     text-decoration: underline;
+    background: none;
 }
 
 .sidebar-nav li a:active,
@@ -161,16 +185,15 @@ body {
     border-bottom: 1px solid #383838;
 }
 
-.footer-sidebar-nav li a {
+.sidebar-nav li:first-child a {
     border-top: 1px solid #383838;
 }
 
 .sidebar-nav li a,
 .footer-sidebar-nav li a {
-    height: 60px;
+    height: 40px;
     font-size: 16px;
-    padding: 15px;
-    line-height: 30px;
+    line-height: 40px;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -184,24 +207,8 @@ body {
         margin-left: -250px;
     }
 
-    .sidebar-header,
-    .sidebar-nav,
-    .footer-sidebar-nav {
-        width: 220px;
-    }
-
     #wrapper {
         padding-left: 250px;
-    }
-
-    .sidebar-nav li a,
-    .footer-sidebar-nav li a {
-        padding: 15px 0;
-    }
-
-    .footer-sidebar-nav {
-        left: 50%;
-        margin: 0 0 0 -110px;
     }
 }
 
@@ -228,17 +235,11 @@ body {
         margin: 15px auto;
     }
 
-    .sidebar-header,
-    .sidebar-nav,
-    .footer-sidebar-nav {
-        width: 220px;
-    }
-
     #wrapper.toggled {
         padding-left: 0;
     }
 
     #sm-header {
-        padding-top: 30px;
+        padding-top: 45px;
     }
 }

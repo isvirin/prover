@@ -1,9 +1,32 @@
+html, body {
+    height: auto;
+    min-height: 100%;
+}
+
 body {
     font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+    font-size: 16px;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+h4 {
+    font-size: 22px;
 }
 
 section {
-    /*margin-bottom: 30px;*/
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+section:nth-child(2n) {
+    background: #eeeeee;
+}
+
+.sidebar-header a, #top-menu a, .sidebar-header a:hover, #top-menu a:hover {
+    text-decoration: none;
 }
 
 #wrapper.toggled .wrapper-background {
@@ -43,15 +66,24 @@ i.fa {
     text-indent: 0;
 }
 
-#prover {
+.about-prover-block {
+    display: table;
     background: #ffffff;
     text-align: left;
-    padding: 0 15px;
+    padding: 14px 15px 15px;
     margin-bottom: 0;
 }
 
 #how-it-work img {
     width: 100%;
+}
+
+#prover p {
+    display: table-cell;
+    vertical-align: middle;
+    margin: 0;
+    font-weight: 300;
+    font-size: 22px;
 }
 
 .video {
@@ -76,16 +108,11 @@ i.fa {
     position: relative;
 }
 
-.about {
+#how-it-work .about {
     padding: 0;
 }
 
-#how-it-work h1,
-.use-cases h1,
-.for-client h1 {
-    padding-top: 30px;
-    /* text-align: center; */
-    /*padding-left: 15px;*/
+#how-it-work .about p {
 }
 
 hr {
@@ -104,8 +131,115 @@ hr {
     text-align: center;
 }
 
+#whitepaper {
+    padding-bottom: 8px;
+}
+
+#whitepaper .btn-whitepaper {
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    border: 0;
+    line-height: 40px;
+    padding: 0px 70px;
+    color: #ffffff;
+    background: rgba(255, 0, 0, .7);
+}
+
+#whitepaper .btn-whitepaper:hover {
+    text-decoration: none;
+    background: rgba(255, 0, 0, .5);
+}
+
+#social {
+    padding-top: 8px;
+}
+
+#social .social-icons {
+    overflow: hidden;
+    background: #eeeeee;
+    padding-right: 15px;
+    margin-right: -15px;
+}
+
+#social .social-icons ul {
+    margin: 0;
+    padding: 0;
+}
+
+#social .social-icons ul li {
+    float: right;
+    list-style: none;
+    margin: 0 0 0 15px;
+}
+
+#social .social-icons ul li a {
+    color: #222222;
+    font-size: 28px;
+}
+
+#social .social-icons ul li a:hover {
+    color: #383838;
+}
+
+.email {
+    color: #222222;
+}
+
+.email input[type="text"] {
+    font-size: 16px;
+    line-height: 40px;
+    display: inline-block;
+    border: 0;
+    margin: 0;
+    background: #eeeeee;
+    padding: 0;
+    width: 100%;
+}
+
+.email input[type="text"]:focus {
+    outline: none;
+}
+
+.email .btn-submit {
+    float: right;
+    margin: 0;
+    display: inline-block;
+    font-size: 16px;
+    height: 40px;
+    border: 0;
+    line-height: 40px;
+    padding: 0px 70px;
+    color: #ffffff;
+    background: #222222;
+}
+
+.email .btn-submit:hover {
+    text-decoration: underline;
+}
+
+.email input::-webkit-input-placeholder {color:#222222;}
+.email input::-moz-placeholder          {color:#222222;}
+.email input:-moz-placeholder           {color:#222222;}
+.email input:-ms-input-placeholder      {color:#222222;}
+
+#use-cases {
+    background: #eee;
+}
+
+.use-cases > div.row {
+    margin-left: -30px;
+}
+
+.use-cases h1 {
+    margin-top: 0;
+}
+
+.use-case {
+    padding: 0 30px;
+}
+
 .use-cases-title {
-    text-align: center;
 }
 
 .use-cases .text {}
@@ -117,6 +251,76 @@ hr {
 }
 
 .use-cases p {}
+
+#team {
+    overflow: hidden;
+    background: #eee;
+    padding-left: 15px;
+}
+
+#team > div {
+    text-align: center;
+    width: calc(20% - 16px);
+    margin: 0 8px;
+    float: left;
+    cursor: pointer;
+}
+
+#team span {
+    line-height: 1em;
+}
+
+#team > div.team-next-line-first-div {
+    margin-left: calc(20% + 1px);
+    clear: left;
+}
+
+#team img {
+    width: 100%;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+#team > div:hover img {
+    background: #999;
+}
+
+#team > div:hover {
+    color: #999;
+}
+
+#team span.name {
+    font-size: 22px;
+}
+
+#team span.role {
+    font-size: 14px;
+}
+
+@media(max-width: 992px) {
+    #team > div {
+        line-height: 2vw;
+    }
+
+    #team span.name {
+        font-size: 2vw;
+    }
+
+    #team span.role {
+        font-size: 1.5vw;
+        font-weight: 100;
+    }
+}
+
+@media(max-width: 768px) {
+    #team > div {
+        line-height: 2.5vw;
+    }
+
+    #team span.role {
+        font-size: 2vw;
+    }
+}
 
 footer .footer-content,
 footer .copyright-content {
@@ -188,4 +392,21 @@ footer .footer-content h4 {
 
 .copyright-content .copyright-text {
     font-size: 14px;
+}
+
+@media(max-width: 768px) {
+    .email {
+        padding: 20px 0;
+        text-align: center;
+    }
+
+    .email .btn-submit {
+        margin-top: 10px;
+        float: none;
+    }
+
+    .email input[type="text"] {
+        width: 234px;
+        border-bottom: solid 1px;
+    }
 }

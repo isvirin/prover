@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <title>Prover</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link href="favicon.png" rel="shortcut icon">
+    <link href="favicon.ico" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
-
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/font-awesome.min.css" rel="stylesheet">
-    <link href="./css/simple-sidebar.css" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet">
+    <link href="./css/simple-sidebar.css?v2" rel="stylesheet">
+    <link href="./css/style.css?v2" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -23,65 +21,67 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-
 <body>
-
     <div id="top-menu">
         <div class="container-fluid">
             <button class="lines-button">
                 <span class="lines"></span>
             </button>
-            <h1>Prover</h1>
+            <a href="#prover">
+                <h1>Prover</h1>
+            </a>
         </div>
     </div>
     <div id="wrapper" class="">
         <div class="wrapper-background"></div>
-
         <div id="sidebar-wrapper">
-            <div class="sidebar-header">
-                <a href="#prover">Prover</a>
+            <div class="sidebar-content">
+                <div class="sidebar-header">
+                    <a href="#prover">Prover</a>
+                </div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="#how-it-work">Как это работает</a>
+                    </li>
+                    <li>
+                        <a href="#use-cases">Области применения</a>
+                    </li>
+                    <li>
+                        <a href="#for-clients-investors">Для клиентов/инвесторов</a>
+                    </li>
+                    <!--
+                    <li>
+                        <a href="#">Blog</a>
+                    </li>
+                    <li>
+                        <a href="#">ICO details</a>
+                    </li>-->
+                    <li>
+                        <a href="#team">Команда</a>
+                    </li>
+                    <li>
+                        <a href="#contacts">Контакты</a>
+                    </li>
+                </ul>
             </div>
-            <ul class="sidebar-nav">
-                <li>
-                    <a href="#how-it-work">Как это работает</a>
-                </li>
-                <li>
-                    <a href="#use-cases">Области применения</a>
-                </li>
-                <li>
-                    <a href="#for-clients-investors">Для клиентов/инвесторов</a>
-                </li>
-                <!--
-                <li>
-                    <a href="#">Blog</a>
-                </li>
-                <li>
-                    <a href="#">ICO details</a>
-                </li>
-                <li>
-                    <a href="#">Team</a>
-                </li>
-                -->
-                <li>
-                    <a href="#contacts">Контакты</a>
-                </li>
-            </ul>
-            <ul class="footer-sidebar-nav">
-                <li>
-                    <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
-                </li>
-                <li>
-                    <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
-                </li>
-            </ul>
+            <div class="sidebar-footer">
+                <ul class="footer-sidebar-nav">
+                    <li>
+                        <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div id="page-content-wrapper">
-            <section id="sm-header">
+            <section id="prover">
                 <div class="container-fluid">
                     <div class="row">
-                        <div id="prover" class="col-md-12 jumbotron">
-                            <h1>Prover</h1>
+                        <div class="about-prover-block col-md-12">
+                            <!--<h1>Prover</h1>-->
                             <p>Технология, позволяющая подтверждать подлинность создания видеоматериалов</p>
                         </div>
                     </div>
@@ -90,31 +90,85 @@
             <section id="how-it-work">
                 <div class="container-fluid">
                     <div class="row">
-                    <div class="col-md-12" style="background: #eeeeee; padding-bottom: 30px;">
-                        <h1>Как это работает</h1>
-                        <div class="row">
-                            <div class="col-md-6 vcenter">
-                                <div class="about">
-                                    <p style="font-size: 22px;">При включении видеокамеры смартфон пользователя обращается через сеть
-                                        Интернет к блокчейну для получения swype кода - проверочного задания, которое
-                                        должен выполнить пользователь при осуществлении записи видеоданных.</p>
-                                </div>
-                            </div><!--
-                         --><div class="col-md-6 vcenter">
-                                <div class="overlay">
-                                    <img src="./images/prover-example-image.png">
-                                    <!-- пока видео нет
-                                    <video id="video" width="100%" height="auto" loop="loop" autoplay="autoplay" preload="auto" muted="muted">
-                                        <source src="./video/it_technology.mp4"></source>
-                                    </video>
-                                    -->
+                        <div class="col-md-12">
+                            <h1>Как это работает</h1>
+                            <div class="row">
+                                <div class="col-md-6 vcenter">
+                                    <div class="about">
+                                        <p>При включении видеокамеры смартфон пользователя обращается через сеть
+                                            Интернет к блокчейну для получения swype кода - проверочного задания, которое
+                                            должен выполнить пользователь при осуществлении записи видеоданных.</p>
+                                    </div>
+                                </div><!-- если между этими div'ами будет пробел, то позиционирование не будет работать
+                             --><div class="col-md-6 vcenter">
+                                    <div class="overlay">
+                                        <img src="./images/prover-example-image.png">
+                                        <!-- пока видео нет
+                                        <video id="video" width="100%" height="auto" loop="loop" autoplay="autoplay" preload="auto" muted="muted">
+                                            <source src="./video/it_technology.mp4"></source>
+                                        </video>
+                                        -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
+            <section id="whitepaper">
+                <div class="container-fluid">
+                    <a target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf" class="btn-whitepaper">Whitepaper</a>
                 </div>
             </section>
+            <section id="social" style="background: none;">
+                <div class="container-fluid">
+                    <div class="social-icons">
+                        <ul>
+                            <li class="social-email">
+                                <a href="mailto:info@prover.io" target="_blank">
+                                    <i class="fa fa-envelope" title="E-Mail Prover"></i>
+                                </a>
+                            </li>
+                            <li class="social-github">
+                                <a href="https://github.com/isvirin/prover" target="_blank" title="Join Prover on Github">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </li>
+                            <li class="social-slack">
+                                <a href="https://prover-team.slack.com/" target="_blank" title="Join Prover on Slack Channel">
+                                    <i class="fa fa-slack"></i>
+                                </a>
+                            </li>
+                            <li class="social-telegram">
+                                <a href="https://telegram.me/prover_project" target="_blank" title="Join Prover on Telegram Channel">
+                                    <i class="fa fa-telegram"></i>
+                                </a>
+                            </li>
+                            <li class="social-facebook">
+                                <a href="https://www.facebook.com/groups/prover.io/" target="_blank" title="Connect with Prover on Facebook">
+                                    <i class="fa fa-facebook"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            <!-- email subscribing not ready yet #36571
+            <section class="email">
+                <div class="container-fluid">
+                    <div class="row">
+                        <form>
+                            <div class="col-sm-6 col-xs-12">
+                                <input type="text" placeholder="e-mail">
+                            </div>
+                            <div class="col-sm-6 col-xs-12">
+                                <button class="btn-submit">Подписаться</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            -->
             <section id="use-cases">
                 <div class="container-fluid">
                     <div class="row">
@@ -122,15 +176,23 @@
                             <div class="use-cases">
                                 <h1>Области применения</h1>
                                 <div class="row">
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case hidden-sm hidden-xs">
+                                        <div class="use-cases-title">
+                                            <h4>&nbsp;</h4>
+                                        </div>
+                                        <div class="use-cases-text" style="text-align: center; font-size: 45px;">
+                                            <p><i class="fa fa-cubes"></i></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Автострахование (КАСКО)</h4>
                                         </div>
                                         <div class="use-cases-text">
-                                            <p>В случае наступления страхового случая, в качестве доказательстав клиент предоставляет видеозапись, заверенную системой PROVER.</p>
+                                            <p>В случае наступления страхового случая, в качестве доказательства клиент предоставляет видеозапись, заверенную системой PROVER.</p>
                                         </div>
                                     </div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Подтверждение авторства видео</h4>
                                         </div>
@@ -139,7 +201,8 @@
                                         </div>
                                     </div>
                                     <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Удаленный контроль пациентов</h4>
                                         </div>
@@ -147,8 +210,7 @@
                                             <p>При помощи технологии PROVER клиники и страховые компании смогут подтвердить, что больной получил должную терапию в полном объеме. Пациент же сможет доказать, что он надлежащим образом выполнил все предписания врачей.</p>
                                         </div>
                                     </div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Онлайн игры и квесты</h4>
                                         </div>
@@ -158,7 +220,7 @@
                                         </div>
                                     </div>
                                     <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Отчеты о проделанной работе</h4>
                                         </div>
@@ -166,7 +228,8 @@
                                             <p>С технологией PROVER будет легко осуществима удаленная проверка производства работ (строительство, монтаж, уборка, патрулирование, курьерская доставка, выкладка товара в магазине, размещение наружней рекламы и т.п.).</p>
                                         </div>
                                     </div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Фиксация нарушений ПДД и общественного порядка</h4>
                                         </div>
@@ -175,8 +238,7 @@
                                         </div>
                                     </div>
                                     <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Образовательные проекты</h4>
                                         </div>
@@ -184,7 +246,7 @@
                                             <p>Для образовательных проектов технология PROVER может выполнить функцию по удаленной идентификации пользователей и верификации их действий внутр образовательной платформы.</p>
                                         </div>
                                     </div>
-                                    <div class="col-sx-12 col-sm-6 col-md-4">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
                                         <div class="use-cases-title">
                                             <h4>Видеосообщения юридического характера</h4>
                                         </div>
@@ -199,7 +261,7 @@
                     </div>
                 </div>
             </section>
-            <section id="for-clients-investors">
+            <section id="for-clients-investors" style="background: none;">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
@@ -216,6 +278,151 @@
                         </div>
                     </div>
                 </div>
+            </section>
+            <!--<section id="team">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="use-cases">
+                                <h1>Команда</h1>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case hidden-sm hidden-xs">
+                                        <div class="use-cases-title">
+                                            <h4>&nbsp;</h4>
+                                        </div>
+                                        <div class="use-cases-text" style="text-align: center; font-size: 45px;">
+                                            <p><i class="fa fa-users"></i></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Набильская Надежда, CEO</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            В сфере информационной безопасности и технических средств охраны работает с 2010 года.<br>
+                                            Выпускница Президентской программы подготовки управленческих кадров.<br>
+                                            Руководство проектами: разработка программного обеспечения - 3, научно-исследовательские и опытно-конструкторские работы - 5, прикладные научные исследования - 2.
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Ростовиков Сергей, CTO</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Опыт разработки программного обеспечения в сфере информационной безопасности и технических средств охраны 14 лет.<br>
+                                            Участвовал более чем в 10 опытно-конструкторских работах в качестве ключевого участника. Имеет опыт разработки сложных технических систем в области средств защиты информации, криптографии, отказоустойчивых серверных систем, систем на базе блокчейн сетей.
+                                        </div>
+                                    </div>
+                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
+                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Воронин Вячеслав, ученый в области видеоанализа</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Доцент Донского государственного технического университета.<br>
+                                            Кандидат технических наук.<br>
+                                            Соавтор монографии «Метод и алгоритмы выделения полезного сигнала на фоне шумов при обработке дискретных сигналов».
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Супрун Виталий, разработчик мобильных приложений</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Опыт разработки мобильного программного обеспечения более 10 лет.<br>
+                                            Разработчик мобильного приложения ECG Dongle.
+                                        </div>
+                                    </div>
+                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Юферова Елена, бизнес-консультант</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Опыт работы в консалтинговых компаниях в качестве руководителя направления кадрового консалтинга и компаниях реального сектора в качестве эксперта в области управления организацией и человеческими ресурсами  более 25 лет.<br>
+                                            Соавтор справочника по управлению персоналом. Соавтор практического пособия для менеджеров «Лицом к лицу с будущим сотрудником» М, 2001 г.
+                                        </div>
+                                    </div>
+                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Евгений Шумилов</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Евангелист блокчейн технологий.<br>
+                                            Основатель и генеральный директор Emercoin.
+                                        </div>
+                                    </div>
+                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Олег Ховайко</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Эксперт по криптографии и финансам.<br>
+                                            Технический директор Emercoin.
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
+                                        <div class="use-cases-title">
+                                            <h4>Свирин Илья</h4>
+                                        </div>
+                                        <div class="use-cases-text">
+                                            Кандидат технических наук.<br>
+                                            Технологический предприниматель.<br>
+                                            Основатель группы компаний «Нордавинд».<br>
+                                            Разработчик технологий в области цифровых систем видеонаблюдения, персональной техники и сервисов для здоровья (в т.ч. всемирно известные  Кардиофлешка «ECG Dongle» и сервис «КардиоОблако»).<br>
+                                            Автор многочисленных научных публикаций по вопросам информационной безопасности и теоретическим основам программирования.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>-->
+            <section id="team">
+                <h1>Команда</h1>
+                <div>
+                    <img src="./images/team/nabilskaya.png"><br>
+                    <span class="name">Набильская Надежда</span><br>
+                    <span class="role">CEO</span>
+                </div>
+                <div>
+                    <img src="./images/team/rostovikov.png"><br>
+                    <span class="name">Ростовиков Сергей</span><br>
+                    <span class="role">CTO</span>
+                </div>
+                <div>
+                    <img src="./images/team/voronin.png"><br>
+                    <span class="name">Воронин Вячеслав</span><br>
+                    <span class="role">ученый в области видеоанализа</span>
+                </div>
+                <div>
+                    <img src="./images/team/suprun.png"><br>
+                    <span class="name">Супрун Виталий</span><br>
+                    <span class="role">разработчик мобильных приложений</span>
+                </div>
+                <div>
+                    <img src="./images/team/yuferova.png"><br>
+                    <span class="name">Юферова Елена</span><br>
+                    <span class="role">бизнес-консультант</span>
+                </div>
+                <div style="clear: both; height: 30px;"></div>
+                <div class="team-next-line-first-div">
+                    <img src="./images/team/shumilov.png"><br>
+                    <span class="name">Шумилов Евгений</span>
+                </div>
+                <div>
+                    <img src="./images/team/hovayko.png"><br>
+                    <span class="name">Ховайко Олег</span>
+                </div>
+                <div>
+                    <img src="./images/team/svirin.png"><br>
+                    <span class="name">Свирин Илья</span>
+                </div>
+                <div style="clear: both; height: 0px;"></div>
             </section>
             <footer id="contacts">
                 <div class="footer-content">
@@ -306,17 +513,8 @@
                 </div>
             </footer>
         </div>
-
     </div>
-
     <script src="./js/jquery.js"></script>
     <script src="./js/bootstrap.min.js"></script>
-    <script src="./js/script.js"></script>
-    <script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-    </script>
-
+    <script src="./js/script.js?v2"></script>
 </body></html>
