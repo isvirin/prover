@@ -25,12 +25,12 @@ contract owned {
     }
     
     modifier onlyOwner {
-        if (owner != msg.sender) throw;
+        require(owner == msg.sender);
         _;
     }
 
     function changeOwner(address _owner) onlyOwner public {
-        if (_owner == 0) throw;
+        require(_owner != 0);
         owner = _owner;
     }
 }
@@ -47,7 +47,7 @@ contract Crowdsale is owned {
     uint  public crowdsaleFinishTime;
 
     modifier enabledState {
-        if (state != State.Enabled) throw;
+        require(state == State.Enabled);
         _;
     }
 
@@ -59,7 +59,7 @@ contract Crowdsale is owned {
     uint       public numberOfInvestors;
     
     function () payable {
-        if (state == State.Disabled) throw;
+        require(state != State.Disabled);
         uint256 tokensPerEther = 0;
         if (state == State.PreICO) {
             if (msg.value >= 100 ether) {
@@ -90,7 +90,7 @@ contract Crowdsale is owned {
     }
     
     function startTokensSale() public onlyOwner {
-        if (state != State.Disabled && state != State.CompletePreICO) throw;
+        require(state == State.Disabled || state == State.CompletePreICO);
         crowdsaleStartTime = now;
         if (state == State.Disabled) {
             crowdsaleFinishTime = now + 7 days;
@@ -103,7 +103,7 @@ contract Crowdsale is owned {
     }
     
     function timeToFinishTokensSale() public constant returns(uint t) {
-        if (state != State.PreICO && state != State.Crowdsale) throw;
+        require(state == State.PreICO || state == State.Crowdsale);
         if (now > crowdsaleFinishTime) {
             t = 0;
         } else {
@@ -112,10 +112,10 @@ contract Crowdsale is owned {
     }
     
     function finishTokensSale() public onlyOwner {
-        if (state != State.PreICO && state != State.Crowdsale) throw;
-        if (now < crowdsaleFinishTime) throw;
+        require(state == State.PreICO || state == State.Crowdsale);
+        require(now >= crowdsaleFinishTime);
         if ((this.balance < 400 ether && state == State.PreICO) ||
-            (this.balance < 1500 ether && state == State.Crowdsale)) {
+            (this.balance < 1000 ether && state == State.Crowdsale)) {
             // Crowdsale failed. Need to return ether to investors
             for (uint i = 0; i <  investors.length; ++i) {
                 Investor inv = investors[i];
@@ -134,7 +134,7 @@ contract Crowdsale is owned {
                 if (!msg.sender.send(this.balance)) throw;
                 state = State.CompletePreICO;
             } else {
-                if (!msg.sender.send(500 ether)) throw;
+                if (!msg.sender.send(1000 ether)) throw;
                 // Emit additional tokens for owner (20% of complete totalSupply)
                 balanceOf[msg.sender] = totalSupply / 4;
                 totalSupply += totalSupply / 4;
@@ -154,7 +154,7 @@ contract Token is Crowdsale {
     uint8   public decimals    = 0;
 
     modifier onlyTokenHolders {
-        if (balanceOf[msg.sender] == 0) throw;
+        require(balanceOf[msg.sender] != 0);
         _;
     }
 
@@ -164,32 +164,27 @@ contract Token is Crowdsale {
     event Approval(address indexed owner, address indexed spender, uint256 value);
     event Burned(address indexed owner, uint256 value);
 
-    modifier noEther() {
-        if (msg.value > 0) throw; 
-        _;
-    }
-
     function Token() Crowdsale() {}
 
-    function transfer(address _to, uint256 _value) public noEther enabledState {
-        if (balanceOf[msg.sender] < _value) throw;
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw; // overflow
+    function transfer(address _to, uint256 _value) public enabledState {
+        require(balanceOf[msg.sender] >= _value);
+        require(balanceOf[_to] + _value >= balanceOf[_to]); // overflow
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
         Transfer(msg.sender, _to, _value);
     }
     
-    function transferFrom(address _from, address _to, uint256 _value) public noEther {
-        if (balanceOf[_from] < _value) throw;
-        if (balanceOf[_to] + _value < balanceOf[_to]) throw; // overflow
-        if (allowed[_from][msg.sender] < _value) throw;
+    function transferFrom(address _from, address _to, uint256 _value) public {
+        require(balanceOf[_from] >= _value);
+        require(balanceOf[_to] + _value >= balanceOf[_to]); // overflow
+        require(allowed[_from][msg.sender] >= _value);
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
         allowed[_from][msg.sender] -= _value;
         Transfer(_from, _to, _value);
     }
 
-    function approve(address _spender, uint256 _value) public noEther enabledState {
+    function approve(address _spender, uint256 _value) public enabledState {
         allowed[msg.sender][_spender] = _value;
         Approval(msg.sender, _spender, _value);
     }
@@ -200,8 +195,8 @@ contract Token is Crowdsale {
     }
 
     function burn(uint256 _value) public enabledState {
-        if (now < crowdsaleFinishTime + 1 years) throw;
-        if (balanceOf[msg.sender] < _value) throw;
+        require(now >= crowdsaleFinishTime + 1 years);
+        require(balanceOf[msg.sender] >= _value);
         balanceOf[msg.sender] -= _value;
         totalSupply -= _value;
         Burned(msg.sender, _value);
@@ -237,7 +232,7 @@ contract ProofBase is Token {
     uint   numberOfVotes;
 
     function startVoting(uint _weiReqFund) public enabledState onlyOwner {
-        if (_weiReqFund <= 0 && _weiReqFund > this.balance) throw;
+        require(_weiReqFund > 0 && _weiReqFund <= this.balance);
         weiReqFund = _weiReqFund;
         votingDeadline = now + 7 days;
         VotingStarted(_weiReqFund);
@@ -255,8 +250,8 @@ contract ProofBase is Token {
 
     function vote(bool _inSupport) public onlyTokenHolders enabledState
         returns (uint voteId) {
-        if (voted[msg.sender] == true) throw;
-        if (votingDeadline <= now) throw;
+        require(voted[msg.sender] != true);
+        require(votingDeadline > now);
         voteId = votes.length++;
         votes[voteId] = Vote({inSupport: _inSupport, voter: msg.sender});
         voted[msg.sender] = true;
@@ -267,7 +262,7 @@ contract ProofBase is Token {
 
     function finishVoting() public enabledState onlyOwner
         returns (bool _inSupport) {
-        if (now < votingDeadline || weiReqFund > this.balance) throw;
+        require(now >= votingDeadline && weiReqFund <= this.balance);
 
         uint yea = 0;
         uint nay = 0;
@@ -322,10 +317,10 @@ contract Proof is ProofBase {
         priceWei = _priceWei;
     }
 
-    function swypeCode() public noEther returns (uint16 _swype) {
+    function swypeCode() public returns (uint16 _swype) {
         bytes32 blockHash = block.blockhash(block.number - 1);
         bytes32 shaTemp = sha3(msg.sender, blockHash);
-        _swype = uint16(uint256(shaTemp)%50000);
+        _swype = uint16(uint256(shaTemp) % 65536);
         swypes[msg.sender] = Swype({swype: _swype, timestampSwype: now});
     }
     
@@ -333,13 +328,13 @@ contract Proof is ProofBase {
         uint tokensProportion = balanceOf[msg.sender] * 100 / totalSupply;
         if (tokensProportion < 10) {
             if (tokensProportion < 5) {
-                if (msg.value < priceWei) throw;
+                require(msg.value >= priceWei);
             } else {
-                if (msg.value < (priceWei / 2)) throw;
+                require(msg.value >= (priceWei / 2));
             }
         }
-        if (swypes[msg.sender].timestampSwype == 0) throw;
-        if (swypes[msg.sender].swype != _swype) throw;
+        require(swypes[msg.sender].timestampSwype != 0);
+        require(swypes[msg.sender].swype == _swype);
         videos[_hash] = Video({swype: _swype, timestampSwype:swypes[msg.sender].timestampSwype, 
             timestampHash: now, owner: msg.sender});
         delete swypes[msg.sender];
