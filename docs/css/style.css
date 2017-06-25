@@ -66,7 +66,7 @@ i.fa {
     display: table;
     background: #ffffff;
     text-align: left;
-    padding: 0 15px;
+    padding: 14px 15px 15px;
     margin-bottom: 0;
 }
 
@@ -139,7 +139,7 @@ hr {
     line-height: 40px;
     padding: 0px 70px;
     color: #ffffff;
-    background: #222222;
+    background: rgba(255, 0, 0, .7);
 }
 
 #social {
