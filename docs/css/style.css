@@ -1,9 +1,13 @@
 body {
     font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+    font-size: 16px;
+}
+
+h4 {
+    font-size: 22px;
 }
 
 section {
-    /*margin-bottom: 30px;*/
 }
 
 section:nth-child(2n) {
@@ -99,15 +103,12 @@ i.fa {
 }
 
 #how-it-work .about p {
-    font-size: 22px;
 }
 
 #how-it-work h1,
 .use-cases h1,
 .for-client h1 {
     padding-top: 30px;
-    /* text-align: center; */
-    /*padding-left: 15px;*/
 }
 
 hr {
@@ -219,11 +220,10 @@ hr {
 }
 
 .use-case {
-    /*background: #000;*/
+    padding: 0 30px;
 }
 
 .use-cases-title {
-    text-align: center;
 }
 
 .use-cases .text {}
