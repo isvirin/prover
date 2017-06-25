@@ -1,3 +1,8 @@
+html, body {
+    height: auto;
+    min-height: 100%;
+}
+
 body {
     font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
     font-size: 16px;
