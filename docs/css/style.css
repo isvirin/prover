@@ -243,6 +243,75 @@ hr {
 
 .use-cases p {}
 
+#team {
+    overflow: hidden;
+    background: #eee;
+}
+
+#team > div {
+    text-align: center;
+    width: calc(20% - 2px);
+    margin: 0 1px;
+    float: left;
+    cursor: pointer;
+}
+
+#team span {
+    line-height: 1em;
+}
+
+#team > div.team-next-line-first-div {
+    margin-left: calc(20% + 1px);
+    clear: left;
+}
+
+#team img {
+    width: 100%;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+#team > div:hover img {
+    background: #999;
+}
+
+#team > div:hover {
+    color: #999;
+}
+
+#team span.name {
+    font-size: 22px;
+}
+
+#team span.role {
+    font-size: 14px;
+}
+
+@media(max-width: 992px) {
+    #team > div {
+        line-height: 2vw;
+    }
+
+    #team span.name {
+        font-size: 2vw;
+    }
+
+    #team span.role {
+        font-size: 1.5vw;
+        font-weight: 100;
+    }
+}
+
+@media(max-width: 768px) {
+    #team > div {
+        line-height: 2.5vw;
+    }
+
+    #team span.role {
+        font-size: 2vw;
+    }
+}
+
 footer .footer-content,
 footer .copyright-content {
     background: #121212;
