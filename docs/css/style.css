@@ -126,11 +126,11 @@ hr {
     text-align: center;
 }
 
-.social {
+.whitepaper {
     padding: 20px 0;
 }
 
-.social .btn-whitepaper {
+.whitepaper .btn-whitepaper {
     display: inline-block;
     font-size: 16px;
     height: 40px;
@@ -139,6 +139,13 @@ hr {
     padding: 0px 70px;
     color: #ffffff;
     background: #222222;
+}
+
+.social .social-icons {
+    overflow: hidden;
+    background: #eeeeee;
+    padding-right: 15px;
+    margin-right: -15px;
 }
 
 .social .social-icons ul {
@@ -289,19 +296,6 @@ footer .footer-content h4 {
 }
 
 @media(max-width: 768px) {
-    .social {
-        text-align: center;
-    }
-
-    .social .social-icons ul {
-        margin-top: 10px;
-        display: inline-block;
-    }
-
-    .social .social-icons ul li:last-child {
-        margin: 0;
-    }
-
     .email {
         padding: 20px 0;
         text-align: center;
