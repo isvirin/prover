@@ -127,10 +127,11 @@ hr {
     text-align: center;
 }
 
-.whitepaper {
+#whitepaper {
+    padding-bottom: 8px;
 }
 
-.whitepaper .btn-whitepaper {
+#whitepaper .btn-whitepaper {
     display: inline-block;
     font-size: 16px;
     height: 40px;
@@ -141,30 +142,34 @@ hr {
     background: #222222;
 }
 
-.social .social-icons {
+#social {
+    padding-top: 8px;
+}
+
+#social .social-icons {
     overflow: hidden;
     background: #eeeeee;
     padding-right: 15px;
     margin-right: -15px;
 }
 
-.social .social-icons ul {
+#social .social-icons ul {
     margin: 0;
     padding: 0;
 }
 
-.social .social-icons ul li {
+#social .social-icons ul li {
     float: right;
     list-style: none;
     margin: 0 0 0 15px;
 }
 
-.social .social-icons ul li a {
+#social .social-icons ul li a {
     color: #222222;
     font-size: 28px;
 }
 
-.social .social-icons ul li a:hover {
+#social .social-icons ul li a:hover {
     color: #383838;
 }
 
