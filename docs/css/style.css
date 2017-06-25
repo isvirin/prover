@@ -25,6 +25,10 @@ section:nth-child(2n) {
     background: #eeeeee;
 }
 
+.sidebar-header a, #top-menu a, .sidebar-header a:hover, #top-menu a:hover {
+    text-decoration: none;
+}
+
 #wrapper.toggled .wrapper-background {
     opacity: 0.5;
     z-index: 1001;

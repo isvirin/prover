@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("#sidebar-wrapper").on("click","a[target!='_blank']", function (event) {
+    $("body").on("click","a[target!='_blank']", function(event) {
         event.preventDefault();
         var id  = $(this).attr('href');
         $("#wrapper").removeClass("toggled");
