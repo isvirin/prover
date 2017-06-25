@@ -147,6 +147,7 @@ hr {
 }
 
 #whitepaper .btn-whitepaper:hover {
+    text-decoration: none;
     background: rgba(255, 0, 0, .5);
 }
 
