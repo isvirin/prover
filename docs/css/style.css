@@ -135,7 +135,7 @@ hr {
     padding-bottom: 8px;
 }
 
-#whitepaper .btn-whitepaper {
+.btn-square {
     display: inline-block;
     font-size: 16px;
     height: 40px;
@@ -143,11 +143,20 @@ hr {
     line-height: 40px;
     padding: 0px 70px;
     color: #ffffff;
+    background: rgba(100, 100, 100, 1);
+}
+
+.btn-square:hover {
+    background: rgba(100, 100, 100, 0.8);
+    text-decoration: none;
+    color: #ffffff;
+}
+
+#whitepaper .btn-whitepaper {
     background: rgba(255, 0, 0, .7);
 }
 
 #whitepaper .btn-whitepaper:hover {
-    text-decoration: none;
     background: rgba(255, 0, 0, .5);
 }
 
@@ -320,6 +329,14 @@ hr {
     #team span.role {
         font-size: 2vw;
     }
+}
+
+#investing .btn-square {
+    margin-top: 15px;
+}
+
+#investing-more {
+    border-left-color: rgba(100,100,100,1);
 }
 
 footer .footer-content,
