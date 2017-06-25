@@ -250,12 +250,13 @@ hr {
 #team {
     overflow: hidden;
     background: #eee;
+    padding-left: 15px;
 }
 
 #team > div {
     text-align: center;
-    width: calc(20% - 2px);
-    margin: 0 1px;
+    width: calc(20% - 16px);
+    margin: 0 8px;
     float: left;
     cursor: pointer;
 }
