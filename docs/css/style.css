@@ -306,6 +306,7 @@ hr {
 
 #team span {
     display: block;
+    padding: 10px 0;
     line-height: 1em;
     background: rgba(0, 0, 0, .5);
     width: 100%;
