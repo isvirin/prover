@@ -272,38 +272,54 @@ hr {
 }
 
 #team > div {
+    overflow: hidden;
+    margin-left: -15px;
+}
+
+#team > div > div {
+    position: relative;
     text-align: center;
-    width: calc(20% - 16px);
-    margin: 0 8px;
+    width: 20%;
     float: left;
     cursor: pointer;
+    height: 14vw;
+    background-color: grey;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+#team > div > div:nth-child(-n+2) {
+    height: 28vw;
+}
+
+#team > div > div:hover {
+    background-color: white;
+}
+
+#team > div > div > div {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    color: white;
 }
 
 #team span {
+    display: block;
     line-height: 1em;
-}
-
-#team > div.team-next-line-first-div {
-    margin-left: calc(20% + 1px);
-    clear: left;
-}
-
-#team img {
+    background: rgba(0, 0, 0, .5);
     width: 100%;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-}
-
-#team > div:hover img {
-    background: #999;
-}
-
-#team > div:hover {
-    color: #999;
 }
 
 #team span.name {
-    font-size: 22px;
+    opacity: 0;
+    overflow: hidden;
+    font-size: 18px;
+    transition: all .3s;
+}
+
+#team > div > div:hover span.name {
+    opacity: 1;
 }
 
 #team span.role {
@@ -311,7 +327,7 @@ hr {
 }
 
 @media(max-width: 992px) {
-    #team > div {
+    #team > div > div {
         line-height: 2vw;
     }
 
@@ -326,13 +342,22 @@ hr {
 }
 
 @media(max-width: 768px) {
-    #team > div {
+    #team > div > div {
         line-height: 2.5vw;
     }
 
     #team span.role {
         font-size: 2vw;
     }
+
+    #team > div > div {
+        height: 18vw;
+    }
+
+    #team > div > div:nth-child(-n+2) {
+        height: 36vw;
+    }
+
 }
 
 #investing .btn-square {
