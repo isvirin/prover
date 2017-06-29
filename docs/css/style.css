@@ -267,6 +267,10 @@ hr {
     padding-left: 15px;
 }
 
+#team h4 {
+    clear: both;
+}
+
 #team > div {
     text-align: center;
     width: calc(20% - 16px);
