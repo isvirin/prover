@@ -74,8 +74,70 @@ i.fa {
     margin-bottom: 0;
 }
 
-#how-it-work img {
+#how-it-work {
+    padding: 56.25% 0 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+#how-it-work .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .5);
+}
+
+#how-it-work .about {
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    width: 96%;
+    transform: translateY(-50%);
+    text-align: right;
+    font-size: 2.2vw;
+}
+
+@media(max-width: 768px) {
+    #how-it-work .about {
+        font-size: 3vw;
+    }
+}
+
+#how-it-work h1 {
+    font-size: 2em;
+}
+
+#how-it-work video {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#how-it-work ul.icons-ul {
+    float: right;
+}
+
+#how-it-work ul.icons-ul a {
+    color: #333333;
+}
+
+#how-it-work ul.icons-ul a:hover {
+    color: #888888;
+}
+
+#how-it-work .btn-square {
+    background: #333333;
+    height: 45px;
+    line-height: 45px;
+    float: right;
+    margin-left: 16px;
+}
+
+#how-it-work .btn-square:hover {
+    background: #888888;
 }
 
 #prover p {
@@ -106,13 +168,6 @@ i.fa {
     margin: auto;
     z-index: 3;
     position: relative;
-}
-
-#how-it-work .about {
-    padding: 0;
-}
-
-#how-it-work .about p {
 }
 
 hr {
@@ -152,11 +207,11 @@ hr {
     color: #ffffff;
 }
 
-#whitepaper .btn-whitepaper {
+.btn-whitepaper {
     background: rgba(255, 0, 0, .7);
 }
 
-#whitepaper .btn-whitepaper:hover {
+.btn-whitepaper:hover {
     background: rgba(255, 0, 0, .5);
 }
 
@@ -164,30 +219,31 @@ hr {
     padding-top: 8px;
 }
 
-#social .social-icons {
+.social-icons {
     overflow: hidden;
-    background: #eeeeee;
     padding-right: 15px;
     margin-right: -15px;
 }
 
-#social .social-icons ul {
+ul.icons-ul {
+    display: block;
+    overflow: hidden;
     margin: 0;
     padding: 0;
 }
 
-#social .social-icons ul li {
+ul.icons-ul li {
     float: right;
     list-style: none;
     margin: 0 0 0 15px;
 }
 
-#social .social-icons ul li a {
+ul.icons-ul li a {
     color: #222222;
     font-size: 28px;
 }
 
-#social .social-icons ul li a:hover {
+ul.icons-ul li a:hover {
     color: #383838;
 }
 
