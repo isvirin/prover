@@ -217,6 +217,10 @@ html {
 }
 
 @media(max-width: 768px) {
+    .sidebar-nav li.active a {
+        background: none;
+    }
+    
     #top-menu {
         display: block;
     }
