@@ -129,15 +129,22 @@ i.fa {
 }
 
 #how-it-work .btn-square {
+    float: right;
     background: #333333;
     height: 45px;
     line-height: 45px;
-    float: right;
     margin-left: 16px;
 }
 
 #how-it-work .btn-square:hover {
     background: #888888;
+}
+
+@media(max-width: 768px) {
+    #how-it-work .btn-square {
+        height: 31px;
+        line-height: 31px;
+    }
 }
 
 #prover p {
@@ -241,6 +248,12 @@ ul.icons-ul li {
 ul.icons-ul li a {
     color: #222222;
     font-size: 28px;
+}
+
+@media(max-width: 768px) {
+    ul.icons-ul li a {
+        font-size: 22px;
+    }
 }
 
 ul.icons-ul li a:hover {
