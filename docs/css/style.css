@@ -385,10 +385,6 @@ ul.icons-ul li a:hover {
 }
 
 .use-case > div {
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
 }
 
 .use-case .use-cases-title {
@@ -429,6 +425,9 @@ ul.icons-ul li a:hover {
 .use-case:hover > div > .use-cases-text {
     max-height: 200px;
     opacity: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 #team {
