@@ -303,13 +303,18 @@ ul.icons-ul li a:hover {
 
 #use-cases {
     background: #eee;
+    padding-left: 15px;
+}
+
+.use-cases {
+    margin-left: -15px;
+    overflow: hidden;
 }
 
 .use-case {
     position: relative;
     width: 25%;
     padding: 25% 0 0 0;
-    outline: 1px solid #000000;
     float: left;
     overflow: hidden;
 }
@@ -351,6 +356,7 @@ ul.icons-ul li a:hover {
     overflow: hidden;
     transition: all .3s;
     text-align: center;
+    padding: 0 1vw;
 }
 
 .use-case:hover > div > .use-cases-text {
