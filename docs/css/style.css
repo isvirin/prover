@@ -80,6 +80,12 @@ i.fa {
     overflow: hidden;
 }
 
+@media(max-width: 400px) {
+    #how-it-work {
+        padding-top: 80%;
+    }
+}
+
 #how-it-work .overlay {
     position: absolute;
     top: 0;
@@ -96,17 +102,40 @@ i.fa {
     width: 96%;
     transform: translateY(-50%);
     text-align: right;
-    font-size: 2.2vw;
-}
-
-@media(max-width: 768px) {
-    #how-it-work .about {
-        font-size: 3vw;
-    }
 }
 
 #how-it-work h1 {
-    font-size: 2em;
+    font-size: 36px;
+    margin: 0;
+}
+
+#how-it-work p {
+    font-size: 22px;
+    max-width: 600px;
+    float: right;
+    clear: both;
+    margin: 20px 0 40px;
+}
+
+@media(max-width: 992px) {
+    #how-it-work h1 {
+        font-size: 32px;
+    }
+
+    #how-it-work p {
+        font-size: 18px;
+    }
+}
+
+@media(max-width: 768px) {
+    #how-it-work h1 {
+        font-size: 22px;
+    }
+
+    #how-it-work p {
+        font-size: 16px;
+        margin: 10px 0 20px;
+    }
 }
 
 #how-it-work video {
@@ -129,6 +158,7 @@ i.fa {
 }
 
 #how-it-work .btn-square {
+    clear: both;
     float: right;
     background: #333333;
     height: 45px;
