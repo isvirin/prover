@@ -538,6 +538,67 @@ ul.icons-ul li a:hover {
     border-left-color: rgba(100,100,100,1);
 }
 
+.investing-step-block {
+    position: relative;
+    border: 1px solid #CFEABE;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.investing-step-block-2 {
+    border-color: #e89c9f;
+}
+
+.investing-special-block {
+    margin-top: 0;
+    background: #e89c9f;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.investing-special-block > span:first-child {
+    font-size: 16px;
+}
+
+.investing-step-name {
+    font-size: 36px;
+    color: #CFEABE;
+}
+
+@media(min-width: 501px) {
+    .investing-step-name {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media(max-width: 500px) {
+    .investing-step-name {
+        text-align: center;
+    }
+}
+
+.investing-step-block-2 .investing-step-name {
+    color: #e89c9f;
+}
+
+.investing-step-block > span {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+@media(max-width: 992px) {
+    .investing-step-block > span.br {
+        clear: left;
+    }
+}
+
+span.investing-step-key {
+    font-size: 28px;
+}
+
 footer .footer-content,
 footer .copyright-content {
     background: #121212;
