@@ -305,30 +305,58 @@ ul.icons-ul li a:hover {
     background: #eee;
 }
 
-.use-cases > div.row {
-    margin-left: -30px;
-}
-
-.use-cases h1 {
-    margin-top: 0;
-}
-
 .use-case {
-    padding: 0 30px;
+    position: relative;
+    width: 25%;
+    padding: 25% 0 0 0;
+    outline: 1px solid #000000;
+    float: left;
+    overflow: hidden;
 }
 
-.use-cases-title {
+@media(max-width: 992px) {
+    .use-case {
+        width: 50%;
+        padding: 50% 0 0 0;
+    }
 }
 
-.use-cases .text {}
-
-.use-cases-title h4 {}
-
-.use-cases-title:before {
-    content: "";
+.use-case > div {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-.use-cases p {}
+.use-case .use-cases-title {
+    font-size: 22px;
+    text-align: center;
+}
+
+.use-case .use-cases-icon {
+    font-size: 50px;
+    text-align: center;
+    max-height: 100px;
+    opacity: 1;
+    transition: all .5s;
+}
+
+.use-case:hover .use-cases-icon {
+    max-height: 0;
+    opacity: 0;
+}
+
+.use-case .use-cases-text {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all .3s;
+    text-align: center;
+}
+
+.use-case:hover > div > .use-cases-text {
+    max-height: 200px;
+    opacity: 1;
+}
 
 #team {
     overflow: hidden;
