@@ -74,8 +74,129 @@ i.fa {
     margin-bottom: 0;
 }
 
-#how-it-work img {
+#how-it-work {
+    padding: 400px 0 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+@media(max-width: 1200px) {
+    #how-it-work {
+        padding-top: 56.25%;
+    }
+}
+
+#how-it-work video {
     width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+@media(max-width: 400px) {
+    #how-it-work {
+        padding-top: 80%;
+    }
+
+    #how-it-work video {
+        width: 140%;
+        left: -20%;
+    }
+}
+
+#how-it-work .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, .5);
+}
+
+#how-it-work .about {
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    width: 96%;
+    transform: translateY(-50%);
+    text-align: right;
+}
+
+#how-it-work h1 {
+    font-size: 36px;
+    margin: 0;
+}
+
+#how-it-work p {
+    font-size: 22px;
+    max-width: 600px;
+    float: right;
+    clear: both;
+    margin: 20px 0 40px;
+}
+
+@media(max-width: 992px) {
+    #how-it-work h1 {
+        font-size: 32px;
+    }
+
+    #how-it-work p {
+        font-size: 18px;
+    }
+}
+
+@media(max-width: 768px) {
+    #how-it-work h1 {
+        font-size: 22px;
+    }
+
+    #how-it-work p {
+        font-size: 16px;
+        margin: 10px 0 20px;
+    }
+}
+
+#how-it-work ul.icons-ul {
+    float: right;
+}
+
+#how-it-work ul.icons-ul a {
+    color: #333333;
+}
+
+#how-it-work ul.icons-ul a:hover {
+    color: #888888;
+}
+
+#how-it-work .btn-square {
+    clear: right;
+    float: right;
+    background: #333333;
+    height: 45px;
+    line-height: 45px;
+    margin-left: 16px;
+}
+
+#how-it-work button.btn-square {
+    clear: none;
+    padding: 0 10px;
+}
+
+#how-it-work button.btn-square:disabled, #how-it-work button.btn-square:disabled:hover {
+    background: #999999;
+    cursor: not-allowed;
+}
+
+#how-it-work .btn-square:hover {
+    background: #888888;
+}
+
+@media(max-width: 768px) {
+    #how-it-work .btn-square {
+        height: 31px;
+        line-height: 31px;
+    }
 }
 
 #prover p {
@@ -106,13 +227,6 @@ i.fa {
     margin: auto;
     z-index: 3;
     position: relative;
-}
-
-#how-it-work .about {
-    padding: 0;
-}
-
-#how-it-work .about p {
 }
 
 hr {
@@ -152,11 +266,11 @@ hr {
     color: #ffffff;
 }
 
-#whitepaper .btn-whitepaper {
+.btn-whitepaper {
     background: rgba(255, 0, 0, .7);
 }
 
-#whitepaper .btn-whitepaper:hover {
+.btn-whitepaper:hover {
     background: rgba(255, 0, 0, .5);
 }
 
@@ -164,30 +278,37 @@ hr {
     padding-top: 8px;
 }
 
-#social .social-icons {
+.social-icons {
     overflow: hidden;
-    background: #eeeeee;
     padding-right: 15px;
     margin-right: -15px;
 }
 
-#social .social-icons ul {
+ul.icons-ul {
+    display: block;
+    overflow: hidden;
     margin: 0;
     padding: 0;
 }
 
-#social .social-icons ul li {
+ul.icons-ul li {
     float: right;
     list-style: none;
     margin: 0 0 0 15px;
 }
 
-#social .social-icons ul li a {
+ul.icons-ul li a {
     color: #222222;
     font-size: 28px;
 }
 
-#social .social-icons ul li a:hover {
+@media(max-width: 768px) {
+    ul.icons-ul li a {
+        font-size: 22px;
+    }
+}
+
+ul.icons-ul li a:hover {
     color: #383838;
 }
 
@@ -234,32 +355,80 @@ hr {
 
 #use-cases {
     background: #eee;
+    padding-left: 15px;
 }
 
-.use-cases > div.row {
-    margin-left: -30px;
-}
-
-.use-cases h1 {
-    margin-top: 0;
+.use-cases {
+    margin-left: -15px;
+    overflow: hidden;
 }
 
 .use-case {
-    padding: 0 30px;
+    position: relative;
+    width: 25%;
+    height: 170px;
+    float: left;
+    overflow: hidden;
 }
 
-.use-cases-title {
+@media(max-width: 992px) {
+    .use-case {
+        width: 50%;
+        height: 140px;
+    }
 }
 
-.use-cases .text {}
-
-.use-cases-title h4 {}
-
-.use-cases-title:before {
-    content: "";
+@media(max-width: 550px) {
+    .use-case {
+        width: 100%;
+    }
 }
 
-.use-cases p {}
+.use-case > div {
+}
+
+.use-case .use-cases-title {
+    font-size: 22px;
+    text-align: center;
+    max-height: 100px;
+    opacity: 1;
+    transition: all .5s;
+}
+
+.use-case:hover .use-cases-title {
+    max-height: 0;
+    opacity: 0;
+}
+
+.use-case .use-cases-icon {
+    font-size: 50px;
+    text-align: center;
+    max-height: 100px;
+    opacity: 1;
+    transition: all .5s;
+}
+
+.use-case:hover .use-cases-icon {
+    max-height: 0;
+    opacity: 0;
+}
+
+.use-case .use-cases-text {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: all .3s;
+    text-align: center;
+    padding: 0 5px;
+}
+
+.use-case:hover > div > .use-cases-text {
+    max-height: 200px;
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
 
 #team {
     overflow: hidden;
@@ -267,39 +436,60 @@ hr {
     padding-left: 15px;
 }
 
+#team h4 {
+    clear: both;
+}
+
 #team > div {
+    overflow: hidden;
+    margin-left: -15px;
+}
+
+#team > div > div {
+    position: relative;
     text-align: center;
-    width: calc(20% - 16px);
-    margin: 0 8px;
+    width: 20%;
     float: left;
     cursor: pointer;
+    height: 14vw;
+    background-color: grey;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+#team > div > div:nth-child(-n+2) {
+    height: 28vw;
+}
+
+#team > div > div:hover {
+    background-color: white;
+}
+
+#team > div > div > div {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    color: white;
 }
 
 #team span {
+    display: block;
+    padding: 10px 0;
     line-height: 1em;
-}
-
-#team > div.team-next-line-first-div {
-    margin-left: calc(20% + 1px);
-    clear: left;
-}
-
-#team img {
+    background: rgba(0, 0, 0, .5);
     width: 100%;
-    border-radius: 50%;
-    border: 1px solid #ddd;
-}
-
-#team > div:hover img {
-    background: #999;
-}
-
-#team > div:hover {
-    color: #999;
 }
 
 #team span.name {
-    font-size: 22px;
+    opacity: 0;
+    overflow: hidden;
+    font-size: 18px;
+    transition: all .3s;
+}
+
+#team > div > div:hover span.name {
+    opacity: 1;
 }
 
 #team span.role {
@@ -307,7 +497,7 @@ hr {
 }
 
 @media(max-width: 992px) {
-    #team > div {
+    #team > div > div {
         line-height: 2vw;
     }
 
@@ -322,13 +512,22 @@ hr {
 }
 
 @media(max-width: 768px) {
-    #team > div {
+    #team > div > div {
         line-height: 2.5vw;
     }
 
     #team span.role {
         font-size: 2vw;
     }
+
+    #team > div > div {
+        height: 18vw;
+    }
+
+    #team > div > div:nth-child(-n+2) {
+        height: 36vw;
+    }
+
 }
 
 #investing .btn-square {
@@ -337,6 +536,67 @@ hr {
 
 #investing-more {
     border-left-color: rgba(100,100,100,1);
+}
+
+.investing-step-block {
+    position: relative;
+    border: 1px solid #CFEABE;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.investing-step-block-2 {
+    border-color: #e89c9f;
+}
+
+.investing-special-block {
+    margin-top: 0;
+    background: #e89c9f;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.investing-special-block > span:first-child {
+    font-size: 16px;
+}
+
+.investing-step-name {
+    font-size: 36px;
+    color: #CFEABE;
+}
+
+@media(min-width: 501px) {
+    .investing-step-name {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media(max-width: 500px) {
+    .investing-step-name {
+        text-align: center;
+    }
+}
+
+.investing-step-block-2 .investing-step-name {
+    color: #e89c9f;
+}
+
+.investing-step-block > span {
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+@media(max-width: 992px) {
+    .investing-step-block > span.br {
+        clear: left;
+    }
+}
+
+span.investing-step-key {
+    font-size: 28px;
 }
 
 footer .footer-content,

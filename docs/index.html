@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <title>Prover</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -11,8 +11,8 @@
 
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/font-awesome.min.css" rel="stylesheet">
-    <link href="./css/simple-sidebar.css?cache_v3" rel="stylesheet">
-    <link href="./css/style.css?cache_v3" rel="stylesheet">
+    <link href="./css/simple-sidebar.css?cache_v5" rel="stylesheet">
+    <link href="./css/style.css?cache_v5" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -81,76 +81,66 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="about-prover-block col-md-12">
-                            <!--<h1>Prover</h1>-->
                             <p>Технология, позволяющая подтверждать подлинность создания видеоматериалов</p>
                         </div>
                     </div>
                 </div>
             </section>
             <section id="how-it-work">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1>Как это работает</h1>
-                            <div class="row">
-                                <div class="col-md-6 vcenter">
-                                    <div class="about">
-                                        <p>При включении видеокамеры смартфон пользователя обращается через сеть
-                                            Интернет к блокчейну для получения swype кода - проверочного задания, которое
-                                            должен выполнить пользователь при осуществлении записи видеоданных.</p>
-                                    </div>
-                                </div><!-- если между этими div'ами будет пробел, то позиционирование не будет работать
-                             --><div class="col-md-6 vcenter">
-                                    <div class="overlay">
-                                        <img src="./images/prover-example-image.png">
-                                        <!-- пока видео нет
-                                        <video id="video" width="100%" height="auto" loop="loop" autoplay="autoplay" preload="auto" muted="muted">
-                                            <source src="./video/it_technology.mp4"></source>
-                                        </video>
-                                        -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section id="whitepaper">
-                <div class="container-fluid">
-                    <a target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf" class="btn-whitepaper btn-square">Whitepaper</a>
-                </div>
-            </section>
-            <section id="social" style="background: none;">
-                <div class="container-fluid">
-                    <div class="social-icons">
-                        <ul>
-                            <li class="social-email">
-                                <a href="mailto:info@prover.io" target="_blank">
-                                    <i class="fa fa-envelope" title="E-Mail Prover"></i>
-                                </a>
-                            </li>
-                            <li class="social-github">
-                                <a href="https://github.com/isvirin/prover" target="_blank" title="Join Prover on Github">
-                                    <i class="fa fa-github"></i>
-                                </a>
-                            </li>
-                            <li class="social-slack">
-                                <a href="https://prover-team.slack.com/" target="_blank" title="Join Prover on Slack Channel">
-                                    <i class="fa fa-slack"></i>
-                                </a>
-                            </li>
-                            <li class="social-telegram">
-                                <a href="https://telegram.me/prover_project" target="_blank" title="Join Prover on Telegram Channel">
-                                    <i class="fa fa-telegram"></i>
-                                </a>
-                            </li>
-                            <li class="social-facebook">
-                                <a href="https://www.facebook.com/groups/prover.io/" target="_blank" title="Connect with Prover on Facebook">
-                                    <i class="fa fa-facebook"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                <video autoplay loop muted id="how-it-work-video" webkit-playsinline playsinline poster="./video/how-it-work.png">
+                    <source src="./video/how-it-work.vp8.webm?cache_v5" type="video/webm" />
+                    <source src="./video/how-it-work.h264.mp4?cache_v5" type="video/mp4" />
+                    <source src="./video/how-it-work.theo.ogv?cache_v5" type="video/ogg" />
+                </video>
+                <div class="overlay"></div>
+                <div class="about">
+                    <h1>Как это работает</h1>
+                    <p>
+                        При включении видеокамеры смартфон пользователя обращается через сеть
+                        Интернет к блокчейну для получения swype кода - проверочного задания, которое
+                        должен выполнить пользователь при осуществлении записи видеоданных
+                    </p>
+                    <a target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf" class="btn-square">Whitepaper</a>
+                    <button class="btn-square" id="how-it-work-playBtn" style="display: none;" onclick="document.getElementById('how-it-work-video').play();">Play demo video</button>
+                    <script type="text/javascript">
+                        var videoBlock = document.getElementById('how-it-work-video');
+                        var playBtn = document.getElementById('how-it-work-playBtn');
+                        var showPlayBtnTimeout = setTimeout(function () {
+                            playBtn.style.display = 'block';
+                        }, 1000);
+                        videoBlock.onplaying=function() {
+                            clearTimeout(showPlayBtnTimeout);
+                            playBtn.remove();
+                            videoBlock.onplaying=null;
+                        }
+                    </script>
+                    <ul class="icons-ul">
+                        <li class="social-email">
+                            <a href="mailto:info@prover.io" target="_blank">
+                                <i class="fa fa-envelope" title="E-Mail Prover"></i>
+                            </a>
+                        </li>
+                        <li class="social-github">
+                            <a href="https://github.com/isvirin/prover" target="_blank" title="Join Prover on Github">
+                                <i class="fa fa-github"></i>
+                            </a>
+                        </li>
+                        <li class="social-slack">
+                            <a href="https://prover-team.slack.com/" target="_blank" title="Join Prover on Slack Channel">
+                                <i class="fa fa-slack"></i>
+                            </a>
+                        </li>
+                        <li class="social-telegram">
+                            <a href="https://telegram.me/prover_project" target="_blank" title="Join Prover on Telegram Channel">
+                                <i class="fa fa-telegram"></i>
+                            </a>
+                        </li>
+                        <li class="social-facebook">
+                            <a href="https://www.facebook.com/groups/prover.io/" target="_blank" title="Connect with Prover on Facebook">
+                                <i class="fa fa-facebook"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </section>
             <!-- email subscribing not ready yet #36571
@@ -170,91 +160,110 @@
             </section>
             -->
             <section id="use-cases">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="use-cases">
-                                <h1>Области применения</h1>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case hidden-sm hidden-xs">
-                                        <div class="use-cases-title">
-                                            <h4>&nbsp;</h4>
-                                        </div>
-                                        <div class="use-cases-text" style="text-align: center; font-size: 45px;">
-                                            <p><i class="fa fa-cubes"></i></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Автострахование (КАСКО)</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>В случае наступления страхового случая, в качестве доказательства клиент предоставляет видеозапись, заверенную системой PROVER.</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Подтверждение авторства видео</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>Пользователь, ведя запись видео, может еще и зарегистрировать при этом свое авторство и иметь возможность его подтвердить.</p>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Удаленный контроль пациентов</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>При помощи технологии PROVER клиники и страховые компании смогут подтвердить, что больной получил должную терапию в полном объеме. Пациент же сможет доказать, что он надлежащим образом выполнил все предписания врачей.</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Онлайн игры и квесты</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>В мобильное приложение игры встраивается технология PROVER, которая позволяет
-регистрировать наступление игровых событий.</p>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Отчеты о проделанной работе</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>С технологией PROVER будет легко осуществима удаленная проверка производства работ (строительство, монтаж, уборка, патрулирование, курьерская доставка, выкладка товара в магазине, размещение наружней рекламы и т.п.).</p>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Фиксация нарушений ПДД и общественного порядка</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>При помощи технологии PROVER можно зафиксировать время, дату и место видео свидетельства для предоставления правоохранительным органам и обеспечить объективное доказательство подлинности.</p>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Образовательные проекты</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>Для образовательных проектов технология PROVER может выполнить функцию по удаленной идентификации пользователей и верификации их действий внутр образовательной платформы.</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Видеосообщения юридического характера</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            <p>Технология PROVER дает возможность защитить и подтвердить видеосообщения
-юридического характера без очного визита к должностным лицам.</p>
-                                        </div>
-                                    </div>
+                <h1>Области применения</h1>
+                <div class="use-cases">
+                    <div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-car"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Автострахование (КАСКО)
+                                </div>
+                                <div class="use-cases-text">
+                                    В случае наступления страхового случая, в качестве доказательства клиент предоставляет видеозапись, заверенную системой PROVER
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-file-video-o"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Подтверждение авторства видео
+                                </div>
+                                <div class="use-cases-text">
+                                    Пользователь, ведя запись видео, может зарегистрировать свое авторство
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-user-md"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Удаленный контроль пациентов
+                                </div>
+                                <div class="use-cases-text">
+                                    Клиники и страховые компании смогут подтвердить, что больной получил должную терапию. Пациент же сможет доказать выполнение предписаний врачей
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-gamepad"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Онлайн игры и квесты
+                                </div>
+                                <div class="use-cases-text">
+                                    Регистрация наступления игровых событий
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-files-o"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Отчеты о проделанной работе
+                                </div>
+                                <div class="use-cases-text">
+                                    Удаленный контроль производства работ
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-legal"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Фиксация нарушений ПДД и общественного порядка
+                                </div>
+                                <div class="use-cases-text">
+                                    Фиксация времени, даты и места видео свидетельства для предоставления правоохранительным органам
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Образовательные проекты
+                                </div>
+                                <div class="use-cases-text">
+                                    Удаленная идентификация пользователей и верификация их действий внутри образовательной платформы
+                                </div>
+                            </div>
+                        </div>
+                        <div class="use-case" onclick="">
+                            <div>
+                                <div class="use-cases-icon">
+                                    <i class="fa fa-briefcase"></i>
+                                </div>
+                                <div class="use-cases-title">
+                                    Видеосообщения юридического характера
+                                </div>
+                                <div class="use-cases-text">
+                                    Защита и подтверждение видеосообщения юридического характера без очного визита к должностным лицам
                                 </div>
                             </div>
                         </div>
@@ -267,192 +276,83 @@
                         <div class="col-md-12">
                             <div class="for-client">
                                 <h1>Инвестирование</h1>
-                                <p>Чтобы финансировать разработку и функционирование системы PROVER, будет
-                                    проводиться фаза сбора средств, известная как crowdsale. Проведение crowdsale
-                                    будет осуществляться в рамках экосистемы Ethereum. Во время crowdsale люди могут
-                                    приобретать токены PROOF по фиксированной ставке, которая предоставляет
-                                    правообладателю право пользоваться услугами сервиса бесплатно или со скидками, а
-                                    также претендовать на часть накопленных смартконтрактом PROOF средств,
-                                    пропорционально количеству токенов в общей эмиссии, путем их сжигания.</p>
-                                <button class="btn-square" data-toggle="collapse" data-target="#investing-more">
-                                    Руководство покупателя
-                                </button>
-                                <blockquote id="investing-more" class="collapse">
-                                    <h4>Pre-ICO</h4>
-                                    <p>Смартконтракт PROOF осуществляет эмиссию токенов PROOF, количество которых в течение Pre-ICO не ограничено. Токены продаются по фиксированной цене 2,000 PROOF = 1 ETH, т.е. в два раза дешевле, чем в ходе осуществления crowdsale. При единовременном инвестировании 100 ETH и более в ходе Pre-ICO действует специальная цена 2,500 PROOF = 1 ETH. Покупка осуществляется путем перечисления эфира на адрес смартконтракта, а владельцем приобретенных токенов становится отправитель транзакции.  Будьте внимательны и помните, что не следует осуществлять оплату из online кошелька или со счета на криптовалютной бирже - это может привести к потере контроля над приобретенными Вами токенами. Продолжительность проведения Pre-ICO составляет 7 дней с момента запуска. Минимально необходимый для успешного прохождения Pre-ICO объем средств составляет 400 ETH. Если необходимые минимальные средства не собраны в течение Pre-ICO, то все собранные средства возвращаются инвесторам, за вычетом комиссий за транзакции и стоимости газа.</p>
-                                    <p>Все собранные на Pre-ICO средства перечисляются команде и должны быть потрачены на проведение следующих работ:</p>
-                                    <ul>
-                                        <li>разработка прототипа мобильного приложения под Android, обеспечивающего взаимодействие со смартконтрактом PROOF;</li>
-                                        <li>маркетинг и продвижение проекта, подготовка к проведению crowdsale;</li>
-                                        <li>перевод white paper на китайский, немецкий, французский, итальянский и украинский языки.</li>
-                                    </ul>
-                                    <h4>Crowdsale</h4>
-                                    <p>Смартконтракт PROOF осуществляет эмиссию токенов PROOF, количество которых в течение crowdsale не ограничено. Токены продаются по фиксированной цене 1,000 PROOF = 1 ETH. Покупка осуществляется путем перечисления эфира на адрес смартконтракта, а владельцем приобретенных токенов становится отправитель транзакции.  Будьте внимательны и помните, что не следует осуществлять оплату из online кошелька или со счета на криптовалютной бирже - это может привести к потере контроля над приобретенными Вами токенами.  После окончания crowdsale осуществляется единовременная дополнительная эмиссия, в ходе которой для команды проекта выпускается 20% общей эмиссии токенов, 18% из которых остаются за командой проекта, а 2% предназначены для советников проекта. Продолжительность проведения crowdsale составляет 30 дней с момента запуска.</p>
-                                    <p>Для ранних инвесторов предусмотрена система скидок:</p>
-                                    <ul>
-                                        <li>1,500 PROOF = 1 ETH при покупке в первый день crowdsale;</li>
-                                        <li>1,250 PROOF = 1 ETH при покупке в течение первой недели проведения crowdsale.</li>
-                                    </ul>
-                                    <p>При единовременном инвестировании 100 ETH и более в течение всего срока crowdsale действует специальная цена 1,750 PROOF = 1 ETH.</p>
-                                    <p>Средства, полученные в ходе crowdsale, предназначены для создания инфраструктуры PROVER и обеспечения ее функционирования. Выпуск токенов после этого не предусмотрен. Минимально необходимый для запуска проекта PROVER объем средств составляет 1,500 ETH. Если необходимые минимальные средства для запуска проекта PROVER не собраны в течение crowdsale, то все собранные средства возвращаются инвесторам, за вычетом комиссий за транзакции и стоимости газа.</p>
-                                    <h4>Расходование инвестиционного капитала</h4>
-                                    <p>Сразу после успешного crowdsale средства в объеме 500 ETH перечисляются смартконтрактом PROOF команде для выполнения первого этапа проекта. Остальные средства остаются под управлением смартконтракта PROOF.</p>
-                                    <p>По завершении каждого этапа проекта команда размещает результаты работы в открытом доступе на сайте проекта  http://prover.io и на https://github.com/isvirin/prover, а также публикует план работ на следующий этап и требуемое финансирование. Все это выносится на голосование, которое длится 7 дней с момента его инициирования командой разработчиков.</p>
-                                    <p>Владельцы токенов PROOF осуществляют голосование, при этом сила голоса конкретного владельца пропорциональна количеству имеющихся у него токенов PROOF в общей эмиссии. Если положительно голосует простое большинство от общего числа проголосовавших токенов, работа по выполненному этапу считается принятой, а план работ на следующий заявленный этап утвержденным. При этом запрошенная сумма перечисляется с баланса смарт-контракта PROOF команде проекта PROVER.</p>
-                                    <h4>Сжигание токенов</h4>
-                                    <p>Предусматривается возможность сжигания токенов их владельцем. При сжигании токены изымаются из обращения (общее количество токенов уменьшается на количество сожженных токенов), а их владелец получает на свой адрес средства с баланса смартконтракта PROOF, пропорционально количеству сожженных токенов в общей эмиссии токенов PROOF. Это позволит обеспечить минимальную обеспеченность токена PROOF на уровне общего размера баланса смартконтракта PROOF, деленного на количество имеющихся в настоящий момент токенов. Сжигание токенов разрешается не ранее, чем через 1 год после завершения crowdsale.</p>
-                                    <h4>Использование токенов</h4>
-                                    <p>Токены PROOF предоставляют право льготного пользования услугами сервиса PROVER. Для владельцев более 0,1% токенов пользование услугами бесплатно. Для владельцев от 0,05 до 0,1% токенов предоставляется скидка на пользование услугой в размере 50 %.</p>
-                                </blockquote>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!--<section id="team">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="use-cases">
-                                <h1>Команда</h1>
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case hidden-sm hidden-xs">
-                                        <div class="use-cases-title">
-                                            <h4>&nbsp;</h4>
-                                        </div>
-                                        <div class="use-cases-text" style="text-align: center; font-size: 45px;">
-                                            <p><i class="fa fa-users"></i></p>
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Набильская Надежда, CEO</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            В сфере информационной безопасности и технических средств охраны работает с 2010 года.<br>
-                                            Выпускница Президентской программы подготовки управленческих кадров.<br>
-                                            Руководство проектами: разработка программного обеспечения - 3, научно-исследовательские и опытно-конструкторские работы - 5, прикладные научные исследования - 2.
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Ростовиков Сергей, CTO</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Опыт разработки программного обеспечения в сфере информационной безопасности и технических средств охраны 14 лет.<br>
-                                            Участвовал более чем в 10 опытно-конструкторских работах в качестве ключевого участника. Имеет опыт разработки сложных технических систем в области средств защиты информации, криптографии, отказоустойчивых серверных систем, систем на базе блокчейн сетей.
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Воронин Вячеслав, ученый в области видеоанализа</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Доцент Донского государственного технического университета.<br>
-                                            Кандидат технических наук.<br>
-                                            Соавтор монографии «Метод и алгоритмы выделения полезного сигнала на фоне шумов при обработке дискретных сигналов».
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Супрун Виталий, разработчик мобильных приложений</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Опыт разработки мобильного программного обеспечения более 10 лет.<br>
-                                            Разработчик мобильного приложения ECG Dongle.
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Юферова Елена, бизнес-консультант</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Опыт работы в консалтинговых компаниях в качестве руководителя направления кадрового консалтинга и компаниях реального сектора в качестве эксперта в области управления организацией и человеческими ресурсами  более 25 лет.<br>
-                                            Соавтор справочника по управлению персоналом. Соавтор практического пособия для менеджеров «Лицом к лицу с будущим сотрудником» М, 2001 г.
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-lg visible-md"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Евгений Шумилов</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Евангелист блокчейн технологий.<br>
-                                            Основатель и генеральный директор Emercoin.
-                                        </div>
-                                    </div>
-                                    <div style="clear: both; height: 20px;" class="visible-sm"></div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Олег Ховайко</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Эксперт по криптографии и финансам.<br>
-                                            Технический директор Emercoin.
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-6 col-md-4 use-case">
-                                        <div class="use-cases-title">
-                                            <h4>Свирин Илья</h4>
-                                        </div>
-                                        <div class="use-cases-text">
-                                            Кандидат технических наук.<br>
-                                            Технологический предприниматель.<br>
-                                            Основатель группы компаний «Нордавинд».<br>
-                                            Разработчик технологий в области цифровых систем видеонаблюдения, персональной техники и сервисов для здоровья (в т.ч. всемирно известные  Кардиофлешка «ECG Dongle» и сервис «КардиоОблако»).<br>
-                                            Автор многочисленных научных публикаций по вопросам информационной безопасности и теоретическим основам программирования.
-                                        </div>
-                                    </div>
+                                <p>Инвестирование осуществляется путем покупки токенов PROOF в ходе проведения Pre-ICO и последующего ICO.<br>Токен PROOF имеет фиксированную стоимость.</p>
+                                <div class="investing-step-block">
+                                    <div class="investing-step-name">Pre-ICO</div>
+                                    <span class="investing-step-key">2,000 PROOF = 1 ETH</span><br>
+                                    <span class="investing-step-key">2,500 PROOF = 1 ETH</span>
+                                    <span class="visible-xs-inline visible-sm-inline"><br></span>
+                                    <span>(при единовременном инвестировании 100 ETH и более)</span>
+                                </div>
+                                <div class="investing-step-block investing-step-block-2">
+                                    <div class="investing-step-name">Crowdsale</div>
+                                    <span class="investing-step-key">1,000 PROOF = 1 ETH</span><br>
+                                    <span class="investing-step-key">1,750 PROOF = 1 ETH</span>
+                                    <span class="visible-xs-inline visible-sm-inline"><br></span>
+                                    <span>(при единовременном инвестировании 100 ETH и более)</span>
+                                </div>
+                                <div class="investing-special-block">
+                                    <span>Для ранних инвесторов предусмотрена система скидок:</span><br>
+                                    <span>1,500 PROOF = 1 ETH при покупке в первый день crowdsale;</span><br>
+                                    <span>1,250 PROOF = 1 ETH при покупке в течение первой недели проведения crowdsale.</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>-->
+            </section>
             <section id="team">
                 <h1>Команда</h1>
                 <div>
-                    <img src="./images/team/nabilskaya.png?v2"><br>
-                    <span class="name">Набильская Надежда</span><br>
-                    <span class="role">CEO</span>
+                    <div style="background-image: url(./images/team/nabilskaya.png?cache_v5); background-color: #ffaaaa;">
+                        <div>
+                            <span class="name">Набильская Надежда</span>
+                            <span class="role">CEO</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/rytikov.png?cache_v5); background-color: #b5dcfd;">
+                        <div>
+                            <span class="name">Рытиков Алексей</span>
+                            <span class="role">CTO</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/voronin.png?cache_v5); background-color: #f5f6fc;">
+                        <div>
+                            <span class="name">Воронин Вячеслав</span>
+                            <span class="role">Видеоанализ</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/suprun.png?cache_v5); background-color: #333333;">
+                        <div>
+                            <span class="name">Супрун Виталий</span>
+                            <span class="role">Приложения</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/yuferova.png?cache_v5); background-color: #dddddd;">
+                        <div>
+                            <span class="name">Юферова Елена</span>
+                            <span class="role">Бизнес-консультант</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/shumilov.png?cache_v5); background-color: #91839c;">
+                        <div>
+                            <span class="name">Шумилов Евгений</span>
+                            <span class="role">Советник</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/hovayko.png?cache_v5); background-color: #dddddd;">
+                        <div>
+                            <span class="name">Ховайко Олег</span>
+                            <span class="role">Советник</span>
+                        </div>
+                    </div>
+                    <div style="background-image: url(./images/team/svirin.png?cache_v5); background-color: #ffffff;">
+                        <div>
+                            <span class="name">Свирин Илья</span>
+                            <span class="role">Советник</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <img src="./images/team/rytikov.png?v2"><br>
-                    <span class="name">Рытиков Алексей</span><br>
-                    <span class="role">CTO</span>
-                </div>
-                <div>
-                    <img src="./images/team/voronin.png?v2"><br>
-                    <span class="name">Воронин Вячеслав</span><br>
-                    <span class="role">ученый в области видеоанализа</span>
-                </div>
-                <div>
-                    <img src="./images/team/suprun.png?v2"><br>
-                    <span class="name">Супрун Виталий</span><br>
-                    <span class="role">разработчик мобильных приложений</span>
-                </div>
-                <div>
-                    <img src="./images/team/yuferova.png?v2"><br>
-                    <span class="name">Юферова Елена</span><br>
-                    <span class="role">бизнес-консультант</span>
-                </div>
-                <div style="clear: both; height: 30px;"></div>
-                <div class="team-next-line-first-div">
-                    <img src="./images/team/shumilov.png?v2"><br>
-                    <span class="name">Шумилов Евгений</span>
-                </div>
-                <div>
-                    <img src="./images/team/hovayko.png?v2"><br>
-                    <span class="name">Ховайко Олег</span>
-                </div>
-                <div>
-                    <img src="./images/team/svirin.png?v2"><br>
-                    <span class="name">Свирин Илья</span>
-                </div>
-                <div style="clear: both; height: 0px;"></div>
             </section>
             <footer id="contacts">
                 <div class="footer-content">
@@ -462,24 +362,16 @@
                                 <div class="contacts">
                                     <h4 class="contacts-title">Контакты</h4>
                                     <ul class="contacts-list">
-                                        <!--<li>
-                                            <i class="fa fa-facebook"></i>
-                                            <strong>Facebook:</strong>
-                                            <a href="#" target="_blank" title="Connect with Prover on Facebook">Facebook.com</a>
-                                        </li>-->
                                         <li>
                                             <i class="fa fa-slack"></i>
-                                            <!-- <strong>Slack:</strong> -->
                                             <a href="https://prover-team.slack.com/" target="_blank" title="Slack channel">Slack channel</a>
                                         </li>
                                         <li>
                                             <i class="fa fa-telegram"></i>
-                                            <!-- <strong>Telegram:</strong> -->
                                             <a href="https://telegram.me/prover_project" target="_blank" title="Telegram channel">Telegram channel</a>
                                         </li>
                                         <li>
                                             <i class="fa fa-envelope"></i>
-                                            <!-- <strong>Email:</strong> -->
                                             <a href="mailto:info@prover.io" title="E-Mail Prover">info@prover.io</a>
                                         </li>
                                     </ul>
@@ -546,5 +438,5 @@
     </div>
     <script src="./js/jquery.js"></script>
     <script src="./js/bootstrap.min.js"></script>
-    <script src="./js/script.js?cache_v3"></script>
+    <script src="./js/script.js?cache_v5"></script>
 </body></html>

@@ -165,7 +165,8 @@ html {
     color: #ffffff;
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li a:hover,
+.sidebar-nav li.active a {
     background: rgba(255, 255, 255, 0.1);
 }
 
@@ -182,6 +183,9 @@ html {
 }
 
 .sidebar-nav li a {
+    -webkit-transition: .5s all ease-out;
+    -moz-transition: .5s all ease-out;
+    transition: .5s all ease-out;
     border-bottom: 1px solid #383838;
 }
 
@@ -213,6 +217,10 @@ html {
 }
 
 @media(max-width: 768px) {
+    .sidebar-nav li.active a {
+        background: none;
+    }
+    
     #top-menu {
         display: block;
     }
