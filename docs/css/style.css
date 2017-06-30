@@ -365,6 +365,14 @@ ul.icons-ul li a:hover {
 .use-case .use-cases-title {
     font-size: 22px;
     text-align: center;
+    max-height: 100px;
+    opacity: 1;
+    transition: all .5s;
+}
+
+.use-case:hover .use-cases-title {
+    max-height: 0;
+    opacity: 0;
 }
 
 .use-case .use-cases-icon {
