@@ -88,10 +88,9 @@
             </section>
             <section id="how-it-work">
                 <video autoplay loop muted id="how-it-work-video" webkit-playsinline playsinline poster="./video/how-it-work.png">
-                    <source src="./video/how-it-work.h264.mp4?cache_v5" type='video/mp4; codecs="h264"' />
-                    <source src="./video/how-it-work.mp4v.mp4?cache_v5" type='video/mp4; codecs="mpeg4"' />
-                    <source src="./video/how-it-work.vp8.webm?cache_v5" type='video/webm; codecs="vp8"' />
-                    <source src="./video/how-it-work.theo.ogv?cache_v5" type='video/ogg; codecs="theora"' />
+                    <source src="./video/how-it-work.vp8.webm?cache_v5" type="video/webm" />
+                    <source src="./video/how-it-work.h264.mp4?cache_v5" type="video/mp4" />
+                    <source src="./video/how-it-work.theo.ogv?cache_v5" type="video/ogg" />
                 </video>
                 <div class="overlay"></div>
                 <div class="about">
@@ -102,6 +101,19 @@
                         должен выполнить пользователь при осуществлении записи видеоданных
                     </p>
                     <a target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf" class="btn-square">Whitepaper</a>
+                    <button class="btn-square" id="how-it-work-playBtn" style="display: none;" onclick="document.getElementById('how-it-work-video').play();">Play demo video</button>
+                    <script type="text/javascript">
+                        var videoBlock = document.getElementById('how-it-work-video');
+                        var playBtn = document.getElementById('how-it-work-playBtn');
+                        var showPlayBtnTimeout = setTimeout(function () {
+                            playBtn.style.display = 'block';
+                        }, 1000);
+                        videoBlock.onplaying=function() {
+                            clearTimeout(showPlayBtnTimeout);
+                            playBtn.remove();
+                            videoBlock.onplaying=null;
+                        }
+                    </script>
                     <ul class="icons-ul">
                         <li class="social-email">
                             <a href="mailto:info@prover.io" target="_blank">

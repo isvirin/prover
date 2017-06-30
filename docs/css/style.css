@@ -170,12 +170,22 @@ i.fa {
 }
 
 #how-it-work .btn-square {
-    clear: both;
+    clear: right;
     float: right;
     background: #333333;
     height: 45px;
     line-height: 45px;
     margin-left: 16px;
+}
+
+#how-it-work button.btn-square {
+    clear: none;
+    padding: 0 10px;
+}
+
+#how-it-work button.btn-square:disabled, #how-it-work button.btn-square:disabled:hover {
+    background: #999999;
+    cursor: not-allowed;
 }
 
 #how-it-work .btn-square:hover {
