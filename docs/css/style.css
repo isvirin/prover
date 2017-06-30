@@ -75,9 +75,15 @@ i.fa {
 }
 
 #how-it-work {
-    padding: 56.25% 0 0 0;
+    padding: 400px 0 0 0;
     position: relative;
     overflow: hidden;
+}
+
+@media(max-width: 1200px) {
+    #how-it-work {
+        padding-top: 56.25%;
+    }
 }
 
 @media(max-width: 400px) {
@@ -141,8 +147,9 @@ i.fa {
 #how-it-work video {
     width: 100%;
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
+    transform: translateY(-50%);
 }
 
 #how-it-work ul.icons-ul {
