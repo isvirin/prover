@@ -86,9 +86,22 @@ i.fa {
     }
 }
 
+#how-it-work video {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
 @media(max-width: 400px) {
     #how-it-work {
         padding-top: 80%;
+    }
+
+    #how-it-work video {
+        width: 140%;
+        left: -20%;
     }
 }
 
@@ -142,14 +155,6 @@ i.fa {
         font-size: 16px;
         margin: 10px 0 20px;
     }
-}
-
-#how-it-work video {
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
 }
 
 #how-it-work ul.icons-ul {
