@@ -29,6 +29,15 @@ section:nth-child(2n) {
     text-decoration: none;
 }
 
+.sidebar-language {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.sidebar-language a {
+    color: white;
+}
+
 #wrapper.toggled .wrapper-background {
     opacity: 0.5;
     z-index: 1001;
