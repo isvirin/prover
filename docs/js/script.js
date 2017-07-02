@@ -60,4 +60,10 @@ $(document).ready(function(){
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });
+
+    $('.sidebar-language > a').click(function (e) {
+        e.preventDefault();
+        localStorage['lang'] = e.target.dataset.lang;
+        location.reload();
+    });
 });

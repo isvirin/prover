@@ -14,6 +14,8 @@
     <link href="./css/simple-sidebar.css?cache_v5" rel="stylesheet">
     <link href="./css/style.css?cache_v5" rel="stylesheet">
 
+    <script src="./js/translation.js?cache_v5"></script>
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -39,35 +41,32 @@
                 <div class="sidebar-header">
                     <a href="#prover">Prover</a>
                 </div>
+                <div class="sidebar-language">
+                    <a href="/" data-lang="en">en</a>
+                    <a href="/" data-lang="ru">ru</a>
+                </div>
                 <ul class="sidebar-nav">
                     <li>
-                        <a href="#how-it-work">Как это работает</a>
+                        <a href="#how-it-work"><script>tr('How it work')</script></a>
                     </li>
                     <li>
-                        <a href="#use-cases">Области применения</a>
+                        <a href="#use-cases"><script>tr('Use cases')</script></a>
                     </li>
                     <li>
-                        <a href="#investing">Инвестирование</a>
-                    </li>
-                    <!--
-                    <li>
-                        <a href="#">Blog</a>
+                        <a href="#investing"><script>tr('Investing')</script></a>
                     </li>
                     <li>
-                        <a href="#">ICO details</a>
-                    </li>-->
-                    <li>
-                        <a href="#team">Команда</a>
+                        <a href="#team"><script>tr('Team')</script></a>
                     </li>
                     <li>
-                        <a href="#contacts">Контакты</a>
+                        <a href="#contacts"><script>tr('Contacts')</script></a>
                     </li>
                 </ul>
             </div>
             <div class="sidebar-footer">
                 <ul class="footer-sidebar-nav">
                     <li>
-                        <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                        <script>tr('whitepaper-a-href')</script>
                     </li>
                     <li>
                         <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
@@ -81,7 +80,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="about-prover-block col-md-12">
-                            <p>Технология, позволяющая подтверждать подлинность создания видеоматериалов</p>
+                            <p><script>tr('About technology line')</script></p>
                         </div>
                     </div>
                 </div>
@@ -94,13 +93,9 @@
                 </video>
                 <div class="overlay"></div>
                 <div class="about">
-                    <h1>Как это работает</h1>
-                    <p>
-                        При включении видеокамеры смартфон пользователя обращается через сеть
-                        Интернет к блокчейну для получения swype кода - проверочного задания, которое
-                        должен выполнить пользователь при осуществлении записи видеоданных
-                    </p>
-                    <a target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf" class="btn-square">Whitepaper</a>
+                    <h1><script>tr('How it work')</script></h1>
+                    <p><script>tr('While the activation of the video camera')</script></p>
+                    <script>tr('whitepaper-a-href-btnsquare')</script>
                     <button class="btn-square" id="how-it-work-playBtn" style="display: none;" onclick="document.getElementById('how-it-work-video').play();">Play demo video</button>
                     <script type="text/javascript">
                         var videoBlock = document.getElementById('how-it-work-video');
@@ -160,7 +155,7 @@
             </section>
             -->
             <section id="use-cases">
-                <h1>Области применения</h1>
+                <h1><script>tr('Use cases')</script></h1>
                 <div class="use-cases">
                     <div>
                         <div class="use-case" onclick="">
@@ -169,10 +164,10 @@
                                     <i class="fa fa-car"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Автострахование (КАСКО)
+                                    <script>tr('Insurance')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    В случае наступления страхового случая, в качестве доказательства клиент предоставляет видеозапись, заверенную системой PROVER
+                                    <script>tr('In the case of an insured event, the client')</script>
                                 </div>
                             </div>
                         </div>
@@ -182,10 +177,10 @@
                                     <i class="fa fa-file-video-o"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Подтверждение авторства видео
+                                    <script>tr('Confirming video authorship')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Пользователь, ведя запись видео, может зарегистрировать свое авторство
+                                    <script>tr('The user, while recording a video, can register his authorship')</script>
                                 </div>
                             </div>
                         </div>
@@ -195,10 +190,10 @@
                                     <i class="fa fa-user-md"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Удаленный контроль пациентов
+                                    <script>tr('Remote control of patients')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Клиники и страховые компании смогут подтвердить, что больной получил должную терапию. Пациент же сможет доказать выполнение предписаний врачей
+                                    <script>tr('Clinics and insurance companies will be able')</script>
                                 </div>
                             </div>
                         </div>
@@ -208,10 +203,10 @@
                                     <i class="fa fa-gamepad"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Онлайн игры и квесты
+                                    <script>tr('Online games and quests')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Регистрация наступления игровых событий
+                                    <script>tr('Registration of game events')</script>
                                 </div>
                             </div>
                         </div>
@@ -221,10 +216,10 @@
                                     <i class="fa fa-files-o"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Отчеты о проделанной работе
+                                    <script>tr('Reports on the work done')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Удаленный контроль производства работ
+                                    <script>tr('Remote control on the work done')</script>
                                 </div>
                             </div>
                         </div>
@@ -234,10 +229,10 @@
                                     <i class="fa fa-legal"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Фиксация нарушений ПДД и общественного порядка
+                                    <script>tr('Fixation of traffic violations and public order')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Фиксация времени, даты и места видео свидетельства для предоставления правоохранительным органам
+                                    <script>tr('Fixation of time, date and place')</script>
                                 </div>
                             </div>
                         </div>
@@ -247,10 +242,10 @@
                                     <i class="fa fa-graduation-cap"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Образовательные проекты
+                                    <script>tr('Educational projects')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Удаленная идентификация пользователей и верификация их действий внутри образовательной платформы
+                                    <script>tr('Remote user identification and verification')</script>
                                 </div>
                             </div>
                         </div>
@@ -260,10 +255,10 @@
                                     <i class="fa fa-briefcase"></i>
                                 </div>
                                 <div class="use-cases-title">
-                                    Видеосообщения юридического характера
+                                    <script>tr('Video messages of a legal nature')</script>
                                 </div>
                                 <div class="use-cases-text">
-                                    Защита и подтверждение видеосообщения юридического характера без очного визита к должностным лицам
+                                    <script>tr('Protection and confirmation of a video message')</script>
                                 </div>
                             </div>
                         </div>
@@ -275,26 +270,26 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="for-client">
-                                <h1>Инвестирование</h1>
-                                <p>Инвестирование осуществляется путем покупки токенов PROOF в ходе проведения Pre-ICO и последующего ICO.<br>Токен PROOF имеет фиксированную стоимость.</p>
+                                <h1><script>tr('Investing')</script></h1>
+                                <p><script>tr('Investing is carried out by purchasing PROOF tokens during')</script></p>
                                 <div class="investing-step-block">
                                     <div class="investing-step-name">Pre-ICO</div>
                                     <span class="investing-step-key">2,000 PROOF = 1 ETH</span><br>
                                     <span class="investing-step-key">2,500 PROOF = 1 ETH</span>
                                     <span class="visible-xs-inline visible-sm-inline"><br></span>
-                                    <span>(при единовременном инвестировании 100 ETH и более)</span>
+                                    <span>(<script>tr('in case of one-time investment of 100 ETH or more')</script>)</span>
                                 </div>
                                 <div class="investing-step-block investing-step-block-2">
                                     <div class="investing-step-name">Crowdsale</div>
                                     <span class="investing-step-key">1,000 PROOF = 1 ETH</span><br>
                                     <span class="investing-step-key">1,750 PROOF = 1 ETH</span>
                                     <span class="visible-xs-inline visible-sm-inline"><br></span>
-                                    <span>(при единовременном инвестировании 100 ETH и более)</span>
+                                    <span>(<script>tr('in case of one-time investment of 100 ETH or more')</script>)</span>
                                 </div>
                                 <div class="investing-special-block">
-                                    <span>Для ранних инвесторов предусмотрена система скидок:</span><br>
-                                    <span>1,500 PROOF = 1 ETH при покупке в первый день crowdsale;</span><br>
-                                    <span>1,250 PROOF = 1 ETH при покупке в течение первой недели проведения crowdsale.</span>
+                                    <span><script>tr('For early birds, there is a system of discounts')</script>:</span><br>
+                                    <span>1,500 PROOF = 1 ETH <script>tr('when purchased on the first day of crowdsale')</script>;</span><br>
+                                    <span>1,250 PROOF = 1 ETH <script>tr('when purchased during the first week of the crowdsale')</script>.</span>
                                 </div>
                             </div>
                         </div>
@@ -302,54 +297,54 @@
                 </div>
             </section>
             <section id="team">
-                <h1>Команда</h1>
+                <h1><script>tr('Team')</script></h1>
                 <div>
                     <div style="background-image: url(./images/team/nabilskaya.png?cache_v5); background-color: #ffaaaa;">
                         <div>
-                            <span class="name">Набильская Надежда</span>
+                            <span class="name"><script>tr('Nadezhda Nabilskaya')</script></span>
                             <span class="role">CEO</span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/rytikov.png?cache_v5); background-color: #b5dcfd;">
                         <div>
-                            <span class="name">Рытиков Алексей</span>
+                            <span class="name"><script>tr('Alexey Rytikov')</script></span>
                             <span class="role">CTO</span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/voronin.png?cache_v5); background-color: #f5f6fc;">
                         <div>
-                            <span class="name">Воронин Вячеслав</span>
-                            <span class="role">Видеоанализ</span>
+                            <span class="name"><script>tr('Vyacheslav Voronin')</script></span>
+                            <span class="role"><script>tr('Video analysis')</script></span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/suprun.png?cache_v5); background-color: #333333;">
                         <div>
-                            <span class="name">Супрун Виталий</span>
-                            <span class="role">Приложения</span>
+                            <span class="name"><script>tr('Vitaly Suprun')</script></span>
+                            <span class="role"><script>tr('Applications')</script></span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/yuferova.png?cache_v5); background-color: #dddddd;">
                         <div>
-                            <span class="name">Юферова Елена</span>
-                            <span class="role">Бизнес-консультант</span>
+                            <span class="name"><script>tr('Elena Yuferova')</script></span>
+                            <span class="role"><script>tr('Business consultant')</script></span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/shumilov.png?cache_v5); background-color: #91839c;">
                         <div>
-                            <span class="name">Шумилов Евгений</span>
-                            <span class="role">Советник</span>
+                            <span class="name"><script>tr('Evgeny Shumilov')</script></span>
+                            <span class="role"><script>tr('Adviser')</script></span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/hovayko.png?cache_v5); background-color: #dddddd;">
                         <div>
-                            <span class="name">Ховайко Олег</span>
-                            <span class="role">Советник</span>
+                            <span class="name"><script>tr('Oleg Khovayko')</script></span>
+                            <span class="role"><script>tr('Adviser')</script></span>
                         </div>
                     </div>
                     <div style="background-image: url(./images/team/svirin.png?cache_v5); background-color: #ffffff;">
                         <div>
-                            <span class="name">Свирин Илья</span>
-                            <span class="role">Советник</span>
+                            <span class="name"><script>tr('Ilya Svirin')</script></span>
+                            <span class="role"><script>tr('Adviser')</script></span>
                         </div>
                     </div>
                 </div>
@@ -360,7 +355,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="contacts">
-                                    <h4 class="contacts-title">Контакты</h4>
+                                    <h4 class="contacts-title"><script>tr('Contacts')</script></h4>
                                     <ul class="contacts-list">
                                         <li>
                                             <i class="fa fa-slack"></i>
@@ -379,10 +374,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="source">
-                                    <h4 class="source-title">Ресурсы</h4>
+                                    <h4 class="source-title"><script>tr('Resources')</script></h4>
                                     <ul class="source-list">
                                         <li>
-                                            <a title="Whitepaper PDF" target="_blank" href="https://github.com/isvirin/prover/blob/master/WhitePaper_PROVER_(rus).pdf">Whitepaper <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
+                                            <script>tr('whitepaper-a-href')</script>
                                         </li>
                                         <li>
                                             <a title="Prover GitHub Project" target="_blank" href="https://github.com/isvirin/prover">GitHub <i class="fa fa-share-square-o" aria-hidden="true"></i></a>
