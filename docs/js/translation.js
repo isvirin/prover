@@ -101,5 +101,11 @@ function tr(code) {
     if (lang === 'ru') {
         trArray = translate['ru'];
     }
-    document.write(trArray[code]);
+    var translatedStr = code;
+    if (trArray[code]) {
+        translatedStr = trArray[code];
+    } else {
+        console.trace('No translate for ', lang, code);
+    }
+    document.write(translatedStr);
 }
