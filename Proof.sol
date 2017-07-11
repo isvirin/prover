@@ -20,7 +20,7 @@ pragma solidity ^0.4.0;
 contract owned {
     address public owner;
 
-    function owned() {
+    function owned() payable {
         owner = msg.sender;
     }
     
@@ -37,8 +37,13 @@ contract owned {
 
 contract Crowdsale is owned {
     
-    uint256 public totalSupply = 0;
+    uint256 public totalSupply;
     mapping (address => uint256) public balanceOf;
+
+    uint public etherPrice;
+    address public crowdsaleOwner;
+    uint256 public totalLimit;
+    uint256 public minimalSuccess;
 
     enum State { Disabled, PreICO, CompletePreICO, Crowdsale, Enabled }
     event NewState(State state);
@@ -59,45 +64,53 @@ contract Crowdsale is owned {
     uint       public numberOfInvestors;
     
     function () payable {
-        require(state != State.Disabled);
-        uint256 tokensPerEther = 0;
+        require(state == State.PreICO || state == State.Crowdsale);
+        uint256 tokensPer100USD = 0;
         if (state == State.PreICO) {
-            if (msg.value >= 100 ether) {
-                tokensPerEther = 2500;
-            } else {
-                tokensPerEther = 2000;
-            }
+            tokensPer100USD = 1250;
         } else if (state == State.Crowdsale) {
-            if (msg.value >= 100 ether) {
-                tokensPerEther = 1750;
-            } else if (now < crowdsaleStartTime + 1 days) {
-                tokensPerEther = 1500;
+            if (msg.value >= 100 ether || now < crowdsaleStartTime + 1 days) {
+                tokensPer100USD = 1150;
             } else if (now < crowdsaleStartTime + 1 weeks) {
-                tokensPerEther = 1250;
+                tokensPer100USD = 1100;
             } else {
-                tokensPerEther = 1000;
+                tokensPer100USD = 1000;
             }
         }
-        if (tokensPerEther > 0) {
-            uint256 tokens = tokensPerEther * msg.value / 1000000000000000000;
+        if (tokensPer100USD > 0) {
+            uint value = msg.value;
+            uint256 tokens = (tokensPer100USD * etherPrice) / 100;
+            tokens *= value / 1000000000000000000;
             if (balanceOf[msg.sender] + tokens < balanceOf[msg.sender]) throw; // overflow
+            if (totalSupply + tokens > totalLimit) { // not enougth tokens
+                tokens = totalLimit - totalSupply;
+                value = tokens * tokensPer100USD / 100;
+                value /= etherPrice;
+                msg.sender.send(msg.value - value);
+            }
+            require(tokens > 0);
             balanceOf[msg.sender] += tokens;
             totalSupply += tokens;
             numberOfInvestors = investors.length++;
-            investors[numberOfInvestors] = Investor({investor: msg.sender, amount: msg.value});
+            investors[numberOfInvestors] = Investor({investor: msg.sender, amount: value});
         }
-        //if (state == State.Enabled) { /* it is donation */ }
     }
     
-    function startTokensSale() public onlyOwner {
+    function startTokensSale(address _crowdsaleOwner, uint _etherPrice) public onlyOwner {
         require(state == State.Disabled || state == State.CompletePreICO);
         crowdsaleStartTime = now;
+        crowdsaleOwner = _crowdsaleOwner;
+        etherPrice = _etherPrice;
         if (state == State.Disabled) {
             crowdsaleFinishTime = now + 7 days;
             state = State.PreICO;
+            totalLimit = 3750000;
+            minimalSuccess = 3750000;
         } else {
             crowdsaleFinishTime = now + 30 days;
             state = State.Crowdsale;
+            totalLimit = 52000000;
+            minimalSuccess = 36000000;
         }
         NewState(state);
     }
@@ -113,9 +126,8 @@ contract Crowdsale is owned {
     
     function finishTokensSale() public onlyOwner {
         require(state == State.PreICO || state == State.Crowdsale);
-        require(now >= crowdsaleFinishTime);
-        if ((this.balance < 400 ether && state == State.PreICO) ||
-            (this.balance < 1000 ether && state == State.Crowdsale)) {
+        require(now >= crowdsaleFinishTime || totalSupply >= minimalSuccess);
+        if (totalSupply < minimalSuccess) {
             // Crowdsale failed. Need to return ether to investors
             for (uint i = 0; i <  investors.length; ++i) {
                 Investor inv = investors[i];
@@ -131,13 +143,13 @@ contract Crowdsale is owned {
             }
         } else {
             if (state == State.PreICO) {
-                if (!msg.sender.send(this.balance)) throw;
+                if (!crowdsaleOwner.send(this.balance)) throw;
                 state = State.CompletePreICO;
             } else {
-                if (!msg.sender.send(1000 ether)) throw;
+                if (!crowdsaleOwner.send(1500000 / etherPrice)) throw;
                 // Emit additional tokens for owner (20% of complete totalSupply)
-                balanceOf[msg.sender] = totalSupply / 4;
-                totalSupply += totalSupply / 4;
+                balanceOf[msg.sender] = totalSupply * 28 / 72;
+                totalSupply += totalSupply * 28 / 72;
                 state = State.Enabled;
             }
         }
@@ -162,9 +174,8 @@ contract Token is Crowdsale {
 
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
-    event Burned(address indexed owner, uint256 value);
 
-    function Token() Crowdsale() {}
+    function Token() payable Crowdsale() {}
 
     function transfer(address _to, uint256 _value) public enabledState {
         require(balanceOf[msg.sender] >= _value);
@@ -193,28 +204,11 @@ contract Token is Crowdsale {
         returns (uint256 remaining) {
         return allowed[_owner][_spender];
     }
-
-    function burn(uint256 _value) public enabledState {
-        require(now >= crowdsaleFinishTime + 1 years);
-        require(balanceOf[msg.sender] >= _value);
-        balanceOf[msg.sender] -= _value;
-        totalSupply -= _value;
-        Burned(msg.sender, _value);
-
-        // Send ether to caller
-        uint amount;
-        if (totalSupply == 0) {
-            amount = this.balance;
-        } else {
-            amount = (this.balance * _value) / totalSupply;
-        }
-        if (!msg.sender.send(amount)) throw;
-    }
 }
 
 contract ProofBase is Token {
 
-    function ProofBase() Token() {}
+    function ProofBase() payable Token() {}
 
     event VotingStarted(uint weiReqFund);
     event Voted(address indexed voter, bool inSupport);
@@ -311,7 +305,7 @@ contract Proof is ProofBase {
 
     uint priceWei;
 
-    function Proof() ProofBase() {}
+    function Proof() payable ProofBase() {}
 
     function setPrice(uint _priceWei) public onlyOwner {
         priceWei = _priceWei;
