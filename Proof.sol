@@ -58,9 +58,14 @@ contract Crowdsale is owned {
         _;
     }
 
+    modifier enabledOrMigrationState {
+        require(state == State.Enabled || state == State.Migration);
+        _;
+    }
+
     struct Investor {
         uint256 amountTokens;
-        uint    amountETH;
+        uint    amountWei;
     }
     mapping (address => Investor) public investors;
     mapping (uint => address)     public investorsIter;
@@ -81,27 +86,29 @@ contract Crowdsale is owned {
             }
         }
         if (tokensPerUSD > 0) {
-            uint valueETH = msg.value;
-            uint valueUSD = valueETH * etherPrice / 1000000000000000000;
+            uint valueWei = msg.value;
+            uint valueUSD = valueWei * etherPrice / 1000000000000000000;
             if (collectedUSD + valueUSD > totalLimitUSD) { // don't need so much ether
                 valueUSD = totalLimitUSD - collectedUSD;
-                valueETH = valueUSD * 1000000000000000000 / etherPrice;
-                msg.sender.transfer(msg.value - valueETH);
+                valueWei = valueUSD * 1000000000000000000 / etherPrice;
+                msg.sender.transfer(msg.value - valueWei);
                 collectedUSD = totalLimitUSD; // to be sure!
+            } else {
+                collectedUSD += valueUSD;
             }
             uint256 tokens = tokensPerUSD * valueUSD;
             require(balanceOf[msg.sender] + tokens > balanceOf[msg.sender]); // overflow
             require(tokens > 0);
             
             Investor memory inv = investors[msg.sender];
-            if (inv.amountETH == 0) { // new investor
+            if (inv.amountWei == 0) { // new investor
                 investorsIter[numberOfInvestors++] = msg.sender;
             }
             inv.amountTokens += tokens;
-            inv.amountETH += valueETH;
+            inv.amountWei += valueWei;
             investors[msg.sender] = inv;
+            balanceOf[msg.sender] += tokens;
             totalSupply += tokens;
-            collectedUSD += valueUSD;
         }
     }
     
@@ -135,7 +142,7 @@ contract Crowdsale is owned {
         }
     }
     
-    function finishTokensSale(uint _investorsToProcess) public onlyOwner {
+    function finishTokensSale(uint _investorsToProcess) public {
         require(state == State.PreICO || state == State.Crowdsale);
         require(now >= crowdsaleFinishTime || collectedUSD >= minimalSuccessUSD);
         if (collectedUSD < minimalSuccessUSD) {
@@ -183,7 +190,7 @@ contract Crowdsale is owned {
     // This function must be called by token holder in case of crowdsale failed
     function withdrawBack() public {
         require(state == State.Disabled || state == State.CompletePreICO);
-        uint value = investors[msg.sender].amountETH;
+        uint value = investors[msg.sender].amountWei;
         if (value > 0) {
             delete investors[msg.sender];
             msg.sender.transfer(value);
@@ -218,7 +225,7 @@ contract Token is Crowdsale {
         Transfer(msg.sender, _to, _value);
     }
     
-    function transferFrom(address _from, address _to, uint256 _value) public {
+    function transferFrom(address _from, address _to, uint256 _value) public enabledState {
         require(balanceOf[_from] >= _value);
         require(balanceOf[_to] + _value >= balanceOf[_to]); // overflow
         require(allowed[_from][msg.sender] >= _value);
@@ -293,10 +300,12 @@ contract ProofTeamVote is TokenMigration {
     mapping (address => Vote) public votes;
     mapping (uint => address) public votesIter;
 
-    function startVoting(uint _weiReqFund) public enabledState onlyOwner {
+    function startVoting(uint _weiReqFund) public enabledOrMigrationState onlyOwner {
         require(weiReqFund == 0 && _weiReqFund > 0 && _weiReqFund <= this.balance);
         weiReqFund = _weiReqFund;
         votingDeadline = now + 7 days;
+        delete yea;
+        delete nay;
         VotingStarted(_weiReqFund);
     }
     
@@ -310,7 +319,7 @@ contract ProofTeamVote is TokenMigration {
         }
     }
 
-    function vote(bool _inSupport) public onlyTokenHolders enabledState
+    function vote(bool _inSupport) public onlyTokenHolders enabledOrMigrationState
         returns (uint voteId) {
         require(votes[msg.sender].voted != true);
         require(votingDeadline > now);
@@ -321,9 +330,9 @@ contract ProofTeamVote is TokenMigration {
         return voteId;
     }
 
-    function finishVoting(uint _votesToProcess) public enabledState onlyOwner
+    function finishVoting(uint _votesToProcess) public enabledOrMigrationState
         returns (bool _inSupport) {
-        require(now >= votingDeadline && weiReqFund <= this.balance);
+        require(now >= votingDeadline);
 
         while (_votesToProcess > 0 && numberOfVotes > 0) {
             address voter = votesIter[--numberOfVotes];
@@ -347,18 +356,16 @@ contract ProofTeamVote is TokenMigration {
 
         if (_inSupport) {
             if (migrationAgent == 0) {
-                if (!owner.send(weiReqFund)) throw;
+                if (!owner.send(this.balance)) throw;
             } else {
                 if (!migrationAgent.send(weiReqFund)) throw;
             }
         }
 
-        VotingFinished(_inSupport);
         delete weiReqFund;
         delete votingDeadline;
         delete numberOfVotes;
-        delete yea;
-        delete nay;
+        VotingFinished(_inSupport);
     }
 }
 
@@ -392,7 +399,7 @@ contract ProofPublicVote is ProofTeamVote {
         Deployed(msg.sender, _proofReqFund, _urlInfo);
     }
     
-    function projectInfo(address _projectOwner) enabledState public 
+    function projectInfo(address _projectOwner) enabledState constant public 
         returns(uint _proofReqFund, string _urlInfo, uint _timeToFinish) {
         _proofReqFund = projects[_projectOwner].proofReqFund;
         _urlInfo = projects[_projectOwner].urlInfo;
@@ -406,12 +413,12 @@ contract ProofPublicVote is ProofTeamVote {
     function vote(address _projectOwner, bool _inSupport) public onlyTokenHolders enabledState
         returns (uint voteId) {
         Project storage p = projects[_projectOwner];
+        require(p.proofReqFund > 0);
         require(p.votes[msg.sender].voted != true);
         require(p.votingDeadline > now);
         voteId = p.numberOfVotes++;
         p.votesIter[voteId] = msg.sender;
         p.votes[msg.sender] = Vote({inSupport: _inSupport, voted: true});
-        projects[_projectOwner] = p; // Is it neccessary?
         Voted(_projectOwner, msg.sender, _inSupport); 
         return voteId;
     }
@@ -419,6 +426,7 @@ contract ProofPublicVote is ProofTeamVote {
     function finishVoting(address _projectOwner, uint _votesToProcess) public enabledState
         returns (bool _inSupport) {
         Project storage p = projects[_projectOwner];
+        require(p.proofReqFund > 0);
         require(now >= p.votingDeadline && p.proofReqFund <= balanceOf[this]);
 
         while (_votesToProcess > 0 && p.numberOfVotes > 0) {
@@ -435,19 +443,23 @@ contract ProofPublicVote is ProofTeamVote {
             --_votesToProcess;
         }
         if (p.numberOfVotes > 0) {
-            projects[_projectOwner] = p; // Is it neccessary?
             _inSupport = false;
             return;
         }
 
         _inSupport = (p.yea > p.nay);
 
+        delete projects[_projectOwner];
+        uint proofReqFund = p.proofReqFund;
+
         if (_inSupport) {
-            transfer(_projectOwner, p.proofReqFund);
+            require(balanceOf[_projectOwner] + proofReqFund >= balanceOf[_projectOwner]); // overflow
+            balanceOf[this] -= proofReqFund;
+            balanceOf[_projectOwner] += proofReqFund;
+            Transfer(this, _projectOwner, proofReqFund);
         }
 
         VotingFinished(_projectOwner, _inSupport);
-        delete projects[_projectOwner];
     }
 }
 
@@ -490,7 +502,6 @@ contract Proof is ProofPublicVote {
     }
     
     function setHash(uint16 _swype, bytes32 _hash) public enabledState {
-        require(balanceOf[msg.sender] >= priceInTokens);
         require(swypes[msg.sender].timestampSwype != 0);
         require(swypes[msg.sender].swype == _swype);
         transfer(owner, teamFee);
