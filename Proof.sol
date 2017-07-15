@@ -309,7 +309,7 @@ contract ProofTeamVote is TokenMigration {
         VotingStarted(_weiReqFund);
     }
     
-    function votingInfo() public constant enabledState 
+    function votingInfo() public constant enabledOrMigrationState
         returns(uint _weiReqFund, uint _timeToFinish) {
         _weiReqFund = weiReqFund;
         if (votingDeadline <= now) {
@@ -353,18 +353,19 @@ contract ProofTeamVote is TokenMigration {
         }
 
         _inSupport = (yea > nay);
-
-        if (_inSupport) {
-            if (migrationAgent == 0) {
-                if (!owner.send(this.balance)) throw;
-            } else {
-                if (!migrationAgent.send(weiReqFund)) throw;
-            }
-        }
-
+        uint weiForSend = weiReqFund;
         delete weiReqFund;
         delete votingDeadline;
         delete numberOfVotes;
+
+        if (_inSupport) {
+            if (migrationAgent == 0) {
+                if (!owner.send(weiForSend)) throw;
+            } else {
+                if (!migrationAgent.send(this.balance)) throw;
+            }
+        }
+
         VotingFinished(_inSupport);
     }
 }
@@ -389,7 +390,8 @@ contract ProofPublicVote is ProofTeamVote {
     }
     mapping (address => Project) public projects;
 
-    function deployProject(uint _proofReqFund, string _urlInfo) public onlyTokenHolders enabledState {
+    function deployProject(uint _proofReqFund, string _urlInfo) public
+        onlyTokenHolders enabledOrMigrationState {
         require(_proofReqFund > 0 && _proofReqFund <= balanceOf[this]);
         require(_proofReqFund <= balanceOf[msg.sender] * 1000);
         require(projects[msg.sender].proofReqFund == 0);
@@ -399,7 +401,7 @@ contract ProofPublicVote is ProofTeamVote {
         Deployed(msg.sender, _proofReqFund, _urlInfo);
     }
     
-    function projectInfo(address _projectOwner) enabledState constant public 
+    function projectInfo(address _projectOwner) enabledOrMigrationState constant public 
         returns(uint _proofReqFund, string _urlInfo, uint _timeToFinish) {
         _proofReqFund = projects[_projectOwner].proofReqFund;
         _urlInfo = projects[_projectOwner].urlInfo;
@@ -410,8 +412,8 @@ contract ProofPublicVote is ProofTeamVote {
         }
     }
 
-    function vote(address _projectOwner, bool _inSupport) public onlyTokenHolders enabledState
-        returns (uint voteId) {
+    function vote(address _projectOwner, bool _inSupport) public
+        onlyTokenHolders enabledOrMigrationState returns (uint voteId) {
         Project storage p = projects[_projectOwner];
         require(p.proofReqFund > 0);
         require(p.votes[msg.sender].voted != true);
@@ -423,8 +425,8 @@ contract ProofPublicVote is ProofTeamVote {
         return voteId;
     }
 
-    function finishVoting(address _projectOwner, uint _votesToProcess) public enabledState
-        returns (bool _inSupport) {
+    function finishVoting(address _projectOwner, uint _votesToProcess) public
+        enabledOrMigrationState returns (bool _inSupport) {
         Project storage p = projects[_projectOwner];
         require(p.proofReqFund > 0);
         require(now >= p.votingDeadline && p.proofReqFund <= balanceOf[this]);
