@@ -144,7 +144,7 @@ contract Crowdsale is owned {
     
     function finishTokensSale(uint _investorsToProcess) public {
         require(state == State.PreICO || state == State.Crowdsale);
-        require(now >= crowdsaleFinishTime || collectedUSD >= minimalSuccessUSD);
+        require(now >= crowdsaleFinishTime || collectedUSD == totalLimitUSD);
         if (collectedUSD < minimalSuccessUSD) {
             // Investors can get their ether calling withdrawBack() function
             while (_investorsToProcess > 0 && numberOfInvestors > 0) {
