@@ -451,8 +451,8 @@ contract ProofPublicVote is ProofTeamVote {
 
         _inSupport = (p.yea > p.nay);
 
-        delete projects[_projectOwner];
         uint proofReqFund = p.proofReqFund;
+        delete projects[_projectOwner];
 
         if (_inSupport) {
             require(balanceOf[_projectOwner] + proofReqFund >= balanceOf[_projectOwner]); // overflow
