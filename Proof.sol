@@ -179,7 +179,7 @@ contract Crowdsale is owned {
             } else {
                 if (!crowdsaleOwner.send(1500000 * 1000000000000000000 / etherPrice)) throw;
                 // Create additional tokens for owner (28% of complete totalSupply)
-                balanceOf[msg.sender] = totalSupply * 28 / 72;
+                balanceOf[owner] = totalSupply * 28 / 72;
                 totalSupply += totalSupply * 28 / 72;
                 state = State.Enabled;
             }
