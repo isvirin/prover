@@ -100,13 +100,12 @@ contract Crowdsale is owned {
             require(balanceOf[msg.sender] + tokens > balanceOf[msg.sender]); // overflow
             require(tokens > 0);
             
-            Investor memory inv = investors[msg.sender];
+            Investor storage inv = investors[msg.sender];
             if (inv.amountWei == 0) { // new investor
                 investorsIter[numberOfInvestors++] = msg.sender;
             }
             inv.amountTokens += tokens;
             inv.amountWei += valueWei;
-            investors[msg.sender] = inv;
             balanceOf[msg.sender] += tokens;
             totalSupply += tokens;
         }
