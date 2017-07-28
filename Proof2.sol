@@ -229,7 +229,7 @@ contract Crowdsale is owned, MigrationAgent {
         _value = _value * 105 / 100; // bonus
         require(balanceOf[_from] + _value > balanceOf[_from]); // overflow?
         balanceOf[_from] += _value;
-        Transfer(_from, owner, _value);
+        Transfer(migrationHost, _from, _value);
         totalSupply += _value;
     }
 }
