@@ -134,23 +134,25 @@ contract Crowdsale is owned, MigrationAgent {
         }
     }
     
-    function startTokensSale(address _crowdsaleOwner, uint _etherPrice) public onlyOwner {
+    function startTokensSale(
+            address _crowdsaleOwner,
+            uint    _crowdsaleDurationDays,
+            uint    _totalLimitUSD,
+            uint    _minimalSuccessUSD,
+            uint    _etherPrice) public onlyOwner {
         require(state == State.Disabled || state == State.CompletePreICO);
         crowdsaleStartTime = now;
         crowdsaleOwner = _crowdsaleOwner;
         etherPrice = _etherPrice;
         delete numberOfInvestors;
         delete collectedUSD;
+        crowdsaleFinishTime = now + _crowdsaleDurationDays * 1 days;
+        totalLimitUSD = _totalLimitUSD;
+        minimalSuccessUSD = _minimalSuccessUSD;
         if (state == State.Disabled) {
-            crowdsaleFinishTime = now + 14 days;
             state = State.PreICO;
-            totalLimitUSD = 300000;
-            minimalSuccessUSD = 300000;
         } else {
-            crowdsaleFinishTime = now + 30 days;
             state = State.Crowdsale;
-            totalLimitUSD = 5200000;
-            minimalSuccessUSD = 3600000;
         }
         NewState(state);
     }
