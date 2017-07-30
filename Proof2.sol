@@ -95,6 +95,7 @@ contract Crowdsale is owned, MigrationAgent {
             return;
         }
         require(state == State.PreICO || state == State.Crowdsale);
+        require(now < crowdsaleFinishTime);
         uint tokensPerUSD = 0;
         if (state == State.PreICO) {
             tokensPerUSD = 125;
