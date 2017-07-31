@@ -201,7 +201,7 @@ contract Crowdsale is ManualMigration {
                 Investor memory inv = investors[addr];
                 balances[addr] -= inv.amountTokens;
                 totalSupply -= inv.amountTokens;
-                Transfer(addr, this, tokens);
+                Transfer(addr, this, inv.amountTokens);
                 --_investorsToProcess;
                 delete investorsIter[numberOfInvestors];
             }
