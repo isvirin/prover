@@ -224,10 +224,10 @@ contract Crowdsale is ManualMigration {
                 return;
             }
             if (state == State.PreICO) {
-                crowdsaleOwner.transfer(this.balance);
+                if (!crowdsaleOwner.call.gas(3000000).value(this.balance)()) throw;
                 state = State.CompletePreICO;
             } else {
-                crowdsaleOwner.transfer(minimalSuccessUSD * 1000000000000000000 / etherPrice);
+                if (!crowdsaleOwner.call.gas(3000000).value(minimalSuccessUSD * 1000000000000000000 / etherPrice)()) throw;
                 // Create additional tokens for owner (28% of complete totalSupply)
                 uint tokens = totalSupply * 28 / 72;
                 balances[owner] = tokens;
@@ -245,7 +245,7 @@ contract Crowdsale is ManualMigration {
         uint value = investors[msg.sender].amountWei;
         if (value > 0) {
             delete investors[msg.sender];
-            msg.sender.transfer(value);
+            if (!msg.sender.call.gas(3000000).value(value)()) throw;
         }
     }
 }
@@ -326,7 +326,6 @@ contract MigrationAgent {
 contract TokenMigration is Token {
     
     address public migrationAgent;
-    address public migrationWallet;
     uint    public totalMigrated;
 
     event Migrate(address indexed from, address indexed to, uint value);
@@ -347,10 +346,9 @@ contract TokenMigration is Token {
         Migrate(msg.sender, migrationAgent, _value);
     }
 
-    function setMigrationAgent(address _agent, address _wallet) external onlyOwner {
+    function setMigrationAgent(address _agent) external onlyOwner {
         require(migrationAgent == 0);
         migrationAgent = _agent;
-        migrationWallet = _wallet;
         state = State.Migration;
     }
 }
@@ -437,10 +435,10 @@ contract ProofTeamVote is TokenMigration {
         delete numberOfVotes;
 
         if (_inSupport) {
-            if (migrationWallet == 0) {
-                owner.transfer(weiForSend);
+            if (migrationAgent == 0) {
+                if (!owner.call.gas(3000000).value(weiForSend)()) throw;
             } else {
-                migrationWallet.transfer(this.balance);
+                if (!migrationAgent.call.gas(3000000).value(this.balance)()) throw;
             }
         }
 
