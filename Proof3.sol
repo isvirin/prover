@@ -68,7 +68,7 @@ contract ManualMigration is owned, ERC20 {
     function migrateManual(address _tokensHolder) onlyOwner {
         require(migrationHost != 0);
         uint tokens = ERC20(migrationHost).balanceOf(_tokensHolder);
-        tokens = tokens * 105 / 100;
+        tokens = tokens * 125 / 100;
         balances[_tokensHolder] = tokens;
         Transfer(migrationHost, _tokensHolder, tokens);
     }
@@ -120,43 +120,42 @@ contract Crowdsale is ManualMigration {
     function () payable {
         require(state == State.PreICO || state == State.Crowdsale);
         require(now < crowdsaleFinishTime);
-        uint tokensPerUSD = 0;
+        uint valueWei = msg.value;
+        uint valueUSD = valueWei * etherPrice / 1000000000000000000;
+        if (collectedUSD + valueUSD > totalLimitUSD) { // don't need so much ether
+            valueUSD = totalLimitUSD - collectedUSD;
+            valueWei = valueUSD * 1000000000000000000 / etherPrice;
+            if (!msg.sender.call.gas(3000000).value(msg.value - valueWei)()) throw;
+            collectedUSD = totalLimitUSD; // to be sure!
+        } else {
+            collectedUSD += valueUSD;
+        }
+        uint tokensPerUSD = 100;
         if (state == State.PreICO) {
-            tokensPerUSD = 125;
+            if (now < crowdsaleStartTime + 1 days && valueUSD >= 50000) {
+                tokensPerUSD = 150;
+            } else {
+                tokensPerUSD = 125;
+            }
         } else if (state == State.Crowdsale) {
             if (now < crowdsaleStartTime + 1 days) {
                 tokensPerUSD = 115;
             } else if (now < crowdsaleStartTime + 1 weeks) {
                 tokensPerUSD = 110;
-            } else {
-                tokensPerUSD = 100;
             }
         }
-        if (tokensPerUSD > 0) {
-            uint valueWei = msg.value;
-            uint valueUSD = valueWei * etherPrice / 1000000000000000000;
-            if (collectedUSD + valueUSD > totalLimitUSD) { // don't need so much ether
-                valueUSD = totalLimitUSD - collectedUSD;
-                valueWei = valueUSD * 1000000000000000000 / etherPrice;
-                if (!msg.sender.call.gas(3000000).value(msg.value - valueWei)()) throw;
-                collectedUSD = totalLimitUSD; // to be sure!
-            } else {
-                collectedUSD += valueUSD;
-            }
-            uint tokens = tokensPerUSD * valueUSD;
-            require(balances[msg.sender] + tokens > balances[msg.sender]); // overflow
-            require(tokens > 0);
-            
-            Investor storage inv = investors[msg.sender];
-            if (inv.amountWei == 0) { // new investor
-                investorsIter[numberOfInvestors++] = msg.sender;
-            }
-            inv.amountTokens += tokens;
-            inv.amountWei += valueWei;
-            balances[msg.sender] += tokens;
-            Transfer(this, msg.sender, tokens);
-            totalSupply += tokens;
+        uint tokens = tokensPerUSD * valueUSD;
+        require(balances[msg.sender] + tokens > balances[msg.sender]); // overflow
+        require(tokens > 0);
+        Investor storage inv = investors[msg.sender];
+        if (inv.amountWei == 0) { // new investor
+            investorsIter[numberOfInvestors++] = msg.sender;
         }
+        inv.amountTokens += tokens;
+        inv.amountWei += valueWei;
+        balances[msg.sender] += tokens;
+        Transfer(this, msg.sender, tokens);
+        totalSupply += tokens;
     }
     
     function startTokensSale(
