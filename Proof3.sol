@@ -70,6 +70,7 @@ contract ManualMigration is owned, ERC20 {
         uint tokens = ERC20(migrationHost).balanceOf(_tokensHolder);
         tokens = tokens * 125 / 100;
         balances[_tokensHolder] = tokens;
+        totalSupply += tokens;
         Transfer(migrationHost, _tokensHolder, tokens);
     }
     
@@ -114,7 +115,6 @@ contract Crowdsale is ManualMigration {
 
     function Crowdsale(address _migrationHost)
         payable ManualMigration(_migrationHost) {
-        migrationHost = _migrationHost;
     }
     
     function () payable {
@@ -332,17 +332,16 @@ contract TokenMigration is Token {
     function TokenMigration(address _migrationHost) payable Token(_migrationHost) {}
 
     // Migrate _value of tokens to the new token contract
-    function migrate(uint _value) external {
+    function migrate() external {
         require(state == State.Migration);
         require(migrationAgent != 0);
-        require(_value != 0);
-        require(_value <= balances[msg.sender]);
-        balances[msg.sender] -= _value;
-        Transfer(msg.sender, this, _value);
-        totalSupply -= _value;
-        totalMigrated += _value;
-        MigrationAgent(migrationAgent).migrateFrom(msg.sender, _value);
-        Migrate(msg.sender, migrationAgent, _value);
+        uint value = balances[msg.sender];
+        balances[msg.sender] -= value;
+        Transfer(msg.sender, this, value);
+        totalSupply -= value;
+        totalMigrated += value;
+        MigrationAgent(migrationAgent).migrateFrom(msg.sender, value);
+        Migrate(msg.sender, migrationAgent, value);
     }
 
     function setMigrationAgent(address _agent) external onlyOwner {
