@@ -127,7 +127,7 @@ contract Crowdsale is ManualMigration {
         if (collectedUSD + valueUSD > totalLimitUSD) { // don't need so much ether
             valueUSD = totalLimitUSD - collectedUSD;
             valueWei = valueUSD * 1000000000000000000 / etherPrice;
-            if (!msg.sender.call.gas(3000000).value(msg.value - valueWei)()) throw;
+            require(msg.sender.call.gas(3000000).value(msg.value - valueWei)());
             collectedUSD = totalLimitUSD; // to be sure!
         } else {
             collectedUSD += valueUSD;
