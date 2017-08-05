@@ -13,6 +13,8 @@ GNU lesser General Public License for more details.
 
 You should have received a copy of the GNU lesser General Public License
 along with the PROOF Contract. If not, see <http://www.gnu.org/licenses/>.
+
+@author Ilya Svirin <i.svirin@nordavind.ru>
 */
 
 pragma solidity ^0.4.0;
@@ -223,10 +225,10 @@ contract Crowdsale is ManualMigration {
                 return;
             }
             if (state == State.PreICO) {
-                if (!crowdsaleOwner.call.gas(3000000).value(this.balance)()) throw;
+                require(crowdsaleOwner.call.gas(3000000).value(this.balance)());
                 state = State.CompletePreICO;
             } else {
-                if (!crowdsaleOwner.call.gas(3000000).value(minimalSuccessUSD * 1000000000000000000 / etherPrice)()) throw;
+                require(crowdsaleOwner.call.gas(3000000).value(minimalSuccessUSD * 1000000000000000000 / etherPrice)());
                 // Create additional tokens for owner (28% of complete totalSupply)
                 uint tokens = totalSupply * 28 / 72;
                 balances[owner] = tokens;
@@ -244,7 +246,7 @@ contract Crowdsale is ManualMigration {
         uint value = investors[msg.sender].amountWei;
         if (value > 0) {
             delete investors[msg.sender];
-            if (!msg.sender.call.gas(3000000).value(value)()) throw;
+            require(msg.sender.call.gas(3000000).value(value)());
         }
     }
 }
@@ -434,9 +436,9 @@ contract ProofTeamVote is TokenMigration {
 
         if (_inSupport) {
             if (migrationAgent == 0) {
-                if (!owner.call.gas(3000000).value(weiForSend)()) throw;
+                require(owner.call.gas(3000000).value(weiForSend)());
             } else {
-                if (!migrationAgent.call.gas(3000000).value(this.balance)()) throw;
+                require(migrationAgent.call.gas(3000000).value(this.balance)());
             }
         }
 
