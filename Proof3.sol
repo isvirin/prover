@@ -451,23 +451,23 @@ contract ProofFund is ProofTeamVote {
     function ProofFund(address _migrationHost)
         payable ProofTeamVote(_migrationHost) {}
 
-    event Deployed(address indexed projectOwner, uint proofReqFund, string urlInfo);
+    event Deployed(address indexed projectOwner, uint proofReqFund, bytes32 urlInfo);
     event Voted(address indexed projectOwner, address indexed voter, bool inSupport);
     event VotingFinished(address indexed projectOwner, bool inSupport);
 
     struct Project {
-        uint   proofReqFund;
-        string urlInfo;
-        uint   votingDeadline;
-        uint   numberOfVotes;
-        uint   yea;
-        uint   nay;
+        uint    proofReqFund;
+        bytes32 urlInfo;
+        uint    votingDeadline;
+        uint    numberOfVotes;
+        uint    yea;
+        uint    nay;
         mapping (address => Vote) votes;
         mapping (uint => address) votesIter;
     }
     mapping (address => Project) public projects;
 
-    function deployProject(uint _proofReqFund, string _urlInfo) public
+    function deployProject(uint _proofReqFund, bytes32 _urlInfo) public
         onlyTokenHolders enabledOrMigrationState {
         require(_proofReqFund > 0 && _proofReqFund <= balances[this]);
         require(_proofReqFund <= balances[msg.sender] * 1000);
@@ -479,7 +479,7 @@ contract ProofFund is ProofTeamVote {
     }
     
     function projectInfoPublic(address _projectOwner) enabledOrMigrationState constant public 
-        returns(uint _proofReqFund, string _urlInfo, uint _timeToFinish) {
+        returns(uint _proofReqFund, bytes32 _urlInfo, uint _timeToFinish) {
         _proofReqFund = projects[_projectOwner].proofReqFund;
         _urlInfo = projects[_projectOwner].urlInfo;
         if (projects[_projectOwner].votingDeadline <= now) {
