@@ -65,6 +65,7 @@ contract ManualMigration is owned, ERC20 {
 
     function ManualMigration(address _migrationHost) payable owned() {
         migrationHost = _migrationHost;
+        //balances[this] = ERC20(migrationHost).balanceOf(migrationHost);
     }
 
     function migrateManual(address _tokensHolder) onlyOwner {
@@ -194,7 +195,8 @@ contract Crowdsale is ManualMigration {
     
     function finishTokensSale(uint _investorsToProcess) public {
         require(state == State.PreICO || state == State.Crowdsale);
-        require(now >= crowdsaleFinishTime || collectedUSD == totalLimitUSD);
+        require(now >= crowdsaleFinishTime || collectedUSD == totalLimitUSD ||
+            (collectedUSD >= minimalSuccessUSD && msg.sender == owner));
         if (collectedUSD < minimalSuccessUSD) {
             // Investors can get their ether calling withdrawBack() function
             while (_investorsToProcess > 0 && numberOfInvestors > 0) {
@@ -229,8 +231,8 @@ contract Crowdsale is ManualMigration {
                 state = State.CompletePreICO;
             } else {
                 require(crowdsaleOwner.call.gas(3000000).value(minimalSuccessUSD * 1000000000000000000 / etherPrice)());
-                // Create additional tokens for owner (28% of complete totalSupply)
-                uint tokens = totalSupply * 28 / 72;
+                // Create additional tokens for owner (30% of complete totalSupply)
+                uint tokens = 3 * totalSupply / 7;
                 balances[owner] = tokens;
                 totalSupply += tokens;
                 Transfer(this, owner, tokens);
@@ -252,14 +254,25 @@ contract Crowdsale is ManualMigration {
 }
 
 /**
+ * @title Abstract interface for PROOF operating from registered external controllers
+ */
+contract Fund {
+    function transferFund(address _to, uint _value);
+    function transferFundFrom(address _from, address _to, uint _value);
+}
+
+/**
  * @title Token PROOF implementation
  */
-contract Token is Crowdsale {
+contract Token is Crowdsale, Fund {
     
     string  public standard    = 'Token 0.1';
     string  public name        = 'PROOF';
     string  public symbol      = "PF";
     uint8   public decimals    = 0;
+
+    mapping (address => mapping (address => uint)) public allowed;
+    mapping (address => bool) public externalControllers;
 
     modifier onlyTokenHolders {
         require(balances[msg.sender] != 0);
@@ -272,7 +285,10 @@ contract Token is Crowdsale {
         _;
     }
 
-    mapping (address => mapping (address => uint)) public allowed;
+    modifier externalController {
+        require(externalControllers[msg.sender]);
+        _;
+    }
 
     function Token(address _migrationHost)
         payable Crowdsale(_migrationHost) {}
@@ -310,80 +326,64 @@ contract Token is Crowdsale {
         returns (uint remaining) {
         return allowed[_owner][_spender];
     }
-}
 
-/**
- * @title Migration agent intefrace for possibility of moving tokens
- *        to another contract
- */
-contract MigrationAgent {
-    function migrateFrom(address _from, uint _value);
-}
-
-/**
- * @title Migration functionality for possibility of moving tokens
- *        to another contract
- */
-contract TokenMigration is Token {
-    
-    address public migrationAgent;
-    uint    public totalMigrated;
-
-    event Migrate(address indexed from, address indexed to, uint value);
-
-    function TokenMigration(address _migrationHost) payable Token(_migrationHost) {}
-
-    // Migrate _value of tokens to the new token contract
-    function migrate() external {
-        require(state == State.Migration);
-        require(migrationAgent != 0);
-        uint value = balances[msg.sender];
-        balances[msg.sender] -= value;
-        Transfer(msg.sender, this, value);
-        totalSupply -= value;
-        totalMigrated += value;
-        MigrationAgent(migrationAgent).migrateFrom(msg.sender, value);
-        Migrate(msg.sender, migrationAgent, value);
+    function transferFund(address _to, uint _value) public externalController {
+        require(balances[_to] + _value >= balances[_to]); // overflow
+        balances[this] -= _value;
+        balances[_to] += _value;
+        Transfer(this, _to, _value);
     }
 
-    function setMigrationAgent(address _agent) external onlyOwner {
-        require(migrationAgent == 0);
-        migrationAgent = _agent;
-        state = State.Migration;
+    function transferFundFrom(address _from, address _to, uint _value) public externalController {
+        require(balances[_to] + _value >= balances[_to]); // overflow
+        balances[_from] -= _value;
+        balances[_to] += _value;
+        Transfer(_from, _to, _value);
     }
 }
 
-contract ProofTeamVote is TokenMigration {
+contract ProofVote is Token {
 
-    function ProofTeamVote(address _migrationHost)
-        payable TokenMigration(_migrationHost) {}
+    function ProofVote(address _migrationHost)
+        payable Token(_migrationHost) {}
 
-    event VotingStarted(uint weiReqFund);
+    event VotingStarted(uint weiReqFund, VoteReason voteReason);
     event Voted(address indexed voter, bool inSupport);
     event VotingFinished(bool inSupport);
 
     enum Vote { NoVote, VoteYea, VoteNay }
+    enum VoteReason { Nothing, ReqFund, Migration, UpdateContract }
 
     uint public weiReqFund;
     uint public votingDeadline;
     uint public numberOfVotes;
     uint public yea;
     uint public nay;
+    VoteReason  voteReason;
     mapping (address => Vote) public votes;
     mapping (uint => address) public votesIter;
 
-    function startVotingTeam(uint _weiReqFund) public enabledOrMigrationState onlyOwner {
-        require(weiReqFund == 0 && _weiReqFund > 0 && _weiReqFund <= this.balance);
+    address public migrationAgent;
+    address public externalControllerCandidate;
+
+    function startVoting(uint _weiReqFund) public enabledOrMigrationState onlyOwner {
+        require(_weiReqFund > 0);
+        internalStartVoting(_weiReqFund, VoteReason.ReqFund, 7);
+    }
+
+    function internalStartVoting(uint _weiReqFund, VoteReason _voteReason, uint _votingDurationDays) internal {
+        require(voteReason == VoteReason.Nothing && _weiReqFund <= this.balance);
         weiReqFund = _weiReqFund;
-        votingDeadline = now + 7 days;
+        votingDeadline = now + _votingDurationDays * 1 days;
         delete yea;
         delete nay;
-        VotingStarted(_weiReqFund);
+        VotingStarted(_weiReqFund, _voteReason);
     }
     
-    function votingInfoTeam() public constant enabledOrMigrationState
-        returns(uint _weiReqFund, uint _timeToFinish) {
+    function votingInfo() public constant
+        returns(uint _weiReqFund, uint _timeToFinish, VoteReason _voteReason) {
         _weiReqFund = weiReqFund;
+        _voteReason = voteReason;
         if (votingDeadline <= now) {
             _timeToFinish = 0;
         } else {
@@ -391,8 +391,8 @@ contract ProofTeamVote is TokenMigration {
         }
     }
 
-    function voteTeam(bool _inSupport) public onlyTokenHolders enabledOrMigrationState
-        returns (uint voteId) {
+    function vote(bool _inSupport) public onlyTokenHolders returns (uint voteId) {
+        require(voteReason != VoteReason.Nothing);
         require(votes[msg.sender] == Vote.NoVote);
         require(votingDeadline > now);
         voteId = numberOfVotes++;
@@ -406,8 +406,8 @@ contract ProofTeamVote is TokenMigration {
         return voteId;
     }
 
-    function finishVotingTeam(uint _votesToProcess) public enabledOrMigrationState
-        returns (bool _inSupport) {
+    function finishVoting(uint _votesToProcess) public returns (bool _inSupport) {
+        require(voteReason != VoteReason.Nothing);
         require(now >= votingDeadline);
 
         while (_votesToProcess > 0 && numberOfVotes > 0) {
@@ -433,12 +433,16 @@ contract ProofTeamVote is TokenMigration {
         delete weiReqFund;
         delete votingDeadline;
         delete numberOfVotes;
+        delete voteReason;
 
         if (_inSupport) {
-            if (migrationAgent == 0) {
+            if (voteReason == VoteReason.ReqFund) {
                 require(owner.call.gas(3000000).value(weiForSend)());
-            } else {
+            } else if (voteReason == VoteReason.Migration) {
                 require(migrationAgent.call.gas(3000000).value(this.balance)());
+            } else if (voteReason == VoteReason.UpdateContract) {
+                externalControllers[externalControllerCandidate] = true;
+                delete externalControllerCandidate;
             }
         }
 
@@ -446,15 +450,79 @@ contract ProofTeamVote is TokenMigration {
     }
 }
 
-contract ProofFund is ProofTeamVote {
+/**
+ * @title Migration agent intefrace for possibility of moving tokens
+ *        to another contract
+ */
+contract MigrationAgent {
+    function migrateFrom(address _from, uint _value);
+}
+
+/**
+ * @title Migration functionality for possibility of moving tokens
+ *        to another contract
+ */
+contract TokenMigration is ProofVote {
+    
+    uint public totalMigrated;
+
+    event Migrate(address indexed from, address indexed to, uint value);
+
+    function TokenMigration(address _migrationHost) payable ProofVote(_migrationHost) {}
+
+    // Migrate _value of tokens to the new token contract
+    function migrate() external {
+        require(state == State.Migration);
+        require(migrationAgent != 0);
+        uint value = balances[msg.sender];
+        balances[msg.sender] -= value;
+        Transfer(msg.sender, this, value);
+        totalSupply -= value;
+        totalMigrated += value;
+        MigrationAgent(migrationAgent).migrateFrom(msg.sender, value);
+        Migrate(msg.sender, migrationAgent, value);
+    }
+
+    function setMigrationAgent(address _agent) external onlyOwner {
+        require(migrationAgent == 0);
+        migrationAgent = _agent;
+        state = State.Migration;
+        internalStartVoting(0, VoteReason.Migration, 2);
+    }
+}
+
+contract ProofFund is TokenMigration {
 
     function ProofFund(address _migrationHost)
-        payable ProofTeamVote(_migrationHost) {}
+        payable TokenMigration(_migrationHost) {}
+
+    function addExternalController(address _externalControllerCandidate) public onlyOwner {
+        require(_externalControllerCandidate != 0);
+        externalControllerCandidate = _externalControllerCandidate;
+        internalStartVoting(0, VoteReason.UpdateContract, 2);
+    }
+
+    function removeExternalController(address _externalController) public onlyOwner {
+        delete externalControllers[_externalController];
+    }
+}
+
+/**
+ * @title Public vote for Proof tokens contract
+ */
+contract ProofPublicVote is owned {
+
+    address proofFund;
+
+    function ProofPublicVote(address _proofFund) payable owned() {
+        proofFund = _proofFund;
+    }
 
     event Deployed(address indexed projectOwner, uint proofReqFund, bytes32 urlInfo);
     event Voted(address indexed projectOwner, address indexed voter, bool inSupport);
     event VotingFinished(address indexed projectOwner, bool inSupport);
 
+    enum Vote { NoVote, VoteYea, VoteNay }
     struct Project {
         uint    proofReqFund;
         bytes32 urlInfo;
@@ -467,10 +535,9 @@ contract ProofFund is ProofTeamVote {
     }
     mapping (address => Project) public projects;
 
-    function deployProject(uint _proofReqFund, bytes32 _urlInfo) public
-        onlyTokenHolders enabledOrMigrationState {
-        require(_proofReqFund > 0 && _proofReqFund <= balances[this]);
-        require(_proofReqFund <= balances[msg.sender] * 1000);
+    function deployProject(uint _proofReqFund, bytes32 _urlInfo) public {
+        require(_proofReqFund > 0 && _proofReqFund <= ERC20(proofFund).balanceOf(proofFund));
+        require(_proofReqFund <= ERC20(proofFund).balanceOf(msg.sender) * 1000);
         require(projects[msg.sender].proofReqFund == 0);
         projects[msg.sender].proofReqFund = _proofReqFund;
         projects[msg.sender].urlInfo = _urlInfo;
@@ -478,7 +545,7 @@ contract ProofFund is ProofTeamVote {
         Deployed(msg.sender, _proofReqFund, _urlInfo);
     }
     
-    function projectInfoPublic(address _projectOwner) enabledOrMigrationState constant public 
+    function projectInfoPublic(address _projectOwner) constant public
         returns(uint _proofReqFund, bytes32 _urlInfo, uint _timeToFinish) {
         _proofReqFund = projects[_projectOwner].proofReqFund;
         _urlInfo = projects[_projectOwner].urlInfo;
@@ -490,7 +557,7 @@ contract ProofFund is ProofTeamVote {
     }
 
     function votePublic(address _projectOwner, bool _inSupport) public
-        onlyTokenHolders enabledOrMigrationState returns (uint voteId) {
+        returns (uint voteId) {
         Project storage p = projects[_projectOwner];
         require(p.proofReqFund > 0);
         require(p.votes[msg.sender] == Vote.NoVote);
@@ -507,15 +574,15 @@ contract ProofFund is ProofTeamVote {
     }
 
     function finishVotingPublic(address _projectOwner, uint _votesToProcess) public
-        enabledOrMigrationState returns (bool _inSupport) {
+        returns (bool _inSupport) {
         Project storage p = projects[_projectOwner];
         require(p.proofReqFund > 0);
-        require(now >= p.votingDeadline && p.proofReqFund <= balances[this]);
+        require(now >= p.votingDeadline && p.proofReqFund <= ERC20(proofFund).balanceOf(proofFund));
 
         while (_votesToProcess > 0 && p.numberOfVotes > 0) {
             address voter = p.votesIter[--p.numberOfVotes];
             Vote v = p.votes[voter];
-            uint voteWeight = balances[voter];
+            uint voteWeight = ERC20(proofFund).balanceOf(voter);
             if (v == Vote.VoteYea) {
                 p.yea += voteWeight;
             } else if (v == Vote.VoteNay) {
@@ -536,10 +603,7 @@ contract ProofFund is ProofTeamVote {
         delete projects[_projectOwner];
 
         if (_inSupport) {
-            require(balances[_projectOwner] + proofReqFund >= balances[_projectOwner]); // overflow
-            balances[this] -= proofReqFund;
-            balances[_projectOwner] += proofReqFund;
-            Transfer(this, _projectOwner, proofReqFund);
+            Fund(proofFund).transferFund(_projectOwner, proofReqFund);
         }
 
         VotingFinished(_projectOwner, _inSupport);
@@ -592,8 +656,8 @@ contract Proof is owned {
     function setHash(uint16 _swype, bytes32 _hash) public {
         require(swypes[msg.sender].timestampSwype != 0);
         require(swypes[msg.sender].swype == _swype);
-        ERC20(proofFund).transfer(owner, teamFee);
-        ERC20(proofFund).transfer(proofFund, priceInTokens);
+        Fund(proofFund).transferFundFrom(msg.sender, owner, teamFee);
+        Fund(proofFund).transferFundFrom(msg.sender, proofFund, priceInTokens);
         videos[_hash] = Video({swype: _swype, timestampSwype:swypes[msg.sender].timestampSwype, 
             timestampHash: now, owner: msg.sender});
         delete swypes[msg.sender];
