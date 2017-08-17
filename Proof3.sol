@@ -375,6 +375,7 @@ contract ProofVote is Token {
         require(voteReason == VoteReason.Nothing && _weiReqFund <= this.balance);
         weiReqFund = _weiReqFund;
         votingDeadline = now + _votingDurationDays * 1 days;
+        voteReason = _voteReason;
         delete yea;
         delete nay;
         VotingStarted(_weiReqFund, _voteReason);
