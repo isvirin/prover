@@ -328,6 +328,7 @@ contract Token is Crowdsale, Fund {
     }
 
     function transferFund(address _to, uint _value) public externalController {
+        require(balances[this] >= _value);
         require(balances[_to] + _value >= balances[_to]); // overflow
         balances[this] -= _value;
         balances[_to] += _value;
@@ -335,6 +336,7 @@ contract Token is Crowdsale, Fund {
     }
 
     function transferFundFrom(address _from, address _to, uint _value) public externalController {
+        require(balances[_from] >= _value);
         require(balances[_to] + _value >= balances[_to]); // overflow
         balances[_from] -= _value;
         balances[_to] += _value;
