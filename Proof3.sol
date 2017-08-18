@@ -436,7 +436,6 @@ contract ProofVote is Token {
         delete weiReqFund;
         delete votingDeadline;
         delete numberOfVotes;
-        delete voteReason;
 
         if (_inSupport) {
             if (voteReason == VoteReason.ReqFund) {
@@ -449,6 +448,7 @@ contract ProofVote is Token {
             }
         }
 
+        delete voteReason;
         VotingFinished(_inSupport);
     }
 }
