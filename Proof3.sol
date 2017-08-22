@@ -366,6 +366,7 @@ contract ProofVote is Token {
     mapping (uint => address) public votesIter;
 
     address public migrationAgent;
+    address public migrationAgentCandidate;
     address public externalControllerCandidate;
 
     function startVoting(uint _weiReqFund) public enabledOrMigrationState onlyOwner {
@@ -441,7 +442,10 @@ contract ProofVote is Token {
             if (voteReason == VoteReason.ReqFund) {
                 require(owner.call.gas(3000000).value(weiForSend)());
             } else if (voteReason == VoteReason.Migration) {
+                migrationAgent = migrationAgentCandidate;
                 require(migrationAgent.call.gas(3000000).value(this.balance)());
+                delete migrationAgentCandidate;
+                state = State.Migration;
             } else if (voteReason == VoteReason.UpdateContract) {
                 externalControllers[externalControllerCandidate] = true;
                 delete externalControllerCandidate;
@@ -476,7 +480,6 @@ contract TokenMigration is ProofVote {
     // Migrate _value of tokens to the new token contract
     function migrate() external {
         require(state == State.Migration);
-        require(migrationAgent != 0);
         uint value = balances[msg.sender];
         balances[msg.sender] -= value;
         Transfer(msg.sender, this, value);
@@ -487,9 +490,8 @@ contract TokenMigration is ProofVote {
     }
 
     function setMigrationAgent(address _agent) external onlyOwner {
-        require(migrationAgent == 0);
-        migrationAgent = _agent;
-        state = State.Migration;
+        require(migrationAgent == 0 && _agent != 0);
+        migrationAgentCandidate = _agent;
         internalStartVoting(0, VoteReason.Migration, 2);
     }
 }
