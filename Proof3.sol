@@ -258,7 +258,6 @@ contract Crowdsale is ManualMigration {
  */
 contract Fund {
     function transferFund(address _to, uint _value);
-    function transferFundFrom(address _from, address _to, uint _value);
 }
 
 /**
@@ -333,14 +332,6 @@ contract Token is Crowdsale, Fund {
         balances[this] -= _value;
         balances[_to] += _value;
         Transfer(this, _to, _value);
-    }
-
-    function transferFundFrom(address _from, address _to, uint _value) public externalController {
-        require(balances[_from] >= _value);
-        require(balances[_to] + _value >= balances[_to]); // overflow
-        balances[_from] -= _value;
-        balances[_to] += _value;
-        Transfer(_from, _to, _value);
     }
 }
 
@@ -513,6 +504,49 @@ contract ProofFund is TokenMigration {
 }
 
 /**
+ * @title Proof interface
+ */
+contract ProofAbstract {
+    function swypeCode(address _who) returns (uint16 _swype);
+    function setHash(address _who, uint16 _swype, bytes32 _hash);
+}
+
+contract Proof is ProofFund {
+
+    uint    public priceInTokens;
+    uint    public teamFee;
+    address public proofImpl;
+
+    function Proof(address _migrationHost)
+        payable ProofFund(_migrationHost) {}
+
+    function setPrice(uint _priceInTokens) public onlyOwner {
+        require(_priceInTokens >= 2);
+        teamFee = _priceInTokens / 10;
+        if (teamFee == 0) {
+            teamFee = 1;
+        }
+        priceInTokens = _priceInTokens - teamFee;
+    }
+
+    function setProofImpl(address _proofImpl) public onlyOwner {
+        proofImpl = _proofImpl;
+    }
+
+    function swypeCode() public returns (uint16 _swype) {
+        require(proofImpl != 0);
+        _swype = ProofAbstract(proofImpl).swypeCode(msg.sender);
+    }
+    
+    function setHash(uint16 _swype, bytes32 _hash) public {
+        require(proofImpl != 0);
+        transfer(owner, teamFee);
+        transfer(this, priceInTokens);
+        ProofAbstract(proofImpl).setHash(msg.sender, _swype, _hash);
+    }
+}
+
+/**
  * @title Public vote for Proof tokens contract
  */
 contract ProofPublicVote is owned {
@@ -618,7 +652,8 @@ contract ProofPublicVote is owned {
 /**
  * @title Prover business-logic contract
  */
-contract Proof is owned {
+contract ProofImpl is owned, ProofAbstract {
+
     struct Swype {
         uint16  swype;
         uint    timestampSwype;
@@ -634,37 +669,29 @@ contract Proof is owned {
     mapping (address => Swype) public swypes;
     mapping (bytes32 => Video) public videos;
 
-    uint    public priceInTokens;
-    uint    public teamFee;
     address public proofFund;
 
-    function Proof(address _proofFund) payable owned() {
+    modifier onlyProofFund {
+        require(proofFund == msg.sender);
+        _;
+    }
+
+    function ProofImpl(address _proofFund) payable owned() {
         proofFund = _proofFund;
     }
 
-    function setPrice(uint _priceInTokens) public onlyOwner {
-        require(_priceInTokens >= 2);
-        teamFee = _priceInTokens / 10;
-        if (teamFee == 0) {
-            teamFee = 1;
-        }
-        priceInTokens = _priceInTokens - teamFee;
-    }
-
-    function swypeCode() public returns (uint16 _swype) {
+    function swypeCode(address _who) public onlyProofFund returns (uint16 _swype) {
         bytes32 blockHash = block.blockhash(block.number - 1);
         bytes32 shaTemp = sha3(msg.sender, blockHash);
         _swype = uint16(uint256(shaTemp) % 65536);
-        swypes[msg.sender] = Swype({swype: _swype, timestampSwype: now});
+        swypes[_who] = Swype({swype: _swype, timestampSwype: now});
     }
     
-    function setHash(uint16 _swype, bytes32 _hash) public {
-        require(swypes[msg.sender].timestampSwype != 0);
-        require(swypes[msg.sender].swype == _swype);
-        Fund(proofFund).transferFundFrom(msg.sender, owner, teamFee);
-        Fund(proofFund).transferFundFrom(msg.sender, proofFund, priceInTokens);
-        videos[_hash] = Video({swype: _swype, timestampSwype:swypes[msg.sender].timestampSwype, 
-            timestampHash: now, owner: msg.sender});
-        delete swypes[msg.sender];
+    function setHash(address _who, uint16 _swype, bytes32 _hash) onlyProofFund public {
+        require(swypes[_who].timestampSwype != 0);
+        require(swypes[_who].swype == _swype);
+        videos[_hash] = Video({swype: _swype, timestampSwype:swypes[_who].timestampSwype, 
+            timestampHash: now, owner: _who});
+        delete swypes[_who];
     }
 }
