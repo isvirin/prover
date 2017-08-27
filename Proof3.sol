@@ -133,7 +133,7 @@ contract Crowdsale is ManualMigration {
         } else {
             collectedUSD += valueUSD;
         }
-        accrueTokens(msg.sender, valueUSD, valueWei);
+        mintTokens(msg.sender, valueUSD, valueWei);
     }
 
     function depositUSD(address _who, uint _valueUSD) public onlyOwner {
@@ -141,10 +141,10 @@ contract Crowdsale is ManualMigration {
         require(now < crowdsaleFinishTime);
         require(collectedUSD + _valueUSD <= totalLimitUSD);
         collectedUSD += _valueUSD;
-        accrueTokens(_who, _valueUSD, 0);
+        mintTokens(_who, _valueUSD, 0);
     }
 
-    function accrueTokens(address _who, uint _valueUSD, uint _valueWei) internal {
+    function mintTokens(address _who, uint _valueUSD, uint _valueWei) internal {
         uint tokensPerUSD = 100;
         if (state == State.PreICO) {
             if (now < crowdsaleStartTime + 1 days && _valueUSD >= 50000) {
@@ -163,7 +163,7 @@ contract Crowdsale is ManualMigration {
         require(balances[_who] + tokens > balances[_who]); // overflow
         require(tokens > 0);
         Investor storage inv = investors[_who];
-        if (inv.amountWei == 0) { // new investor
+        if (inv.amountTokens == 0) { // new investor
             investorsIter[numberOfInvestors++] = _who;
         }
         inv.amountTokens += tokens;
