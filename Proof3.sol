@@ -168,7 +168,7 @@ contract Crowdsale is ManualMigration {
         }
         inv.amountTokens += tokens;
         inv.amountWei += _valueWei;
-        balances[msg.sender] += tokens;
+        balances[_who] += tokens;
         Transfer(this, _who, tokens);
         totalSupply += tokens;
     }
