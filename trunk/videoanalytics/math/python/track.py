@@ -156,9 +156,9 @@ if __name__=='__main__':
 
         cur_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if type(prev_frame) is np.ndarray: # if it is not the first frame
-            # Feature detection on the frame น1
+            # Feature detection on the frame ยน1
             prev_frame_kp, prev_frame_desc = detector.detectAndCompute(prev_frame, None)
-            # Feature detection on the frame น2
+            # Feature detection on the frame ยน2
             cur_frame_kp, cur_frame_desc = detector.detectAndCompute(cur_frame, None)
             # Feature matching
             raw_matches = matcher.knnMatch(prev_frame_desc, cur_frame_desc, k=2)
@@ -176,10 +176,10 @@ if __name__=='__main__':
                 rez_vec_2_y = []
                 for idx in range(len(status)):
                     if status[idx] == 1:
-                        rez_vec_1_x.append(original_points[idx, 0])
-                        rez_vec_1_y.append(original_points[idx, 1])
-                        rez_vec_2_x.append(distorted_points[idx, 0])
-                        rez_vec_2_y.append(distorted_points[idx, 1])
+                        rez_vec_1_x.append(original_points[idx, 1])
+                        rez_vec_1_y.append(original_points[idx, 0])
+                        rez_vec_2_x.append(distorted_points[idx, 1])
+                        rez_vec_2_y.append(distorted_points[idx, 0])
                 rez_vec_1_x = np.array(rez_vec_1_x)
                 rez_vec_1_y = np.array(rez_vec_1_y)
                 rez_vec_2_x = np.array(rez_vec_2_x)
