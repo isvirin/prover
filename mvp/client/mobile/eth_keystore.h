@@ -12,7 +12,8 @@ enum DecryptKeystoreResultCode
     Keystore_WrongFormat        = -1,
     Keystore_UnsupportedVersion = -2,
     Keystore_UnsupportedCipher  = -3,
-    Keystore_UnsupportedKdf     = -4
+    Keystore_UnsupportedKdf     = -4,
+    Keystore_AuthFailed         = -5
 };
 
 enum DecryptKeystoreResultCode decrypt_keystore_file(

@@ -5,8 +5,8 @@
 #include <json/json.h>
 #include "scrypt.h"
 #include "aesctr.h"
+#include "keccak.h"
 
-#include <stdio.h>
 
 static int hex2bin(const char *hex, uint8_t *bin, unsigned int byteslen)
 {
@@ -115,8 +115,9 @@ static enum DecryptKeystoreResultCode decrypt_privkey(
     struct scrypt_context kdf;
     uint8_t cipherkey[16], mackey[16];
     uint8_t iv[16];
+    uint8_t filemac[32], realmac[32];
+    struct keccak_context keccak;
     struct aesctr_context cipher;
-    int i;
 
     // Check presence and types of "cipher" and "kdf"
     if(!json_object_object_get_ex(obj, "crypto", &jsonCrypto) ||
@@ -185,15 +186,25 @@ static enum DecryptKeystoreResultCode decrypt_privkey(
     scrypt_step(&kdf, mackey, 16);
     scrypt_finish(&kdf);
 
-    // Decrypt
-    hex2bin(json_object_get_string(jsonIV), iv, 16);
+    // Read cipher text
     hex2bin(json_object_get_string(jsonCipherText), privkey, 32);
 
+    // Check MAC
+    keccak_start(&keccak, 1088, 256, 0x01);
+    keccak_step(&keccak, mackey, 16);
+    keccak_step(&keccak, privkey, 32);
+    keccak_finish(&keccak, realmac);
+
+    hex2bin(json_object_get_string(jsonMAC), filemac, 32);
+
+    if(memcmp(filemac, realmac, 32)!=0)
+        return Keystore_AuthFailed;
+
+    // Decrypt
+    hex2bin(json_object_get_string(jsonIV), iv, 16);
     aesctr_start(&cipher, cipherkey, 16, iv);
     aesctr_step(&cipher, privkey, 32);
     aesctr_finish(&cipher);
-
-    // TODO: check MAC. Keccak-256 is needed
 
     return Keystore_OK;
 }

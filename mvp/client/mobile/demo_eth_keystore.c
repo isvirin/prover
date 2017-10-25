@@ -35,6 +35,9 @@ int main(int argc, char *argv[])
         case Keystore_UnsupportedKdf:
             fprintf(stderr, "Unsupported key derivation function\n");
             break;
+        case Keystore_AuthFailed:
+            fprintf(stderr, "Invalid password\n");
+            break;
         default:
             fprintf(stderr, "Unexpected error %d\n", (int)rc);
             break;
