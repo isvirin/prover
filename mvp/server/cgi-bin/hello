@@ -1,0 +1,55 @@
+#! /usr/bin/env python
+
+import sys, os, json, traceback
+
+# Python 2/3 compatibility stuff
+if str==bytes:
+    from urlparse import parse_qs, parse_qsl
+    from urllib import urlencode
+    from urllib import urlopen
+else:
+    from urllib.parse import parse_qs, parse_qsl
+    from urllib.parse import urlencode
+    from urllib.request import urlopen
+    sys.stdout=sys.stdout.buffer
+    sys.stdin=sys.stdin.buffer
+
+
+configfile=os.getenv("PROVER_MVP_CONFIG", os.path.expanduser(os.path.join("~", "prover.conf")))
+try:
+    config=json.load(open(configfile, "rt"))
+except:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nServer is not configured properly\n")
+    sys.exit(0)
+
+try:
+    if os.environ["REQUEST_METHOD"]!="POST":
+        sys.stdout.write(b"Status: 405 Method Not Allowed\n\nOnly POST method is allowed\n")
+        sys.exit(0)
+
+    if os.environ["CONTENT_TYPE"]!="application/x-www-form-urlencoded":
+        sys.stdout.write(b"Status: 415 Unsupported Media Type\n\nOnly x-www-form-urlencoded content type is supported\n")
+        sys.exit(0)
+
+    data=sys.stdin.read().decode("latin1")
+    query_args=parse_qs(data, keep_blank_values=True)
+except Exception:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\n"+traceback.format_exc().encode("utf8")+b"\n")
+    sys.exit(0)
+
+
+address=query_args["user"][0]
+
+rpcrequest=[]
+rpcrequest.append({"jsonrpc":"2.0", "method":"eth_gasPrice", "params":[], "id":"gp"})
+rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getTransactionCount", "params":[address, "latest"], "id":"tc"})
+
+res=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+if res.getcode()!=200:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
+    sys.exit(0)
+
+reply=json.loads(res.read().decode("latin1"))
+res={"gasprice":[r["result"] for r in reply if r["id"]=="gp"][0], "nonce":[r["result"] for r in reply if r["id"]=="tc"][0], "contract":config["contract"]}
+
+sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(res).encode("latin1")+b"\n")
