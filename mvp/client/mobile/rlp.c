@@ -32,6 +32,17 @@ struct rlp_item *rlp_create_string_item(const uint8_t *data, size_t size)
     return item;
 }
 
+struct rlp_item *rlp_create_be_int_item(const uint8_t *data, size_t size)
+{
+    while(size>0 && *data==0)
+    {
+        ++data;
+        --size;
+    }
+
+    return rlp_create_string_item(data, size);
+}
+
 struct rlp_item *rlp_create_list_item()
 {
     struct rlp_item *item=(struct rlp_item *)malloc(sizeof(struct rlp_item));

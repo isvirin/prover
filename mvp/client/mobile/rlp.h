@@ -23,6 +23,7 @@ struct rlp_item
 // Item creation and destruction. A newborn item has reference count equal
 // to 1. There are two kinds of items - string (byte array) and list.
 struct rlp_item *rlp_create_string_item(const uint8_t *data, size_t size);
+struct rlp_item *rlp_create_be_int_item(const uint8_t *data, size_t size);
 struct rlp_item *rlp_create_list_item();
 struct rlp_item *rlp_duplicate_item(const struct rlp_item *item);
 
