@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import sys, os, json, traceback
+import sys, os, json, hashlib, traceback
 
 # Python 2/3 compatibility stuff
 if str==bytes:
@@ -43,13 +43,36 @@ address=query_args["user"][0]
 rpcrequest=[]
 rpcrequest.append({"jsonrpc":"2.0", "method":"eth_gasPrice", "params":[], "id":"gp"})
 rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getTransactionCount", "params":[address, "latest"], "id":"tc"})
+rpcrequest.append({"jsonrpc":"2.0", "method":"eth_blockNumber", "params":[], "id":"bn"})
 
-res=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
-if res.getcode()!=200:
+reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+if reply.getcode()!=200:
     sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
     sys.exit(0)
 
-reply=json.loads(res.read().decode("latin1"))
-res={"gasprice":[r["result"] for r in reply if r["id"]=="gp"][0], "nonce":[r["result"] for r in reply if r["id"]=="tc"][0], "contract":config["contract"]}
+replyJson=json.loads(reply.read().decode("latin1"))
+
+res=dict()
+res["contractAddress"]=config["contract"]
+res["gasprice"]=[r["result"] for r in replyJson if r["id"]=="gp"][0]
+res["nonce"]=[r["result"] for r in replyJson if r["id"]=="tc"][0]
+
+referenceBlockNumber=int([r["result"] for r in replyJson if r["id"]=="bn"][0], 16)
+try:
+    referenceBlockNumber-=(config["referenceConfirmations"]-1)
+except:
+    pass
+
+rpcrequest={"jsonrpc":"2.0", "method":"eth_getBlockByNumber", "params":[hex(referenceBlockNumber), False], "id":0}
+reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+if reply.getcode()!=200:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
+    sys.exit(0)
+
+replyJson=json.loads(reply.read().decode("latin1"))
+
+res["referenceBlockNumber"]=replyJson["result"]["number"]
+res["referenceBlockHash"]=replyJson["result"]["hash"]
+res["swypeCode"]=int.from_bytes(hashlib.sha256(int(address, 16).to_bytes(20, "big")+int(res["referenceBlockHash"], 16).to_bytes(32, "big")).digest(), "big")%config["swypeModulo"]
 
 sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(res).encode("latin1")+b"\n")
