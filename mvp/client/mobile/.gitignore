@@ -1,3 +1,4 @@
 *.c.o
 *.a
 demo_eth_keystore
+demo_sign_tx
