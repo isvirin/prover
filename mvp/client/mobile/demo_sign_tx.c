@@ -66,7 +66,8 @@ int main(int argc, char *argv[])
     }
     else
     {
-        printf(
+        fprintf(
+            stderr,
             "Usage:\n"
             "  %s commitSwypeCode NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY REFERENCE-BLOCK-HASH\n"
             "  %s commitMediaHash NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MEDIA-HASH\n",

@@ -14,7 +14,10 @@ int main(int argc, char *argv[])
     unsigned int i;
 
     if(argc<=1)
+    {
+        fprintf(stderr, "Usage: %s FILE\n", argv[0]);
         return 1;
+    }
 
     password=getpass("Unlock account: ");
 
