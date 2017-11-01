@@ -33,3 +33,4 @@ demo_sign_tx: demo_sign_tx.c.o hex2bin.c.o sign_eth_tx.a secp256k1/.libs/libsecp
 
 clean:
 	rm -rf $(TARGET_DEMOS) $(TARGET_LIBS) *.c.o
+	cd secp256k1; make distclean
