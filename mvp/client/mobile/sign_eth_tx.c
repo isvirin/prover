@@ -1,6 +1,7 @@
 // Blashyrkh.maniac.coding
 
 #include "sign_eth_tx.h"
+#include <string.h>
 #include <stdlib.h>
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
@@ -12,9 +13,9 @@ static ssize_t build_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
-    const uint8_t   privkey[32],
     const uint8_t  *data,
     size_t          datasize,
+    const uint8_t   privkey[32],
     uint8_t       **pbuffer)
 {
     struct rlp_item *Ls, *Lt;
@@ -70,19 +71,46 @@ static ssize_t build_tx(
     return rlp_serialize(Ls, pbuffer);
 }
 
-ssize_t build_swypeCode_tx(
+ssize_t build_commitSwypeCode_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
+    const uint8_t   referenceBlockHash[32],
     const uint8_t   privkey[32],
     uint8_t       **pbuffer)
 {
+    uint8_t data[4+32];
+    memcpy(data+0, "\x0e\x16\xc8\x89", 4); // Keccak("commitSwypeCode(bytes32)")[0:4]
+    memcpy(data+4, referenceBlockHash, 32);
+
     return build_tx(
         nonce,
         gasPrice,
         contractAddress,
+        data,
+        sizeof(data),
         privkey,
-        (const uint8_t *)"\x46\x97\x5b\x9a", // hard-coded "swypeCode()" signature
-        4,
+        pbuffer);
+}
+
+ssize_t build_commitMediaHash_tx(
+    const uint8_t   nonce[32],
+    const uint8_t   gasPrice[32],
+    const uint8_t   contractAddress[20],
+    const uint8_t   mediaHash[32],
+    const uint8_t   privkey[32],
+    uint8_t       **pbuffer)
+{
+    uint8_t data[4+32];
+    memcpy(data+0, "\x02\x4c\x6d\x70", 4); // Keccak("commitMediaHash(bytes32)")[0:4]
+    memcpy(data+4, mediaHash, 32);
+
+    return build_tx(
+        nonce,
+        gasPrice,
+        contractAddress,
+        data,
+        sizeof(data),
+        privkey,
         pbuffer);
 }
