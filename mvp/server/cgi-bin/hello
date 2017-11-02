@@ -54,7 +54,7 @@ replyJson=json.loads(reply.read().decode("latin1"))
 
 res=dict()
 res["contractAddress"]=config["contract"]
-res["gasprice"]=[r["result"] for r in replyJson if r["id"]=="gp"][0]
+res["gasPrice"]=[r["result"] for r in replyJson if r["id"]=="gp"][0]
 res["nonce"]=[r["result"] for r in replyJson if r["id"]=="tc"][0]
 
 referenceBlockNumber=int([r["result"] for r in replyJson if r["id"]=="bn"][0], 16)
