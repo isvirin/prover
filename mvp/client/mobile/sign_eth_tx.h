@@ -21,6 +21,7 @@ ssize_t build_commitMediaHash_tx(
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
     const uint8_t   mediaHash[32],
+    const uint8_t   swypeCodeTransactionHash[32],
     const uint8_t   privkey[32],
     uint8_t       **pbuffer);
 

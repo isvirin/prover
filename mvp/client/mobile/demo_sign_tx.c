@@ -37,12 +37,13 @@ int main(int argc, char *argv[])
             free(result);
         }
     }
-    else if(argc==7 && strcmp(argv[1], "commitMediaHash")==0)
+    else if(argc==8 && strcmp(argv[1], "commitMediaHash")==0)
     {
         uint8_t nonce[32];
         uint8_t gasPrice[32];
         uint8_t contract[20];
         uint8_t mediaHash[32];
+        uint8_t swypeCodeTransactionHash[32];
         uint8_t privkey[32];
         uint8_t *result;
         ssize_t size;
@@ -52,8 +53,9 @@ int main(int argc, char *argv[])
         hex2bin(argv[4], contract, 20);
         hex2bin(argv[5], privkey, 32);
         hex2bin(argv[6], mediaHash, 32);
+        hex2bin(argv[7], swypeCodeTransactionHash, 32);
 
-        size=build_commitMediaHash_tx(nonce, gasPrice, contract, mediaHash, privkey, &result);
+        size=build_commitMediaHash_tx(nonce, gasPrice, contract, mediaHash, swypeCodeTransactionHash, privkey, &result);
         if(size!=-1)
         {
             ssize_t i;
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
             stderr,
             "Usage:\n"
             "  %s commitSwypeCode NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY REFERENCE-BLOCK-HASH\n"
-            "  %s commitMediaHash NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MEDIA-HASH\n",
+            "  %s commitMediaHash NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MEDIA-HASH SWYPE-CODE-TX-HASH\n",
             argv[0],
             argv[0]);
         return 1;

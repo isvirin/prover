@@ -98,12 +98,14 @@ ssize_t build_commitMediaHash_tx(
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
     const uint8_t   mediaHash[32],
+    const uint8_t   swypeCodeTransactionHash[32],
     const uint8_t   privkey[32],
     uint8_t       **pbuffer)
 {
-    uint8_t data[4+32];
-    memcpy(data+0, "\x02\x4c\x6d\x70", 4); // Keccak("commitMediaHash(bytes32)")[0:4]
+    uint8_t data[4+32+32];
+    memcpy(data+0, "\x07\xa7\x73\xa9", 4); // Keccak("commitMediaHash(bytes32,bytes32)")[0:4]
     memcpy(data+4, mediaHash, 32);
+    memcpy(data+36, swypeCodeTransactionHash, 32);
 
     return build_tx(
         nonce,
