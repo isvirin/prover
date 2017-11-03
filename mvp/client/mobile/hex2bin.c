@@ -72,6 +72,7 @@ int hex2bin_bigendian(const char *hex, uint8_t *bin, unsigned int byteslen)
             --hp;
         }
 
+        *bp=v;
         --bp;
     }
     if(bp<bin && hp>=hex)
