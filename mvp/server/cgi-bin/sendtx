@@ -15,7 +15,7 @@ else:
     sys.stdin=sys.stdin.buffer
 
 
-configfile=os.getenv("PROVER_MVP_CONFIG", os.path.expanduser(os.path.join("~", "prover.conf")))
+configfile=os.getenv("PROVER_MVP_CONFIG", "/etc/prover/prover.conf")
 try:
     config=json.load(open(configfile, "rt"))
 except:
