@@ -3,7 +3,7 @@
 using namespace cv;
 using namespace std;
 
-int SwypeDetect::CircleDetection(void)
+int SwypeDetect::CircleDetection(void)  // circle detection algorithm
 {
 	vector<double> C;
 	int lenth_deltaXX = (int)deltaXX.size();
@@ -20,7 +20,7 @@ int SwypeDetect::CircleDetection(void)
 	return 0;
 }
 
-vector<double> SwypeDetect::x_corr(void)
+vector<double> SwypeDetect::x_corr(void)  // correlation calculation algorithm
 {
 	vector<double> Result;
 	matchTemplate(deltaXX, deltaYY, Result, CV_TM_CCOEFF_NORMED);
@@ -28,7 +28,7 @@ vector<double> SwypeDetect::x_corr(void)
 }
 
 
-vector<Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)
+vector<Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)  // coordinates of the swype points
 {
 	vector<Point2i> Result(9);
 
@@ -62,7 +62,7 @@ vector<Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)
 	return Result;
 }
 
-void SwypeDetect::Delta_Calculation(Point2i output, int k)
+void SwypeDetect::Delta_Calculation(Point2i output, int k) // offsets calculation for frames
 {
 	double Mean_Alfa;
 	double K;
@@ -112,7 +112,7 @@ void SwypeDetect::Delta_Calculation(Point2i output, int k)
 	if ((Mean_Alfa >= 292.5) && (Mean_Alfa<337.5)) Direction = 4;
 }
 
-void SwypeDetect::Swype_Data(vector<Point2i>& koord)
+void SwypeDetect::Swype_Data(vector<Point2i>& koord)  // logic for entering swype numbers
 {
 
 	
@@ -385,7 +385,7 @@ void SwypeDetect::Swype_Data(vector<Point2i>& koord)
 	}
 }
 
-SwypeDetect::SwypeDetect()
+SwypeDetect::SwypeDetect() // initialization
 {
 	call = 0;
 	count_direction = -1;
@@ -432,7 +432,7 @@ void SwypeDetect::setSwype(string swype)
 	}
 }
 
-void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y)
+void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y)  // main logic
 {
 
 	vector<Point2i> koord_Sw_points(9);
@@ -442,7 +442,7 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 	Point2d shift;
 
 	if (frame1.empty()) {
-		cvtColor(frame, frame1, CV_RGB2GRAY); // Перевод в градации серого
+		cvtColor(frame, frame1, CV_RGB2GRAY); // RGB to grayscale
 		frame2 = frame1.clone();
 	}
 	else {
@@ -450,28 +450,28 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 		cvtColor(frame, frame2, CV_RGB2GRAY);
 	}
 	
-	width = frame1.cols; //Ширина фрейма
-	height = frame1.rows; //Высота фрейма
+	width = frame1.cols; 
+	height = frame1.rows; 
 
-	koord_Sw_points = Koord_Swipe_Points(width, height); //Получаем координаты swipe-точек
+	koord_Sw_points = Koord_Swipe_Points(width, height); // we get the coordinates of the swipe points
 	
-	frame1.convertTo(buf1ft, CV_64F); //Преобразование фреймов в тип CV_64F
+	frame1.convertTo(buf1ft, CV_64F); // converting frames to CV_64F type
 	frame2.convertTo(buf2ft, CV_64F);
 
 	if (hann.empty()) {
-		createHanningWindow(hann, buf1ft.size(), CV_64F); //Если окно Ханна не было создано - создаем
+		createHanningWindow(hann, buf1ft.size(), CV_64F); //  create Hanning window
 	}
 
-	shift = phaseCorrelate(buf1ft, buf2ft, hann); //Получаем вектор смещения фазы
+	shift = phaseCorrelate(buf1ft, buf2ft, hann); // we calculate a phase offset vector
 
-	Delta_Calculation(shift, call); //Вычисляем перемещение
+	Delta_Calculation(shift, call); //offsets calculation for frames
 	
 	if (S == 0) {
-		if ((fabs(deltaX) > 3) || (fabs(deltaY) > 3)) S = CircleDetection(); //Определяем круговое движение
+		if ((fabs(deltaX) > 3) || (fabs(deltaY) > 3)) S = CircleDetection(); //circle detection
 		seconds_1 = time(NULL);
 	}
 	else if (S == 1) {
-		if (!swype_Numbers.empty()) S = 2; //Если получили свайпкод, то переходим к детектированию
+		if (!swype_Numbers.empty()) S = 2; // if we have swype then we go to detection swype from video
 		state = S;
 		seconds_2 = time(NULL);
 		if ((seconds_2 - seconds_1) > 4) Reset();
@@ -479,14 +479,12 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 	else if (S == 2) {
 		//for (int j = count_num; j < swype_Numbers.size; j++) {
 
-			//тут непонятный кусок и цикл, сделаю немного по-своему
-
-			if ((fabs(deltaX) > 3) || (fabs(deltaY) > 3)) { //Если приращение по какой-либо из координат больше 3, то это уже направление и его сохраняем в массив
+			if ((fabs(deltaX) > 3) || (fabs(deltaY) > 3)) {
 				DirectionS.push_back(Direction);
 				count_direction++;
 			}
 
-			if ((count_direction >= 2) && (DirectionS[count_direction] == DirectionS[count_direction - 1]) && (DirectionS[count_direction - 1] == DirectionS[count_direction - 2])) { //если направление сохраняется, то засчитываем определение цифры свайпкода (верное или не верное)
+			if ((count_direction >= 2) && (DirectionS[count_direction] == DirectionS[count_direction - 1]) && (DirectionS[count_direction - 1] == DirectionS[count_direction - 2])) {
 				count_num++;
 				if (count_num > 1) Swype_Data(koord_Sw_points);
 			}
@@ -518,7 +516,7 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 	
 }
 
-void SwypeDetect::Reset(void)
+void SwypeDetect::Reset(void)  // reset
 {
 	call = 0;
 	count_direction = -1;
