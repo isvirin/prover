@@ -56,5 +56,7 @@ if reply.getcode()!=200:
     sys.exit(0)
 
 replyJson=json.loads(reply.read().decode("latin1"))
+del replyJson["jsonrpc"]
+del replyJson["id"]
 
-sys.stdout.write(replyJson["result"])
+sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(replyJson).encode("latin1")+b"\n")
