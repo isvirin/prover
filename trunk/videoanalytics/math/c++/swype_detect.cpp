@@ -1,11 +1,8 @@
 #include "swype_detect.h"
 
-using namespace cv;
-using namespace std;
-
 int SwypeDetect::CircleDetection(void)  // circle detection algorithm
 {
-	vector<double> C;
+	std::vector<double> C;
 	int lenth_deltaXX = (int)deltaXX.size();
 	for (int i = 0; i < lenth_deltaXX; i++) {
 		if ((deltaXX[i] > frame2.cols) && ((deltaYY[i] > frame2.rows))) {
@@ -20,17 +17,17 @@ int SwypeDetect::CircleDetection(void)  // circle detection algorithm
 	return 0;
 }
 
-vector<double> SwypeDetect::x_corr(void)  // correlation calculation algorithm
+std::vector<double> SwypeDetect::x_corr(void)  // correlation calculation algorithm
 {
-	vector<double> Result;
-	matchTemplate(deltaXX, deltaYY, Result, CV_TM_CCOEFF_NORMED);
+	std::vector<double> Result;
+	cv::matchTemplate(deltaXX, deltaYY, Result, CV_TM_CCOEFF_NORMED);
 	return Result;
 }
 
 
-vector<Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)  // coordinates of the swype points
+std::vector<cv::Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)  // coordinates of the swype points
 {
-	vector<Point2i> Result(9);
+	std::vector<cv::Point2i> Result(9);
 
 	Result[0].x = (int)floor(2 * width / 8);
 	Result[0].y = (int)floor(2 * height / 8);
@@ -62,7 +59,7 @@ vector<Point2i> SwypeDetect::Koord_Swipe_Points(int width, int height)  // coord
 	return Result;
 }
 
-void SwypeDetect::Delta_Calculation(Point2i output, int k) // offsets calculation for frames
+void SwypeDetect::Delta_Calculation(cv::Point2i output, int k) // offsets calculation for frames
 {
 	double Mean_Alfa;
 	double K;
@@ -112,7 +109,7 @@ void SwypeDetect::Delta_Calculation(Point2i output, int k) // offsets calculatio
 	if ((Mean_Alfa >= 292.5) && (Mean_Alfa<337.5)) Direction = 4;
 }
 
-void SwypeDetect::Swype_Data(vector<Point2i>& koord)  // logic for entering swype numbers
+void SwypeDetect::Swype_Data(std::vector<cv::Point2i>& koord)  // logic for entering swype numbers
 {
 
 	
@@ -413,13 +410,13 @@ SwypeDetect::~SwypeDetect()
 
 }
 
-void SwypeDetect::init(int fps_e, string swype = "")
+void SwypeDetect::init(int fps_e, std::string swype = "")
 {
 	fps = fps_e;
 	setSwype(swype);
 }
 
-void SwypeDetect::setSwype(string swype)
+void SwypeDetect::setSwype(std::string swype)
 {
 	char t;
 	int j;
@@ -432,14 +429,14 @@ void SwypeDetect::setSwype(string swype)
 	}
 }
 
-void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y)  // main logic
+void SwypeDetect::processFrame(cv::Mat frame, int &state, int &index, int &x, int &y)  // main logic
 {
 
-	vector<Point2i> koord_Sw_points(9);
-	Mat buf1ft;
-	Mat buf2ft;
-	Mat hann;
-	Point2d shift;
+	std::vector<cv::Point2i> koord_Sw_points(9);
+	cv::Mat buf1ft;
+	cv::Mat buf2ft;
+	cv::Mat hann;
+	cv::Point2d shift;
 
 	if (frame1.empty()) {
 		cvtColor(frame, frame1, CV_RGB2GRAY); // RGB to grayscale
