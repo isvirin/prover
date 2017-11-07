@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Prover MVP</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- permissions -->
+    <string name="permissionRequired">Требуется разрешение</string>
+    <string name="writePermissionRequired">Права на запись файлов необходимы для ....</string>
+    <string name="cantFindApp">Cant find app to open file</string>
+</resources>
