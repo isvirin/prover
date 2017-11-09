@@ -1,4 +1,4 @@
-package io.prover.provermvp.view;
+package io.prover.provermvp.viewholder;
 
 import android.app.Activity;
 import android.support.design.widget.Snackbar;
@@ -21,11 +21,11 @@ public class CameraControlsHolder implements View.OnClickListener {
     private final ViewGroup root;
     private final ImageButton mainButton;
     private final Activity activity;
-    private final CameraViewHolder cameraHolder;
+    private final ICameraViewHolder cameraHolder;
     boolean resumed = false;
     private boolean started;
 
-    public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, CameraViewHolder cameraHolder) {
+    public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, ICameraViewHolder cameraHolder) {
         this.root = root;
         this.mainButton = mainButton;
         this.activity = activity;

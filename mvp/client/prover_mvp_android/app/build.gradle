@@ -33,6 +33,11 @@ android {
             path "CMakeLists.txt"
         }
     }
+
+    if(project.hasProperty("ProverMvp.signing")
+            && new File(project.property("ProverMvp.signing") + "ProverMvp.gradle").exists()) {
+        apply from: project.property("ProverMvp.signing") + "ProverMvp.gradle";
+    }
 }
 
 dependencies {

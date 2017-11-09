@@ -1,5 +1,6 @@
 package io.prover.provermvp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -8,25 +9,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import io.prover.provermvp.permissions.PermissionManager;
-import io.prover.provermvp.view.CameraControlsHolder;
-import io.prover.provermvp.view.CameraViewHolder;
+import io.prover.provermvp.viewholder.CameraControlsHolder;
+import io.prover.provermvp.viewholder.CameraViewHolder;
+import io.prover.provermvp.viewholder.ICameraViewHolder;
 
 public class MainActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler();
-    private CameraViewHolder cameraHolder;
+    private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
     private boolean resumed;
     private boolean started;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ViewGroup cameraContainer = findViewById(R.id.cameraContainer);
+        FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
+        //cameraHolder = new CameraViewHolder2(cameraContainer, this);
         cameraHolder = new CameraViewHolder(cameraContainer);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         started = false;
         super.onStop();
         cameraControlsHolder.onStop();
+        cameraHolder.onStop();
     }
 
     @Override

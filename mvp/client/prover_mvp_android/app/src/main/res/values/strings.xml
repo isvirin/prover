@@ -3,7 +3,8 @@
     <string name="action_settings">Settings</string>
 
     <!-- permissions -->
-    <string name="permissionRequired">Требуется разрешение</string>
-    <string name="writePermissionRequired">Права на запись файлов необходимы для ....</string>
+    <string name="permissionRequired">Permissions required</string>
+    <string name="writePermissionRequired">File write permissions are required to write file</string>
     <string name="cantFindApp">Cant find app to open file</string>
+    <string name="camera_error">Camera error</string>
 </resources>
