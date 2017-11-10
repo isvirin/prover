@@ -101,12 +101,13 @@
 #pragma once
 
 
-#include <opencv2/opencv.hpp>
+#include <opencv2\opencv.hpp>
 #include <vector>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 
 
 class SwypeDetect
@@ -118,7 +119,7 @@ public:
 	
 	void init(int fps_e, std::string swype);
 	void setSwype(std::string swype);  // setting the swype code
-	void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);   // a frame processing
+	void processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y);  // a frame processing
 	// frame - pointer to a buffer with a frame
 	// state - state S
 	// index - if state==2, the index  of the last entered swype number
@@ -127,40 +128,42 @@ public:
 private:
 	
 	//External data
-        std::vector<int> _swypeNumbers; //we have swype code or we will wait swype code
-        int _fps; //fps frame
+	std::vector<int> swype_Numbers;  //we have swype code or we will wait swype code
+	int fps;
 	
 	//Internal data
-        cv::Mat _frame1; //previous frame
-        cv::Mat _frame2; //current frame
-        std::vector<double> _deltaXX;
-        std::vector<double> _deltaYY;
+	cv::Mat frame1; //previous frame
+	cv::Mat frame2; //current frame
+	std::vector<cv::Point2d> Delta; //dinamic array of moving camera
+	
 
 	
 	
-        int _width; //frame width
-        int _height; //frame height
-        int _S; //state S
-        int _call; //Number of the frame processing function calls
-        int _count_num; //Number of the correctly entered swype-numbers
-        int _count_direction; // we count 3 same direction for enter swype-number
-        std::vector<int> _Swype_Numbers_Get; //the entered numbers of the swype code
-        std::vector<cv::Point2i> _Swype_Koord; //the coordinates of the entered swype code
-        std::vector<int> _DirectionS; //directions array
+	int width; //frame width
+	int height; //frame height
+	int S; //state S
+	int call; //Number of the frame processing function calls
+	int count_num; //Number of the correctly entered swype-numbers
+	int count_direction; // we count 3 same direction for enter swype-number
+	std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
+	std::vector<cv::Point2d> Swype_Koord; //the coordinates of the entered swype code
+	std::vector<int> DirectionS; //directions array
 	
-        double _deltaX;
-        double _deltaY;
-        int _Direction;
+	cv::Point2d D_coord;
+	int Direction;
+	bool c_det;
+	bool fl_dir;
 
-        time_t _seconds_1;
-        time_t _seconds_2;
-        long _frm_count;
+	time_t seconds_1;
+	time_t seconds_2;
+	long frm_count;
 	
 	std::vector<double> x_corr(void);
 	int CircleDetection(void);
-	std::vector<cv::Point2i> Koord_Swipe_Points(int width, int height);
-	void Delta_Calculation(cv::Point2i output, int k);
-	void Swype_Data(std::vector<cv::Point2i>& koord);
+	std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
+	void Delta_Calculation(cv::Point2d output);
+	void Swype_Data(std::vector<cv::Point2d>& koord);
 	void Reset(void);
+	std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 };
 
