@@ -62,7 +62,7 @@ if "hex" in query_args:
     # - value MUST be zero
     # - nonce MUST be equal to number of transactions sent from this sender (hence,
     #   I have to recover sender address from the signature)
-    # - data MUST be commitSwypeCode or commitMediaHash method call
+    # - data MUST be requestSwypeCode method call
 
     rpcrequest={"jsonrpc":"2.0", "method":"eth_sendRawTransaction", "params":[tx], "id":0}
 
