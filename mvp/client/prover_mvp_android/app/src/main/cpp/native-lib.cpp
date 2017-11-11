@@ -45,21 +45,24 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrame(JNIEnv *env, jobjec
                                                              jlong nativeHandler,
                                                              jbyteArray frameData_, jint width,
                                                              jint height, jintArray result_) {
+
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
-    jbyte *frameDataCrit = (jbyte *) env->GetPrimitiveArrayCritical(frameData_, NULL);
+    jbyte *frameData = env->GetByteArrayElements(frameData_, NULL);
     jint *result = env->GetIntArrayElements(result_, NULL);
 
-    int state, index, x, y;
-    detector->processFrame((const unsigned char *) frameDataCrit, width, height, state, index, x,
-                           y);
+    int state = 0, index = 0, x = 0, y = 0;
+    static long counter = 0;
+    LOGI_NATIVE("start frame detection %ld", counter);
+    detector->processFrame((const unsigned char *) frameData, width, height, state, index, x, y);
+    LOGI_NATIVE("done frame detection %ld", counter++);
 
     result[0] = state;
     result[1] = index;
     result[2] = x;
     result[3] = y;
 
-    env->ReleasePrimitiveArrayCritical(frameData_, frameDataCrit, JNI_ABORT);
     env->ReleaseIntArrayElements(result_, result, JNI_COMMIT_AND_RELEASE);
+    env->ReleaseByteArrayElements(frameData_, frameData, JNI_ABORT);
 }
 
 JNIEXPORT void JNICALL

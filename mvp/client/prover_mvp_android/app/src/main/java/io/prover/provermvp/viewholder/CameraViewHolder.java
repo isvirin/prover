@@ -62,6 +62,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         if (prepareRecording()) {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
+            detectorHandler = SwypeDetectorHandler.newHandler(30, null, swypeStateHelperHolder);
             return true;
         }
         return false;
@@ -75,6 +76,8 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         } catch (Exception e) {
         }
         releaseMediaRecorder(); // release the MediaRecorder object
+        detectorHandler.sendQuit();
+        detectorHandler = null;
         if (stoppedOk) {
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
         } else {
@@ -89,6 +92,8 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         } catch (Exception ignored) {
         }
         releaseMediaRecorder(); // release the MediaRecorder object
+        detectorHandler.sendQuit();
+        detectorHandler = null;
         videoFile.delete();
     }
 
@@ -116,8 +121,6 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         screenOrientationLock.unlockScreen(activity);
         if (mMediaRecorder != null)
             cancelRecording();
-        detectorHandler.sendQuit();
-        detectorHandler = null;
     }
 
     @Override
@@ -125,10 +128,6 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         if (!PermissionManager.ensureHaveCameraPermission(activity, () -> previewHolder.setHasPermissions(true))) {
             previewHolder.setHasPermissions(false);
         }
-        if (detectorHandler != null) {
-            detectorHandler.sendQuit();
-        }
-        detectorHandler = SwypeDetectorHandler.newHandler(30, null, swypeStateHelperHolder);
     }
 
     @Override

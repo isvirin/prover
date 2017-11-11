@@ -4,8 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import java.util.Arrays;
+import static io.prover.provermvp.Const.TAG;
 
 /**
  * Created by babay on 11.11.2017.
@@ -51,10 +52,11 @@ public class ProverDetector {
         nativeHandler = 0;
     }
 
-    public synchronized void detectFrame(byte[] frameData, int width, int height) {
+    public void detectFrame(byte[] frameData, int width, int height) {
         if (nativeHandler != 0) {
-            Arrays.fill(detectionResult, 0);
+            long time = System.currentTimeMillis();
             detectFrame(nativeHandler, frameData, width, height, detectionResult);
+            Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
         }
 
         if (detectionState == null || !detectionState.isEqualsArray(detectionResult)) {
@@ -63,7 +65,6 @@ public class ProverDetector {
             detectionState = newState;
             handler.post(() -> detectionListener.onDetectionStateChanged(oldState, newState));
         }
-
     }
 
     /**
