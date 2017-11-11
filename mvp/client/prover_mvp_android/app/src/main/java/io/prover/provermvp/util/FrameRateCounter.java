@@ -7,12 +7,16 @@ package io.prover.provermvp.util;
 public class FrameRateCounter {
     private static final long SEC = 1_000_000_000;
     long[] frameTimes;
+    float[] fpsHistory;
     int pos = 0;
+    int historyPos = 0;
+    int totalSec;
 
     private long lastReportTime = System.currentTimeMillis();
 
-    public FrameRateCounter(int maxFps) {
+    public FrameRateCounter(int maxFps, int historyLengthSec) {
         frameTimes = new long[maxFps];
+        fpsHistory = new float[historyLengthSec];
     }
 
     public float addFrame() {
@@ -24,6 +28,11 @@ public class FrameRateCounter {
             float fps = getFps();
             //Log.d(TAG, String.format("FPS: %.0f", fps));
             lastReportTime = System.currentTimeMillis();
+
+            fpsHistory[historyPos++] = fps;
+            if (historyPos == fpsHistory.length)
+                historyPos = 0;
+            totalSec++;
             return fps;
         }
         return -1.0f;
@@ -54,5 +63,11 @@ public class FrameRateCounter {
         return frames;
     }
 
-
+    public float getAvgFps() {
+        float sum = 0;
+        for (int i = 0; i < fpsHistory.length; i++) {
+            sum += fpsHistory[i];
+        }
+        return sum / Math.min(fpsHistory.length, totalSec);
+    }
 }

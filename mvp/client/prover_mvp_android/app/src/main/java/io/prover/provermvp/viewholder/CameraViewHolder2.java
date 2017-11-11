@@ -30,7 +30,7 @@ import io.prover.provermvp.util.FrameRateCounter;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, MyCamera2.CameraStateListener, ICameraViewHolder {
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
-    private final FrameRateCounter counter = new FrameRateCounter(60);
+    private final FrameRateCounter counter = new FrameRateCounter(60, 10);
     AutoFitTextureView mRoot;
     MyCamera2 myCamera;
     private Activity activity;

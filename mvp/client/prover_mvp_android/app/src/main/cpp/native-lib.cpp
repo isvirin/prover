@@ -18,6 +18,8 @@ Java_io_prover_provermvp_detector_ProverDetector_initSwype(JNIEnv *env, jobject 
         env->ReleaseStringUTFChars(swype_, chars);
     }
 
+    LOGI_NATIVE("initialising detector, fps %d, swype %s ", fps, swype.c_str());
+
     SwypeDetect *detector = new SwypeDetect();
     detector->init(fps, swype);
     return (jlong) detector;

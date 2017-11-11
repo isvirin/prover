@@ -31,7 +31,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     private final ViewGroup mRoot;
     private final CameraPreviewHolder previewHolder;
     private final TextView fpsView;
-    private final FrameRateCounter frameRateCounter = new FrameRateCounter(60);
+    private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private final SwypeStateHelperHolder swypeStateHelperHolder;
     SwypeDetectorHandler detectorHandler;
     private MediaRecorder mMediaRecorder;
@@ -62,7 +62,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         if (prepareRecording()) {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
-            detectorHandler = SwypeDetectorHandler.newHandler(30, null, swypeStateHelperHolder);
+            detectorHandler = SwypeDetectorHandler.newHandler((int) fpsCounter.getAvgFps(), null, swypeStateHelperHolder);
             return true;
         }
         return false;
@@ -138,7 +138,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        float fps = frameRateCounter.addFrame();
+        float fps = fpsCounter.addFrame();
         Camera.Parameters params = camera.getParameters();
         Camera.Size size = params.getPreviewSize();
         if (detectorHandler != null) {

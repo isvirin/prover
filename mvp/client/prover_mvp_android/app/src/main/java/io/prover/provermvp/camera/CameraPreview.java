@@ -19,7 +19,7 @@ import static android.content.Context.WINDOW_SERVICE;
  */
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback, Camera.PreviewCallback {
     private static final String TAG = "CameraPreview";
-    private final FrameRateCounter frameRateCounter = new FrameRateCounter(60);
+    private final FrameRateCounter frameRateCounter = new FrameRateCounter(60, 10);
     public boolean recording;
     MyCamera camera;
     Camera mCamera;
