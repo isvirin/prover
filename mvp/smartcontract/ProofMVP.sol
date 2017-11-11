@@ -2,16 +2,16 @@ pragma solidity ^0.4.11;
 
 contract ProofMVP
 {
-    event SwypeCodeCommited(address _who, bytes32 _referenceBlockHash);
-    event MediaHashCommited(address indexed _who, bytes32 indexed _publishedMediaHash, bytes32 _swypeCodeTransactionHash);
+    event SwypeCodeRequested(address indexed _who);
+    event MediaHashSubmitted(address indexed _who, bytes32 indexed _publishedMediaHash, bytes32 _swypeCodeTransactionHash);
 
-    function commitSwypeCode(bytes32 _referenceBlockHash) public
+    function requestSwypeCode() public
     {
-        SwypeCodeCommited(msg.sender, _referenceBlockHash);
+        SwypeCodeRequested(msg.sender);
     }
 
-    function commitMediaHash(bytes32 _publishedMediaHash, bytes32 _swypeCodeTransactionHash) public
+    function submitMediaHash(bytes32 _publishedMediaHash, bytes32 _swypeCodeTransactionHash) public
     {
-        MediaHashCommited(msg.sender, _publishedMediaHash, _swypeCodeTransactionHash);
+        MediaHashSubmitted(msg.sender, _publishedMediaHash, _swypeCodeTransactionHash);
     }
 }
