@@ -1,0 +1,68 @@
+#! /usr/bin/env python
+
+import cgitb
+cgitb.enable()
+
+import os, sys, json, traceback
+
+# Python 2/3 compatibility stuff
+if str==bytes:
+    from urlparse import parse_qs, parse_qsl
+    from urllib import urlencode
+    from urllib import urlopen
+else:
+    from urllib.parse import parse_qs, parse_qsl
+    from urllib.parse import urlencode
+    from urllib.request import urlopen
+    sys.stdout=sys.stdout.buffer
+    sys.stdin=sys.stdin.buffer
+
+
+configfile=os.getenv("PROVER_MVP_CONFIG", "/etc/prover/prover.conf")
+try:
+    config=json.load(open(configfile, "rt"))
+except:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nServer is not configured properly\n")
+    sys.exit(0)
+
+try:
+    if os.environ["REQUEST_METHOD"]!="POST":
+        sys.stdout.write(b"Status: 405 Method Not Allowed\n\nOnly POST method is allowed\n")
+        sys.exit(0)
+
+    if os.environ["CONTENT_TYPE"]!="application/x-www-form-urlencoded":
+        sys.stdout.write(b"Status: 415 Unsupported Media Type\n\nOnly x-www-form-urlencoded content type is supported\n")
+        sys.exit(0)
+
+    data=sys.stdin.read().decode("latin1")
+    query_args=parse_qs(data, keep_blank_values=True)
+except Exception:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\n"+traceback.format_exc().encode("utf8")+b"\n")
+    sys.exit(0)
+
+if "hex" not in query_args:
+    sys.stdout.write(b"Status: 400 Bad Request\n\n")
+    sys.exit(0)
+
+
+tx=query_args["hex"][0]
+
+# TODO: parse the transaction, check fields:
+# - target address MUST be config.contract
+# - value MUST be zero
+# - nonce MUST be equal to number of transactions sent from this sender (hence,
+#   I have to recover sender address from the signature)
+# - data MUST be submitMediaHash method call
+
+rpcrequest={"jsonrpc":"2.0", "method":"eth_sendRawTransaction", "params":[tx], "id":0}
+
+reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+if reply.getcode()!=200:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
+    sys.exit(0)
+
+replyJson=json.loads(reply.read().decode("latin1"))
+del replyJson["jsonrpc"]
+del replyJson["id"]
+
+sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(replyJson).encode("latin1")+b"\n")
