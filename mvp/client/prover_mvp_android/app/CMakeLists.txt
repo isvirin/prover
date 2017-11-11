@@ -5,19 +5,23 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+# Download OpenCV for android 3.3 here: https://opencv.org/releases.html
+# set path to OpenCV
 
-add_library( # Sets the name of the library.
-             native-lib
+set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../Android/OpenCV-android-sdk)
+include_directories(${pathToOpenCv}/sdk/native/jni/include)
 
-             # Sets the library as a shared library.
-             SHARED
+MESSAGE( STATUS "CMAKE_SOURCE_DIR:         " ${CMAKE_SOURCE_DIR} )
+MESSAGE( STATUS "pathToOpenCv:         " ${pathToOpenCv} )
 
-             # Provides a relative path to your source file(s).
-             src/main/cpp/native-lib.cpp )
+add_library( native-lib SHARED
+             src/main/cpp/native-lib.cpp
+             src/main/cpp/swype_detect.cpp
+              )
+
+add_library( lib_opencv SHARED IMPORTED )
+set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI}/libopencv_java3.so)
+
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
@@ -38,7 +42,11 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
                        native-lib
+                       lib_opencv
 
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
+
+include_directories ( src/main/cpp/include
+                     )

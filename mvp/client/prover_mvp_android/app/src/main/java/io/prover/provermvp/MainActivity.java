@@ -15,10 +15,12 @@ import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.viewholder.CameraControlsHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
+import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 public class MainActivity extends AppCompatActivity {
 
     private final Handler handler = new Handler();
+    SwypeStateHelperHolder swypeStateHelperHolder;
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
     private boolean resumed;
@@ -30,8 +32,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
+        swypeStateHelperHolder = new SwypeStateHelperHolder(findViewById(R.id.contentRoot));
         //cameraHolder = new CameraViewHolder2(cameraContainer, this);
-        cameraHolder = new CameraViewHolder(cameraContainer);
+
+        cameraHolder = new CameraViewHolder(cameraContainer, swypeStateHelperHolder);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder);
