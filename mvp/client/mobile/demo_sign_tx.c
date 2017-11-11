@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
             free(result);
         }
     }
-    else if(argc==8 && strcmp(argv[1], "commitMediaHash")==0)
+    else if(argc==8 && strcmp(argv[1], "submitMediaHash")==0)
     {
         uint8_t nonce[32];
         uint8_t gasPrice[32];
