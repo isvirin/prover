@@ -8,15 +8,14 @@
 #include <sys/types.h>
 
 
-ssize_t build_commitSwypeCode_tx(
+ssize_t build_requestSwypeCode_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
-    const uint8_t   referenceBlockHash[32],
     const uint8_t   privkey[32],
     uint8_t       **pbuffer);
 
-ssize_t build_commitMediaHash_tx(
+ssize_t build_submitMediaHash_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],

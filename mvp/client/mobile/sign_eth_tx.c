@@ -71,17 +71,15 @@ static ssize_t build_tx(
     return rlp_serialize(Ls, pbuffer);
 }
 
-ssize_t build_commitSwypeCode_tx(
+ssize_t build_requestSwypeCode_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
-    const uint8_t   referenceBlockHash[32],
     const uint8_t   privkey[32],
     uint8_t       **pbuffer)
 {
-    uint8_t data[4+32];
-    memcpy(data+0, "\x0e\x16\xc8\x89", 4); // Keccak("commitSwypeCode(bytes32)")[0:4]
-    memcpy(data+4, referenceBlockHash, 32);
+    uint8_t data[4];
+    memcpy(data, "\x74\x30\x5b\x38", 4); // Keccak("requestSwypeCode()")[0:4]
 
     return build_tx(
         nonce,
@@ -93,7 +91,7 @@ ssize_t build_commitSwypeCode_tx(
         pbuffer);
 }
 
-ssize_t build_commitMediaHash_tx(
+ssize_t build_submitMediaHash_tx(
     const uint8_t   nonce[32],
     const uint8_t   gasPrice[32],
     const uint8_t   contractAddress[20],
@@ -103,7 +101,7 @@ ssize_t build_commitMediaHash_tx(
     uint8_t       **pbuffer)
 {
     uint8_t data[4+32+32];
-    memcpy(data+0, "\x07\xa7\x73\xa9", 4); // Keccak("commitMediaHash(bytes32,bytes32)")[0:4]
+    memcpy(data+0, "\xa0\xee\x3e\xcf", 4); // Keccak("submitMediaHash(bytes32,bytes32)")[0:4]
     memcpy(data+4, mediaHash, 32);
     memcpy(data+36, swypeCodeTransactionHash, 32);
 
