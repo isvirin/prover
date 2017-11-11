@@ -1,0 +1,98 @@
+#! /usr/bin/env python
+
+import cgitb
+cgitb.enable()
+
+import os, sys, json, traceback, hashlib, binascii
+
+
+def generateSwype(blockHash, txHash):
+    global config
+    modulo=config["swypeModulo"]
+
+    digest=hashlib.sha256(binascii.a2b_hex(blockHash[2:]+txHash[2:])).digest()
+
+    swype=0
+    for c in digest:
+        if type(c)!=int:
+            c=ord(c)
+        swype=(swype*256+c)%modulo
+    return swype
+
+# Python 2/3 compatibility stuff
+if str==bytes:
+    from urlparse import parse_qs, parse_qsl
+    from urllib import urlencode
+    from urllib import urlopen
+else:
+    from urllib.parse import parse_qs, parse_qsl
+    from urllib.parse import urlencode
+    from urllib.request import urlopen
+    sys.stdout=sys.stdout.buffer
+    sys.stdin=sys.stdin.buffer
+
+
+configfile=os.getenv("PROVER_MVP_CONFIG", "/etc/prover/prover.conf")
+try:
+    config=json.load(open(configfile, "rt"))
+except:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\nServer is not configured properly\n")
+    sys.exit(0)
+
+try:
+    if os.environ["REQUEST_METHOD"]!="POST":
+        sys.stdout.write(b"Status: 405 Method Not Allowed\n\nOnly POST method is allowed\n")
+        sys.exit(0)
+
+    if os.environ["CONTENT_TYPE"]!="application/x-www-form-urlencoded":
+        sys.stdout.write(b"Status: 415 Unsupported Media Type\n\nOnly x-www-form-urlencoded content type is supported\n")
+        sys.exit(0)
+
+    data=sys.stdin.read().decode("latin1")
+    query_args=parse_qs(data, keep_blank_values=True)
+except Exception:
+    sys.stdout.write(b"Status: 500 Internal Server Error\n\n"+traceback.format_exc().encode("utf8")+b"\n")
+    sys.exit(0)
+
+if "hex" in query_args:
+    tx=query_args["hex"][0]
+
+    # TODO: parse the transaction, check fields:
+    # - target address MUST be config.contract
+    # - value MUST be zero
+    # - nonce MUST be equal to number of transactions sent from this sender (hence,
+    #   I have to recover sender address from the signature)
+    # - data MUST be commitSwypeCode or commitMediaHash method call
+
+    rpcrequest={"jsonrpc":"2.0", "method":"eth_sendRawTransaction", "params":[tx], "id":0}
+
+    reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+    if reply.getcode()!=200:
+        sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
+        sys.exit(0)
+
+    replyJson=json.loads(reply.read().decode("latin1"))
+    del replyJson["jsonrpc"]
+    del replyJson["id"]
+
+    sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(replyJson).encode("latin1")+b"\n")
+elif "txhash" in query_args:
+    txhash=query_args["txhash"][0]
+
+    rpcrequest={"jsonrpc":"2.0", "method":"eth_getTransactionByHash", "params":[txhash], "id":0}
+
+    reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+    if reply.getcode()!=200:
+        sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
+        sys.exit(0)
+
+    replyJson=json.loads(reply.read().decode("latin1"))
+
+    if "result" in replyJson and replyJson["result"] is not None and replyJson["result"]["blockHash"] is not None:
+        res={"result": generateSwype(replyJson["result"]["blockHash"], replyJson["result"]["hash"])}
+    else:
+        res={"result": None}
+
+    sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(res).encode("latin1")+b"\n")
+else:
+    sys.stdout.write(b"Status: 400 Bad Request\n\n")
