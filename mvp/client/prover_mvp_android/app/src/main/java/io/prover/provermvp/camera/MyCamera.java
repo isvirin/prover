@@ -245,19 +245,7 @@ public class MyCamera {
         return camera.getParameters().getSupportedPreviewSizes();
     }
 
-    public static class Size {
-        public final int width;
-        public final int height;
-        public final float ratio;
-
-        public Size(int w, int h) {
-            width = w;
-            height = h;
-            ratio = width / (float) height;
-        }
-
-        public Size(Camera.Size size) {
-            this(size.width, size.height);
-        }
+    public Size getResolution() {
+        return camera == null ? null : new Size(camera.getParameters().getPreviewSize());
     }
 }

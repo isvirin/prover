@@ -5,11 +5,16 @@ import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 
 import java.io.File;
+import java.util.List;
 
 import io.prover.provermvp.R;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.util.UtilFile;
 
@@ -17,19 +22,29 @@ import io.prover.provermvp.util.UtilFile;
  * Created by babay on 07.11.2017.
  */
 
-public class CameraControlsHolder implements View.OnClickListener {
+public class CameraControlsHolder implements View.OnClickListener, AdapterView.OnItemSelectedListener {
+
+
     private final ViewGroup root;
     private final ImageButton mainButton;
+    private final Spinner resolutionSpinner;
     private final Activity activity;
     private final ICameraViewHolder cameraHolder;
+    private final ArrayAdapter cameraResolutionsAdapter;
     boolean resumed = false;
     private boolean started;
 
     public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, ICameraViewHolder cameraHolder) {
+        cameraResolutionsAdapter = new ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item);
+        cameraResolutionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         this.root = root;
         this.mainButton = mainButton;
         this.activity = activity;
         this.cameraHolder = cameraHolder;
+        resolutionSpinner = root.findViewById(R.id.resolutionSpinner);
+        resolutionSpinner.setAdapter(cameraResolutionsAdapter);
+        resolutionSpinner.setOnItemSelectedListener(this);
 
         mainButton.setOnClickListener(this);
     }
@@ -74,6 +89,17 @@ public class CameraControlsHolder implements View.OnClickListener {
 
     public void onResume() {
         resumed = true;
+
+        List<Size> cameraResolutions = cameraHolder.getCameraResolutions();
+        cameraResolutionsAdapter.clear();
+        if (cameraResolutions != null)
+            cameraResolutionsAdapter.addAll(cameraResolutions);
+        Size selectedResolution = cameraHolder.getSelectedCameraResolution();
+        if (cameraResolutions != null && selectedResolution != null) {
+            int pos = cameraResolutions.indexOf(selectedResolution);
+            if (pos >= 0)
+                resolutionSpinner.setSelection(pos, false);
+        }
     }
 
     public void onStart() {
@@ -84,4 +110,13 @@ public class CameraControlsHolder implements View.OnClickListener {
         started = false;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        cameraHolder.setCameraResolution((Size) parent.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }
