@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.io.File;
+import java.util.List;
 
 import io.prover.provermvp.camera.ScreenOrientationLock;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.camera2.AutoFitTextureView;
 import io.prover.provermvp.camera2.MyCamera2;
 import io.prover.provermvp.permissions.PermissionManager;
@@ -193,5 +195,20 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
     @Override
     public boolean startRecording(Activity activity) {
         return false;
+    }
+
+    @Override
+    public List<Size> getCameraResolutions() {
+        return null;
+    }
+
+    @Override
+    public Size getSelectedCameraResolution() {
+        return null;
+    }
+
+    @Override
+    public void setCameraResolution(Size size) {
+
     }
 }
