@@ -9,12 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.List;
 import java.util.Locale;
 
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.MyCamera;
 import io.prover.provermvp.camera.ScreenOrientationLock;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.util.FrameRateCounter;
@@ -147,5 +149,20 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         if (fps >= 0) {
             fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
         }
+    }
+
+    @Override
+    public List<Size> getCameraResolutions() {
+        return previewHolder.getCameraResolutions();
+    }
+
+    @Override
+    public Size getSelectedCameraResolution() {
+        return previewHolder.getSelectedCameraResolution();
+    }
+
+    @Override
+    public void setCameraResolution(Size size) {
+        previewHolder.setResolution(size);
     }
 }

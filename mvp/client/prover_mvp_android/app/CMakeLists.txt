@@ -9,7 +9,10 @@ cmake_minimum_required(VERSION 3.4.1)
 # set path to OpenCV
 
 set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../Android/OpenCV-android-sdk)
-include_directories(${pathToOpenCv}/sdk/native/jni/include)
+include_directories(
+                    ${pathToOpenCv}/sdk/native/jni/include
+#                    src/main/cpp/secp256k1/include
+)
 
 MESSAGE( STATUS "CMAKE_SOURCE_DIR:         " ${CMAKE_SOURCE_DIR} )
 MESSAGE( STATUS "pathToOpenCv:         " ${pathToOpenCv} )
@@ -17,6 +20,10 @@ MESSAGE( STATUS "pathToOpenCv:         " ${pathToOpenCv} )
 add_library( native-lib SHARED
              src/main/cpp/native-lib.cpp
              src/main/cpp/swype_detect.cpp
+
+#             src/main/cpp/keccak.c
+#             src/main/cpp/rlp.c
+#             src/main/cpp/sign_eth_tx.c
               )
 
 add_library( lib_opencv SHARED IMPORTED )
@@ -47,6 +54,3 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
-
-include_directories ( src/main/cpp/include
-                     )

@@ -77,7 +77,7 @@ public class AutoFitSurfaceView extends SurfaceView {
     }
 
 
-    public void configurePreviewSize(MyCamera.Size size) {
+    public void configurePreviewSize(Size size) {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             setAspectRatio(size.width, size.height);
