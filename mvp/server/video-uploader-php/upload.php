@@ -6,7 +6,7 @@ if (!$loadConfig_result[0]) {
     exit(1);
 }
 
-define('EVENT_ID', '0x461afacbe8920fcf3516d8b18e2634291cc96d0151ab7d324cca32fb77c44986');
+define('GETLOGS_FILE_EVENT_ID', '0x461afacbe8920fcf3516d8b18e2634291cc96d0151ab7d324cca32fb77c44986');
 define('USER_ADDRESS_FILTER', null);
 define('EXAMPLE_FILE_HASH', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 define('TRANSACTIONBYHASH_CORRECT_INPUT', '0x74305b38');
@@ -27,7 +27,7 @@ if (!$mvpHelloInfo['contractAddress']) {
         "toBlock" => "latest",
         "address" => $mvpHelloInfo['contractAddress'],
         "topics" => [
-            EVENT_ID,
+            GETLOGS_FILE_EVENT_ID,
             USER_ADDRESS_FILTER,
             '0x' . $hash
         ]
@@ -102,7 +102,6 @@ if (!$mvpHelloInfo['contractAddress']) {
         $error = $gethClient->error;
     }
 }
-
 
 die(json_encode([
     'success' => $isSuccess,
