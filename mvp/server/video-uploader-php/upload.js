@@ -4,6 +4,33 @@ var isAdvancedUpload = function () {
     return ( ( 'draggable' in div ) || ( 'ondragstart' in div && 'ondrop' in div ) ) && 'FormData' in window && 'FileReader' in window;
 }();
 
+function getSenderInfo(address) {
+    var block_clientAddressInfo = document.querySelectorAll('.block_client_address_info')[0];
+    block_clientAddressInfo.innerHTML = '';
+    var newHtml = '<span>Sender <strong>' + address + '</strong> transactions:</span>';
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState === 4) {
+            if (xmlHttp.status === 200) {
+                var result = JSON.parse(xmlHttp.responseText);
+                console.log(result);
+                if (result.success) {
+                    result.transactions.forEach(function (transaction) {
+                        newHtml += '<br>• ' + transaction.blockNumber;
+                    });
+                } else {
+                    newHtml += 'sorry, something goes wrong 😭';
+                }
+            } else {
+                newHtml = 'sorry, something goes wrong 😱😠';
+            }
+            block_clientAddressInfo.innerHTML = newHtml;
+        }
+    };
+    xmlHttp.open("GET", '/senderInfo.php?senderAddress=' + address, true);
+    xmlHttp.send(null);
+}
+
 // applying the effect for every form
 var forms = document.querySelectorAll('.box');
 Array.prototype.forEach.call(forms, function (form) {
@@ -71,7 +98,11 @@ Array.prototype.forEach.call(forms, function (form) {
             var senderAddressesSpans = '';
             response.transactions.forEach(function (transaction) {
                 senderAddressesSpans +=
-                    '<br><span class="box__sender_address">' + transaction.senderAddress + '</span>';
+                    '<br>' +
+                    '<span' +
+                    ' class="box__sender_address"' +
+                    ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
+                    '>' + transaction.senderAddress + '</span>';
             });
             successMsg.innerHTML =
                 'Transactions count: ' + response.transactions.length + '.' +

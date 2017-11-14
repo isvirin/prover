@@ -7,7 +7,7 @@ if (!$loadConfig_result[0]) {
 }
 
 define('GETLOGS_SENDER_EVENT_ID', '0x4328c421156f7877c4adccdc8c132d0678b25caeec5e719aeaa881942f5aa2d2');
-define('EXAMPLE_SENDER_ADDRESS', '00000000000000000000000042e1e53a644e3f8d5dc606c5104f6666163f2c76');
+define('EXAMPLE_SENDER_ADDRESS', '0x00000000000000000000000042e1e53a644e3f8d5dc606c5104f6666163f2c76');
 
 $isSuccess = false;
 $error = 'error text';
@@ -25,7 +25,7 @@ if (!$mvpHelloInfo['contractAddress']) {
         "address" => $mvpHelloInfo['contractAddress'],
         "topics" => [
             GETLOGS_SENDER_EVENT_ID,
-            '0x' . $_POST['senderAddress']
+            $_GET['senderAddress']
         ]
     ]];
 

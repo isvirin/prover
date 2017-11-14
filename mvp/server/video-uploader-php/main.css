@@ -104,6 +104,12 @@ body {
 .box__sender_address {
     font-size: .7em;
     color: #faa;
+    cursor: pointer;
+}
+
+.box__sender_address:hover {
+    color: #fff;
+    text-decoration: underline;
 }
 
 .box__uploading {
@@ -206,4 +212,9 @@ body {
 .box__button:hover,
 .box__button:focus {
     background-color: #f00;
+}
+
+.block_client_address_info {
+    margin-top: 2em;
+    text-align: left;
 }

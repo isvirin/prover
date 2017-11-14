@@ -16,9 +16,9 @@ if (!$loadConfig_result[0]) {
     <title>Prover video uploader</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="icon" type="image/x-icon" href="prover-icon-32.png"/>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css?<?= md5('main.css') ?>">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400">
-    <script type="text/javascript" src="upload.js" defer></script>
+    <script type="text/javascript" src="upload.js?<?= md5('upload.js') ?>" defer></script>
 
     <script>
         var r = document.querySelectorAll("html")[0];
@@ -63,7 +63,7 @@ if (!$loadConfig_result[0]) {
             <span class="box__restart">Try another file</span>
         </div>
     </form>
-    <div class="clientAddressInfo"></div>
+    <div class="block_client_address_info"></div>
 </div>
 
 </body>
