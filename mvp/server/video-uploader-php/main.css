@@ -101,6 +101,11 @@ body {
     max-width: 94%;
 }
 
+.box__sender_address {
+    font-size: .7em;
+    color: #faa;
+}
+
 .box__uploading {
     font-weight: bold;
 }

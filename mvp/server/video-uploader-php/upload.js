@@ -68,10 +68,14 @@ Array.prototype.forEach.call(forms, function (form) {
         if (!response.success) {
             errorMsg.textContent = response.error;
         } else {
+            var senderAddressesSpans = '';
+            response.transactions.forEach(function (transaction) {
+                senderAddressesSpans +=
+                    '<br><span class="box__sender_address">' + transaction.senderAddress + '</span>';
+            });
             successMsg.innerHTML =
-                'All transactions on this file: ' + response.transactions.length
-                + '<br>' + JSON.stringify(response.transactions) // отладка
-            ;
+                'Transactions count: ' + response.transactions.length + '.' +
+                (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
         }
     }
 

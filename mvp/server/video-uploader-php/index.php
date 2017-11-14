@@ -51,11 +51,9 @@ if (!$loadConfig_result[0]) {
 
         <div class="box__uploading">Uploading&hellip;</div>
         <div class="box__success">
-            Done!
+            Done! <span class="box__restart">Try another file</span>
             <br>
             <span class="box__success_msg"></span>
-            <br>
-            <span class="box__restart">Try another file</span>
         </div>
         <div class="box__error">
             Error!
@@ -65,6 +63,7 @@ if (!$loadConfig_result[0]) {
             <span class="box__restart">Try another file</span>
         </div>
     </form>
+    <div class="clientAddressInfo"></div>
 </div>
 
 </body>
