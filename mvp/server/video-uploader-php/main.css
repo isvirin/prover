@@ -98,7 +98,7 @@ body {
 .box__success_msg {
     display: inline-block;
     max-width: 94%;
-    overflow-x: scroll;
+    overflow: auto;
 }
 
 .box__uploading {

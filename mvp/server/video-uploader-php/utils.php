@@ -33,9 +33,20 @@ function loadConfig()
     $config = $config_saved;
     $needConfigure = false;
 
-    if (!isset($config['gethNodeAddr'])) {
+    if (!isset($config['gethNodeUrl'])) {
         $needConfigure = true;
-        $config['!_gethNodeAddr'] = 'http://';
+        $config['!_gethNodeUrl'] = 'http://';
+    } else {
+        $config['gethNodeUrl'] = preg_replace('/(.*)\/$/', '$1', $config['gethNodeUrl']);
+        DEFINE('GETH_NODE_URL', $config['gethNodeUrl']);
+    }
+
+    if (!isset($config['mvpCgiBinUrl'])) {
+        $needConfigure = true;
+        $config['!_mvpCgiBinUrl'] = 'http://';
+    } else {
+        $config['mvpCgiBinUrl'] = preg_replace('/(.*)\/$/', '$1', $config['mvpCgiBinUrl']);
+        DEFINE('MVP_CGI_BIN_URL', $config['mvpCgiBinUrl']);
     }
 
     // если конфиг отличается после проверки всех параметров
@@ -47,8 +58,30 @@ function loadConfig()
     }
 
     if ($needConfigure) {
-        return [false, "NEED CONFIGURE CLOUD: $configFile.\n<br>Change properties started with !_ and remove !_"];
+        return [false, "NEED CONFIGURE: $configFile.\n<br>Change properties started with !_ and remove !_"];
     }
 
     return [true, ''];
+}
+
+spl_autoload_register('autoload');
+
+function autoload($className)
+{
+
+    $className = ltrim($className, '\\');
+    $fileName = '';
+
+    if ($lastNsPos = strripos($className, '\\')) {
+        $namespace = substr($className, 0, $lastNsPos);
+        $className = substr($className, $lastNsPos + 1);
+        $fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+    }
+
+    $fileName .= $className . '.php';
+
+    // set the path to our source directory, relative to the directory we are in
+    $src = realpath('src');
+
+    require $src . DIRECTORY_SEPARATOR . $fileName;
 }

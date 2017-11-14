@@ -64,6 +64,17 @@ Array.prototype.forEach.call(forms, function (form) {
         });
     }
 
+    function updateOnResponse(response) {
+        if (!response.success) {
+            errorMsg.textContent = response.error;
+        } else {
+            successMsg.innerHTML =
+                'Всего транзакций по этому файлу: ' + response.data.length
+            // + '<br>' + JSON.stringify(response.data) // отладка
+            ;
+        }
+    }
+
     // if the form was submitted
     form.addEventListener('submit', function (e) {
         // preventing the duplicate submissions if the current one is in progress
@@ -92,13 +103,9 @@ Array.prototype.forEach.call(forms, function (form) {
             ajax.onload = function () {
                 form.classList.remove('is-uploading');
                 if (ajax.status >= 200 && ajax.status < 400) {
-                    var data = JSON.parse(ajax.responseText);
-                    form.classList.add(data.success ? 'is-success' : 'is-error');
-                    if (!data.success) {
-                        errorMsg.textContent = data.error;
-                    } else {
-                        successMsg.textContent = data.data;
-                    }
+                    var response = JSON.parse(ajax.responseText);
+                    form.classList.add(response.success ? 'is-success' : 'is-error');
+                    updateOnResponse(response);
                 }
                 else {
                     alert('Error. Please, contact the webmaster!');
@@ -124,15 +131,11 @@ Array.prototype.forEach.call(forms, function (form) {
             form.setAttribute('target', iframeName);
 
             iframe.addEventListener('load', function () {
-                var data = JSON.parse(iframe.contentDocument.body.innerHTML);
+                var response = JSON.parse(iframe.contentDocument.body.innerHTML);
                 form.classList.remove('is-uploading');
-                form.classList.add(data.success ? 'is-success' : 'is-error');
+                form.classList.add(response.success ? 'is-success' : 'is-error');
                 form.removeAttribute('target');
-                if (!data.success) {
-                    errorMsg.textContent = data.error;
-                } else {
-                    successMsg.textContent = data.data;
-                }
+                updateOnResponse(response);
                 iframe.parentNode.removeChild(iframe);
             });
         }
