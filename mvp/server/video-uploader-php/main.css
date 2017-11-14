@@ -26,6 +26,7 @@ body {
     background-color: transparent;
     position: relative;
     padding: 100px 20px;
+    overflow: auto;
 }
 
 .box:hover {
@@ -98,7 +99,6 @@ body {
 .box__success_msg {
     display: inline-block;
     max-width: 94%;
-    overflow: auto;
 }
 
 .box__uploading {

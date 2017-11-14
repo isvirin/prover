@@ -69,8 +69,8 @@ Array.prototype.forEach.call(forms, function (form) {
             errorMsg.textContent = response.error;
         } else {
             successMsg.innerHTML =
-                'Всего транзакций по этому файлу: ' + response.data.length
-            // + '<br>' + JSON.stringify(response.data) // отладка
+                'All transactions on this file: ' + response.transactions.length
+                + '<br>' + JSON.stringify(response.transactions) // отладка
             ;
         }
     }
