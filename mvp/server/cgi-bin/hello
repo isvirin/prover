@@ -41,13 +41,17 @@ except Exception:
     sys.stdout.write(b"Status: 500 Internal Server Error\n\n"+traceback.format_exc().encode("utf8")+b"\n")
     sys.exit(0)
 
-address=query_args["user"][0]
+try:
+    address=query_args["user"][0]
+except:
+    address=None
 
 rpcrequest=[]
 rpcrequest.append({"jsonrpc":"2.0", "method":"eth_gasPrice", "params":[], "id":"gp"})
-rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getTransactionCount", "params":[address, "latest"], "id":"tc"})
 #rpcrequest.append({"jsonrpc":"2.0", "method":"eth_blockNumber", "params":[], "id":"bn"})
-rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getBalance", "params":[address, "latest"], "id":"b"})
+if address is not None:
+    rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getTransactionCount", "params":[address, "latest"], "id":"tc"})
+    rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getBalance", "params":[address, "latest"], "id":"b"})
 
 reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
 if reply.getcode()!=200:
@@ -59,7 +63,8 @@ replyJson=json.loads(reply.read().decode("latin1"))
 res=dict()
 res["contractAddress"]=config["contract"]
 res["gasPrice"]=[r["result"] for r in replyJson if r["id"]=="gp"][0]
-res["nonce"]=[r["result"] for r in replyJson if r["id"]=="tc"][0]
-res["ethBalance"]=[r["result"] for r in replyJson if r["id"]=="b"][0]
+if address is not None:
+    res["nonce"]=[r["result"] for r in replyJson if r["id"]=="tc"][0]
+    res["ethBalance"]=[r["result"] for r in replyJson if r["id"]=="b"][0]
 
 sys.stdout.write(b"Status: 200 OK\nContent-Type: application/json\n\n"+json.dumps(res).encode("latin1")+b"\n")
