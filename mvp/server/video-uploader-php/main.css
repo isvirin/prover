@@ -23,17 +23,24 @@ body {
 
 .box {
     font-size: 1.25rem; /* 20 */
-    background-color: #282828;
+    background-color: transparent;
     position: relative;
     padding: 100px 20px;
 }
 
+.box:hover {
+    background-color: rgba(255, 0, 0, .1);
+}
+
 .box.has-advanced-upload {
     outline: 2px dashed #E0222D;
-    outline-offset: -10px;
-
+    outline-offset: 0;
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
     transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+
+.box.has-advanced-upload:hover {
+    outline-offset: -10px;
 }
 
 .box__dragndrop,
@@ -54,9 +61,9 @@ body {
 }
 
 .box.is-dragover {
-    outline-offset: -20px;
+    outline-offset: -25px;
     outline-color: #CCC;
-    background-color: #911;
+    background-color: rgba(255, 0, 0, .6);
 }
 
 .box.is-dragover .box__icon {
