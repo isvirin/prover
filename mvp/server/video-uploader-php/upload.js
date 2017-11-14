@@ -10,6 +10,7 @@ Array.prototype.forEach.call(forms, function (form) {
     var input = form.querySelector('input[type="file"]'),
         labelFile = form.querySelector('label.box__labelFile_file'),
         labelDefault = form.querySelector('label.box__labelFile_default'),
+        successMsg = form.querySelector('.box__success_msg'),
         errorMsg = form.querySelector('.box__error span'),
         restart = form.querySelectorAll('.box__restart'),
         droppedFiles = false,
@@ -70,8 +71,9 @@ Array.prototype.forEach.call(forms, function (form) {
             return false;
         }
 
-        form.classList.add('is-uploading');
         form.classList.remove('is-error');
+        form.classList.remove('is-success');
+        form.classList.add('is-uploading');
 
         if (isAdvancedUpload) { // ajax file upload for modern browsers
             e.preventDefault();
@@ -92,9 +94,15 @@ Array.prototype.forEach.call(forms, function (form) {
                 if (ajax.status >= 200 && ajax.status < 400) {
                     var data = JSON.parse(ajax.responseText);
                     form.classList.add(data.success ? 'is-success' : 'is-error');
-                    if (!data.success) errorMsg.textContent = data.error;
+                    if (!data.success) {
+                        errorMsg.textContent = data.error;
+                    } else {
+                        successMsg.textContent = data.data;
+                    }
                 }
-                else alert('Error. Please, contact the webmaster!');
+                else {
+                    alert('Error. Please, contact the webmaster!');
+                }
             };
 
             ajax.onerror = function () {
@@ -122,6 +130,8 @@ Array.prototype.forEach.call(forms, function (form) {
                 form.removeAttribute('target');
                 if (!data.success) {
                     errorMsg.textContent = data.error;
+                } else {
+                    successMsg.textContent = data.data;
                 }
                 iframe.parentNode.removeChild(iframe);
             });

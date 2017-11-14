@@ -44,6 +44,8 @@
         <div class="box__success">
             Done!
             <br>
+            <span class="box__success_msg"></span>
+            <br>
             <span class="box__restart">Try another file</span>
         </div>
         <div class="box__error">

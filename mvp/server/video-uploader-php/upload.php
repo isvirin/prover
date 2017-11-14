@@ -1,14 +1,17 @@
 <?php
 
-$upload_success = false;
-$upload_error = 'error text';
+$isSuccess = false;
+$error = 'error text';
+$data = '';
 
 if (!empty($_FILES['file'])) {
-    $upload_success = true;
-    $upload_error = '';
+    $isSuccess = true;
+    $error = '';
+    $data = hash_file('sha256', $_FILES['file']['tmp_name']);
 }
 
 die(json_encode([
-    'success' => $upload_success,
-    'error' => $upload_error
+    'success' => $isSuccess,
+    'data' => $data,
+    'error' => $error
 ], JSON_UNESCAPED_UNICODE));

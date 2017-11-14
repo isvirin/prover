@@ -88,6 +88,12 @@ body {
     transform: translateY(-50%);
 }
 
+.box__success_msg {
+    display: inline-block;
+    max-width: 94%;
+    overflow-x: scroll;
+}
+
 .box__uploading {
     font-weight: bold;
 }
