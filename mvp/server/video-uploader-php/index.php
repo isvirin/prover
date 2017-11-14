@@ -20,6 +20,11 @@
 <body>
 
 <div class="container">
+    <div class="logo">
+        <svg>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" target="blank" xlink:href="sprite.svg#Prover"></use>
+        </svg>
+    </div>
     <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box">
         <div class="box__input">
             <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>
