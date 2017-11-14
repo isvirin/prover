@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.4.1)
 set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../Android/OpenCV-android-sdk)
 include_directories(
                     ${pathToOpenCv}/sdk/native/jni/include
-#                    src/main/cpp/secp256k1/include
+#                    src/main/cpp/secp256k1
 )
 
 MESSAGE( STATUS "CMAKE_SOURCE_DIR:         " ${CMAKE_SOURCE_DIR} )
@@ -21,9 +21,7 @@ add_library( native-lib SHARED
              src/main/cpp/native-lib.cpp
              src/main/cpp/swype_detect.cpp
 
-#             src/main/cpp/keccak.c
-#             src/main/cpp/rlp.c
-#             src/main/cpp/sign_eth_tx.c
+#             src/main/cpp/keccak.c src/main/cpp/rlp.c  src/main/cpp/sign_eth_tx.c src/main/cpp/secp256k1/src/secp256k1.c
               )
 
 add_library( lib_opencv SHARED IMPORTED )
