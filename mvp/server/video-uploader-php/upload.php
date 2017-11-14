@@ -1,4 +1,6 @@
 <?php
+require('utils.php');
+loadConfig();
 
 $isSuccess = false;
 $error = 'error text';

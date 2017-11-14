@@ -1,3 +1,12 @@
+<?php
+require('utils.php');
+$loadConfig_result = loadConfig();
+if (!$loadConfig_result[0]) {
+    echo $loadConfig_result[1];
+    exit(1);
+}
+?>
+
 <!DOCTYPE html>
 
 <html lang="en" class="no-js">
