@@ -97,17 +97,18 @@
 //    int        &index,
 //    int        &x,
 //    int        &y);
-
 #pragma once
 
 
-#include <opencv2\opencv.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/features2d.hpp>
+#include <opencv2/xfeatures2d.hpp>
 #include <vector>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
+//#include <iostream>
 
 
 class SwypeDetect
@@ -118,8 +119,9 @@ public:
 	~SwypeDetect();
 	
 	void init(int fps_e, std::string swype);
-	void setSwype(std::string swype);  // setting the swype code
-	void processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y);  // a frame processing
+	void setSwype(std::string swype); // setting the swype code
+	void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);
+	void processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y);
 	// frame - pointer to a buffer with a frame
 	// state - state S
 	// index - if state==2, the index  of the last entered swype number
@@ -128,35 +130,34 @@ public:
 private:
 	
 	//External data
-	std::vector<int> swype_Numbers;  //we have swype code or we will wait swype code
+	std::vector<int> swype_Numbers; //we have swype code or we will wait swype code
 	int fps;
 	
 	//Internal data
 	cv::Mat frame1; //previous frame
-	cv::Mat frame2; //current frame
 	std::vector<cv::Point2d> Delta; //dinamic array of moving camera
-	
 
 	
 	
-	int width; //frame width
-	int height; //frame height
+
 	int S; //state S
 	int call; //Number of the frame processing function calls
 	int count_num; //Number of the correctly entered swype-numbers
-	int count_direction; // we count 3 same direction for enter swype-number
 	std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
 	std::vector<cv::Point2d> Swype_Koord; //the coordinates of the entered swype code
 	std::vector<int> DirectionS; //directions array
 	
 	cv::Point2d D_coord;
 	int Direction;
-	bool c_det;
 	bool fl_dir;
 
 	time_t seconds_1;
 	time_t seconds_2;
-	long frm_count;
+
+	std::vector<cv::Point2d> koord_Sw_points;
+	cv::Mat buf1ft;
+	cv::Mat buf2ft;
+	cv::Mat hann;
 	
 	std::vector<double> x_corr(void);
 	int CircleDetection(void);
@@ -164,6 +165,9 @@ private:
 	void Delta_Calculation(cv::Point2d output);
 	void Swype_Data(std::vector<cv::Point2d>& koord);
 	void Reset(void);
+	cv::Point2d Frame_processor(cv::Mat &frame_i);
+	void S1_processor(void);
 	std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
+	cv::Point2d Frame_processor2(cv::Mat &frame_i);
 };
 
