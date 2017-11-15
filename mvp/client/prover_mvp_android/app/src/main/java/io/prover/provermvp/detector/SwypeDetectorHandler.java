@@ -8,6 +8,8 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.prover.provermvp.transport.BufferHolder;
+
 import static io.prover.provermvp.Const.TAG;
 
 /**
@@ -15,7 +17,7 @@ import static io.prover.provermvp.Const.TAG;
  */
 
 public class SwypeDetectorHandler extends Handler {
-    private static final int MAX_FRAMES_IN_QUEUE = 10;
+    private static final int MAX_FRAMES_IN_QUEUE = 1;
 
     private static final int MESSAGE_INIT = 1;
     private static final int MESSAGE_SET_SWYPE = 2;
@@ -50,13 +52,16 @@ public class SwypeDetectorHandler extends Handler {
         sendMessage(obtainMessage(MESSAGE_SET_SWYPE, swype));
     }
 
-    public void sendProcesstFrame(byte[] frame, int width, int height) {
+    public boolean sendProcesstFrame(byte[] frame, int width, int height, BufferHolder bufferHolder) {
         int inQueue = framesInQueue.get();
         if (inQueue < MAX_FRAMES_IN_QUEUE) {
             framesInQueue.incrementAndGet();
             sendMessage(obtainMessage(MESSAGE_PROCESS_FRAME, width, height, frame));
+            detector.setBufferHolder(bufferHolder);
+            return true;
         } else {
             Log.e(TAG, "frames processing queue maxed out!");
+            return false;
         }
     }
 

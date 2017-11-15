@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
         swypeStateHelperHolder = new SwypeStateHelperHolder(findViewById(R.id.contentRoot));
         //cameraHolder = new CameraViewHolder2(cameraContainer, this);
 
-        cameraHolder = new CameraViewHolder(cameraContainer, swypeStateHelperHolder);
+        cameraHolder = new CameraViewHolder(this, cameraContainer, swypeStateHelperHolder);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder);
+        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder, swypeStateHelperHolder);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

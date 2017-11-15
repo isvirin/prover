@@ -119,9 +119,7 @@ public:
     ~SwypeDetect();
 
     void init(int fps_e, std::string swype);
-
     void setSwype(std::string swype);
-
     void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);
 
     void
@@ -168,12 +166,9 @@ private:
 
     void Swype_Data(std::vector<cv::Point2d> &koord);
     void Reset(void);
-
     cv::Point2d Frame_processor(cv::Mat &frame_i);
-
     void S1_processor(void);
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
-
     cv::Point2d Frame_processor2(cv::Mat &frame_i);
 };
 

@@ -37,6 +37,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/balanceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#40ffffff"
+        android:text="0"
+        android:textColor="#000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/statsView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

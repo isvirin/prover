@@ -17,8 +17,8 @@ import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.MyCamera;
 import io.prover.provermvp.camera.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
-import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.permissions.PermissionManager;
+import io.prover.provermvp.transport.BufferHolder;
 import io.prover.provermvp.util.FrameRateCounter;
 
 import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
@@ -29,17 +29,19 @@ import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
 
 public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallback {
 
+    private final Activity activity;
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
     private final ViewGroup mRoot;
     private final CameraPreviewHolder previewHolder;
     private final TextView fpsView;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private final SwypeStateHelperHolder swypeStateHelperHolder;
-    SwypeDetectorHandler detectorHandler;
     private MediaRecorder mMediaRecorder;
     private File videoFile;
 
-    public CameraViewHolder(FrameLayout root, SwypeStateHelperHolder stateHelperHolder) {
+
+    public CameraViewHolder(Activity activity, FrameLayout root, SwypeStateHelperHolder stateHelperHolder) {
+        this.activity = activity;
         this.mRoot = root;
         fpsView = root.findViewById(R.id.fpsCounter);
         this.swypeStateHelperHolder = stateHelperHolder;
@@ -60,17 +62,23 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         return true;
     }
 
+    @Override
     public boolean startRecording(Activity activity) {
         if (prepareRecording()) {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
-            detectorHandler = SwypeDetectorHandler.newHandler((int) fpsCounter.getAvgFps(), null, swypeStateHelperHolder);
+            mRoot.setKeepScreenOn(true);
+            swypeStateHelperHolder.startDetector(fpsCounter.getAvgFps());
+            previewHolder.updateCallback();
             return true;
         }
         return false;
     }
 
+    @Override
     public void finishRecording() {
+        mRoot.setKeepScreenOn(false);
+        screenOrientationLock.unlockScreen(activity);
         boolean stoppedOk = false;
         try {
             mMediaRecorder.stop();  // stop the recording
@@ -78,8 +86,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         } catch (Exception e) {
         }
         releaseMediaRecorder(); // release the MediaRecorder object
-        detectorHandler.sendQuit();
-        detectorHandler = null;
+        swypeStateHelperHolder.stopDetector();
         if (stoppedOk) {
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
         } else {
@@ -88,14 +95,15 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         }
     }
 
+    @Override
     public void cancelRecording() {
+        mRoot.setKeepScreenOn(false);
         try {
             mMediaRecorder.stop();  // stop the recording
         } catch (Exception ignored) {
         }
         releaseMediaRecorder(); // release the MediaRecorder object
-        detectorHandler.sendQuit();
-        detectorHandler = null;
+        swypeStateHelperHolder.stopDetector();
         videoFile.delete();
     }
 
@@ -121,8 +129,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     @Override
     public void onPause(Activity activity) {
         screenOrientationLock.unlockScreen(activity);
-        if (mMediaRecorder != null)
-            cancelRecording();
+
     }
 
     @Override
@@ -134,18 +141,15 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
 
     @Override
     public void onStop() {
-        if (mMediaRecorder == null)
-            previewHolder.releaseCamera();
+        previewHolder.releaseCamera();
     }
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
         float fps = fpsCounter.addFrame();
-        Camera.Parameters params = camera.getParameters();
-        Camera.Size size = params.getPreviewSize();
-        if (detectorHandler != null) {
-            detectorHandler.sendProcesstFrame(data, size.width, size.height);
-        }
+        BufferHolder bufferHolder = previewHolder.getCamera().getBufferHolder();
+        bufferHolder.onGotBuffer();
+        swypeStateHelperHolder.onPreviewFrame(data, camera, bufferHolder);
         if (fps >= 0) {
             fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
         }
