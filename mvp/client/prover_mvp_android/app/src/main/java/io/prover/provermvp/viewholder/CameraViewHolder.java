@@ -129,7 +129,9 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     @Override
     public void onPause(Activity activity) {
         screenOrientationLock.unlockScreen(activity);
-
+        if (activity.isChangingConfigurations()) {
+            previewHolder.releaseCamera();
+        }
     }
 
     @Override

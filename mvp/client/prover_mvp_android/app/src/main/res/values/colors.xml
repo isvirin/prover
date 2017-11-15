@@ -2,5 +2,12 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FF9400</color>
+    <color name="bgWhite">#ffffff</color>
+    <color name="mainColor_minus400">@color/indigo_200</color>
+    <color name="mainColor_lightmost">@color/indigo_50</color>
+
+
+    <color name="indigo_200">#9FA8DA</color>
+    <color name="indigo_50">#E8EAF6</color>
 </resources>
