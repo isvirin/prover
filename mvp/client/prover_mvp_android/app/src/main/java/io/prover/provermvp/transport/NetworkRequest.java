@@ -7,6 +7,7 @@ import android.util.Log;
 
 import org.ethereum.core.Transaction;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import java.net.URL;
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.Const;
 import io.prover.provermvp.transport.responce.KnownTransactionException;
+import io.prover.provermvp.transport.responce.LowFundsException;
 import io.prover.provermvp.transport.responce.NonceTooLowException;
 
 /**
@@ -86,7 +88,8 @@ public abstract class NetworkRequest<T> implements Runnable {
                 sb.append(line);
             }
             String result = sb.toString();
-            debugData.onGotResponse(result);
+            if (debugData != null)
+                debugData.onGotResponse(result);
             return result;
         }
     }
@@ -133,11 +136,22 @@ public abstract class NetworkRequest<T> implements Runnable {
     }
 
     private IOException tryParseResponseException(String responce, Exception e) {
+        String message;
+        try {
+            JSONObject jso = new JSONObject(responce);
+            JSONObject error = jso.getJSONObject("error");
+            message = error.getString("message");
+        } catch (Exception e1) {
+            message = responce;
+        }
         if (responce.contains("known transaction:")) {
-            return new KnownTransactionException(responce);
+            return new KnownTransactionException(message);
         }
         if (responce.contains("nonce too low")) {
-            return new NonceTooLowException(responce);
+            return new NonceTooLowException(message);
+        }
+        if (responce.contains("insufficient funds")) {
+            return new LowFundsException(message);
         }
         return new IOException(e);
     }

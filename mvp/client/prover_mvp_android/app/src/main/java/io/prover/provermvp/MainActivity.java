@@ -105,11 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS:
-                handler.post(() -> PermissionManager.onPermissionRequestDone(this, permissions, grantResults));
-                break;
-        }
+        handler.post(() -> PermissionManager.onPermissionRequestDone(this, requestCode, permissions, grantResults));
     }
 
     @Override

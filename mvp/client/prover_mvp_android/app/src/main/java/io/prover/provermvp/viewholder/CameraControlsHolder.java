@@ -22,6 +22,7 @@ import io.prover.provermvp.transport.NetworkHolder;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.HelloResponce;
+import io.prover.provermvp.transport.responce.LowFundsException;
 import io.prover.provermvp.transport.responce.SwypeResponce2;
 import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.UtilFile;
@@ -169,7 +170,10 @@ public class CameraControlsHolder implements View.OnClickListener, AdapterView.O
     @Override
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
         if (request instanceof RequestSwypeCode1) {
-            swypeStateHelperHolder.setSwypeStatus("error");
+            if (e instanceof LowFundsException)
+                swypeStateHelperHolder.setSwypeStatus("error: low funds");
+            else
+                swypeStateHelperHolder.setSwypeStatus("error");
         }
     }
 }

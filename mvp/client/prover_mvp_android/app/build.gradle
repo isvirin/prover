@@ -7,7 +7,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 2
-        versionName "0.1"
+        versionName "0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
@@ -27,7 +27,7 @@ android {
     ).all { variant ->
 
         variant.outputs.all {
-            outputFileName = "../../../../../../build/${variant.applicationId}-${variant.versionName}(${variant.versionCode}).apk"
+            outputFileName = "../../../../../../build/${variant.applicationId}-${variant.flavorName}-${variant.versionName}(${variant.versionCode}).apk"
         }
     }
 
@@ -51,20 +51,20 @@ android {
 
     flavorDimensions "main"
     productFlavors {
-        armeabi {
+        arm {
             dimension "main"
             ndk {
-                abiFilter "armeabi"
+                abiFilters "armeabi",  "arm64-v8a"
             }
             externalNativeBuild {
                 cmake {
-                    abiFilters "armeabi"
+                    abiFilters "armeabi",  "arm64-v8a"
                 }
             }
         }
 
 
-/*        arm64_v8a {
+/*        arm64 {
             dimension "main"
             ndk {
                 abiFilter "arm64-v8a"

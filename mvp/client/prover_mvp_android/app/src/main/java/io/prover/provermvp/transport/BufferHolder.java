@@ -1,5 +1,7 @@
 package io.prover.provermvp.transport;
 
+import android.util.Log;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -9,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BufferHolder {
     public final AtomicInteger bufferCounter2 = new AtomicInteger();
     private final AtomicInteger bufferCounter = new AtomicInteger();
+    volatile boolean recording;
     private int width;
     private int height;
     private int size;
@@ -27,6 +30,10 @@ public class BufferHolder {
     }
 
     public void releaseBuffer(byte[] buffer) {
+        if (recording) {
+            int i = 0;
+            i++;
+        }
         if (buffer.length != size || bufferReleasedListener == null)
             return;
 
@@ -43,12 +50,18 @@ public class BufferHolder {
         }
     }
 
-    public void onSetBuffer() {
+    public void onBufferAddedToCamera() {
         bufferCounter2.incrementAndGet();
+        Log.d("TAG", "buffer   added to camera; total: " + bufferCounter);
     }
 
-    public void onGotBuffer() {
+    public void onBufferGotFromCamera() {
         bufferCounter2.decrementAndGet();
+        Log.d("TAG", "buf received from camera; total: " + bufferCounter);
+    }
+
+    public void setRecording(boolean recording) {
+        this.recording = recording;
     }
 
     public interface OnBufferReleasedListener {

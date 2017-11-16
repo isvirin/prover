@@ -6,4 +6,5 @@ package io.prover.provermvp;
 
 public interface Settings {
     boolean REQUEST_SWYPE = true;
+    boolean REUSE_PREVIEW_BUFFERS = true;
 }

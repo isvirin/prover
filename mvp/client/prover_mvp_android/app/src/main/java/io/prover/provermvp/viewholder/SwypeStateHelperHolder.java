@@ -79,6 +79,12 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener 
 
     public void setSwypeStatus(String swypeStatus) {
         this.swypeStatus = swypeStatus;
+        String str = statsText.getText().toString();
+        int pos = str.indexOf('\n');
+        if (pos > 0) {
+            str = str.substring(0, pos);
+        }
+        setStatusText(str);
     }
 
     public void setConfirmedListener(VideoConfirmedListener confirmedListener) {

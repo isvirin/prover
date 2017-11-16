@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaScannerConnection;
+import android.view.Surface;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -47,13 +48,18 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         this.swypeStateHelperHolder = stateHelperHolder;
         MyCamera camera = MyCamera.openBackCamera();
         previewHolder = new CameraPreviewHolder(root, camera, this);
+        if (camera != null)
+            camera.setPreviewCallback(this);
         fpsView.bringToFront();
     }
 
     private boolean prepareRecording() {
-        previewHolder.unlockCamera();
+        Surface surface = previewHolder.getSurface();
+        if (surface == null)
+            return false;
         videoFile = CameraUtil.getOutputMediaFile(MEDIA_TYPE_VIDEO, mRoot.getContext());
-        mMediaRecorder = previewHolder.getCamera().prepareRecording(videoFile, previewHolder.getSurface());
+        previewHolder.unlockCamera();
+        mMediaRecorder = previewHolder.getCamera().prepareRecording(videoFile, surface);
 
         if (mMediaRecorder == null) {
             previewHolder.lockCamera();
@@ -69,7 +75,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
             mMediaRecorder.start();
             mRoot.setKeepScreenOn(true);
             swypeStateHelperHolder.startDetector(fpsCounter.getAvgFps());
-            previewHolder.updateCallback();
+            previewHolder.getCamera().setRecording(true);
             return true;
         }
         return false;
@@ -78,6 +84,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     @Override
     public void finishRecording() {
         mRoot.setKeepScreenOn(false);
+        previewHolder.getCamera().setRecording(false);
         screenOrientationLock.unlockScreen(activity);
         boolean stoppedOk = false;
         try {
@@ -85,6 +92,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
             stoppedOk = true;
         } catch (Exception e) {
         }
+        previewHolder.getCamera().setRecording(false);
         releaseMediaRecorder(); // release the MediaRecorder object
         swypeStateHelperHolder.stopDetector();
         if (stoppedOk) {
@@ -93,10 +101,12 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
             videoFile.delete();
             videoFile = null;
         }
+        previewHolder.lockCamera();           // lock camera for later use
     }
 
     @Override
     public void cancelRecording() {
+        previewHolder.getCamera().setRecording(false);
         mRoot.setKeepScreenOn(false);
         try {
             mMediaRecorder.stop();  // stop the recording
@@ -105,6 +115,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
         releaseMediaRecorder(); // release the MediaRecorder object
         swypeStateHelperHolder.stopDetector();
         videoFile.delete();
+        previewHolder.lockCamera();           // lock camera for later use
     }
 
     private void releaseMediaRecorder() {
@@ -112,7 +123,6 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
             mMediaRecorder.reset();   // clear recorder configuration
             mMediaRecorder.release(); // release the recorder object
             mMediaRecorder = null;
-            previewHolder.lockCamera();           // lock camera for later use
         }
     }
 
@@ -129,13 +139,12 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     @Override
     public void onPause(Activity activity) {
         screenOrientationLock.unlockScreen(activity);
-        if (activity.isChangingConfigurations()) {
-            previewHolder.releaseCamera();
-        }
+        previewHolder.releaseCamera();
     }
 
     @Override
     public void onResume(Activity activity) {
+        previewHolder.onResume();
         if (!PermissionManager.ensureHaveCameraPermission(activity, () -> previewHolder.setHasPermissions(true))) {
             previewHolder.setHasPermissions(false);
         }
@@ -150,7 +159,7 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     public void onPreviewFrame(byte[] data, Camera camera) {
         float fps = fpsCounter.addFrame();
         BufferHolder bufferHolder = previewHolder.getCamera().getBufferHolder();
-        bufferHolder.onGotBuffer();
+        bufferHolder.onBufferGotFromCamera();
         swypeStateHelperHolder.onPreviewFrame(data, camera, bufferHolder);
         if (fps >= 0) {
             fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
