@@ -70,6 +70,8 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
         }
 
         if (size() == 0 || requestCode == 0) {
+            if (runAfterGrant != null)
+                runAfterGrant.onAfterPermissionsGranted();
             return this;
         }
 
@@ -152,7 +154,8 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
                     request.onGranted(false);
                 }
         }
-
+        if (runAfterGrant != null && size() == 0)
+            runAfterGrant.onAfterPermissionsGranted();
     }
 
     public PermissionRequest getRequestForPermission(String permission) {
@@ -180,9 +183,6 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
         remove(request);
         if (rejected != null)
             rejected.remove(request);
-        if (size() == 0 && runAfterGrant != null) {
-            runAfterGrant.onAfterPermissionsGranted();
-        }
     }
 
     @Override

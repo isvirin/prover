@@ -145,9 +145,8 @@ public class CameraViewHolder implements ICameraViewHolder, Camera.PreviewCallba
     @Override
     public void onResume(Activity activity) {
         previewHolder.onResume();
-        if (!PermissionManager.ensureHaveCameraPermission(activity, () -> previewHolder.setHasPermissions(true))) {
-            previewHolder.setHasPermissions(false);
-        }
+        boolean hasPermissions = PermissionManager.ensureHaveCameraPermission(activity, null);
+        previewHolder.setHasPermissions(hasPermissions);
     }
 
     @Override

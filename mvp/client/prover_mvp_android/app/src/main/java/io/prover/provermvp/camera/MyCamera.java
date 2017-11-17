@@ -116,6 +116,7 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
     }
 
     public Size selectResolution(Size selectedResolution, Size surfaceSize, Context context) {
+        open();
         if (availableResolutions == null)
             return null;
         return resolutionSelector.selectResolution(selectedResolution, availableResolutions, surfaceSize, context);

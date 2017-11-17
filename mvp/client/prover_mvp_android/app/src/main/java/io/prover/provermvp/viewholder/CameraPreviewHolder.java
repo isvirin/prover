@@ -253,8 +253,4 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
         }
         return result;
     }
-
-    public AutoFitSurfaceView getSurfaceView() {
-        return surfaceView;
-    }
 }
