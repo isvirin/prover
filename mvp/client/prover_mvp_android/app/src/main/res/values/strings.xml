@@ -7,4 +7,7 @@
     <string name="writePermissionRequired">File write permissions are required to write file</string>
     <string name="cantFindApp">Cant find app to open file</string>
     <string name="camera_error">Camera error</string>
+    <string name="info">Info</string>
+    <string name="addressCopied">Address copied to clipboard</string>
+    <string name="address_">Address:</string>
 </resources>

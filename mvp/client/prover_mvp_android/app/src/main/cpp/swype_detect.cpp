@@ -28,6 +28,7 @@ int SwypeDetect::CircleDetection(void)
 }
 
 
+
 vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
 {
     vector<Point2d> Result(10);
@@ -389,6 +390,7 @@ void SwypeDetect::setSwype(string swype) {
     char t;
     int j;
     if (swype != "") {
+        swype_Numbers.clear();
         for (int i = 0; i < swype.length(); i++) {
             t = swype.at(i);
             j = atoi(&t);
@@ -454,12 +456,20 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
     //NW21 convert
 
+//    LOGI_NATIVE("frame detection start");
+
     Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
     cvtColor(frame, frame, CV_YUV2RGBA_NV21);
 
+//    LOGI_NATIVE("frame detection done convert");
+
     shift = Frame_processor(frame);
 
+//    LOGI_NATIVE("frame detection Frame_processor(frame)");
+
     Delta_Calculation(shift); //Вычисляем перемещение
+
+//    LOGI_NATIVE("frame detection Delta_Calculation");
 
     if (S == 0) {
         if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3))

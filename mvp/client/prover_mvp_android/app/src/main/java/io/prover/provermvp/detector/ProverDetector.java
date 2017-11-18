@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import io.prover.provermvp.transport.BufferHolder;
+
 import static io.prover.provermvp.Const.TAG;
 
 /**
@@ -23,6 +25,7 @@ public class ProverDetector {
     private final DetectionListener detectionListener;
     DetectionState detectionState;
     private long nativeHandler;
+    private BufferHolder bufferHolder;
 
     public ProverDetector(int fps, String swype, DetectionListener detectionListener) {
         this.detectionListener = detectionListener;
@@ -65,6 +68,8 @@ public class ProverDetector {
             detectionState = newState;
             handler.post(() -> detectionListener.onDetectionStateChanged(oldState, newState));
         }
+        if (bufferHolder != null)
+            bufferHolder.releaseBuffer(frameData);
     }
 
     /**
@@ -96,6 +101,10 @@ public class ProverDetector {
     private native void detectFrame(long nativeHandler, byte[] frameData, int width, int height, int[] result);
 
     private native void releaseNativeHandler(long nativeHandler);
+
+    public void setBufferHolder(BufferHolder bufferHolder) {
+        this.bufferHolder = bufferHolder;
+    }
 
     public interface DetectionListener {
         void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState);

@@ -9,15 +9,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
+import io.prover.provermvp.dialog.InfoDialog;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.viewholder.CameraControlsHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
@@ -35,14 +37,15 @@ public class MainActivity extends AppCompatActivity {
         swypeStateHelperHolder = new SwypeStateHelperHolder(findViewById(R.id.contentRoot));
         //cameraHolder = new CameraViewHolder2(cameraContainer, this);
 
-        cameraHolder = new CameraViewHolder(cameraContainer, swypeStateHelperHolder);
+        cameraHolder = new CameraViewHolder(this, cameraContainer, swypeStateHelperHolder);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder);
+        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder, swypeStateHelperHolder);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().hide();
+        findViewById(R.id.infoButton).setOnClickListener(this);
     }
 
     @Override
@@ -109,4 +112,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.infoButton:
+                new InfoDialog(this).show();
+                break;
+        }
+    }
 }

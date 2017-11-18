@@ -141,7 +141,9 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
             selectedResolution = size;
             mCamera.updateDisplayOrientation(display.getRotation());
 
-            camera.setPreviewCallback(previewCallback);
+            camera.setPreviewCallbackWithBuffer(previewCallback);
+            mCamera.onStartPreview(previewWidth, previewHeight);
+
 
             if (!isPreviewRunning) {
                 try {
@@ -175,8 +177,9 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
             Camera camera = mCamera.getCamera();
             if (camera != null) {
                 camera.stopPreview();
-                camera.setPreviewCallback(null);
+                camera.setPreviewCallbackWithBuffer(null);
             }
+            mCamera.onStopPreview();
             isPreviewRunning = false;
         }
         isPreviewRequested = false;
@@ -267,4 +270,11 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
         return sizes;
     }
 
+
+    public void updateCallback() {
+        if (mCamera != null && mCamera.getCamera() != null && selectedResolution != null) {
+            Camera camera = mCamera.getCamera();
+            camera.setPreviewCallbackWithBuffer(previewCallback);
+        }
+    }
 }

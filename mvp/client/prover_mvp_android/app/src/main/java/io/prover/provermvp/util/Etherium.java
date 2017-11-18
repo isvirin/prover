@@ -92,10 +92,6 @@ public class Etherium {
 
     public ECKey generateKeyPair() throws NoSuchAlgorithmException, NoSuchProviderException, InvalidAlgorithmParameterException {
         return new ECKey(new SecureRandom());
-        /*ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256k1");
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("ECDsA", "SC");
-        keyGen.initialize(ecSpec, new SecureRandom());
-        return keyGen.generateKeyPair();*/
     }
 
     private void saveKey(Context context) {
@@ -115,5 +111,9 @@ public class Etherium {
         byte[] bytes = Base64.decode(value.toCharArray());
 
         return ECKey.fromPrivate(bytes);
+    }
+
+    public ECKey getKey() {
+        return keyPair;
     }
 }

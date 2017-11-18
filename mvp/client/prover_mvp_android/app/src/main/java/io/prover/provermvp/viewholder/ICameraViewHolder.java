@@ -31,4 +31,6 @@ public interface ICameraViewHolder {
     Size getSelectedCameraResolution();
 
     void setCameraResolution(Size size);
+
+    void cancelRecording();
 }
