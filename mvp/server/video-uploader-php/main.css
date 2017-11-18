@@ -27,6 +27,7 @@ body {
     position: relative;
     padding: 100px 20px;
     overflow: auto;
+    cursor: pointer;
 }
 
 .box:hover {

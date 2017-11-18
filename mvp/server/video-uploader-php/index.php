@@ -34,7 +34,8 @@ if (!$loadConfig_result[0]) {
             <use xmlns:xlink="http://www.w3.org/1999/xlink" target="blank" xlink:href="sprite.svg#Prover"></use>
         </svg>
     </div>
-    <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box">
+    <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
+          onclick="document.getElementById('file').click()">
         <div class="box__input">
             <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>
                 <path d="M760.499 493.901c-9.995-9.997-26.206-9.997-36.203 0l-212.296 212.294v-578.195c0-14.138-11.462-25.6-25.6-25.6s-25.6 11.462-25.6 25.6v578.195l-212.298-212.294c-9.998-9.997-26.206-9.997-36.205 0-9.997 9.995-9.997 26.206 0 36.203l256 256c5 4.997 11.55 7.496 18.102 7.496s13.102-2.499 18.102-7.501l256-256c9.997-9.995 9.997-26.203-0.003-36.198z"></path>
