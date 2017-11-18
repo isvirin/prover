@@ -11,12 +11,13 @@ define('USER_ADDRESS_FILTER', null);
 define('EXAMPLE_FILE_HASH', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 define('TRANSACTIONBYHASH_CORRECT_INPUT', '0x74305b38');
 
-function uploadResult($isSuccess, $transactions, $error)
+function uploadResult($isSuccess, $transactions, $error, $debug = false)
 {
     return json_encode([
         'success' => $isSuccess,
         'transactions' => $transactions,
-        'error' => $error
+        'error' => $error,
+        'debug' => $debug
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 }
 
