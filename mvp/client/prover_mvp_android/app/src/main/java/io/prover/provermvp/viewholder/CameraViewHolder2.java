@@ -211,4 +211,9 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
     public void setCameraResolution(Size size) {
 
     }
+
+    @Override
+    public void cancelRecording() {
+
+    }
 }

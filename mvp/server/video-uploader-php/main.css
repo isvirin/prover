@@ -17,19 +17,32 @@ body {
     margin: 0 auto;
 }
 
+.logo svg {
+    width: 100%;
+}
+
 .box {
     font-size: 1.25rem; /* 20 */
-    background-color: #282828;
+    background-color: transparent;
     position: relative;
     padding: 100px 20px;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.box:hover {
+    background-color: rgba(255, 0, 0, .1);
 }
 
 .box.has-advanced-upload {
     outline: 2px dashed #E0222D;
-    outline-offset: -10px;
-
+    outline-offset: 0;
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
     transition: outline-offset .15s ease-in-out, background-color .15s linear;
+}
+
+.box.has-advanced-upload:hover {
+    outline-offset: -10px;
 }
 
 .box__dragndrop,
@@ -50,9 +63,9 @@ body {
 }
 
 .box.is-dragover {
-    outline-offset: -20px;
+    outline-offset: -25px;
     outline-color: #CCC;
-    background-color: #911;
+    background-color: rgba(255, 0, 0, .6);
 }
 
 .box.is-dragover .box__icon {
@@ -82,6 +95,22 @@ body {
 
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
+}
+
+.box__success_msg {
+    display: inline-block;
+    max-width: 94%;
+}
+
+.box__sender_address {
+    font-size: .7em;
+    color: #faa;
+    cursor: pointer;
+}
+
+.box__sender_address:hover {
+    color: #fff;
+    text-decoration: underline;
 }
 
 .box__uploading {
@@ -184,4 +213,9 @@ body {
 .box__button:hover,
 .box__button:focus {
     background-color: #f00;
+}
+
+.block_client_address_info {
+    margin-top: 2em;
+    text-align: left;
 }

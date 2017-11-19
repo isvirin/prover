@@ -38,6 +38,8 @@ Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject i
         env->ReleaseStringUTFChars(swype_, chars);
     }
 
+    LOGI_NATIVE("detection: set swype %s", swype.c_str());
+
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
     detector->setSwype(swype);
 }
@@ -53,10 +55,10 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrame(JNIEnv *env, jobjec
     jint *result = env->GetIntArrayElements(result_, NULL);
 
     int state = 0, index = 0, x = 0, y = 0;
-    static long counter = 0;
-    LOGI_NATIVE("start frame detection %ld", counter);
+//    static long counter = 0;
+//    LOGI_NATIVE("start frame detection %ld", counter);
     detector->processFrame((const unsigned char *) frameData, width, height, state, index, x, y);
-    LOGI_NATIVE("done frame detection %ld", counter++);
+//    LOGI_NATIVE("done frame detection %ld", counter++);
 
     result[0] = state;
     result[1] = index;
@@ -75,9 +77,9 @@ Java_io_prover_provermvp_detector_ProverDetector_releaseNativeHandler(JNIEnv *en
     if (detector == NULL) {
         LOGE_NATIVE("trying to close NULL detector");
     } else {
-        LOGE_NATIVE("requested detector close");
+        LOGI_NATIVE("requested detector close");
         delete detector;
-        LOGE_NATIVE("detector closed");
+        LOGI_NATIVE("detector closed");
     }
 }
 

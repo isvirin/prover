@@ -1,0 +1,34 @@
+package io.prover.provermvp.transport;
+
+import org.ethereum.crypto.ECKey;
+import org.json.JSONException;
+import org.spongycastle.util.encoders.Hex;
+
+import java.io.IOException;
+
+import io.prover.provermvp.transport.responce.HelloResponce;
+
+/**
+ * Created by babay on 14.11.2017.
+ */
+
+public class HelloRequest extends NetworkRequest<HelloResponce> {
+    private static final String METHOD = "hello";
+    private final ECKey key;
+
+    public HelloRequest(ECKey key, NetworkRequestListener<HelloResponce> listener) {
+        super(listener);
+        this.key = key;
+    }
+
+    @Override
+    public void run() {
+        String requestBody = "user=0x" + Hex.toHexString(key.getAddress());
+        execSimpleRequest(METHOD, RequestType.Post, requestBody);
+    }
+
+    @Override
+    protected HelloResponce parse(String source) throws IOException, JSONException {
+        return new HelloResponce(source);
+    }
+}

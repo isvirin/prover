@@ -6,8 +6,8 @@ android {
         applicationId "io.prover.provermvp"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
@@ -21,6 +21,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    applicationVariants.matching(
+            { it.buildType.name == android.buildTypes.release.name }
+    ).all { variant ->
+
+        variant.outputs.all {
+            outputFileName = "../../../../../../build/${variant.applicationId}-${variant.versionName}(${variant.versionCode}).apk"
+        }
+    }
+
 
     buildTypes {
         release {
@@ -54,7 +64,7 @@ android {
         }
 
 
-        arm64_v8a {
+/*        arm64_v8a {
             dimension "main"
             ndk {
                 abiFilter "arm64-v8a"
@@ -136,4 +146,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.madgag.spongycastle:pkix:1.54.0.0'
 }

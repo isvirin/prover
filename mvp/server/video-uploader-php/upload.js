@@ -4,12 +4,39 @@ var isAdvancedUpload = function () {
     return ( ( 'draggable' in div ) || ( 'ondragstart' in div && 'ondrop' in div ) ) && 'FormData' in window && 'FileReader' in window;
 }();
 
+function getSenderInfo(address) {
+    var block_clientAddressInfo = document.querySelectorAll('.block_client_address_info')[0];
+    block_clientAddressInfo.innerHTML = '';
+    var newHtml = '<span>Sender <strong>' + address + '</strong> transactions:</span>';
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState === 4) {
+            if (xmlHttp.status === 200) {
+                var result = JSON.parse(xmlHttp.responseText);
+                if (result.success) {
+                    result.transactions.forEach(function (transaction) {
+                        newHtml += '<br>• ' + transaction.blockNumber;
+                    });
+                } else {
+                    newHtml += 'sorry, something goes wrong 😭';
+                }
+            } else {
+                newHtml = 'sorry, something goes wrong 😱😠';
+            }
+            block_clientAddressInfo.innerHTML = newHtml;
+        }
+    };
+    xmlHttp.open("GET", '/senderInfo.php?senderAddress=' + address, true);
+    xmlHttp.send(null);
+}
+
 // applying the effect for every form
 var forms = document.querySelectorAll('.box');
 Array.prototype.forEach.call(forms, function (form) {
     var input = form.querySelector('input[type="file"]'),
         labelFile = form.querySelector('label.box__labelFile_file'),
         labelDefault = form.querySelector('label.box__labelFile_default'),
+        successMsg = form.querySelector('.box__success_msg'),
         errorMsg = form.querySelector('.box__error span'),
         restart = form.querySelectorAll('.box__restart'),
         droppedFiles = false,
@@ -63,6 +90,51 @@ Array.prototype.forEach.call(forms, function (form) {
         });
     }
 
+    function hexTsToDate(hexTs) {
+        return new Date(parseInt(hexTs) * 1000);
+    }
+
+    function updateOnResponse(response) {
+        //todo: remove console.log
+        console.log(response);
+        if (!response.success) {
+            errorMsg.textContent = response.error;
+        } else {
+            var senderAddressesSpans = '';
+            response.transactions.forEach(function (transaction) {
+                senderAddressesSpans +=
+                    '<br>' +
+                    '<span' +
+                    ' class="box__sender_address"' +
+                    ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
+                    '>' + transaction.senderAddress + '</span>';
+            });
+            var msg = 'Nothing found';
+            if (response.transactions.length) {
+                if (response.debug) {
+                    msg = 'Transactions count: ' + response.transactions.length + '.' +
+                        (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
+                } else {
+                    msg = 'Found';
+                    var beginBlock_ts = response.transactions[0].beginBlock.timestamp;
+                    if (beginBlock_ts) {
+                        msg += '<br>Time 1: ' + hexTsToDate(beginBlock_ts);
+                        var endBlock_ts = response.transactions[0].endBlock.timestamp;
+                        if (endBlock_ts) {
+                            msg += '<br>Time 2: ' + hexTsToDate(endBlock_ts);
+                            msg += '<br>swype and relative time later';
+                        } else {
+                            msg += '<br>but not completed 😢';
+                        }
+                    } else {
+                        msg += '<br>but can not get time 😨';
+                    }
+                }
+            }
+            successMsg.innerHTML = msg;
+        }
+    }
+
     // if the form was submitted
     form.addEventListener('submit', function (e) {
         // preventing the duplicate submissions if the current one is in progress
@@ -70,8 +142,9 @@ Array.prototype.forEach.call(forms, function (form) {
             return false;
         }
 
-        form.classList.add('is-uploading');
         form.classList.remove('is-error');
+        form.classList.remove('is-success');
+        form.classList.add('is-uploading');
 
         if (isAdvancedUpload) { // ajax file upload for modern browsers
             e.preventDefault();
@@ -90,11 +163,13 @@ Array.prototype.forEach.call(forms, function (form) {
             ajax.onload = function () {
                 form.classList.remove('is-uploading');
                 if (ajax.status >= 200 && ajax.status < 400) {
-                    var data = JSON.parse(ajax.responseText);
-                    form.classList.add(data.success ? 'is-success' : 'is-error');
-                    if (!data.success) errorMsg.textContent = data.error;
+                    var response = JSON.parse(ajax.responseText);
+                    form.classList.add(response.success ? 'is-success' : 'is-error');
+                    updateOnResponse(response);
                 }
-                else alert('Error. Please, contact the webmaster!');
+                else {
+                    alert('Error. Please, contact the webmaster!');
+                }
             };
 
             ajax.onerror = function () {
@@ -116,13 +191,11 @@ Array.prototype.forEach.call(forms, function (form) {
             form.setAttribute('target', iframeName);
 
             iframe.addEventListener('load', function () {
-                var data = JSON.parse(iframe.contentDocument.body.innerHTML);
+                var response = JSON.parse(iframe.contentDocument.body.innerHTML);
                 form.classList.remove('is-uploading');
-                form.classList.add(data.success ? 'is-success' : 'is-error');
+                form.classList.add(response.success ? 'is-success' : 'is-error');
                 form.removeAttribute('target');
-                if (!data.success) {
-                    errorMsg.textContent = data.error;
-                }
+                updateOnResponse(response);
                 iframe.parentNode.removeChild(iframe);
             });
         }

@@ -11,4 +11,6 @@ public interface Const {
 
     String KEY_SELECTED_RESOLUTION_X = "resX";
     String KEY_SELECTED_RESOLUTION_Y = "resY";
+
+    String SERVER_URL = "http://mvp.prover.io/cgi-bin/";
 }
