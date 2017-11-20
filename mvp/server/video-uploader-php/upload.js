@@ -13,7 +13,6 @@ function getSenderInfo(address) {
         if (xmlHttp.readyState === 4) {
             if (xmlHttp.status === 200) {
                 var result = JSON.parse(xmlHttp.responseText);
-                console.log(result);
                 if (result.success) {
                     result.transactions.forEach(function (transaction) {
                         newHtml += '<br>• ' + transaction.blockNumber;
@@ -91,7 +90,13 @@ Array.prototype.forEach.call(forms, function (form) {
         });
     }
 
+    function hexTsToDate(hexTs) {
+        return new Date(parseInt(hexTs) * 1000);
+    }
+
     function updateOnResponse(response) {
+        //todo: remove console.log
+        console.log(response);
         if (!response.success) {
             errorMsg.textContent = response.error;
         } else {
@@ -104,9 +109,29 @@ Array.prototype.forEach.call(forms, function (form) {
                     ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
                     '>' + transaction.senderAddress + '</span>';
             });
-            successMsg.innerHTML =
-                'Transactions count: ' + response.transactions.length + '.' +
-                (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
+            var msg = 'Nothing found';
+            if (response.transactions.length) {
+                if (response.debug) {
+                    msg = 'Transactions count: ' + response.transactions.length + '.' +
+                        (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
+                } else {
+                    msg = 'Found';
+                    var beginBlock_ts = response.transactions[0].beginBlock.timestamp;
+                    if (beginBlock_ts) {
+                        msg += '<br>Time 1: ' + hexTsToDate(beginBlock_ts);
+                        var endBlock_ts = response.transactions[0].endBlock.timestamp;
+                        if (endBlock_ts) {
+                            msg += '<br>Time 2: ' + hexTsToDate(endBlock_ts);
+                            msg += '<br>swype and relative time later';
+                        } else {
+                            msg += '<br>but not completed 😢';
+                        }
+                    } else {
+                        msg += '<br>but can not get time 😨';
+                    }
+                }
+            }
+            successMsg.innerHTML = msg;
         }
     }
 
