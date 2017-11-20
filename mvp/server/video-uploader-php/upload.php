@@ -106,7 +106,7 @@ function worker()
             "topics" => [
                 GETLOGS_FILE_EVENT_ID,
                 USER_ADDRESS_FILTER,
-                '0x' . EXAMPLE_FILE_HASH
+                '0x' . $hash
             ]
         ]];
 
@@ -138,8 +138,8 @@ function worker()
                 $beginSwypeTime = 0;
                 $endSwypeTime = 0;
 
-                $beginBlock = getBlockByHash($gethClient, $transaction->blockHash);
-                $endBlock = [];
+                $submitMediaHash_block = getBlockByHash($gethClient, $transaction->blockHash);
+                $requestSwypeCode_block = [];
 
                 if ($gethClient->call('eth_getTransactionByHash', [
                     $data
@@ -163,7 +163,7 @@ function worker()
                       ["s"]=> string(65) "0x12f49c4ac822f7914a6fcdcca9d44e73fdfd4f5dfbab3e36abbdb0bca5c784c"
                     }
                     */
-                    $endBlock = getBlockByHash($gethClient, $transactionDetails->blockHash);
+                    $requestSwypeCode_block = getBlockByHash($gethClient, $transactionDetails->blockHash);
                     if (
                         preg_replace('/0x[0]*(.*)/', '$1', $transactionDetails->from) ===
                         preg_replace('/0x[0]*(.*)/', '$1', $senderAddress)
@@ -183,8 +183,8 @@ function worker()
                 $transactions[] = [
                     'senderAddress' => $senderAddress,
                     'validated' => $validated,
-                    'beginBlock' => $beginBlock,
-                    'endBlock' => $endBlock,
+                    'submitMediaHash_block' => $submitMediaHash_block,
+                    'requestSwypeCode_block' => $requestSwypeCode_block,
                     'swype' => $swype,
                     'beginSwypeTime' => $beginSwypeTime,
                     'endSwypeTime' => $endSwypeTime

@@ -116,23 +116,25 @@ Array.prototype.forEach.call(forms, function (form) {
             });
             var msg = 'Nothing found';
             if (response.transactions.length) {
+                msg = '';
                 if (response.debug) {
                     msg = 'Transactions count: ' + response.transactions.length + '.' +
                         (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
                 } else {
-                    msg = 'Found';
-                    var beginBlock_ts = response.transactions[0].beginBlock.timestamp;
-                    if (beginBlock_ts) {
-                        msg += '<br>Time 1: ' + hexTsToDate(beginBlock_ts);
-                        var endBlock_ts = response.transactions[0].endBlock.timestamp;
-                        if (endBlock_ts) {
-                            msg += '<br>Time 2: ' + hexTsToDate(endBlock_ts);
-                            msg += '<br>swype and relative time later';
+                    var submitMediaHash_ts = response.transactions[0].submitMediaHash_block.timestamp;
+                    if (submitMediaHash_ts) {
+                        var requestSwypeCode_ts = response.transactions[0].requestSwypeCode_block.timestamp;
+                        if (requestSwypeCode_ts) {
+                            msg += 'Request swype code on ' + hexTsToDate(requestSwypeCode_ts);
                         } else {
-                            msg += '<br>but not completed 😢';
+                            msg += 'Request swype code not found 😢';
+                        }
+                        msg += '<br>Submit media hash on ' + hexTsToDate(submitMediaHash_ts);
+                        if (requestSwypeCode_ts) {
+                            msg += '<br>Swype code and relative time later with analytic program';
                         }
                     } else {
-                        msg += '<br>but can not get time 😨';
+                        msg += 'Can not found submit media hash 😨';
                     }
                 }
             }

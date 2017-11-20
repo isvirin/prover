@@ -102,6 +102,12 @@ body {
     max-width: 94%;
 }
 
+.box__success_msg, .box__error > span {
+    text-align: left;
+    font-family: "Courier New", Courier, monospace;
+    display: inline-block;
+}
+
 .box__sender_address {
     font-size: .7em;
     color: #faa;
