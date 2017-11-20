@@ -9,7 +9,6 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.WINDOW_SERVICE;
@@ -66,7 +65,7 @@ public class ResolutionSelector {
         final float targetRatio = w / (float) h;
 
         List<Size> sizesList = new ArrayList<>(availableResolutions);
-        Collections.sort(sizesList, new CameraSizeRatioComparator(targetRatio));
+        Collections.sort(sizesList, new Size.CameraSizeRatioComparator(targetRatio));
 
         int minHeight = (int) (h / Math.max(1.5f, displayMetrics.density));
         int maxHeight = (int) (h * 1.25f);
@@ -96,9 +95,9 @@ public class ResolutionSelector {
         for (Camera.Size size : previewSizes) {
             int sWidth = size.width;
             int sHeight = size.height;
-            if (sWidth >= sHeight && sWidth > MAX_WIDTH && sHeight > MAX_HEIGHT)
+            if (sWidth >= sHeight && sWidth > MAX_WIDTH || sHeight > MAX_HEIGHT)
                 continue;
-            if (sWidth < sHeight && sWidth > MAX_HEIGHT && sHeight > MAX_WIDTH)
+            if (sWidth < sHeight && sWidth > MAX_HEIGHT || sHeight > MAX_WIDTH)
                 continue;
 
             if (!videoSizes.contains(size))
@@ -108,32 +107,8 @@ public class ResolutionSelector {
             else result.add(new Size(size).toOrientation(orientation));
         }
 
-        Collections.sort(result, new CameraAreaComparator());
+        Collections.sort(result, new Size.CameraAreaComparator());
         return result;
     }
 
-    public class CameraSizeRatioComparator implements Comparator<Size> {
-        final float targetRatio;
-
-        public CameraSizeRatioComparator(float targetRatio) {
-            this.targetRatio = targetRatio;
-        }
-
-        @Override
-        public int compare(Size o1, Size o2) {
-            float ratio1 = Math.abs(o1.ratio - targetRatio);
-            float ratio2 = Math.abs(o2.ratio - targetRatio);
-            if (Math.abs(ratio1 - ratio2) < 0.1f)
-                return Integer.compare(o2.width * o2.height, o1.width * o1.height);
-            return Float.compare(ratio1, ratio2);
-        }
-    }
-
-    public class CameraAreaComparator implements Comparator<Size> {
-
-        @Override
-        public int compare(Size o1, Size o2) {
-            return Integer.compare(o2.width * o2.height, o1.width * o1.height);
-        }
-    }
 }

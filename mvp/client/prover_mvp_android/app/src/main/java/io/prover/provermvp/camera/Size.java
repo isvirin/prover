@@ -1,7 +1,11 @@
 package io.prover.provermvp.camera;
 
+import android.content.SharedPreferences;
 import android.hardware.Camera;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
+import java.util.Comparator;
 import java.util.Locale;
 
 /**
@@ -20,6 +24,20 @@ public class Size {
 
     public Size(Camera.Size size) {
         this(size.width, size.height);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public Size(android.util.Size size) {
+        this(size.getWidth(), size.getHeight());
+    }
+
+    public static Size fromPreferences(SharedPreferences prefs, String keyX, String keyY) {
+        if (prefs.contains(keyX) && prefs.contains(keyY)) {
+            int w = prefs.getInt(keyX, 0);
+            int h = prefs.getInt(keyY, 0);
+            return new Size(w, h);
+        }
+        return null;
     }
 
     @Override
@@ -94,5 +112,38 @@ public class Size {
 
     public int area() {
         return width * height;
+    }
+
+    public Size scale(float scaleWidth, float scaleHeight) {
+        return new Size((int) (width * scaleWidth), (int) (height * scaleHeight));
+    }
+
+    public void saveToPreferences(SharedPreferences.Editor edit, String keyX, String keyY) {
+        edit.putInt(keyX, width).putInt(keyY, height);
+    }
+
+    public static class CameraAreaComparator implements Comparator<Size> {
+
+        @Override
+        public int compare(Size o1, Size o2) {
+            return Integer.compare(o2.width * o2.height, o1.width * o1.height);
+        }
+    }
+
+    public static class CameraSizeRatioComparator implements Comparator<Size> {
+        final float targetRatio;
+
+        public CameraSizeRatioComparator(float targetRatio) {
+            this.targetRatio = targetRatio;
+        }
+
+        @Override
+        public int compare(Size o1, Size o2) {
+            float ratio1 = Math.abs(o1.ratio - targetRatio);
+            float ratio2 = Math.abs(o2.ratio - targetRatio);
+            if (Math.abs(ratio1 - ratio2) < 0.1f)
+                return Integer.compare(o2.width * o2.height, o1.width * o1.height);
+            return Float.compare(ratio1, ratio2);
+        }
     }
 }

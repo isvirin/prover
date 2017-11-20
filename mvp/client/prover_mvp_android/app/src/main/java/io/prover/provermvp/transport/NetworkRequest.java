@@ -1,8 +1,6 @@
 package io.prover.provermvp.transport;
 
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import org.ethereum.core.Transaction;
@@ -33,12 +31,11 @@ public abstract class NetworkRequest<T> implements Runnable {
     public static final int CONNECT_TIMEOUT = 10_000;
     public static final int READ_TIMEOUT = 30_000;
     static final String TAG = Const.TAG + "NetRequest";
-    protected final Handler handler = new Handler(Looper.getMainLooper());
-    protected final NetworkRequestListener<T> listener;
+    protected final NetworkRequestListener listener;
     protected RequestLog debugData;
     protected String charset = "UTF-8";
 
-    public NetworkRequest(NetworkRequestListener<T> listener) {
+    public NetworkRequest(NetworkRequestListener listener) {
         this.listener = listener;
     }
 
@@ -113,7 +110,7 @@ public abstract class NetworkRequest<T> implements Runnable {
         try {
             String responceStr = postEnclosingRequest(method, requestType, requestBody);
             T responce = parse(responceStr);
-            handler.post(() -> listener.onNetworkRequestDone(this, responce));
+            listener.onNetworkRequestDone(this, responce);
         } catch (IOException | JSONException ex) {
             handleException(ex);
         }
@@ -161,7 +158,7 @@ public abstract class NetworkRequest<T> implements Runnable {
             debugData.setException(ex).log();
         }
 
-        handler.post(() -> listener.onNetworkRequestError(this, ex));
+        listener.onNetworkRequestError(this, ex);
     }
 
     protected abstract T parse(String source) throws IOException, JSONException;
@@ -170,8 +167,10 @@ public abstract class NetworkRequest<T> implements Runnable {
         return null;
     }
 
-    public interface NetworkRequestListener<T> {
-        void onNetworkRequestDone(NetworkRequest request, T responce);
+    public interface NetworkRequestListener {
+        void onNetworkRequestStart(NetworkRequest request);
+
+        void onNetworkRequestDone(NetworkRequest request, Object responce);
 
         void onNetworkRequestError(NetworkRequest request, Exception e);
     }

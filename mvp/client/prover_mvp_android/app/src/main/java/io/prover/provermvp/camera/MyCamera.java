@@ -5,6 +5,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Surface;
 
@@ -14,45 +15,40 @@ import java.util.List;
 
 import io.prover.provermvp.Const;
 import io.prover.provermvp.Settings;
-import io.prover.provermvp.transport.BufferHolder;
+import io.prover.provermvp.controller.CameraController;
 
 /**
  * Created by babay on 09.12.2016.
  */
 
-public class MyCamera implements BufferHolder.OnBufferReleasedListener {
+public class MyCamera implements CameraController.OnPreviewStartListener, CameraController.OnRecordingStartListener, Camera.PreviewCallback, CameraController.OnFrameReleasedListener, CameraController.OnRecordingStopListener {
     public static final String TAG = Const.TAG + "Camera";
     public final int id;
     private final Camera.CameraInfo cameraInfo;
-    private final BufferHolder bufferHolder = new BufferHolder();
     private final ResolutionSelector resolutionSelector = new ResolutionSelector();
+    private final CameraController cameraController;
     private Camera camera;
     private List<Size> availableResolutions;
-    private Camera.PreviewCallback previewCallback;
 
-    private MyCamera(int id, Camera camera, Camera.CameraInfo cameraInfo) {
-        this.id = id;
-        this.camera = camera;
-        this.cameraInfo = cameraInfo;
-        if (camera != null) {
-            availableResolutions = resolutionSelector.getSuitableResolutions(camera, null);
-        }
-    }
-
-    private MyCamera(int id, Camera.CameraInfo cameraInfo) {
+    private MyCamera(int id, Camera.CameraInfo cameraInfo, CameraController cameraController) {
         this.id = id;
         this.cameraInfo = cameraInfo;
+        this.cameraController = cameraController;
+        cameraController.previewStart.add(this);
+        cameraController.onRecordingStart.add(this);
+        cameraController.onRecordingStop.add(this);
+        cameraController.frameReleased.add(this);
         open();
     }
 
-    public static MyCamera openBackCamera() {
+    public static MyCamera openBackCamera(CameraController cameraController) {
         Log.d(TAG, "Open back camera");
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                return new MyCamera(i, cameraInfo);
+                return new MyCamera(i, cameraInfo, cameraController);
             }
         }
         return null;
@@ -97,7 +93,6 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
             camera.release();
             camera = null;
         }
-        bufferHolder.setBufferReleasedListener(null);
     }
 
     public int getDisplayOrientation(int degrees) {
@@ -171,37 +166,6 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
         return mediaRecorder;
     }
 
-    @Override
-    public boolean onBufferReleased(byte[] buffer) {
-        if (camera != null) {
-            if (Settings.REUSE_PREVIEW_BUFFERS) {
-                camera.addCallbackBuffer(buffer);
-                bufferHolder.onBufferAddedToCamera();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public void onStartPreview(int previewWidth, int previewHeight) {
-        bufferHolder.setSize(previewWidth, previewHeight);
-        bufferHolder.setBufferReleasedListener(this);
-        if (Settings.REUSE_PREVIEW_BUFFERS) {
-            camera.addCallbackBuffer(bufferHolder.getBuffer());
-            camera.addCallbackBuffer(bufferHolder.getBuffer());
-            camera.addCallbackBuffer(bufferHolder.getBuffer());
-            camera.addCallbackBuffer(bufferHolder.getBuffer());
-            bufferHolder.onBufferAddedToCamera();
-            bufferHolder.onBufferAddedToCamera();
-            bufferHolder.onBufferAddedToCamera();
-            bufferHolder.onBufferAddedToCamera();
-        }
-    }
-
-    public BufferHolder getBufferHolder() {
-        return bufferHolder;
-    }
-
     public void stopPreview() {
         if (camera != null) {
             camera.stopPreview();
@@ -213,28 +177,59 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
                 Log.e(TAG, e.getMessage(), e);
             }
         }
-        bufferHolder.setBufferReleasedListener(null);
     }
 
     public void updateCallback() {
         if (camera != null) {
             Log.d(TAG, "updating buffer callback");
             if (Settings.REUSE_PREVIEW_BUFFERS) {
-                camera.setPreviewCallbackWithBuffer(previewCallback);
+                camera.setPreviewCallbackWithBuffer(this);
             } else {
-                camera.setPreviewCallback(previewCallback);
+                camera.setPreviewCallback(this);
             }
         }
     }
 
     public void setRecording(boolean recording) {
-        bufferHolder.setRecording(recording);
         if (recording) {
             updateCallback();
         }
     }
 
-    public void setPreviewCallback(Camera.PreviewCallback previewCallback) {
-        this.previewCallback = previewCallback;
+    @Override
+    public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
+        if (Settings.REUSE_PREVIEW_BUFFERS) {
+            int size = previewSize.width * previewSize.height * 3 / 2;
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
+        }
+    }
+
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        cameraController.frameAvailable.postNotifyEvent(data, camera);
+    }
+
+    @Override
+    public void onFrameReleased(byte[] data) {
+        if (camera != null) {
+            if (Settings.REUSE_PREVIEW_BUFFERS) {
+                camera.addCallbackBuffer(data);
+            }
+        }
+    }
+
+    @Override
+    public void onRecordingStart(float fps) {
+        setRecording(true);
+    }
+
+
+    @Override
+    public void onRecordingStop(File file, boolean isVideoConfirmed) {
+        setRecording(false);
     }
 }

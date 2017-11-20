@@ -12,10 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.dialog.InfoDialog;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.viewholder.CameraControlsHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder;
+import io.prover.provermvp.viewholder.CameraViewHolder2;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
+    CameraController cameraController = new CameraController();
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
     private boolean resumed;
@@ -34,13 +37,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
-        swypeStateHelperHolder = new SwypeStateHelperHolder(findViewById(R.id.contentRoot));
-        //cameraHolder = new CameraViewHolder2(cameraContainer, this);
-
-        cameraHolder = new CameraViewHolder(this, cameraContainer, swypeStateHelperHolder);
+        swypeStateHelperHolder = new SwypeStateHelperHolder(findViewById(R.id.contentRoot), cameraController);
+        if (Settings.USE_CAMERA_2)
+            cameraHolder = new CameraViewHolder2(cameraContainer, this, cameraController);
+        else
+            cameraHolder = new CameraViewHolder(this, cameraContainer, cameraController);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder, swypeStateHelperHolder);
+        cameraControlsHolder = new CameraControlsHolder(this, findViewById(R.id.contentRoot), fab, cameraHolder, cameraController);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

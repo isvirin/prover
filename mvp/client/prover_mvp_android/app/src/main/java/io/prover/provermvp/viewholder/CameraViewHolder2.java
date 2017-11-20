@@ -3,8 +3,8 @@ package io.prover.provermvp.viewholder;
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraDevice;
-import android.media.Image;
-import android.media.ImageReader;
+import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -14,33 +14,41 @@ import android.view.Gravity;
 import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import java.io.File;
-import java.util.List;
+import java.io.IOException;
 
+import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.camera2.AutoFitTextureView;
 import io.prover.provermvp.camera2.MyCamera2;
+import io.prover.provermvp.camera2.OrientationHelper;
+import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.permissions.PermissionManager;
-import io.prover.provermvp.util.FrameRateCounter;
+
+import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
 
 /**
  * Created by babay on 08.11.2017.
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, MyCamera2.CameraStateListener, ICameraViewHolder {
+public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICameraViewHolder, CameraController.OnRecordingStartListener {
+
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
-    private final FrameRateCounter counter = new FrameRateCounter(60, 10);
-    AutoFitTextureView mRoot;
+    private final FrameLayout mRoot;
+    private final CameraController cameraController;
+    AutoFitTextureView textureView;
     MyCamera2 myCamera;
+    Size selectedSize;
     private Activity activity;
     private boolean resumed;
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
-    private final TextureView.SurfaceTextureListener mSurfaceTextureListener
-            = new TextureView.SurfaceTextureListener() {
+    private Size mSurfaceSize;
+    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
 
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
@@ -50,7 +58,7 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
             if (myCamera.getPreviewSize() != null && activity != null) {
-                mRoot.configureTransform(activity, myCamera.getPreviewSize(), width, height);
+                textureView.configureTransform(activity, myCamera.getPreviewSize(), width, height);
             }
         }
 
@@ -65,30 +73,37 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
         }
 
     };
+    private MediaRecorder mMediaRecorder;
+    private File videoFile;
 
-    public CameraViewHolder2(FrameLayout root, Activity activity) {
-        this.mRoot = new AutoFitTextureView(root.getContext());
+    public CameraViewHolder2(FrameLayout root, Activity activity, CameraController cameraController) {
+        this.mRoot = root;
+        this.textureView = new AutoFitTextureView(root.getContext());
+        this.activity = activity;
+        this.cameraController = cameraController;
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.CENTER;
-        root.addView(mRoot, lp);
-        this.activity = activity;
-        myCamera = new MyCamera2(this, this);
-    }
+        root.addView(textureView, lp);
 
-    public CameraViewHolder2(AutoFitTextureView root, Activity activity) {
-        this.mRoot = root;
-        this.activity = activity;
-        myCamera = new MyCamera2(this, this);
+        myCamera = new MyCamera2(this, cameraController);
+        cameraController.onRecordingStart.add(this);
     }
 
     private void openCamera(int width, int height) {
         if (!PermissionManager.ensureHaveCameraPermission(activity, null))
             return;
 
-        //myCamera.setUpCamera(activity, width, height, mBackgroundHandler);
-        myCamera.openCamera(activity, mBackgroundHandler, width, height);
-        mRoot.configurePreviewSize(myCamera.getPreviewSize());
-        mRoot.configureTransform(activity, myCamera.getPreviewSize(), width, height);
+        mSurfaceSize = new Size(width, height);
+        myCamera.openCamera(activity, mBackgroundHandler, mSurfaceSize, selectedSize);
+        selectedSize = myCamera.getVideoSize();
+    }
+
+    private void startPreview() {
+        Size size = myCamera.getPreviewSize();
+        textureView.configurePreviewSize(size);
+        textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
+
+        myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
     }
 
     private void releaseCamera() {
@@ -106,15 +121,9 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
 
     public void onPause(Activity activity) {
         resumed = false;
+        cancelRecording();
         myCamera.closeCamera();
         stopBackgroundThread();
-
-
-        screenOrientationLock.unlockScreen(activity);
-        /*releaseMediaRecorder();       // if you are using MediaRecorder, release it first
-        if (cameraPreview != null) {
-            cameraPreview.releaseCamera();              // release the camera immediately on pause event
-        }*/
     }
 
     /**
@@ -141,26 +150,16 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
-        if (mRoot.isAvailable()) {
-            openCamera(mRoot.getWidth(), mRoot.getHeight());
+        if (textureView.isAvailable()) {
+            openCamera(textureView.getWidth(), textureView.getHeight());
         } else {
-            mRoot.setSurfaceTextureListener(mSurfaceTextureListener);
+            textureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
-
-        //PermissionManager.ensureHaveCameraPermission(activity, this::startCamera);
-    }
-
-    @Override
-    public void onImageAvailable(ImageReader reader) {
-        counter.addFrame();
-        Image image = reader.acquireLatestImage();
-        image.close();
     }
 
     @Override
     public void onCameraOpened(@NonNull CameraDevice cameraDevice) {
-        mRoot.configureTransform(activity, myCamera.getPreviewSize(), mRoot.getWidth(), mRoot.getHeight());
-        myCamera.startPreview(mRoot.getSurfaceTexture(), mBackgroundHandler);
+        startPreview();
     }
 
     @Override
@@ -170,50 +169,106 @@ public class CameraViewHolder2 implements ImageReader.OnImageAvailableListener, 
 
     @Override
     public void onCameraError(@NonNull CameraDevice cameraDevice, int error) {
+        Toast.makeText(activity, "Video error: " + error, Toast.LENGTH_SHORT).show();
+    }
 
+    private void prepareMediaRecorder() throws IOException {
+        if (mMediaRecorder == null)
+            mMediaRecorder = new MediaRecorder();
+        Size videoSize = myCamera.getVideoSize();
+        videoFile = CameraUtil.getOutputMediaFile(MEDIA_TYPE_VIDEO, mRoot.getContext());
+        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mMediaRecorder.setOutputFile(videoFile.getPath());
+        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        mMediaRecorder.setVideoFrameRate(30);
+        mMediaRecorder.setVideoSize(videoSize.width, videoSize.height);
+        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        Integer orientationHint = OrientationHelper.getOrientationHint(myCamera.getSensorOrientation(), rotation);
+        if (orientationHint != null)
+            mMediaRecorder.setOrientationHint(orientationHint);
+
+        mMediaRecorder.prepare();
     }
 
     @Override
     public void onStop() {
-
-    }
-
-    public boolean isRecording() {
-        return false;
+        releaseCamera();
+        if (mMediaRecorder != null) {
+            mMediaRecorder.release();
+            mMediaRecorder = null;
+        }
     }
 
     @Override
     public void finishRecording() {
-
+        myCamera.stopVideoSession();
+        stopRecording();
+        cameraController.onRecordingStop(videoFile);
+        myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+        MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
+        videoFile = null;
     }
 
     @Override
-    public File getVideoFile() {
-        return null;
-    }
-
-    @Override
-    public boolean startRecording(Activity activity) {
-        return false;
-    }
-
-    @Override
-    public List<Size> getCameraResolutions() {
-        return null;
-    }
-
-    @Override
-    public Size getSelectedCameraResolution() {
-        return null;
+    public boolean startRecording(Activity activity, float averageFps) {
+        if (!textureView.isAvailable() || null == myCamera.getVideoSize()) {
+            return false;
+        }
+        try {
+            prepareMediaRecorder();
+            SurfaceTexture texture = textureView.getSurfaceTexture();
+            myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
+            mRoot.setKeepScreenOn(true);
+            screenOrientationLock.lockScreenOrientation(activity);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public void setCameraResolution(Size size) {
-
+        if (size == null || !size.equalsIgnoringRotation(selectedSize)) {
+            selectedSize = size;
+            if (mSurfaceSize != null) {
+                textureView.configurePreviewSize(size);
+                textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
+                myCamera.setResolution(mSurfaceSize, selectedSize, mRoot.getContext());
+                myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+            }
+        }
     }
 
     @Override
     public void cancelRecording() {
+        if (mMediaRecorder != null && cameraController.isRecording()) {
+            stopRecording();
+            cameraController.onRecordingStop(videoFile);
+            videoFile.delete();
+            videoFile = null;
+        }
+    }
 
+    private void stopRecording() {
+        if (mMediaRecorder != null) {
+            try {
+                mMediaRecorder.stop();
+            } catch (Exception ignored) {
+            }
+            mMediaRecorder.reset();   // clear recorder configuration
+
+            mRoot.setKeepScreenOn(false);
+            screenOrientationLock.unlockScreen(activity);
+        }
+    }
+
+    @Override
+    public void onRecordingStart(float fps) {
+        mMediaRecorder.start();
     }
 }

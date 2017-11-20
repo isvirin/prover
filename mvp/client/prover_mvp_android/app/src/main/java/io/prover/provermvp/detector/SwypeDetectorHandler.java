@@ -1,5 +1,7 @@
 package io.prover.provermvp.detector;
 
+import android.media.Image;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -8,7 +10,7 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.prover.provermvp.transport.BufferHolder;
+import io.prover.provermvp.controller.CameraController;
 
 import static io.prover.provermvp.Const.TAG;
 
@@ -22,24 +24,27 @@ public class SwypeDetectorHandler extends Handler {
     private static final int MESSAGE_INIT = 1;
     private static final int MESSAGE_SET_SWYPE = 2;
     private static final int MESSAGE_PROCESS_FRAME = 3;
-    private static final int MESSAGE_QUIT = 4;
+    private static final int MESSAGE_PROCESS_FRAME2 = 4;
+    private static final int MESSAGE_QUIT = 5;
     private static volatile int counter = 0;
     private final HandlerThread handlerThread;
 
     private final ProverDetector detector;
     private final AtomicInteger framesInQueue = new AtomicInteger();
+    private final CameraController cameraController;
     private volatile boolean quitRequested = false;
 
-    public SwypeDetectorHandler(Looper looper, ProverDetector.DetectionListener listener) {
+    public SwypeDetectorHandler(Looper looper, ProverDetector.DetectionListener listener, CameraController cameraController) {
         super(looper);
         handlerThread = (HandlerThread) looper.getThread();
-        detector = new ProverDetector(listener);
+        detector = new ProverDetector(listener, cameraController);
+        this.cameraController = cameraController;
     }
 
-    public static SwypeDetectorHandler newHandler(int fps, String swype, ProverDetector.DetectionListener listener) {
+    public static SwypeDetectorHandler newHandler(int fps, String swype, ProverDetector.DetectionListener listener, CameraController cameraController) {
         HandlerThread handlerThread = new HandlerThread("SwypeDetectorThread_" + counter++);
         handlerThread.start();
-        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), listener);
+        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), listener, cameraController);
         handler.sendInit(fps, swype);
         return handler;
     }
@@ -52,12 +57,25 @@ public class SwypeDetectorHandler extends Handler {
         sendMessage(obtainMessage(MESSAGE_SET_SWYPE, swype));
     }
 
-    public boolean sendProcesstFrame(byte[] frame, int width, int height, BufferHolder bufferHolder) {
+    public boolean sendProcesstFrame(byte[] frame, int width, int height) {
         int inQueue = framesInQueue.get();
         if (inQueue < MAX_FRAMES_IN_QUEUE) {
             framesInQueue.incrementAndGet();
             sendMessage(obtainMessage(MESSAGE_PROCESS_FRAME, width, height, frame));
-            detector.setBufferHolder(bufferHolder);
+            return true;
+        } else {
+            Log.e(TAG, "detectorframes processing queue maxed out!");
+            return false;
+        }
+    }
+
+
+    public boolean sendProcesstFrame(Image image) {
+        //return false;
+        int inQueue = framesInQueue.get();
+        if (inQueue < MAX_FRAMES_IN_QUEUE) {
+            framesInQueue.incrementAndGet();
+            sendMessage(obtainMessage(MESSAGE_PROCESS_FRAME2, image));
             return true;
         } else {
             Log.e(TAG, "frames processing queue maxed out!");
@@ -89,13 +107,30 @@ public class SwypeDetectorHandler extends Handler {
                 framesInQueue.decrementAndGet();
                 return;
 
+            case MESSAGE_PROCESS_FRAME2:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    Image image = (Image) msg.obj;
+                    if (quitRequested) {
+                        image.close();
+                    } else {
+                        detector.detectFrame(image);
+                        image.close();
+                    }
+                }
+                framesInQueue.decrementAndGet();
+                break;
+
+
             case MESSAGE_QUIT:
                 detector.release();
-                handlerThread.quit();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    handlerThread.quitSafely();
+                } else {
+                    handlerThread.quit();
+                }
                 return;
         }
 
         super.handleMessage(msg);
     }
-
 }

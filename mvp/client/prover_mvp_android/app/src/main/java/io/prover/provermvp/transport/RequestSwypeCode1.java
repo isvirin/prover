@@ -30,16 +30,17 @@ public class RequestSwypeCode1 extends NetworkRequest<SwypeResponce1> {
 
     @Override
     public void run() {
+        listener.onNetworkRequestStart(this);
         try {
             SwypeResponce1 responce = postTransaction(METHOD, "hex=0x", null);
             session.increaseNonce();
-            handler.post(() -> listener.onNetworkRequestDone(this, responce));
+            listener.onNetworkRequestDone(this, responce);
         } catch (FixableEtheriumExcetion e) {
             if (debugData != null) {
                 debugData.setException(e).log();
             }
             session.increaseNonce();
-            handler.post(this::execute);
+            execute();
         } catch (IOException | DecoderException | JSONException ex) {
             handleException(ex);
         }

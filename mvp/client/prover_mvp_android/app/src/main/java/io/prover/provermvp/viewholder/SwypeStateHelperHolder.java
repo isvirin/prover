@@ -1,45 +1,64 @@
 package io.prover.provermvp.viewholder;
 
 import android.hardware.Camera;
+import android.media.Image;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.text.SpannableStringBuilder;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Locale;
 
 import io.prover.provermvp.R;
+import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.detector.ProverDetector;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
-import io.prover.provermvp.transport.BufferHolder;
+import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.transport.RequestSwypeCode1;
+import io.prover.provermvp.transport.responce.LowFundsException;
+import io.prover.provermvp.transport.responce.SwypeResponce2;
 
 /**
  * Created by babay on 11.11.2017.
  */
 
-public class SwypeStateHelperHolder implements ProverDetector.DetectionListener {
+public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
+        CameraController.OnFrameAvailableListener,
+        CameraController.OnFrameAvailable2Listener,
+        CameraController.NetworkRequestErrorListener,
+        CameraController.NetworkRequestDoneListener, CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.NetworkRequestStartListener {
     private final ViewGroup root;
     private final TextView statsText;
-    VideoConfirmedListener confirmedListener;
+    private final CameraController cameraController;
     int latestState = 0;
     private String swype;
     private String swypeStatus;
     private SwypeDetectorHandler detectorHandler;
 
-    public SwypeStateHelperHolder(ViewGroup root) {
+    public SwypeStateHelperHolder(ViewGroup root, CameraController cameraController) {
         this.root = root;
         statsText = root.findViewById(R.id.statsView);
+        this.cameraController = cameraController;
         statsText.bringToFront();
+        cameraController.setSwypeStateHelperHolder(this);
+        cameraController.frameAvailable.add(this);
+        cameraController.frameAvailable2.add(this);
+        cameraController.onNetworkRequestStart.add(this);
+        cameraController.networkRequestDone.add(this);
+        cameraController.networkRequestError.add(this);
+        cameraController.onRecordingStart.add(this);
+        cameraController.onRecordingStop.add(this);
     }
 
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState state) {
         String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d", state.state, state.index, state.x, state.y);
         setStatusText(stateStr);
-        if (state.state == 3 && confirmedListener != null)
-            confirmedListener.onVideoConfirmed();
         latestState = state.state;
         if (state.state == 1 && swype != null && detectorHandler != null) {
             detectorHandler.sendSetSwype(swype);
@@ -87,36 +106,71 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener 
         setStatusText(str);
     }
 
-    public void setConfirmedListener(VideoConfirmedListener confirmedListener) {
-        this.confirmedListener = confirmedListener;
-    }
-
     public boolean isVideoConfirmed() {
         return latestState == 3;
     }
 
-    public void startDetector(float avgFps) {
-        detectorHandler = SwypeDetectorHandler.newHandler((int) avgFps * 2, swype, this);
+    @Override
+    public void onRecordingStart(float fps) {
+        detectorHandler = SwypeDetectorHandler.newHandler((int) fps * 2, swype, this, cameraController);
+        setSwypeStatus("not requesting");
     }
 
-    public void stopDetector() {
-        detectorHandler.sendQuit();
-        detectorHandler = null;
-    }
-
-    public void onPreviewFrame(byte[] data, Camera camera, BufferHolder bufferHolder) {
+    @Override
+    public void onRecordingStop(File file, boolean isVideoConfirmed) {
+        setSwype(null);
         if (detectorHandler != null) {
-            Camera.Parameters params = camera.getParameters();
-            Camera.Size size = params.getPreviewSize();
-            if (!detectorHandler.sendProcesstFrame(data, size.width, size.height, bufferHolder)) {
-                bufferHolder.releaseBuffer(data);
-            }
-        } else {
-            bufferHolder.releaseBuffer(data);
+            detectorHandler.sendQuit();
+            detectorHandler = null;
         }
     }
 
-    public interface VideoConfirmedListener {
-        void onVideoConfirmed();
+    @Override
+    public void onFrameAvailable(byte[] data, Camera camera) {
+        if (detectorHandler != null) {
+            Camera.Parameters params = camera.getParameters();
+            Camera.Size size = params.getPreviewSize();
+            if (!detectorHandler.sendProcesstFrame(data, size.width, size.height)) {
+                cameraController.frameReleased.postNotifyEvent(data);
+            }
+        } else {
+            cameraController.frameReleased.postNotifyEvent(data);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onFrameAvailable(Image image) {
+        if (detectorHandler != null) {
+            if (!detectorHandler.sendProcesstFrame(image)) {
+                image.close();
+            }
+        } else {
+            image.close();
+        }
+    }
+
+    @Override
+    public void onNetworkRequestStart(NetworkRequest request) {
+        if (request instanceof RequestSwypeCode1) {
+            setSwypeStatus("requesting");
+        }
+    }
+
+    @Override
+    public void onNetworkRequestDone(NetworkRequest request, Object responce) {
+        if (responce instanceof SwypeResponce2 && cameraController.isRecording()) {
+            setSwype(((SwypeResponce2) responce).swypeCode);
+        }
+    }
+
+    @Override
+    public void onNetworkRequestError(NetworkRequest request, Exception e) {
+        if (request instanceof RequestSwypeCode1) {
+            if (e instanceof LowFundsException)
+                setSwypeStatus("error: low funds");
+            else
+                setSwypeStatus("error");
+        }
     }
 }
