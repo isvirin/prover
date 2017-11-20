@@ -97,9 +97,14 @@ Array.prototype.forEach.call(forms, function (form) {
     function updateOnResponse(response) {
         //todo: remove console.log
         console.log(response);
+        form.classList.remove('is-error');
+        form.classList.remove('is-success');
+        form.classList.remove('is-uploading');
         if (!response.success) {
+            form.classList.add('is-error');
             errorMsg.textContent = response.error;
         } else {
+            form.classList.add('is-success');
             var senderAddressesSpans = '';
             response.transactions.forEach(function (transaction) {
                 senderAddressesSpans +=
@@ -161,14 +166,22 @@ Array.prototype.forEach.call(forms, function (form) {
             var ajax = new XMLHttpRequest();
             ajax.open(form.getAttribute('method'), form.getAttribute('action'), true);
             ajax.onload = function () {
-                form.classList.remove('is-uploading');
                 if (ajax.status >= 200 && ajax.status < 400) {
-                    var response = JSON.parse(ajax.responseText);
-                    form.classList.add(response.success ? 'is-success' : 'is-error');
-                    updateOnResponse(response);
-                }
-                else {
-                    alert('Error. Please, contact the webmaster!');
+                    try {
+                        var response = JSON.parse(ajax.responseText);
+                        form.classList.add(response.success ? 'is-success' : 'is-error');
+                        updateOnResponse(response);
+                    } catch (exception) {
+                        updateOnResponse({
+                            success: false,
+                            error: 'upload exception 😱: ' + ajax.responseText
+                        });
+                    }
+                } else {
+                    updateOnResponse({
+                        success: false,
+                        error: 'upload exception ☹️: ' + ajax.status
+                    });
                 }
             };
 
@@ -192,8 +205,6 @@ Array.prototype.forEach.call(forms, function (form) {
 
             iframe.addEventListener('load', function () {
                 var response = JSON.parse(iframe.contentDocument.body.innerHTML);
-                form.classList.remove('is-uploading');
-                form.classList.add(response.success ? 'is-success' : 'is-error');
                 form.removeAttribute('target');
                 updateOnResponse(response);
                 iframe.parentNode.removeChild(iframe);

@@ -106,7 +106,7 @@ function worker()
             "topics" => [
                 GETLOGS_FILE_EVENT_ID,
                 USER_ADDRESS_FILTER,
-                '0x' . $hash
+                '0x' . EXAMPLE_FILE_HASH
             ]
         ]];
 
