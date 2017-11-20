@@ -16,13 +16,14 @@ public class HelloRequest extends NetworkRequest<HelloResponce> {
     private static final String METHOD = "hello";
     private final ECKey key;
 
-    public HelloRequest(ECKey key, NetworkRequestListener<HelloResponce> listener) {
+    public HelloRequest(ECKey key, NetworkRequestListener listener) {
         super(listener);
         this.key = key;
     }
 
     @Override
     public void run() {
+        listener.onNetworkRequestStart(this);
         String requestBody = "user=0x" + Hex.toHexString(key.getAddress());
         execSimpleRequest(METHOD, RequestType.Post, requestBody);
     }

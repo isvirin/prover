@@ -18,6 +18,7 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
     int style;
     IPermissionExplainer explainer;
     List<PermissionRequest> rejected;
+    int requestCode;
     private IRunAfterPermissionsGranted runAfterGrant;
 
     public PermissionRequestSet() {
@@ -56,14 +57,21 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
     @Override
     public PermissionRequestSet check(final Activity activity, final int requestCode, int dialogStyle) {
         this.style = dialogStyle;
+        this.requestCode = requestCode;
 
-        for (PermissionRequest permissionRequest : new ArrayList<>(this)) {
+        ArrayList<PermissionRequest> permissionRequests = new ArrayList<>(this);
+        for (int i = 0; i < permissionRequests.size(); i++) {
+            PermissionRequest permissionRequest = permissionRequests.get(i);
             if (permissionRequest.hasPermission(activity)) {
                 permissionRequest.onGranted(true);
+                permissionRequests.remove(permissionRequest);
+                --i;
             }
         }
 
-        if (size() == 0) {
+        if (size() == 0 || requestCode == 0) {
+            if (runAfterGrant != null)
+                runAfterGrant.onAfterPermissionsGranted();
             return this;
         }
 
@@ -146,7 +154,8 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
                     request.onGranted(false);
                 }
         }
-
+        if (runAfterGrant != null && size() == 0)
+            runAfterGrant.onAfterPermissionsGranted();
     }
 
     public PermissionRequest getRequestForPermission(String permission) {
@@ -174,9 +183,6 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
         remove(request);
         if (rejected != null)
             rejected.remove(request);
-        if (size() == 0 && runAfterGrant != null) {
-            runAfterGrant.onAfterPermissionsGranted();
-        }
     }
 
     @Override
@@ -186,5 +192,9 @@ public class PermissionRequestSet extends ArrayList<PermissionRequest> implement
         if (!rejected.contains(request)) {
             rejected.add(request);
         }
+    }
+
+    public int getRequestCode() {
+        return requestCode;
     }
 }

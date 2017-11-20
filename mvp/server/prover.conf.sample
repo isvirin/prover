@@ -2,5 +2,5 @@
     "node":"192.168.4.251:8545",
     "contract":"0x123456789123456789123456789123456789cdef",
     "referenceConfirmations":5,
-    "swypeModulo":6075
+    "swypeModulo":27000
 }

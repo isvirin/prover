@@ -2,9 +2,6 @@ package io.prover.provermvp.viewholder;
 
 import android.app.Activity;
 
-import java.io.File;
-import java.util.List;
-
 import io.prover.provermvp.camera.Size;
 
 /**
@@ -12,13 +9,11 @@ import io.prover.provermvp.camera.Size;
  */
 
 public interface ICameraViewHolder {
-    boolean isRecording();
+    boolean startRecording(Activity activity, float averageFps);
 
     void finishRecording();
 
-    File getVideoFile();
-
-    boolean startRecording(Activity activity);
+    void cancelRecording();
 
     void onPause(Activity mainActivity);
 
@@ -26,11 +21,5 @@ public interface ICameraViewHolder {
 
     void onStop();
 
-    List<Size> getCameraResolutions();
-
-    Size getSelectedCameraResolution();
-
     void setCameraResolution(Size size);
-
-    void cancelRecording();
 }

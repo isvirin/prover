@@ -1,64 +1,57 @@
 package io.prover.provermvp.camera;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.util.DisplayMetrics;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Surface;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import io.prover.provermvp.transport.BufferHolder;
-
-import static io.prover.provermvp.Const.TAG;
+import io.prover.provermvp.Const;
+import io.prover.provermvp.Settings;
+import io.prover.provermvp.controller.CameraController;
 
 /**
  * Created by babay on 09.12.2016.
  */
 
-public class MyCamera implements BufferHolder.OnBufferReleasedListener {
-    private static final int MAX_WIDTH = 1920;
-    private static final int MAX_HEIGHT = 1080;
+public class MyCamera implements CameraController.OnPreviewStartListener, CameraController.OnRecordingStartListener, Camera.PreviewCallback, CameraController.OnFrameReleasedListener, CameraController.OnRecordingStopListener {
+    public static final String TAG = Const.TAG + "Camera";
     public final int id;
     private final Camera.CameraInfo cameraInfo;
-    private final BufferHolder bufferHolder = new BufferHolder();
+    private final ResolutionSelector resolutionSelector = new ResolutionSelector();
+    private final CameraController cameraController;
     private Camera camera;
+    private List<Size> availableResolutions;
 
-
-    private MyCamera(int id, Camera camera, Camera.CameraInfo cameraInfo) {
+    private MyCamera(int id, Camera.CameraInfo cameraInfo, CameraController cameraController) {
         this.id = id;
-        this.camera = camera;
         this.cameraInfo = cameraInfo;
+        this.cameraController = cameraController;
+        cameraController.previewStart.add(this);
+        cameraController.onRecordingStart.add(this);
+        cameraController.onRecordingStop.add(this);
+        cameraController.frameReleased.add(this);
+        open();
     }
 
-    public static MyCamera openBackCamera() {
+    public static MyCamera openBackCamera(CameraController cameraController) {
+        Log.d(TAG, "Open back camera");
         int numberOfCameras = Camera.getNumberOfCameras();
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         for (int i = 0; i < numberOfCameras; i++) {
             Camera.getCameraInfo(i, cameraInfo);
             if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
-                try {
-                    Camera camera = Camera.open(i);
-                    return new MyCamera(i, camera, cameraInfo);
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                }
+                return new MyCamera(i, cameraInfo, cameraController);
             }
         }
         return null;
-    }
-
-    public static String getSceneMode(int width, int height) {
-        if (width < height)
-            return Camera.Parameters.SCENE_MODE_PORTRAIT;
-        else
-            return Camera.Parameters.SCENE_MODE_LANDSCAPE;
     }
 
     public static int getDisplayRotation(int rotationDirection) {
@@ -75,11 +68,13 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
         return 0;
     }
 
-    public Camera open() {
+    public synchronized Camera open() {
         if (camera != null)
             return camera;
         try {
+            Log.d(TAG, "Camera.open");
             camera = Camera.open(id);
+            availableResolutions = resolutionSelector.getSuitableResolutions(camera, null);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
             camera = null;
@@ -93,12 +88,11 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
 
     public void release() {
         if (camera != null) {
-            camera.unlock();
+            Log.d(TAG, "releasing camera");
             camera.setPreviewCallback(null);
             camera.release();
             camera = null;
         }
-        bufferHolder.setBufferReleasedListener(null);
     }
 
     public int getDisplayOrientation(int degrees) {
@@ -116,49 +110,15 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
         return result;
     }
 
-    public Size getOptimalVideoSize(Camera.Parameters parameters, int width, int height, DisplayMetrics displayMetrics) {
-        List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
-        int w = width > height ? width : height;
-        int h = width > height ? height : width;
+    public Size selectResolution(Size selectedResolution, Size surfaceSize, Context context) {
+        open();
+        if (availableResolutions == null)
+            return null;
+        return resolutionSelector.selectResolution(selectedResolution, availableResolutions, surfaceSize, context);
+    }
 
-        final float targetRatio = w / (float) h;
-
-        List<Size> sizesList = new ArrayList<>(sizes.size());
-        for (Camera.Size size : sizes) {
-            int sWidth = size.width;
-            int sHeight = size.height;
-            if (sWidth >= sHeight && sWidth > MAX_WIDTH && sHeight > MAX_HEIGHT)
-                continue;
-            if (sWidth < sHeight && sWidth > MAX_HEIGHT && sHeight > MAX_WIDTH)
-                continue;
-            sizesList.add(new Size(size.width, size.height));
-        }
-
-        Collections.sort(sizesList, (o1, o2) -> {
-            float ratio1 = Math.abs(o1.ratio - targetRatio);
-            float ratio2 = Math.abs(o2.ratio - targetRatio);
-            if (Math.abs(ratio1 - ratio2) < 0.1f)
-                return Integer.compare(o2.width * o2.height, o1.width * o1.height);
-            return Float.compare(ratio1, ratio2);
-        });
-
-        int minHeight = (int) (h / Math.max(1.5f, displayMetrics.density));
-        int maxHeight = (int) (h * 1.25f);
-
-        final float TOLERANCE = 1.2f;
-        float bestRatioDiff = Math.abs(sizesList.get(0).ratio - targetRatio);
-        if (bestRatioDiff == 0)
-            bestRatioDiff = 0.2f;
-
-        for (Size size : sizesList) {
-            if (size.height >= minHeight && size.height <= maxHeight) {
-                return size;
-            }
-            if (Math.abs(size.ratio - targetRatio) / bestRatioDiff > TOLERANCE)
-                break;
-        }
-
-        return sizesList.get(0);
+    public List<Size> getAvailableResolutions() {
+        return availableResolutions;
     }
 
     public void updateDisplayOrientation(int displayOrientation) {
@@ -206,42 +166,70 @@ public class MyCamera implements BufferHolder.OnBufferReleasedListener {
         return mediaRecorder;
     }
 
-    public List<Camera.Size> getAvailableSizes() {
-        if (camera == null)
-            return new ArrayList<>(1);
+    public void stopPreview() {
+        if (camera != null) {
+            camera.stopPreview();
+            camera.setPreviewCallbackWithBuffer(null);
+            camera.setPreviewCallback(null);
+            try {
+                camera.setPreviewDisplay(null);
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    }
 
-        return camera.getParameters().getSupportedPreviewSizes();
+    public void updateCallback() {
+        if (camera != null) {
+            Log.d(TAG, "updating buffer callback");
+            if (Settings.REUSE_PREVIEW_BUFFERS) {
+                camera.setPreviewCallbackWithBuffer(this);
+            } else {
+                camera.setPreviewCallback(this);
+            }
+        }
+    }
+
+    public void setRecording(boolean recording) {
+        if (recording) {
+            updateCallback();
+        }
     }
 
     @Override
-    public boolean onBufferReleased(byte[] buffer) {
-        if (camera != null) {
-            camera.addCallbackBuffer(buffer);
-            bufferHolder.onSetBuffer();
-            return true;
+    public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
+        if (Settings.REUSE_PREVIEW_BUFFERS) {
+            int size = previewSize.width * previewSize.height * 3 / 2;
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
+            camera.addCallbackBuffer(new byte[size]);
         }
-        return false;
     }
 
-    public void onStartPreview(int previewWidth, int previewHeight) {
-        bufferHolder.setSize(previewWidth, previewHeight);
-        bufferHolder.setBufferReleasedListener(this);
 
-        camera.addCallbackBuffer(bufferHolder.getBuffer());
-        camera.addCallbackBuffer(bufferHolder.getBuffer());
-        camera.addCallbackBuffer(bufferHolder.getBuffer());
-        camera.addCallbackBuffer(bufferHolder.getBuffer());
-        bufferHolder.onSetBuffer();
-        bufferHolder.onSetBuffer();
-        bufferHolder.onSetBuffer();
-        bufferHolder.onSetBuffer();
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+        cameraController.frameAvailable.postNotifyEvent(data, camera);
     }
 
-    public BufferHolder getBufferHolder() {
-        return bufferHolder;
+    @Override
+    public void onFrameReleased(byte[] data) {
+        if (camera != null) {
+            if (Settings.REUSE_PREVIEW_BUFFERS) {
+                camera.addCallbackBuffer(data);
+            }
+        }
     }
 
-    public void onStopPreview() {
-        bufferHolder.setBufferReleasedListener(null);
+    @Override
+    public void onRecordingStart(float fps) {
+        setRecording(true);
+    }
+
+
+    @Override
+    public void onRecordingStop(File file, boolean isVideoConfirmed) {
+        setRecording(false);
     }
 }

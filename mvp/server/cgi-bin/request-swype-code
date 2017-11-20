@@ -12,12 +12,40 @@ def generateSwype(blockHash, txHash):
 
     digest=hashlib.sha256(binascii.a2b_hex(blockHash[2:]+txHash[2:])).digest()
 
-    swype=0
+    swypeid=0
     for c in digest:
         if type(c)!=int:
             c=ord(c)
-        swype=(swype*256+c)%modulo
-    return swype
+        swypeid=(swypeid*256+c)%modulo
+
+    seq=[5]   # always start from the center
+    n=swypeid
+    m=1
+    while m<modulo:
+        # 1 2 3
+        # 4 5 6
+        # 7 8 9
+        neighbours=[
+            [2, 4, 5],
+            [1, 3, 4, 5, 6],
+            [2, 5, 6],
+            [1, 2, 5, 7, 8],
+            [1, 2, 3, 4, 6, 7, 8, 9],
+            [2, 3, 5, 8, 9],
+            [4, 5, 8],
+            [4, 5, 6, 7, 9],
+            [5, 6, 8]
+        ]
+        curpt=seq[-1]
+        nc=len(neighbours[curpt-1])
+        nextpt=neighbours[curpt-1][n*nc//modulo]
+
+        m*=nc
+        n=(n*nc)%modulo
+
+        seq.append(nextpt)
+
+    return {"swype-id":swypeid, "swype-sequence":seq}
 
 # Python 2/3 compatibility stuff
 if str==bytes:

@@ -1,8 +1,8 @@
 package io.prover.provermvp.viewholder;
 
-import android.content.SharedPreferences;
 import android.hardware.Camera;
-import android.preference.PreferenceManager;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -12,16 +12,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.prover.provermvp.camera.AutoFitSurfaceView;
 import io.prover.provermvp.camera.MyCamera;
 import io.prover.provermvp.camera.Size;
+import io.prover.provermvp.controller.CameraController;
 
 import static android.content.Context.WINDOW_SERVICE;
-import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_X;
-import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_Y;
 import static io.prover.provermvp.Const.TAG;
 
 /**
@@ -29,172 +25,108 @@ import static io.prover.provermvp.Const.TAG;
  */
 
 public class CameraPreviewHolder implements SurfaceHolder.Callback {
-    private final AutoFitSurfaceView mRoot;
-    private final SurfaceHolder mHolder;
-    private final Camera.PreviewCallback previewCallback;
+    private final FrameLayout mRoot;
+    private final CameraController cameraController;
+    private AutoFitSurfaceView surfaceView;
     private volatile MyCamera mCamera;
-    private int surfaceWidth;
-    private int surfaceHeight;
-    private volatile boolean isPreviewRequested;
+    private Size surfaceSize;
+    private Size cameraResolution;
     private volatile boolean isPreviewRunning;
     private boolean hasPermissions = false;
-    private Size selectedResolution;
+    private volatile boolean surfaceCreated = false;
+    /**
+     * current resolution with orientation matching surface orientation
+     */
+    private Size currentResolution;
 
-    public CameraPreviewHolder(AutoFitSurfaceView root, MyCamera camera, Camera.PreviewCallback previewCallback) {
+    public CameraPreviewHolder(FrameLayout root, MyCamera camera, CameraController cameraController) {
         this.mRoot = root;
         this.mCamera = camera;
-        this.previewCallback = previewCallback;
-        mHolder = mRoot.getHolder();
-        mHolder.addCallback(this);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
-        if (prefs.contains(KEY_SELECTED_RESOLUTION_X) && prefs.contains(KEY_SELECTED_RESOLUTION_Y)) {
-            int w = prefs.getInt(KEY_SELECTED_RESOLUTION_X, 0);
-            int h = prefs.getInt(KEY_SELECTED_RESOLUTION_Y, 0);
-            selectedResolution = new Size(w, h);
-        }
-    }
-
-    public CameraPreviewHolder(FrameLayout root, MyCamera camera, Camera.PreviewCallback previewCallback) {
-        this(new AutoFitSurfaceView(root.getContext()), camera, previewCallback);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        lp.gravity = Gravity.CENTER;
-        root.addView(mRoot, lp);
+        this.cameraController = cameraController;
+        addSurfaceView();
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        surfaceWidth = holder.getSurfaceFrame().width();
-        surfaceHeight = holder.getSurfaceFrame().height();
-        startPreview();
+        surfaceSize = new Size(holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
+        surfaceCreated = true;
+        if (surfaceSize.width > 0 && surfaceSize.height > 0 && mCamera != null) {
+            cameraResolution = selectResolution();
+            startPreview();
+        }
+    }
+
+    private @Nullable
+    Size selectResolution() {
+        if (mCamera == null || surfaceSize == null || surfaceSize.area() == 0)
+            return null;
+        return mCamera.selectResolution(currentResolution, surfaceSize, mRoot.getContext());
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        this.surfaceWidth = width;
-        this.surfaceHeight = height;
-
-        if (isPreviewRequested) {
+        surfaceSize = new Size(width, height);
+        Size newSize = selectResolution();
+        if (newSize != null && !newSize.equals(cameraResolution) && surfaceCreated) {
+            cameraResolution = newSize;
             restartPreview();
         }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        surfaceCreated = false;
         stopPreview();
     }
 
     public void startPreview() {
-        isPreviewRequested = true;
-        if (!hasPermissions)
+        if (!hasPermissions || cameraResolution == null || surfaceSize == null || surfaceView == null || surfaceSize.area() <= 0)
             return;
-        if (surfaceWidth != 0 && surfaceHeight != 0) {
-            Display display = ((WindowManager) mRoot.getContext().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-            Camera camera = mCamera.open();
-            if (camera == null)
-                return;
-            Camera.Parameters parameters = camera.getParameters();
+        Camera camera = mCamera.open();
+        if (camera == null)
+            return;
+        Camera.Parameters parameters = camera.getParameters();
+        parameters.setPreviewSize(cameraResolution.width, cameraResolution.height);
+        parameters.setPictureSize(cameraResolution.width, cameraResolution.height);
+        parameters.setRecordingHint(true);
+        parameters.setPreviewFpsRange(25, 60);
+        try {
+            camera.setParameters(parameters);
+            Log.d(TAG, "selected resolution: " + cameraResolution.toString());
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+            parameters = camera.getParameters();
+            cameraResolution = new Size(parameters.getPreviewSize());
+        }
+        currentResolution = cameraResolution.toOrientation(surfaceSize.getOrientation());
+        surfaceView.configurePreviewSize(currentResolution);
+        Display display = ((WindowManager) mRoot.getContext().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        mCamera.updateDisplayOrientation(display.getRotation());
 
-            Size size = selectResolution(parameters);
+        mCamera.updateCallback();
 
-            int previewWidth = size.width;
-            int previewHeight = size.height;
-
-            if (previewHeight < previewWidth && surfaceHeight > surfaceWidth) {
-                int a = previewWidth;
-                previewWidth = previewHeight;
-                previewHeight = a;
-            }
-
+        if (!isPreviewRunning) {
             try {
-                switch (display.getRotation()) {
-                    case Surface.ROTATION_0:
-                        parameters.setPreviewSize(previewHeight, previewWidth);
-                        parameters.setPictureSize(previewHeight, previewWidth);
-                        break;
-
-                    case Surface.ROTATION_90:
-                        parameters.setPreviewSize(previewWidth, previewHeight);
-                        parameters.setPictureSize(previewWidth, previewHeight);
-                        break;
-
-                    case Surface.ROTATION_180:
-                        parameters.setPreviewSize(previewHeight, previewWidth);
-                        parameters.setPictureSize(previewHeight, previewWidth);
-                        break;
-
-                    case Surface.ROTATION_270:
-                        parameters.setPreviewSize(previewWidth, previewHeight);
-                        parameters.setPictureSize(previewWidth, previewHeight);
-                        break;
-                }
-                parameters.setPreviewFpsRange(25, 60);
-                camera.setParameters(parameters);
-                Log.d(TAG, "selected resolution: " + size.toString());
-
+                camera.setPreviewDisplay(surfaceView.getHolder());
+                camera.startPreview();
+                cameraController.previewStart.postNotifyEvent(mCamera.getAvailableResolutions(), cameraResolution);
+                isPreviewRunning = true;
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
-                parameters = camera.getParameters();
-                size = new Size(parameters.getPreviewSize());
-            }
-            mRoot.configurePreviewSize(size);
-            selectedResolution = size;
-            mCamera.updateDisplayOrientation(display.getRotation());
-
-            camera.setPreviewCallbackWithBuffer(previewCallback);
-            mCamera.onStartPreview(previewWidth, previewHeight);
-
-
-            if (!isPreviewRunning) {
-                try {
-                    camera.setPreviewDisplay(mHolder);
-                    camera.startPreview();
-                    isPreviewRunning = true;
-                } catch (Exception e) {
-                    Log.d(getClass().getSimpleName(), "Cannot start preview", e);
-                }
-            }
-
-        }
-    }
-
-    private Size selectResolution(Camera.Parameters parameters) {
-        if (selectedResolution != null) {
-            List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
-            for (Camera.Size size : sizes) {
-                if (selectedResolution.equals(size)) {
-                    return new Size(size);
-                }
+                Log.d(getClass().getSimpleName(), "Cannot start preview", e);
             }
         }
-
-        return mCamera.getOptimalVideoSize(parameters,
-                surfaceWidth, surfaceHeight, mRoot.getResources().getDisplayMetrics());
     }
 
     public void stopPreview() {
         if (isPreviewRunning) {
-            Camera camera = mCamera.getCamera();
-            if (camera != null) {
-                camera.stopPreview();
-                camera.setPreviewCallbackWithBuffer(null);
-            }
-            mCamera.onStopPreview();
+            mCamera.stopPreview();
             isPreviewRunning = false;
-        }
-        isPreviewRequested = false;
-    }
-
-    public void onResume() {
-        if (isPreviewRequested) {
-            restartPreview();
         }
     }
 
     private void restartPreview() {
         try {
             stopPreview();
-            isPreviewRequested = true;
             startPreview();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -202,12 +134,36 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
     }
 
     public void releaseCamera() {
+        stopPreview();
         if (mCamera != null)
             mCamera.release();
+        removeSurfaceView();
+    }
+
+    public void onResume() {
+        addSurfaceView();
+    }
+
+    private void removeSurfaceView() {
+        if (surfaceView != null) {
+            surfaceView.getHolder().removeCallback(this);
+            mRoot.removeView(surfaceView);
+            surfaceView = null;
+        }
+    }
+
+    private void addSurfaceView() {
+        if (surfaceView == null) {
+            this.surfaceView = new AutoFitSurfaceView(mRoot.getContext());
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            lp.gravity = Gravity.CENTER;
+            mRoot.addView(surfaceView, lp);
+            surfaceView.getHolder().addCallback(this);
+        }
     }
 
     public void lockCamera() {
-        Camera camera = mCamera.open();
+        Camera camera = mCamera.getCamera();
         if (camera != null)
             camera.lock();
     }
@@ -222,59 +178,33 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
         return mCamera;
     }
 
-    public Surface getSurface() {
-        return mHolder.getSurface();
+    public @Nullable
+    Surface getSurface() {
+        return surfaceView == null ? null : surfaceView.getHolder().getSurface();
     }
 
     public void setHasPermissions(boolean hasPermissions) {
         this.hasPermissions = hasPermissions;
-        if (hasPermissions && isPreviewRequested && !isPreviewRunning) {
-            if (mCamera == null)
-                mCamera = MyCamera.openBackCamera();
-            startPreview();
-        }
-    }
-
-    public void setResolution(Size size) {
-        if (size != null && selectedResolution == null || !selectedResolution.equals(size)) {
-            selectedResolution = size;
-            restartPreview();
-
-            if (selectedResolution != null) {
-                PreferenceManager.getDefaultSharedPreferences(mRoot.getContext()).edit()
-                        .putInt(KEY_SELECTED_RESOLUTION_X, selectedResolution.width)
-                        .putInt(KEY_SELECTED_RESOLUTION_Y, selectedResolution.height)
-                        .apply();
+        if (hasPermissions) {
+            if (mCamera == null) mCamera = MyCamera.openBackCamera(cameraController);
+            if (surfaceCreated && !isPreviewRunning && surfaceSize != null && surfaceSize.area() > 0) {
+                cameraResolution = selectResolution();
+                startPreview();
             }
         }
     }
 
-    public Size getSelectedCameraResolution() {
-        return selectedResolution;
-    }
+    public void setResolution(Size size) {
+        if (size == null)
+            return;
+        if (cameraResolution == null || !currentResolution.equals(size)) {
+            currentResolution = size;
+            cameraResolution = selectResolution();
+            stopPreview();
+            releaseCamera();
+            removeSurfaceView();
 
-    public List<Size> getCameraResolutions() {
-        if (mCamera == null) {
-            return new ArrayList<>();
-        }
-        List<Camera.Size> cameraResolutions = mCamera.getAvailableSizes();
-
-        Display display = ((WindowManager) mRoot.getContext().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-        int rotation = display.getRotation();
-        boolean flip = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180;
-
-        List<Size> sizes = new ArrayList<>();
-        for (Camera.Size size : cameraResolutions) {
-            sizes.add(flip ? new Size(size.height, size.width) : new Size(size));
-        }
-        return sizes;
-    }
-
-
-    public void updateCallback() {
-        if (mCamera != null && mCamera.getCamera() != null && selectedResolution != null) {
-            Camera camera = mCamera.getCamera();
-            camera.setPreviewCallbackWithBuffer(previewCallback);
+            new Handler().postDelayed(this::addSurfaceView, 10);
         }
     }
 }

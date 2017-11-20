@@ -3,6 +3,9 @@ package io.prover.provermvp.permissions;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.prover.provermvp.Const;
 import io.prover.provermvp.R;
 
@@ -16,7 +19,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class PermissionManager {
 
-    private static PermissionRequestSet expectedPermissions = new PermissionRequestSet();
+    private static final List<PermissionRequestSet> expectedPermissions = new ArrayList<>();
+
+    private static int nextFreeId = 1000;
 
     public static boolean ensureHaveWriteSdcardPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
         return ensureHavePermissions(activity, getRequest(WRITE_EXTERNAL_STORAGE, runAfterGrant));
@@ -26,16 +31,30 @@ public class PermissionManager {
         return ensureHavePermissions(activity, getRequest(CAMERA, runAfterGrant));
     }
 
-    public static boolean ensureHavePermissions(final Activity activity, PermissionRequestSet set) {
-        expectedPermissions = set.check(activity, Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, 0);
-        return expectedPermissions.size() == 0;
+    public static boolean checkHaveCameraPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
+        return checkHavePermissions(activity, getRequest(CAMERA, runAfterGrant));
     }
 
-    //grantUriPermission()
+    public static boolean ensureHavePermissions(final Activity activity, PermissionRequestSet set) {
+        set = set.check(activity, ++nextFreeId, 0);
+        if (set.size() == 0)
+            return true;
+        expectedPermissions.add(set);
+        return false;
+    }
 
-    public static void onPermissionRequestDone(Activity activity, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (expectedPermissions != null) {
-            expectedPermissions.onPermissionRequestDone(activity, Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
+    public static boolean checkHavePermissions(final Activity activity, PermissionRequestSet set) {
+        set = set.check(activity, ++nextFreeId, 0);
+        return set.size() == 0;
+    }
+
+    public static void onPermissionRequestDone(Activity activity, int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        for (int i = 0; i < expectedPermissions.size(); i++) {
+            PermissionRequestSet set = expectedPermissions.get(i);
+            if (set.getRequestCode() == requestCode) {
+                set.onPermissionRequestDone(activity, Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
+                expectedPermissions.remove(i--);
+            }
         }
     }
 
@@ -55,4 +74,6 @@ public class PermissionManager {
                 throw new RuntimeException("not implementer for permission " + permission);
         }
     }
+
+
 }

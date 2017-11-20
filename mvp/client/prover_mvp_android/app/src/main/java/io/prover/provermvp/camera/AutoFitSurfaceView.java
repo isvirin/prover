@@ -80,9 +80,9 @@ public class AutoFitSurfaceView extends SurfaceView {
     public void configurePreviewSize(Size size) {
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            setAspectRatio(size.width, size.height);
+            setAspectRatio(size.largerDimension(), size.smallerDimension());
         } else {
-            setAspectRatio(size.height, size.width);
+            setAspectRatio(size.smallerDimension(), size.largerDimension());
         }
     }
 

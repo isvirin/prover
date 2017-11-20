@@ -1,6 +1,11 @@
 package io.prover.provermvp.viewholder;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.hardware.Camera;
+import android.media.Image;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.View;
@@ -17,83 +22,93 @@ import java.util.Locale;
 
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.Size;
+import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.transport.NetworkHolder;
 import io.prover.provermvp.transport.NetworkRequest;
-import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.HelloResponce;
-import io.prover.provermvp.transport.responce.SwypeResponce2;
 import io.prover.provermvp.util.Etherium;
+import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.util.UtilFile;
+
+import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_X;
+import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_Y;
 
 /**
  * Created by babay on 07.11.2017.
  */
 
-public class CameraControlsHolder implements View.OnClickListener, AdapterView.OnItemSelectedListener, NetworkRequest.NetworkRequestListener {
+public class CameraControlsHolder implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener,
+        CameraController.OnPreviewStartListener,
+        CameraController.OnFrameAvailableListener,
+        CameraController.OnFrameAvailable2Listener,
+        CameraController.OnRecordingStartListener,
+        CameraController.NetworkRequestDoneListener, CameraController.OnRecordingStopListener {
     private final ViewGroup root;
     private final ImageButton mainButton;
     private final Spinner resolutionSpinner;
     private final Activity activity;
     private final ICameraViewHolder cameraHolder;
-    private final ArrayAdapter cameraResolutionsAdapter;
+    private final ArrayAdapter<Size> cameraResolutionsAdapter;
     private final TextView balanceView;
-    private final SwypeStateHelperHolder swypeStateHelperHolder;
+    private final CameraController cameraController;
+    private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
+    private final TextView fpsView;
     boolean resumed = false;
     NetworkHolder networkHolder;
-    boolean swypeConfirmed = true;
     private boolean started;
 
-    public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, ICameraViewHolder cameraHolder, SwypeStateHelperHolder swypeStateHelperHolder) {
-        cameraResolutionsAdapter = new ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item);
+    public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, ICameraViewHolder cameraHolder, CameraController cameraController) {
+        cameraResolutionsAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item);
         cameraResolutionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.swypeStateHelperHolder = swypeStateHelperHolder;
 
         this.root = root;
         this.mainButton = mainButton;
         this.activity = activity;
         this.cameraHolder = cameraHolder;
+        this.cameraController = cameraController;
+
         resolutionSpinner = root.findViewById(R.id.resolutionSpinner);
         balanceView = root.findViewById(R.id.balanceView);
+        fpsView = root.findViewById(R.id.fpsCounter);
 
         resolutionSpinner.setAdapter(cameraResolutionsAdapter);
         resolutionSpinner.setOnItemSelectedListener(this);
 
         mainButton.setOnClickListener(this);
 
+        fpsView.bringToFront();
+        cameraController.previewStart.add(this);
+        cameraController.frameAvailable.add(this);
+        cameraController.frameAvailable2.add(this);
+        cameraController.onRecordingStart.add(this);
+        cameraController.onRecordingStop.add(this);
+        cameraController.networkRequestDone.add(this);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
+        Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
+        if (resolution != null)
+            cameraHolder.setCameraResolution(resolution);
     }
 
     @Override
     public void onClick(View v) {
         if (v == mainButton) {
-            if (cameraHolder.isRecording()) {
+            if (cameraController.isRecording()) {
                 cameraHolder.finishRecording();
-                final File file = cameraHolder.getVideoFile();
-                if (file != null) {
-                    Snackbar.make(v, "Finished file: " + file.getPath(), Snackbar.LENGTH_LONG)
-                            .setAction("Open", v1 -> new UtilFile(file).externalOpenFile(root.getContext(), null))
-                            .show();
-                }
-                updateMainButton(true, cameraHolder.isRecording());
-                if (networkHolder != null && !cameraHolder.isRecording() && swypeStateHelperHolder.isVideoConfirmed()) {
-                    networkHolder.onStopRecording(swypeConfirmed ? file : null);
-                }
-                swypeStateHelperHolder.setSwype(null);
+
             } else {
-                PermissionManager.ensureHaveWriteSdcardPermission(activity, () -> {
-                    if (started && cameraHolder.startRecording(activity)) {
-                        updateMainButton(false, true);
-                        if (networkHolder != null) {
-                            boolean requesting = networkHolder.requestSwypeCode();
-                            swypeStateHelperHolder.setSwypeStatus(requesting ? "requesting" : "not requesting");
-                        }
-                    }
-                });
+                PermissionManager.ensureHaveWriteSdcardPermission(activity, () ->
+                        cameraController.handler.postDelayed(() -> {
+                            if (started)
+                                cameraHolder.startRecording(activity, fpsCounter.getAvgFps());
+                        }, 100));
             }
         }
     }
 
-    private void updateMainButton(boolean wasPlaying, boolean playing) {
+    private void updateControls(boolean wasPlaying, boolean playing) {
         if (wasPlaying == playing)
             return;
         VectorDrawableCompat dr;
@@ -104,34 +119,21 @@ public class CameraControlsHolder implements View.OnClickListener, AdapterView.O
         }
         dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
         mainButton.setImageDrawable(dr);
+
+        resolutionSpinner.setEnabled(!playing);
     }
 
     public void onPause() {
         resumed = false;
-        if (cameraHolder.isRecording()) {
-            cameraHolder.cancelRecording();
-            if (networkHolder != null)
-                networkHolder.onStopRecording(null);
-        }
     }
 
     public void onResume() {
         resumed = true;
 
-        List<Size> cameraResolutions = cameraHolder.getCameraResolutions();
-        cameraResolutionsAdapter.clear();
-        if (cameraResolutions != null)
-            cameraResolutionsAdapter.addAll(cameraResolutions);
-        Size selectedResolution = cameraHolder.getSelectedCameraResolution();
-        if (cameraResolutions != null && selectedResolution != null) {
-            int pos = cameraResolutions.indexOf(selectedResolution);
-            if (pos >= 0)
-                resolutionSpinner.setSelection(pos, false);
-        }
         if (networkHolder == null) {
             Etherium etherium = Etherium.getInstance(activity);
-            if (etherium.getKey() != null || etherium.getKey().equals(networkHolder.key)) {
-                networkHolder = new NetworkHolder(etherium.getKey(), this);
+            if (etherium.getKey() != null || !etherium.getKey().equals(networkHolder.key)) {
+                networkHolder = new NetworkHolder(etherium.getKey(), cameraController);
             }
         }
         if (networkHolder != null)
@@ -140,6 +142,7 @@ public class CameraControlsHolder implements View.OnClickListener, AdapterView.O
 
     public void onStart() {
         started = true;
+        updateControls(true, false);
     }
 
     public void onStop() {
@@ -161,15 +164,54 @@ public class CameraControlsHolder implements View.OnClickListener, AdapterView.O
         if (responce instanceof HelloResponce) {
             String text = String.format(Locale.getDefault(), "balance: %.4f", ((HelloResponce) responce).getDoubleBalance());
             balanceView.setText(text);
-        } else if (responce instanceof SwypeResponce2 && cameraHolder.isRecording()) {
-            swypeStateHelperHolder.setSwype(((SwypeResponce2) responce).swypeCode);
         }
     }
 
     @Override
-    public void onNetworkRequestError(NetworkRequest request, Exception e) {
-        if (request instanceof RequestSwypeCode1) {
-            swypeStateHelperHolder.setSwypeStatus("error");
+    public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
+        cameraResolutionsAdapter.clear();
+        cameraResolutionsAdapter.addAll(sizes);
+        int pos = sizes.indexOf(previewSize);
+        if (pos >= 0)
+            resolutionSpinner.setSelection(pos, false);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
+        Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
+        if (!previewSize.equalsIgnoringRotation(resolution)) {
+            SharedPreferences.Editor editor = prefs.edit();
+            previewSize.saveToPreferences(editor, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
+            editor.apply();
         }
+    }
+
+    @Override
+    public void onFrameAvailable(byte[] data, Camera camera) {
+        float fps = fpsCounter.addFrame();
+        if (fps >= 0) {
+            fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
+        }
+    }
+
+    @Override
+    public void onFrameAvailable(Image image) {
+        float fps = fpsCounter.addFrame();
+        if (fps >= 0) {
+            fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
+        }
+    }
+
+    @Override
+    public void onRecordingStart(float fps) {
+        updateControls(false, true);
+    }
+
+    @Override
+    public void onRecordingStop(File file, boolean isVideoConfirmed) {
+        if (file != null) {
+            Snackbar.make(root, "Finished file: " + file.getPath(), Snackbar.LENGTH_LONG)
+                    .setAction("Open", v1 -> new UtilFile(file).externalOpenFile(root.getContext(), null))
+                    .show();
+        }
+        updateControls(true, false);
     }
 }

@@ -33,7 +33,7 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
 
     private byte[] videoFileHash;
 
-    public SubmitVideoHashRequest(NetworkSession session, SwypeResponce1 responce1, File videoFile, NetworkRequestListener<SubmitVideoHashResponce> listener) {
+    public SubmitVideoHashRequest(NetworkSession session, SwypeResponce1 responce1, File videoFile, NetworkRequestListener listener) {
         super(listener);
         this.session = session;
         this.responce1 = responce1;
@@ -42,6 +42,7 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
 
     @Override
     public void run() {
+        listener.onNetworkRequestStart(this);
         try {
             if (videoFileHash == null) {
                 videoFileHash = calculateFileHash();
@@ -49,13 +50,13 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
             try {
                 SubmitVideoHashResponce responce = postTransaction(METHOD, "hex=0x", null);
                 session.increaseNonce();
-                handler.post(() -> listener.onNetworkRequestDone(this, responce));
+                listener.onNetworkRequestDone(this, responce);
             } catch (FixableEtheriumExcetion e) {
                 if (debugData != null) {
                     debugData.setException(e).log();
                 }
                 session.increaseNonce();
-                handler.post(this::execute);
+                execute();
             } catch (IOException | DecoderException ex) {
                 handleException(ex);
             }
