@@ -43,7 +43,6 @@ public class VideoSessionWrapper {
         }
     }
 
-
     public void startVideoSession(Handler mBackgroundHandler, Runnable startedNotificator, Surface... surfaces) throws CameraAccessException {
         mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
         List<Surface> surfaceList = new ArrayList<>();

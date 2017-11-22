@@ -13,4 +13,6 @@ public interface Const {
     String KEY_SELECTED_RESOLUTION_Y = "resY";
 
     String SERVER_URL = "http://mvp.prover.io/cgi-bin/";
+
+    String[] FAKE_SWYPES = {"1236", "15953", "25478", "57896"};
 }

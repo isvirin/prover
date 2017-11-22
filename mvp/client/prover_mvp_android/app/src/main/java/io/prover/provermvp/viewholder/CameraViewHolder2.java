@@ -295,7 +295,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     }
 
     @Override
-    public void onRecordingStart(float fps) {
+    public void onRecordingStart(float fps, Size detectorSize) {
         mMediaRecorder.start();
     }
 }

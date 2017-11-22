@@ -5,11 +5,13 @@ import android.media.Image;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.util.List;
 
 import io.prover.provermvp.camera.Size;
+import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
@@ -33,8 +35,8 @@ public class CameraController {
     public final ListenerList1<OnFrameAvailable2Listener, Image> frameAvailable2
             = new ListenerList1<>(handler, OnFrameAvailable2Listener::onFrameAvailable);
 
-    public final ListenerList1<OnRecordingStartListener, Float> onRecordingStart
-            = new ListenerList1<>(handler, OnRecordingStartListener::onRecordingStart);
+    public final ListenerList2<OnRecordingStartListener, Float, Size> onRecordingStart
+            = new ListenerList2<>(handler, OnRecordingStartListener::onRecordingStart);
 
     public final ListenerList2<OnRecordingStopListener, File, Boolean> onRecordingStop
             = new ListenerList2<>(handler, OnRecordingStopListener::onRecordingStop);
@@ -47,6 +49,13 @@ public class CameraController {
 
     public final ListenerList2<NetworkRequestErrorListener, NetworkRequest, Exception> onNetworkRequestError
             = new ListenerList2<>(handler, NetworkRequestErrorListener::onNetworkRequestError);
+
+    public final ListenerList2<OnDetectionStateCahngedListener, DetectionState, DetectionState> detectionState
+            = new ListenerList2<>(handler, OnDetectionStateCahngedListener::onDetectionStateChanged);
+
+    public final ListenerList1<OnSwypeCodeSetListener, String> swypeCodeSet
+            = new ListenerList1<>(handler, OnSwypeCodeSetListener::onSwypeCodeSet);
+
     public final NetworkDelegate networkDelegate = new NetworkDelegate();
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
@@ -59,9 +68,9 @@ public class CameraController {
         return recording;
     }
 
-    public void onRecordingStart(float averageFps) {
+    public void onRecordingStart(float averageFps, Size detectorSize) {
         recording = true;
-        onRecordingStart.postNotifyEvent(averageFps);
+        onRecordingStart.postNotifyEvent(averageFps, detectorSize);
     }
 
     public void onRecordingStop(File file) {
@@ -72,6 +81,14 @@ public class CameraController {
 
     public void setSwypeStateHelperHolder(SwypeStateHelperHolder swypeStateHelperHolder) {
         this.swypeStateHelperHolder = swypeStateHelperHolder;
+    }
+
+    public void notifyDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
+        detectionState.postNotifyEvent(oldState, newState);
+    }
+
+    public void setSwypeCode(String swypeCode) {
+        swypeCodeSet.postNotifyEvent(swypeCode);
     }
 
     public interface OnPreviewStartListener {
@@ -91,7 +108,7 @@ public class CameraController {
     }
 
     public interface OnRecordingStartListener {
-        void onRecordingStart(float fps);
+        void onRecordingStart(float fps, Size detectorSize);
     }
 
     public interface OnRecordingStopListener {
@@ -108,6 +125,14 @@ public class CameraController {
 
     public interface NetworkRequestErrorListener {
         void onNetworkRequestError(NetworkRequest request, Exception e);
+    }
+
+    public interface OnDetectionStateCahngedListener {
+        void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState);
+    }
+
+    public interface OnSwypeCodeSetListener {
+        void onSwypeCodeSet(String swypeCode);
     }
 
     private class NetworkDelegate implements NetworkRequest.NetworkRequestListener {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="36dp"
+    android:viewportHeight="36"
+    android:viewportWidth="36">
+
+    <group
+        android:translateX="18"
+        android:translateY="18">
+        <path
+            android:name="circle"
+            android:pathData="M-14.5,0 a14.5,14.5 0,1,1 29,0 a14.5,14.5 0,1,1 -29,0"
+            android:strokeColor="#ffffff"
+            android:strokeWidth="3" />
+
+        <path
+            android:name="centerPoint"
+            android:fillColor="#e31e24"
+            android:pathData="M-3.5,0 a3.5,3.5 0,1,1 7,0 a3.5,3.5 0,1,1 -7,0"
+            android:strokeWidth="3" />
+
+    </group>
+
+</vector>

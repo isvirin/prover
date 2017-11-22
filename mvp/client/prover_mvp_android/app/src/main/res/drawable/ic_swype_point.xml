@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="7dp"
+    android:height="7dp"
+    android:viewportHeight="7"
+    android:viewportWidth="7">
+
+    <group
+        android:translateX="3.5"
+        android:translateY="3.5">
+        <path
+            android:name="centerPoint"
+            android:fillColor="#e31e24"
+            android:pathData="M-3.5,0 a3.5,3.5 0,1,1 7,0 a3.5,3.5 0,1,1 -7,0"
+            android:strokeWidth="3" />
+
+    </group>
+
+</vector>

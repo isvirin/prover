@@ -8,11 +8,14 @@ import org.ethereum.crypto.ECKey;
 
 import java.io.File;
 
+import io.prover.provermvp.Const;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.transport.responce.HelloResponce;
 import io.prover.provermvp.transport.responce.SwypeResponce1;
 import io.prover.provermvp.transport.responce.SwypeResponce2;
 
+import static io.prover.provermvp.Settings.FAKE_SWYPE_CODE;
 import static io.prover.provermvp.Settings.REQUEST_SWYPE;
 import static io.prover.provermvp.transport.NetworkRequest.TAG;
 
@@ -59,6 +62,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
             }, 10000);
         } else if (request instanceof RequestSwypeCode2) {
             swypeResponce2 = (SwypeResponce2) responce;
+            cameraController.setSwypeCode(swypeResponce2.swypeCode);
         }
     }
 
@@ -70,6 +74,10 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
                     request.execute();
             }, REPEAT_SWYPE_REQUEST_2_TIMEOUT);
             Log.d(TAG, "postponed RequestSwypeCode2");
+        }
+        if (request instanceof RequestSwypeCode1 && FAKE_SWYPE_CODE) {
+            String code = Const.FAKE_SWYPES[(int) (Math.random() * Const.FAKE_SWYPES.length)];
+            handler.postDelayed(() -> cameraController.setSwypeCode(code), 4000);
         }
     }
 
@@ -84,7 +92,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
     }
 
     @Override
-    public void onRecordingStart(float fps) {
+    public void onRecordingStart(float fps, Size detectorSize) {
         swypeResponce2 = null;
         swypeRequestHash = null;
         if (networkSession != null && REQUEST_SWYPE) {

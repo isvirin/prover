@@ -14,24 +14,27 @@ import java.io.File;
 import java.util.Locale;
 
 import io.prover.provermvp.R;
+import io.prover.provermvp.Settings;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.detector.ProverDetector;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.LowFundsException;
-import io.prover.provermvp.transport.responce.SwypeResponce2;
 
 /**
  * Created by babay on 11.11.2017.
  */
 
-public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
+public class SwypeStateHelperHolder implements
         CameraController.OnFrameAvailableListener,
         CameraController.OnFrameAvailable2Listener,
         CameraController.NetworkRequestErrorListener,
-        CameraController.NetworkRequestDoneListener, CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.NetworkRequestStartListener {
+        CameraController.OnRecordingStartListener,
+        CameraController.OnRecordingStopListener,
+        CameraController.NetworkRequestStartListener,
+        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener {
     private final ViewGroup root;
     private final TextView statsText;
     private final CameraController cameraController;
@@ -49,10 +52,11 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
         cameraController.frameAvailable.add(this);
         cameraController.frameAvailable2.add(this);
         cameraController.onNetworkRequestStart.add(this);
-        cameraController.onNetworkRequestDone.add(this);
         cameraController.onNetworkRequestError.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
+        cameraController.detectionState.add(this);
+        cameraController.swypeCodeSet.add(this);
     }
 
     @Override
@@ -111,8 +115,8 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
     }
 
     @Override
-    public void onRecordingStart(float fps) {
-        detectorHandler = SwypeDetectorHandler.newHandler((int) fps * 2, swype, this, cameraController);
+    public void onRecordingStart(float fps, Size detectorSize) {
+        detectorHandler = SwypeDetectorHandler.newHandler((int) fps * 2, swype, cameraController);
         setSwypeStatus("not requesting");
     }
 
@@ -158,19 +162,21 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
     }
 
     @Override
-    public void onNetworkRequestDone(NetworkRequest request, Object responce) {
-        if (responce instanceof SwypeResponce2 && cameraController.isRecording()) {
-            setSwype(((SwypeResponce2) responce).swypeCode);
+    public void onNetworkRequestError(NetworkRequest request, Exception e) {
+        if (request instanceof RequestSwypeCode1) {
+            if (e instanceof LowFundsException) {
+                if (Settings.FAKE_SWYPE_CODE) {
+                    setSwypeStatus("error: low funds;\nexpecting fake code");
+                } else {
+                    setSwypeStatus("error: low funds");
+                }
+            } else
+                setSwypeStatus("error");
         }
     }
 
     @Override
-    public void onNetworkRequestError(NetworkRequest request, Exception e) {
-        if (request instanceof RequestSwypeCode1) {
-            if (e instanceof LowFundsException)
-                setSwypeStatus("error: low funds");
-            else
-                setSwypeStatus("error");
-        }
+    public void onSwypeCodeSet(String swypeCode) {
+        setSwype(swypeCode);
     }
 }

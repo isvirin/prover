@@ -62,7 +62,7 @@ public class CameraViewHolder implements ICameraViewHolder {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
             mRoot.setKeepScreenOn(true);
-            cameraController.onRecordingStart(averageFps);
+            cameraController.onRecordingStart(averageFps, previewHolder.getCameraResolution());
             return true;
         }
         return false;

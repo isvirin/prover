@@ -21,6 +21,7 @@ import io.prover.provermvp.viewholder.CameraViewHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder2;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
+import io.prover.provermvp.viewholder.SwypeViewHolder;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
     private BalanceStatusHolder balanceStatusHolder;
+    private SwypeViewHolder swypeViewHolder;
     private boolean resumed;
     private boolean started;
 
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         cameraControlsHolder = new CameraControlsHolder(this, contentRoot, cameraHolder, cameraController);
         balanceStatusHolder = new BalanceStatusHolder(contentRoot, cameraController);
+        swypeViewHolder = new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

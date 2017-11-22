@@ -207,4 +207,8 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
             new Handler().postDelayed(this::addSurfaceView, 10);
         }
     }
+
+    public Size getCameraResolution() {
+        return cameraResolution;
+    }
 }

@@ -77,8 +77,10 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             mCameraOpenCloseLock.release();
-            mVideoSessionWrapper.closeVideoSession();
-            mVideoSessionWrapper.onCameraDeviceClosed();
+            if (mVideoSessionWrapper != null) {
+                mVideoSessionWrapper.closeVideoSession();
+                mVideoSessionWrapper.onCameraDeviceClosed();
+            }
             cameraDevice.close();
             mCameraDevice = null;
 
@@ -89,8 +91,10 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
             mCameraOpenCloseLock.release();
-            mVideoSessionWrapper.closeVideoSession();
-            mVideoSessionWrapper.onCameraDeviceClosed();
+            if (mVideoSessionWrapper != null) {
+                mVideoSessionWrapper.closeVideoSession();
+                mVideoSessionWrapper.onCameraDeviceClosed();
+            }
             cameraDevice.close();
             mCameraDevice = null;
             mVideoSessionWrapper = null;
@@ -251,7 +255,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             mImageReader.setOnImageAvailableListener(this, backgroundHandler);
         }
         texture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
-        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps);
+        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, mCaptureFrameSize);
         try {
             mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, new Surface(texture), mediaRecorder.getSurface(), mImageReader.getSurface());
         } catch (CameraAccessException e) {

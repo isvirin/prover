@@ -555,11 +555,11 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b) {
 
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     Point2d shift;
-    Mat R_size;
+    //Mat R_size;
 
-    cv::resize(frame_i, R_size, cv::Size(200, 150));
+    //cv::resize(frame_i, R_size, cv::Size(200, 150));
 
-    cvtColor(R_size, frame1, CV_RGB2GRAY);// Перевод в градации серого
+    cvtColor(frame_i, frame1, CV_RGB2GRAY);// Перевод в градации серого
 
 
     if (buf1ft.empty()) {

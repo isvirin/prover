@@ -211,7 +211,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     }
 
     @Override
-    public void onRecordingStart(float fps) {
+    public void onRecordingStart(float fps, Size detectorSize) {
         //updateControls(false, true);
     }
 

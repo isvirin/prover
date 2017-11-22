@@ -3,10 +3,6 @@ package io.prover.provermvp.detector;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
@@ -27,15 +23,12 @@ public class ProverDetector {
     }
 
     private final int[] detectionResult = new int[4];
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private final DetectionListener detectionListener;
     private final CameraController cameraController;
     DetectionState detectionState;
     private long nativeHandler;
 
 
-    public ProverDetector(DetectionListener detectionListener, CameraController cameraController) {
-        this.detectionListener = detectionListener;
+    public ProverDetector(CameraController cameraController) {
         this.cameraController = cameraController;
     }
 
@@ -69,7 +62,7 @@ public class ProverDetector {
             final DetectionState oldState = detectionState;
             final DetectionState newState = new DetectionState(detectionResult);
             detectionState = newState;
-            handler.post(() -> detectionListener.onDetectionStateChanged(oldState, newState));
+            cameraController.notifyDetectionStateChanged(oldState, newState);
         }
 
         cameraController.frameReleased.postNotifyEvent(frameData);
@@ -98,7 +91,7 @@ public class ProverDetector {
             final DetectionState oldState = detectionState;
             final DetectionState newState = new DetectionState(detectionResult);
             detectionState = newState;
-            handler.post(() -> detectionListener.onDetectionStateChanged(oldState, newState));
+            cameraController.notifyDetectionStateChanged(oldState, newState);
         }
     }
 
@@ -135,9 +128,4 @@ public class ProverDetector {
     private native void detectFrameNV21Buf(long nativeHandler, ByteBuffer data, int width, int height, int[] result);
 
     private native void releaseNativeHandler(long nativeHandler);
-
-
-    public interface DetectionListener {
-        void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState);
-    }
 }

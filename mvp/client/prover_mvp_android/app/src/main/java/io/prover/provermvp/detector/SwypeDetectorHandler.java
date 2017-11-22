@@ -34,17 +34,17 @@ public class SwypeDetectorHandler extends Handler {
     private final CameraController cameraController;
     private volatile boolean quitRequested = false;
 
-    public SwypeDetectorHandler(Looper looper, ProverDetector.DetectionListener listener, CameraController cameraController) {
+    public SwypeDetectorHandler(Looper looper, CameraController cameraController) {
         super(looper);
         handlerThread = (HandlerThread) looper.getThread();
-        detector = new ProverDetector(listener, cameraController);
+        detector = new ProverDetector(cameraController);
         this.cameraController = cameraController;
     }
 
-    public static SwypeDetectorHandler newHandler(int fps, String swype, ProverDetector.DetectionListener listener, CameraController cameraController) {
+    public static SwypeDetectorHandler newHandler(int fps, String swype, CameraController cameraController) {
         HandlerThread handlerThread = new HandlerThread("SwypeDetectorThread_" + counter++);
         handlerThread.start();
-        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), listener, cameraController);
+        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), cameraController);
         handler.sendInit(fps, swype);
         return handler;
     }
