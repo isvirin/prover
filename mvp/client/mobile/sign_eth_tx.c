@@ -42,19 +42,32 @@ static ssize_t build_tx(
     rlp_put_item(Ls);
 
     secpctx=secp256k1_context_create(SECP256K1_CONTEXT_SIGN);
-    secp256k1_ecdsa_sign_recoverable(
-        secpctx,
-        &signature,
-        (const unsigned char *)hash,
-        (const unsigned char *)privkey,
-        secp256k1_nonce_function_rfc6979,
-        NULL);
-    secp256k1_ecdsa_recoverable_signature_serialize_compact(
-        secpctx,
-        rs,
-        &recoverId,
-        &signature);
-    // TODO: remake the signature if recoverId is not 0 or 1
+
+    while(1)
+    {
+        uint8_t entropy[32];
+        int i;
+
+        for(i=0; i<32; ++i)
+            entropy[i]=random()%256;
+
+        secp256k1_ecdsa_sign_recoverable(
+            secpctx,
+            &signature,
+            (const unsigned char *)hash,
+            (const unsigned char *)privkey,
+            secp256k1_nonce_function_rfc6979,
+            entropy);
+        secp256k1_ecdsa_recoverable_signature_serialize_compact(
+            secpctx,
+            rs,
+            &recoverId,
+            &signature);
+
+        if(recoverId==0 || recoverId==1)
+            break;
+    }
+
     secp256k1_context_destroy(secpctx);
 
     Lt=rlp_create_list_item();
