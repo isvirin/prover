@@ -24,11 +24,7 @@ std::string generateSwypeFromInteger(unsigned int n, unsigned int modulo)
     std::string res;
 
     unsigned int m=1;
-
-    unsigned int currentPoint=(n*9)/modulo;
-    m*=9;
-    n=(n*9)%modulo;
-
+    unsigned int currentPoint=4;
     res+='1'+currentPoint;
 
     while(m<modulo)
@@ -53,7 +49,7 @@ std::string generateSwypeFromInteger(unsigned int n, unsigned int modulo)
 int main()
 {
     for(int i=0; i<65536; ++i)
-        std::cout<<generateSwypeFromInteger(i)<<std::endl;
+        std::cout<<generateSwypeFromInteger(i, 27000)<<std::endl;
     return 0;
 }
 
