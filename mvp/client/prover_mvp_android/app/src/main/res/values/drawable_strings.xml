@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="recordButton_RedSmall" translatable="false">M40,40 m-28,0 a28,28 0,1 1,56 0 a28,28 0,1 1,-56 0</string>
+    <string name="recordButton_RedLarge" translatable="false">M40,40 m-35,0 a35,35 0,1 1,70 0 a35,35 0,1 1,-70 0</string>
+
+    <string name="recordButton_RectSmall" translatable="false">M40,40 m-1,-1 l2,0 0,2 -2,0 z</string>
+    <string name="recordButton_RectLarge" translatable="false">M40,40 m-10,-10 l20,0 0,20 -20,0 z</string>
+
+    <string name="recordButton_RectCropSmall" translatable="false">M40,40 m-0,0 a0,0 0,1,1 0,0 a0,0 0,1,1 -0,0</string>
+    <string name="recordButton_RectCropLarge" translatable="false">M40,40 m-14,0 a14,14 0,1,1 28,0 a14,14 0,1,1 -28,0</string>
+
+</resources>

@@ -9,5 +9,5 @@
     <string name="camera_error">Camera error</string>
     <string name="info">Info</string>
     <string name="addressCopied">Address copied to clipboard</string>
-    <string name="address_">Address:</string>
+    <string name="address_">Wallet address:</string>
 </resources>

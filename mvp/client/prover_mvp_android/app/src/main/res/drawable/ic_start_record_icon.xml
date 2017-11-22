@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportHeight="80"
+    android:viewportWidth="80">
+    <path
+        android:pathData="M40,40 m-37.5,0 a37.5,37.5 0,1 1,75 0 a37.5,37.5 0,1 1,-75 0"
+        android:strokeColor="#ffffff"
+        android:strokeWidth="5" />
+
+    <path
+        android:name="redCircle"
+        android:fillColor="#e31e24"
+        android:pathData="@string/recordButton_RedSmall" />
+
+</vector>

@@ -13,9 +13,7 @@
      limitations under the License.
 -->
 
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/mainColor_minus400">
-    <item
-        android:id="@android:id/mask"
-        android:drawable="@drawable/btn_default_mtrl_shape_white" />
-</ripple>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:alpha="?android:attr/disabledAlpha" android:color="@color/button_material_dark" android:state_enabled="false" />
+    <item android:color="#000" />
+</selector>

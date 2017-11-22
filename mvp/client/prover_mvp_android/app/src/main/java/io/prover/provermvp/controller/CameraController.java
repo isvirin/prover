@@ -42,10 +42,10 @@ public class CameraController {
     public final ListenerList1<NetworkRequestStartListener, NetworkRequest> onNetworkRequestStart
             = new ListenerList1<>(handler, NetworkRequestStartListener::onNetworkRequestStart);
 
-    public final ListenerList2<NetworkRequestDoneListener, NetworkRequest, Object> networkRequestDone
+    public final ListenerList2<NetworkRequestDoneListener, NetworkRequest, Object> onNetworkRequestDone
             = new ListenerList2<>(handler, NetworkRequestDoneListener::onNetworkRequestDone);
 
-    public final ListenerList2<NetworkRequestErrorListener, NetworkRequest, Exception> networkRequestError
+    public final ListenerList2<NetworkRequestErrorListener, NetworkRequest, Exception> onNetworkRequestError
             = new ListenerList2<>(handler, NetworkRequestErrorListener::onNetworkRequestError);
     public final NetworkDelegate networkDelegate = new NetworkDelegate();
     private boolean recording;
@@ -67,7 +67,7 @@ public class CameraController {
     public void onRecordingStop(File file) {
         recording = false;
         boolean isVideoConfirmed = swypeStateHelperHolder.isVideoConfirmed();
-        onRecordingStop.notifyEvent(file, isVideoConfirmed);
+        onRecordingStop.postNotifyEvent(file, isVideoConfirmed);
     }
 
     public void setSwypeStateHelperHolder(SwypeStateHelperHolder swypeStateHelperHolder) {
@@ -118,12 +118,12 @@ public class CameraController {
 
         @Override
         public void onNetworkRequestDone(NetworkRequest request, Object responce) {
-            networkRequestDone.postNotifyEvent(request, responce);
+            onNetworkRequestDone.postNotifyEvent(request, responce);
         }
 
         @Override
         public void onNetworkRequestError(NetworkRequest request, Exception e) {
-            networkRequestError.postNotifyEvent(request, e);
+            onNetworkRequestError.postNotifyEvent(request, e);
         }
     }
 }

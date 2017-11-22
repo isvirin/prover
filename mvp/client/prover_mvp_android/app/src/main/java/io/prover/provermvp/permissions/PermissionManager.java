@@ -31,8 +31,12 @@ public class PermissionManager {
         return ensureHavePermissions(activity, getRequest(CAMERA, runAfterGrant));
     }
 
-    public static boolean checkHaveCameraPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
-        return checkHavePermissions(activity, getRequest(CAMERA, runAfterGrant));
+    public static boolean checkHaveCameraPermission(final Activity activity) {
+        return checkHavePermissions(activity, getRequest(CAMERA, null));
+    }
+
+    public static boolean checkHaveWriteSdcardPermission(final Activity activity) {
+        return checkHavePermissions(activity, getRequest(WRITE_EXTERNAL_STORAGE, null));
     }
 
     public static boolean ensureHavePermissions(final Activity activity, PermissionRequestSet set) {

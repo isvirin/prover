@@ -31,7 +31,7 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
     private String address;
 
     public InfoDialog(@NonNull Context context) {
-        super(context, R.style.NormalDialog);
+        super(context);
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 

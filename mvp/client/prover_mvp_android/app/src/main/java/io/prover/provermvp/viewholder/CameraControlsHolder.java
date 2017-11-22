@@ -2,8 +2,11 @@ package io.prover.provermvp.viewholder;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.media.Image;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -25,8 +28,6 @@ import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.transport.NetworkHolder;
-import io.prover.provermvp.transport.NetworkRequest;
-import io.prover.provermvp.transport.responce.HelloResponce;
 import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.util.UtilFile;
@@ -43,40 +44,37 @@ public class CameraControlsHolder implements View.OnClickListener,
         CameraController.OnPreviewStartListener,
         CameraController.OnFrameAvailableListener,
         CameraController.OnFrameAvailable2Listener,
-        CameraController.OnRecordingStartListener,
-        CameraController.NetworkRequestDoneListener, CameraController.OnRecordingStopListener {
+        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener {
     private final ViewGroup root;
-    private final ImageButton mainButton;
     private final Spinner resolutionSpinner;
     private final Activity activity;
     private final ICameraViewHolder cameraHolder;
     private final ArrayAdapter<Size> cameraResolutionsAdapter;
-    private final TextView balanceView;
     private final CameraController cameraController;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private final TextView fpsView;
+    private final ImageButton recordButton;
     boolean resumed = false;
     NetworkHolder networkHolder;
     private boolean started;
 
-    public CameraControlsHolder(Activity activity, ViewGroup root, ImageButton mainButton, ICameraViewHolder cameraHolder, CameraController cameraController) {
-        cameraResolutionsAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item);
+    public CameraControlsHolder(Activity activity, ViewGroup root, ICameraViewHolder cameraHolder, CameraController cameraController) {
+        cameraResolutionsAdapter = new ArrayAdapter<>(activity, R.layout.simple_spinner_item_nopad);
         cameraResolutionsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         this.root = root;
-        this.mainButton = mainButton;
         this.activity = activity;
         this.cameraHolder = cameraHolder;
         this.cameraController = cameraController;
 
         resolutionSpinner = root.findViewById(R.id.resolutionSpinner);
-        balanceView = root.findViewById(R.id.balanceView);
         fpsView = root.findViewById(R.id.fpsCounter);
+        recordButton = root.findViewById(R.id.recordButton);
 
         resolutionSpinner.setAdapter(cameraResolutionsAdapter);
         resolutionSpinner.setOnItemSelectedListener(this);
 
-        mainButton.setOnClickListener(this);
+        recordButton.setOnClickListener(this);
 
         fpsView.bringToFront();
         cameraController.previewStart.add(this);
@@ -84,7 +82,6 @@ public class CameraControlsHolder implements View.OnClickListener,
         cameraController.frameAvailable2.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
-        cameraController.networkRequestDone.add(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
@@ -94,16 +91,23 @@ public class CameraControlsHolder implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
-        if (v == mainButton) {
+        if (v == recordButton) {
             if (cameraController.isRecording()) {
+                updateControls(true, false);
                 cameraHolder.finishRecording();
-
             } else {
-                PermissionManager.ensureHaveWriteSdcardPermission(activity, () ->
-                        cameraController.handler.postDelayed(() -> {
-                            if (started)
-                                cameraHolder.startRecording(activity, fpsCounter.getAvgFps());
-                        }, 100));
+                if (PermissionManager.checkHaveWriteSdcardPermission(activity)) {
+                    cameraHolder.startRecording(activity, fpsCounter.getAvgFps());
+                    updateControls(false, true);
+                } else {
+                    PermissionManager.ensureHaveWriteSdcardPermission(activity, () ->
+                            cameraController.handler.postDelayed(() -> {
+                                if (started) {
+                                    cameraHolder.startRecording(activity, fpsCounter.getAvgFps());
+                                    updateControls(false, true);
+                                }
+                            }, 100));
+                }
             }
         }
     }
@@ -111,14 +115,27 @@ public class CameraControlsHolder implements View.OnClickListener,
     private void updateControls(boolean wasPlaying, boolean playing) {
         if (wasPlaying == playing)
             return;
-        VectorDrawableCompat dr;
-        if (playing) {
-            dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_stop_24dp, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AnimatedVectorDrawable adr;
+            if (playing) {
+                adr = (AnimatedVectorDrawable) root.getResources().getDrawable(R.drawable.ic_record_start_animated);
+            } else {
+                adr = (AnimatedVectorDrawable) root.getResources().getDrawable(R.drawable.ic_record_stop_animated);
+            }
+            adr.setBounds(0, 0, adr.getIntrinsicWidth(), adr.getIntrinsicHeight());
+            recordButton.setImageDrawable(adr);
+            adr.start();
         } else {
-            dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_record_24dp, null);
+            Drawable dr;
+            if (playing) {
+                dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_stop_record_icon, null);
+            } else {
+                dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_start_record_icon, null);
+            }
+            dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+            recordButton.setImageDrawable(dr);
         }
-        dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-        mainButton.setImageDrawable(dr);
 
         resolutionSpinner.setEnabled(!playing);
     }
@@ -159,13 +176,6 @@ public class CameraControlsHolder implements View.OnClickListener,
 
     }
 
-    @Override
-    public void onNetworkRequestDone(NetworkRequest request, Object responce) {
-        if (responce instanceof HelloResponce) {
-            String text = String.format(Locale.getDefault(), "balance: %.4f", ((HelloResponce) responce).getDoubleBalance());
-            balanceView.setText(text);
-        }
-    }
 
     @Override
     public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
@@ -188,7 +198,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     public void onFrameAvailable(byte[] data, Camera camera) {
         float fps = fpsCounter.addFrame();
         if (fps >= 0) {
-            fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
+            fpsView.setText(String.format(Locale.getDefault(), "%.1f fps", fps));
         }
     }
 
@@ -196,13 +206,13 @@ public class CameraControlsHolder implements View.OnClickListener,
     public void onFrameAvailable(Image image) {
         float fps = fpsCounter.addFrame();
         if (fps >= 0) {
-            fpsView.setText(String.format(Locale.getDefault(), "%.1f", fps));
+            fpsView.setText(String.format(Locale.getDefault(), "%.1f fps", fps));
         }
     }
 
     @Override
     public void onRecordingStart(float fps) {
-        updateControls(false, true);
+        //updateControls(false, true);
     }
 
     @Override

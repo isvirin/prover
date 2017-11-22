@@ -142,7 +142,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             selectResolutions(surfaceSize, selectedSize, map, activity);
 
             mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-            manager.openCamera(mCameraId, mStateCallback, null);
+            manager.openCamera(mCameraId, mStateCallback, backgroundHandler);
         } catch (CameraAccessException e) {
             Toast.makeText(activity, "Cannot access the camera.", Toast.LENGTH_SHORT).show();
             activity.finish();
@@ -213,6 +213,8 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
      * Creates a new {@link CameraCaptureSession} for camera preview.
      */
     public void startPreview(SurfaceTexture texture, Handler backgroundHandler) {
+        if (mVideoSessionWrapper == null)
+            return;
         mVideoSessionWrapper.closeVideoSession();
         /*if (null != mImageReader)
         {
@@ -235,6 +237,8 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
     }
 
     public void startVideoRecordingSession(SurfaceTexture texture, MediaRecorder mediaRecorder, float fps, Handler backgroundHandler) {
+        if (mVideoSessionWrapper == null)
+            return;
         mVideoSessionWrapper.closeVideoSession();
         /*if (null != mImageReader) {
             mImageReader.close();

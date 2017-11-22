@@ -49,8 +49,8 @@ public class SwypeStateHelperHolder implements ProverDetector.DetectionListener,
         cameraController.frameAvailable.add(this);
         cameraController.frameAvailable2.add(this);
         cameraController.onNetworkRequestStart.add(this);
-        cameraController.networkRequestDone.add(this);
-        cameraController.networkRequestError.add(this);
+        cameraController.onNetworkRequestDone.add(this);
+        cameraController.onNetworkRequestError.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
     }

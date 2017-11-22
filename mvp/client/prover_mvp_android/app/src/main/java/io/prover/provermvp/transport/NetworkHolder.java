@@ -36,8 +36,8 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
         this.cameraController = cameraController;
         cameraController.onRecordingStop.add(this);
         cameraController.onRecordingStart.add(this);
-        cameraController.networkRequestDone.add(this);
-        cameraController.networkRequestError.add(this);
+        cameraController.onNetworkRequestDone.add(this);
+        cameraController.onNetworkRequestError.add(this);
     }
 
     public void doHello() {

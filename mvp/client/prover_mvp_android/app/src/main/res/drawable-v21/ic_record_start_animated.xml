@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_stop_record_icon">
+
+    <target android:name="redCircle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="400"
+                android:propertyName="pathData"
+                android:valueFrom="@string/recordButton_RedSmall"
+                android:valueTo="@string/recordButton_RedLarge"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+
+    <target android:name="rectMask">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="400"
+                android:propertyName="pathData"
+                android:valueFrom="@string/recordButton_RectCropSmall"
+                android:valueTo="@string/recordButton_RectCropLarge"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+
+    <target android:name="rect">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="400"
+                android:propertyName="pathData"
+                android:valueFrom="@string/recordButton_RectSmall"
+                android:valueTo="@string/recordButton_RectLarge"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+
+</animated-vector>

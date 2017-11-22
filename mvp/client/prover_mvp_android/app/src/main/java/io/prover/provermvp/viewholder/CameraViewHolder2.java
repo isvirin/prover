@@ -8,6 +8,7 @@ import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.Gravity;
@@ -40,6 +41,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
     private final FrameLayout mRoot;
     private final CameraController cameraController;
+    private final Handler foregroundHandler = new Handler(Looper.getMainLooper());
     AutoFitTextureView textureView;
     MyCamera2 myCamera;
     Size selectedSize;
@@ -100,8 +102,14 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
 
     private void startPreview() {
         Size size = myCamera.getPreviewSize();
-        textureView.configurePreviewSize(size);
-        textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
+        foregroundHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                textureView.configurePreviewSize(size);
+                textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
+
+            }
+        });
 
         myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
     }
@@ -205,30 +213,42 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
 
     @Override
     public void finishRecording() {
-        myCamera.stopVideoSession();
-        stopRecording();
-        cameraController.onRecordingStop(videoFile);
-        myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
-        MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
-        videoFile = null;
+        Runnable r = () -> {
+            myCamera.stopVideoSession();
+            stopRecording();
+            cameraController.onRecordingStop(videoFile);
+            myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+            MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
+            videoFile = null;
+        };
+        if (mBackgroundHandler != null)
+            mBackgroundHandler.post(r);
+        else r.run();
     }
 
     @Override
     public boolean startRecording(Activity activity, float averageFps) {
-        if (!textureView.isAvailable() || null == myCamera.getVideoSize()) {
+        if (!textureView.isAvailable() || null == myCamera.getVideoSize() || mBackgroundThread == null || !mBackgroundThread.isAlive()) {
             return false;
         }
-        try {
-            prepareMediaRecorder();
-            SurfaceTexture texture = textureView.getSurfaceTexture();
-            myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
-            mRoot.setKeepScreenOn(true);
-            screenOrientationLock.lockScreenOrientation(activity);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        mBackgroundHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    prepareMediaRecorder();
+                    SurfaceTexture texture = textureView.getSurfaceTexture();
+                    myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
+                    foregroundHandler.post(() -> {
+                        mRoot.setKeepScreenOn(true);
+                        screenOrientationLock.lockScreenOrientation(activity);
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return true;
     }
 
     @Override
@@ -262,8 +282,15 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             }
             mMediaRecorder.reset();   // clear recorder configuration
 
-            mRoot.setKeepScreenOn(false);
-            screenOrientationLock.unlockScreen(activity);
+            if (Thread.currentThread().equals(foregroundHandler.getLooper().getThread())) {
+                mRoot.setKeepScreenOn(false);
+                screenOrientationLock.unlockScreen(activity);
+            } else {
+                foregroundHandler.post(() -> {
+                    mRoot.setKeepScreenOn(false);
+                    screenOrientationLock.unlockScreen(activity);
+                });
+            }
         }
     }
 
