@@ -101,14 +101,11 @@
 
 
 #include <opencv2/opencv.hpp>
-#include <opencv2/features2d.hpp>
-#include <opencv2/xfeatures2d.hpp>
 #include <vector>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
-//#include <iostream>
 
 
 class SwypeDetect
@@ -122,6 +119,7 @@ public:
 	void setSwype(std::string swype); // setting the swype code
 	void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);
 	void processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y);
+	void Reset(void);
 	// frame - pointer to a buffer with a frame
 	// state - state S
 	// index - if state==2, the index  of the last entered swype number
@@ -164,10 +162,8 @@ private:
 	std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
 	void Delta_Calculation(cv::Point2d output);
 	void Swype_Data(std::vector<cv::Point2d>& koord);
-	void Reset(void);
-	cv::Point2d Frame_processor(cv::Mat &frame_i);
+	ñv::Point2d Frame_processor(cv::Mat &frame_i);
 	void S1_processor(void);
 	std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
-	cv::Point2d Frame_processor2(cv::Mat &frame_i);
 };
 

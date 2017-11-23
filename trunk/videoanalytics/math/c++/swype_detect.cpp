@@ -2,7 +2,7 @@
 
 using namespace cv;
 using namespace std;
-using namespace cv::xfeatures2d;
+//using namespace cv::xfeatures2d;
 
 
 int SwypeDetect::CircleDetection(void)// circle detection algorithm
@@ -94,8 +94,7 @@ void SwypeDetect::Delta_Calculation(Point2d output)// offsets calculation for fr
 		}
 		Delta.push_back(D_coord);
 
-           //cout << D_coord.x << "		" << D_coord.y << endl;
-		
+           		
 		rez_vec_2_x = 0;
 		rez_vec_2_y = 0;
 		rez_vec_1_x = floor(D_coord.x);
@@ -408,12 +407,12 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 	if (S == 0) {
 		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); 
 		state = S;
-		seconds_1 = time(NULL);
+		//seconds_1 = time(NULL);
 	}
 	else if (S == 1) {
 		S1_processor();
-		seconds_2 = time(NULL);
-		if ((seconds_2 - seconds_1) > 4) Reset();
+		//seconds_2 = time(NULL);
+		//if ((seconds_2 - seconds_1) > 4) Reset();
 	}
 	else if (S == 2) {
 		
@@ -427,7 +426,7 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 					if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
 					else {
 						if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
-							index = Swype_Numbers_Get[count_num];
+							index = count_num;
 							x = static_cast<int>(floor((Swype_Koord[count_num].x)));
 							y = static_cast<int>(floor((Swype_Koord[count_num].y)));
 							if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
@@ -461,13 +460,12 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
 	if (S == 0) {
 		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); 
-		state = S;
-		seconds_1 = time(NULL);
+		//seconds_1 = time(NULL);
 	}
 	else if (S == 1) {
 		S1_processor();
-		seconds_2 = time(NULL);
-		if ((seconds_2 - seconds_1) > 4) Reset();
+		//seconds_2 = time(NULL);
+		//if ((seconds_2 - seconds_1) > 4) Reset();
 	}
 	else if (S == 2) {
 
@@ -481,7 +479,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 					if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
 					else {
 						if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
-							index = Swype_Numbers_Get[count_num];
+							index = count_num;
 							x = static_cast<int>(floor((Swype_Koord[count_num].x)));
 							y = static_cast<int>(floor((Swype_Koord[count_num].y)));
 							if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
@@ -506,21 +504,39 @@ void SwypeDetect::Reset(void) // reset
 	call = 0;
 	count_num = -1;
 	S = 0;
+	fps = 0;
+	fl_dir = false;
+
 	Swype_Numbers_Get.clear();
 	Swype_Numbers_Get.resize(0);
+
 	Swype_Koord.clear();
 	Swype_Koord.resize(0);
+
 	DirectionS.clear();
 	DirectionS.resize(0);
+
+	swype_Numbers.clear();
+	swype_Numbers.resize(0);
+
+	Delta.clear();
+	Delta.resize(0);
+
+	koord_Sw_points.clear();
+	koord_Sw_points.resize(0);
+
 	D_coord.x = 0;
 	D_coord.y = 0;
+
 	Direction = 0;
 
 	seconds_1 = 0;
 	seconds_2 = 0;
 
-	Delta.clear();
-	Delta.resize(0);
+	frame1.release();
+	buf1ft.release();
+	buf2ft.release();
+	hann.release();
 }
 
 
@@ -545,11 +561,8 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b)
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i)
 {
 	Point2d shift;
-	Mat R_size;
 
-	cv::resize(frame_i, R_size, cv::Size(200, 150));
-
-	cvtColor(R_size, frame1, CV_RGB2GRAY);
+	cvtColor(frame_i, frame1, CV_RGB2GRAY);
 	
 	
 	if (buf1ft.empty()) {
@@ -585,68 +598,6 @@ void SwypeDetect::S1_processor(void)
 		count_num++;
 		Swype_Numbers_Get.push_back(swype_Numbers[0]);
 		Swype_Koord.push_back(koord_Sw_points[swype_Numbers[0]]);
-	S = 2; // if we have swype then we go to detection swype from video
+	    S = 2; // if we have swype then we go to detection swype from video
 		}
-}
-
-Point2d SwypeDetect::Frame_processor2(cv::Mat &frame_i)
-{
-	Point2d shift;
-	Ptr<Feature2D> surf;
-	Ptr<Feature2D> extr;
-
-	cvtColor(frame_i, frame1, CV_RGB2GRAY);
-
-	if (buf1ft.empty()) {
-		frame1.convertTo(buf2ft, CV_64F); //converting frames to CV_64F type
-		buf1ft = buf2ft.clone();
-		koord_Sw_points = Koord_Swipe_Points(frame1.cols, frame1.rows); //Получаем координаты swipe-точек
-	}
-	else {
-		buf1ft = buf2ft.clone();
-		frame1.convertTo(buf2ft, CV_64F); //converting frames to CV_64F type
-	}
-	
-	double minHessian = 400;
-	//surf = SURF::create(minHessian);
-	/*
-	std::vector<KeyPoint> keypoints_1, keypoints_2;
-	
-	surf->detect(buf1ft, keypoints_1);
-	surf->detect(buf2ft, keypoints_2);
-	
-	extr = SurfDescriptorExtractor::create();
-
-	Mat descriptors_1, descriptors_2;
-
-	extr->compute(buf1ft, keypoints_1, descriptors_1);
-	extr->compute(buf2ft, keypoints_2, descriptors_2);
-
-	FlannBasedMatcher matcher;
-	
-	std::vector< DMatch > matches;
-	matcher.match(descriptors_1, descriptors_2, matches);
-
-	double max_dist = 0; double min_dist = 100;
-
-	for (int i = 0; i < descriptors_1.rows; i++)
-	{
-		double dist = matches[i].distance;
-		if (dist < min_dist) min_dist = dist;
-		if (dist > max_dist) max_dist = dist;
-	}
-
-	std::vector< DMatch > good_matches;
-
-	for (int i = 0; i < descriptors_1.rows; i++)
-	{
-		if (matches[i].distance <= max(2 * min_dist, 0.02))
-		{
-			good_matches.push_back(matches[i]);
-		}
-	}
-	
-	*/
-
-	return shift;
 }
