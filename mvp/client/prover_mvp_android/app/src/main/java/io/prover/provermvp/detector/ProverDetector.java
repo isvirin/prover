@@ -27,6 +27,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     DetectionState detectionState;
     private long nativeHandler;
     private volatile boolean isDetectionPaused;
+    private String swypeCode;
 
 
     public ProverDetector(CameraController cameraController) {
@@ -41,6 +42,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     }
 
     public synchronized void setSwype(String swype) {
+        this.swypeCode = swype;
         if (nativeHandler != 0) {
             setSwype(nativeHandler, swype);
         }
@@ -62,15 +64,8 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             detectFrameNV21(nativeHandler, frameData, width, height, detectionResult);
             Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
         }
-
-        if (detectionState == null || !detectionState.isEqualsArray(detectionResult)) {
-            final DetectionState oldState = detectionState;
-            final DetectionState newState = new DetectionState(detectionResult);
-            detectionState = newState;
-            cameraController.notifyDetectionStateChanged(oldState, newState);
-        }
-
         cameraController.frameReleased.postNotifyEvent(frameData);
+        detectionDone();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -93,12 +88,18 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
 
             Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
         }
+        detectionDone();
+    }
 
+    private void detectionDone() {
         if (detectionState == null || !detectionState.isEqualsArray(detectionResult)) {
             final DetectionState oldState = detectionState;
             final DetectionState newState = new DetectionState(detectionResult);
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
+            if (oldState != null && oldState.state == 2 && newState.state == 0) {
+                setSwype(swypeCode);
+            }
         }
     }
 

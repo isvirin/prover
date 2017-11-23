@@ -18,7 +18,7 @@ import static io.prover.provermvp.Const.TAG;
  * Created by babay on 11.11.2017.
  */
 
-public class SwypeDetectorHandler extends Handler {
+public class SwypeDetectorHandler extends Handler implements CameraController.OnSwypeCodeSetListener {
     private static final int MAX_FRAMES_IN_QUEUE = 1;
 
     private static final int MESSAGE_INIT = 1;
@@ -39,6 +39,7 @@ public class SwypeDetectorHandler extends Handler {
         handlerThread = (HandlerThread) looper.getThread();
         detector = new ProverDetector(cameraController);
         this.cameraController = cameraController;
+        cameraController.swypeCodeSet.add(this);
     }
 
     public static SwypeDetectorHandler newHandler(int fps, String swype, CameraController cameraController) {
@@ -69,9 +70,7 @@ public class SwypeDetectorHandler extends Handler {
         }
     }
 
-
     public boolean sendProcesstFrame(Image image) {
-        //return false;
         int inQueue = framesInQueue.get();
         if (inQueue < MAX_FRAMES_IN_QUEUE) {
             framesInQueue.incrementAndGet();
@@ -120,8 +119,8 @@ public class SwypeDetectorHandler extends Handler {
                 framesInQueue.decrementAndGet();
                 break;
 
-
             case MESSAGE_QUIT:
+                cameraController.swypeCodeSet.remove(this);
                 detector.release();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     handlerThread.quitSafely();
@@ -130,7 +129,11 @@ public class SwypeDetectorHandler extends Handler {
                 }
                 return;
         }
-
         super.handleMessage(msg);
+    }
+
+    @Override
+    public void onSwypeCodeSet(String swypeCode) {
+        sendSetSwype(swypeCode);
     }
 }

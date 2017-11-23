@@ -95,8 +95,6 @@ public class SwypeStateHelperHolder implements
                 str = str.substring(0, pos);
             }
             setStatusText(str);
-            if (detectorHandler != null)
-                detectorHandler.sendSetSwype(swype);
         }
     }
 
