@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="68dp"
+            android:height="68dp"
+            android:viewportHeight="68.0"
+            android:viewportWidth="68.0">
+            <group android:name="arrowGroup">
+                <path
+                    android:name="arrowPath"
+                    android:pathData="M0,68 m1,-1 L67,1 m0,0 m-5.7,0 l5.7,0 l0,5.7"
+                    android:strokeColor="#ffffff"
+                    android:strokeWidth="2" />
+            </group>
+        </vector>
+    </aapt:attr>
+
+    <target android:name="arrowGroup">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="translateX"
+                    android:valueFrom="-60"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="translateY"
+                    android:valueFrom="60"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target
+        android:name="arrowPath"
+        android:animation="@animator/appear_400" />
+
+</animated-vector>

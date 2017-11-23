@@ -1,6 +1,5 @@
 package io.prover.provermvp.viewholder;
 
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,15 +28,14 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private final ImageView[] swypePoints = new ImageView[9];
     private final ImageView currentPoint;
     private final Handler handler = new Handler();
+    private final SwypeArrowHolder swypeArrowHolder;
     float xMult, yMult;
     private String swype;
     private ImageView[] swypeSequence;
     private int[] sequenceIndices;
     private boolean[] pointVisited;
-    private Size detectorSize;
     private int detectProgressPos;
     private VectorDrawableCompat emptyPointDrawable;
-    private VectorDrawableCompat visitedPointDrawable;
     private boolean detectionPaused = false;
 
 
@@ -56,6 +54,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         swypePoints[8] = root.findViewById(R.id.swypePoint9);
 
         currentPoint = root.findViewById(R.id.swypeCurrentPosition);
+        swypeArrowHolder = new SwypeArrowHolder(root, swypePoints);
 
         cameraController.detectionState.add(this);
         cameraController.swypeCodeSet.add(this);
@@ -87,19 +86,14 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         }
         int index = tempGetActualIndex(newState);
         if (!pointVisited[index]) {
-            AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), R.drawable.swype_path_point_fill);
-            dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-            swypeSequence[index].setImageDrawable(dr);
-            dr.start();
+            applyAnimatedVectorDrawable(swypeSequence[index], R.drawable.swype_path_point_fill);
             detectProgressPos = index;
-        }
-        /*if (newState.index < swypeSequence.length && !pointVisited[newState.index]) {
-            if (detectProgressPos >= 0) {
-                swypeSequence[detectProgressPos].setImageDrawable(visitedPointDrawable);
+            if (detectProgressPos < swypeSequence.length - 1) {
+                swypeArrowHolder.show(sequenceIndices[detectProgressPos], sequenceIndices[detectProgressPos + 1]);
+            } else {
+                swypeArrowHolder.hide();
             }
-            swypeSequence[newState.index].setImageDrawable(visitedPointDrawable);
-            detectProgressPos = newState.index;
-        }*/
+        }
     }
 
     private int tempGetActualIndex(DetectionState state) {
@@ -133,16 +127,12 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             if (pos >= 0 && pos < 9) {
                 swypeSequence[i] = swypePoints[pos];
                 sequenceIndices[i] = pos;
-                if (Build.VERSION.SDK_INT >= 21) {
-
-                }
             }
         }
     }
 
     @Override
     public void onRecordingStart(float fps, Size detectorSize) {
-        this.detectorSize = detectorSize;
         float size = root.getResources().getDisplayMetrics().density * (60 + 60 + 36);
         xMult = size / detectorSize.width;
         yMult = size / detectorSize.height;
@@ -164,10 +154,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             emptyPointDrawable = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_swype_empty, null);
             emptyPointDrawable.setBounds(0, 0, emptyPointDrawable.getIntrinsicWidth(), emptyPointDrawable.getIntrinsicHeight());
         }
-        if (visitedPointDrawable == null) {
-            visitedPointDrawable = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_swype_visited, null);
-            visitedPointDrawable.setBounds(0, 0, visitedPointDrawable.getIntrinsicWidth(), visitedPointDrawable.getIntrinsicHeight());
-        }
     }
 
     private void show() {
@@ -176,32 +162,30 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         detectionPaused = true;
         cameraController.setSwypeDetectorPaused(true);
         int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration);
-        //animationDuration = animationDuration * 2 + 10;
         Arrays.fill(pointVisited, false);
+        swypeArrowHolder.hide();
 
         for (int i = 0; i < swypeSequence.length; i++) {
             final int pos = i;
             handler.postDelayed(() -> {
                 if (swypeSequence == null)
                     return;
-                AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), R.drawable.swype_path_point_blink);
-                dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-                swypeSequence[pos].setImageDrawable(dr);
-                dr.start();
-
-                if (pos == 0) {
-                    dr = AnimatedVectorDrawableCompat.create(root.getContext(), R.drawable.swype_track_point_blink);
-                    dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-                    currentPoint.setImageDrawable(dr);
-                    dr.start();
-                }
+                applyAnimatedVectorDrawable(swypeSequence[pos], R.drawable.swype_path_point_blink);
             }, animationDuration * i);
         }
 
+        applyAnimatedVectorDrawable(currentPoint, R.drawable.swype_track_point_blink);
         handler.postDelayed(() -> {
             detectionPaused = false;
             cameraController.setSwypeDetectorPaused(false);
         }, animationDuration * (swypeSequence.length + 1));
+    }
+
+    private void applyAnimatedVectorDrawable(ImageView view, int id) {
+        AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), id);
+        dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+        view.setImageDrawable(dr);
+        dr.start();
     }
 
     private void hide() {

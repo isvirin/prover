@@ -9,10 +9,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.Surface;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.prover.provermvp.camera.MyCamera.TAG;
 
 /**
  * Created by babay on 19.11.2017.
@@ -31,7 +34,11 @@ public class VideoSessionWrapper {
 
     public synchronized void closeVideoSession() {
         if (mCameraVideoSession != null) {
-            mCameraVideoSession.close();
+            try {
+                mCameraVideoSession.close();
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            }
             mCameraVideoSession = null;
             synchronized (this) {
                 try {
