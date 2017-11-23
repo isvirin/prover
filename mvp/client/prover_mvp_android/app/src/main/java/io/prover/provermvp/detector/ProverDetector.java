@@ -51,6 +51,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             releaseNativeHandler(nativeHandler);
         }
         nativeHandler = 0;
+        cameraController.swypeDetectionPause.remove(this);
     }
 
     public void detectFrame(byte[] frameData, int width, int height) {

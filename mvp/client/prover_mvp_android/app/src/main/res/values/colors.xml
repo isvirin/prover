@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <!--    <color name="colorAccent">#FF9400</color> -->
+    <color name="colorPrimaryDark">@color/bgColorOpaque</color>
     <color name="colorAccent">#e31e24</color>
     <color name="colorAccent_50p">#80e31e24</color>
     <color name="colorAccent_20p">#33e31e24</color>

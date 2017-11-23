@@ -2,15 +2,15 @@ package io.prover.provermvp.controller;
 
 import android.os.Handler;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by babay on 17.11.2017.
  */
 
 public class ListenerList<T> {
-    private final List<T> listeners = new ArrayList<>();
+    private final List<T> listeners = new CopyOnWriteArrayList<>();
 
     private final Handler handler;
     private final NotificationRunner<T> notificationRunner;
@@ -21,12 +21,12 @@ public class ListenerList<T> {
         this.notificationRunner = notificationRunner;
     }
 
-    public void add(T listener) {
+    public synchronized void add(T listener) {
         if (!listeners.contains(listener))
             listeners.add(listener);
     }
 
-    public void remove(T listener) {
+    public synchronized void remove(T listener) {
         listeners.remove(listener);
     }
 

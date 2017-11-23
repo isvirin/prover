@@ -9,9 +9,12 @@ import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,13 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
         addressView.setOnClickListener(this);
         findViewById(R.id.buttonOk).setOnClickListener(this);
         setTitle(R.string.info);
+
+        Window window = getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+
+        wlp.gravity = Gravity.TOP;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        wlp.width = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
     private void updateAddress() {
@@ -57,14 +67,14 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
             int start = builder.length();
             builder.append(address);
             int end = builder.length();
-            Object span = new RelativeSizeSpan(1.2f);
-            builder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            /*Object span = new RelativeSizeSpan(1.2f);
+            builder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
             Resources res = getContext().getResources();
             TypedValue val = new TypedValue();
             getContext().getTheme().resolveAttribute(android.R.attr.textColorPrimary, val, true);
             int color = res.getColor(val.resourceId);
 
-            span = new ForegroundColorSpan(color);
+            Object span = new ForegroundColorSpan(color);
             builder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             addressView.setText(builder);
         }
