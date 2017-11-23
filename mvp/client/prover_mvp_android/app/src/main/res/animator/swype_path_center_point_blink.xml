@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <objectAnimator
+        android:duration="@integer/swypeBlinkAnimationDuration"
+        android:propertyName="pathData"
+        android:valueFrom="@string/swype_point_center_gone"
+        android:valueTo="@string/swype_point_center_large"
+        android:valueType="pathType" />
+
+    <objectAnimator
+        android:duration="@integer/swypeBlinkAnimationDuration"
+        android:propertyName="pathData"
+        android:startOffset="@integer/swypeBlinkAnimationDuration"
+        android:valueFrom="@string/swype_point_center_large"
+        android:valueTo="@string/swype_point_center_norm"
+        android:valueType="pathType" />
+
+
+</set>

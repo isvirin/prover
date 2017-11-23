@@ -77,7 +77,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
         }
         if (request instanceof RequestSwypeCode1 && FAKE_SWYPE_CODE) {
             String code = Const.FAKE_SWYPES[(int) (Math.random() * Const.FAKE_SWYPES.length)];
-            handler.postDelayed(() -> cameraController.setSwypeCode(code), 4000);
+            handler.postDelayed(() -> cameraController.setSwypeCode(code), 2000);
         }
     }
 

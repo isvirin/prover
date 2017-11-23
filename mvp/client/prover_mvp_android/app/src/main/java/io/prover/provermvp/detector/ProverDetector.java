@@ -16,7 +16,7 @@ import static io.prover.provermvp.Const.TAG;
  * Created by babay on 11.11.2017.
  */
 
-public class ProverDetector {
+public class ProverDetector implements CameraController.OnDetectorPauseChangedListener {
     static {
         System.loadLibrary("native-lib");
         System.loadLibrary("opencv_java3");
@@ -26,10 +26,12 @@ public class ProverDetector {
     private final CameraController cameraController;
     DetectionState detectionState;
     private long nativeHandler;
+    private volatile boolean isDetectionPaused;
 
 
     public ProverDetector(CameraController cameraController) {
         this.cameraController = cameraController;
+        cameraController.swypeDetectionPause.add(this);
     }
 
     public void init(int fps, String swype) {
@@ -52,6 +54,8 @@ public class ProverDetector {
     }
 
     public void detectFrame(byte[] frameData, int width, int height) {
+        if (isDetectionPaused)
+            return;
         if (nativeHandler != 0) {
             long time = System.currentTimeMillis();
             detectFrameNV21(nativeHandler, frameData, width, height, detectionResult);
@@ -70,6 +74,8 @@ public class ProverDetector {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void detectFrame(Image image) {
+        if (isDetectionPaused)
+            return;
         int width = image.getWidth();
         int height = image.getHeight();
         int format = image.getFormat();
@@ -128,4 +134,10 @@ public class ProverDetector {
     private native void detectFrameNV21Buf(long nativeHandler, ByteBuffer data, int width, int height, int[] result);
 
     private native void releaseNativeHandler(long nativeHandler);
+
+    @Override
+    public void onDetectorPauseChanged(boolean isPaused) {
+        this.isDetectionPaused = isPaused;
+        detectionState = null;
+    }
 }

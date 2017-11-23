@@ -9,4 +9,9 @@
     <string name="recordButton_RectCropSmall" translatable="false">M40,40 m-0,0 a0,0 0,1,1 0,0 a0,0 0,1,1 -0,0</string>
     <string name="recordButton_RectCropLarge" translatable="false">M40,40 m-14,0 a14,14 0,1,1 28,0 a14,14 0,1,1 -28,0</string>
 
+    <string name="swype_point_center_gone" translatable="false">M-0,0 a0,0 0,1,1 0,0 a0,0 0,1,1 -0,0</string>
+    <string name="swype_point_center_norm" translatable="false">M-3.5,0 a3.5,3.5 0,1,1 7,0 a3.5,3.5 0,1,1 -7,0</string>
+    <string name="swype_point_center_large" translatable="false">M-8,0 a8,8 0,1,1 16,0 a8,8 0,1,1 -16,0</string>
+    <string name="swype_point_center_filled" translatable="false">M-14,0 a14,14 0,1,1 28,0 a14,14 0,1,1 -28,0</string>
+
 </resources>

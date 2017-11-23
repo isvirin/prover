@@ -29,7 +29,7 @@ public class VideoSessionWrapper {
         this.mCameraDevice = cameraDevice;
     }
 
-    public void closeVideoSession() {
+    public synchronized void closeVideoSession() {
         if (mCameraVideoSession != null) {
             mCameraVideoSession.close();
             mCameraVideoSession = null;

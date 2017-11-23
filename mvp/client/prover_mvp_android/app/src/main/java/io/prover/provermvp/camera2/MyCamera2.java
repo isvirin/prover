@@ -77,11 +77,11 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             mCameraOpenCloseLock.release();
-            if (mVideoSessionWrapper != null) {
-                mVideoSessionWrapper.closeVideoSession();
-                mVideoSessionWrapper.onCameraDeviceClosed();
+            VideoSessionWrapper session = mVideoSessionWrapper;
+            if (session != null) {
+                session.closeVideoSession();
+                session.onCameraDeviceClosed();
             }
-            cameraDevice.close();
             mCameraDevice = null;
 
             mVideoSessionWrapper = null;
@@ -91,10 +91,12 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
             mCameraOpenCloseLock.release();
-            if (mVideoSessionWrapper != null) {
-                mVideoSessionWrapper.closeVideoSession();
-                mVideoSessionWrapper.onCameraDeviceClosed();
+            VideoSessionWrapper session = mVideoSessionWrapper;
+            if (session != null) {
+                session.closeVideoSession();
+                session.onCameraDeviceClosed();
             }
+
             cameraDevice.close();
             mCameraDevice = null;
             mVideoSessionWrapper = null;

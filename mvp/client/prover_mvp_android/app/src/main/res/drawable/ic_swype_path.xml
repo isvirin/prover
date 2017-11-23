@@ -17,8 +17,7 @@
         <path
             android:name="centerPoint"
             android:fillColor="#ffffff"
-            android:pathData="M-3.5,0 a3.5,3.5 0,1,1 7,0 a3.5,3.5 0,1,1 -7,0"
-            android:strokeWidth="3" />
+            android:pathData="@string/swype_point_center_norm" />
 
     </group>
 

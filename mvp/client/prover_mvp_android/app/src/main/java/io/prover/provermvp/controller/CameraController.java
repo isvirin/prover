@@ -56,10 +56,12 @@ public class CameraController {
     public final ListenerList1<OnSwypeCodeSetListener, String> swypeCodeSet
             = new ListenerList1<>(handler, OnSwypeCodeSetListener::onSwypeCodeSet);
 
+    public final ListenerList1<OnDetectorPauseChangedListener, Boolean> swypeDetectionPause
+            = new ListenerList1<>(handler, OnDetectorPauseChangedListener::onDetectorPauseChanged);
+
     public final NetworkDelegate networkDelegate = new NetworkDelegate();
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
-
 
     public CameraController() {
     }
@@ -89,6 +91,10 @@ public class CameraController {
 
     public void setSwypeCode(String swypeCode) {
         swypeCodeSet.postNotifyEvent(swypeCode);
+    }
+
+    public void setSwypeDetectorPaused(boolean paused) {
+        swypeDetectionPause.notifyEvent(paused);
     }
 
     public interface OnPreviewStartListener {
@@ -133,6 +139,10 @@ public class CameraController {
 
     public interface OnSwypeCodeSetListener {
         void onSwypeCodeSet(String swypeCode);
+    }
+
+    public interface OnDetectorPauseChangedListener {
+        void onDetectorPauseChanged(boolean isPaused);
     }
 
     private class NetworkDelegate implements NetworkRequest.NetworkRequestListener {
