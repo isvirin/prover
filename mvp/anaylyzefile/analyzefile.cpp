@@ -1,14 +1,17 @@
 #include <cstdio>
+#include <string>
 
 extern "C"
 {
 #include <libavformat/avformat.h>
 }
 
+#include "swype_detect.h"
+
 
 int main(int argc, char *argv[])
 {
-    if(argc<=1)
+    if(argc<=2)
         return 1;
 
     av_register_all();
@@ -73,6 +76,12 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+    int fps=formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
+
+    std::string swype=argv[2];
+    SwypeDetect detector;
+    detector.init(fps, swype);
+
     AVFrame *frame=av_frame_alloc();
     while(true)
     {
@@ -86,7 +95,6 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Failed to read packed %d\n", rc);
             break;
         }
-        fprintf(stderr, "packet %d %d %d\n", packet.stream_index, videoStreamIndex, packet.size);
 
         if(packet.stream_index==videoStreamIndex)
         {
@@ -104,8 +112,6 @@ int main(int argc, char *argv[])
                 packet.size,
                 packet.flags&AV_PKT_FLAG_KEY);
 
-            fprintf(stderr, "ff %d %d %d\n", packet.size, size, shouldFreeNewBuffer);
-
             if(data && size)
             {
                 AVPacket newpacket;
@@ -119,9 +125,10 @@ int main(int argc, char *argv[])
 
                 while((rc=avcodec_receive_frame(codecctx, frame))==0)
                 {
+                    int state=-1, index=-1, x=-1, y=-1;
+                    detector.processFrame(frame->data[0], frame->width, frame->height, state, index, x, y);
 
-
-                    fprintf(stderr, "%d %d %d %lld\n", rc, frame->width, frame->height, frame->pts);
+                    fprintf(stderr, "S=%d index=%d x=%d y=%d\n", state, index, x, y);
                 }
                 if(rc==AVERROR_EOF)
                     break;
