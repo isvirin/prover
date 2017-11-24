@@ -42,14 +42,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
         ViewGroup contentRoot = findViewById(R.id.contentRoot);
-        swypeStateHelperHolder = new SwypeStateHelperHolder(contentRoot, cameraController);
+
         if (Settings.USE_CAMERA_2)
             cameraHolder = new CameraViewHolder2(cameraContainer, this, cameraController);
         else
             cameraHolder = new CameraViewHolder(this, cameraContainer, cameraController);
 
-
         cameraControlsHolder = new CameraControlsHolder(this, contentRoot, cameraHolder, cameraController);
+        swypeStateHelperHolder = new SwypeStateHelperHolder(contentRoot, cameraController);
         balanceStatusHolder = new BalanceStatusHolder(contentRoot, cameraController);
         swypeViewHolder = new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
 
