@@ -97,7 +97,6 @@
 //    int        &index,
 //    int        &x,
 //    int        &y);
-
 #pragma once
 
 
@@ -116,7 +115,8 @@ public:
     ~SwypeDetect();
 
     void init(int fps_e, std::string swype);
-    void setSwype(std::string swype);
+
+    void setSwype(std::string swype); // setting the swype code
     void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);
 
     void
@@ -124,23 +124,27 @@ public:
                  int &x, int &y);
 
     void Reset(void);
-
+    // frame - pointer to a buffer with a frame
+    // state - state S
+    // index - if state==2, the index  of the last entered swype number
+    // x - if state==2, the X coordinate for visualisation
+    // y - if state==2, the Y coordinate for visualisation
 private:
 
     //External data
-    std::vector<int> swype_Numbers;
+    std::vector<int> swype_Numbers; //we have swype code or we will wait swype code
     int fps;
 
     //Internal data
     cv::Mat frame1; //previous frame
-    std::vector<cv::Point2d> Delta; //динамический массив перемещений камеры
+    std::vector<cv::Point2d> Delta; //dinamic array of moving camera
 
-    int S; //Текущий этап распознования
-    int call; //Колличество вызовов функции обработки кадров
-    int count_num; //Колличество правильно введенных свайп-цифр
-    std::vector<int> Swype_Numbers_Get; //Введеные цифры свайпкода
-    std::vector<cv::Point2d> Swype_Koord; //Координаты введенного свайпкода
-    std::vector<int> DirectionS; //Массив направлений
+    int S; //state S
+    int call; //Number of the frame processing function calls
+    int count_num; //Number of the correctly entered swype-numbers
+    std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
+    std::vector<cv::Point2d> Swype_Koord; //the coordinates of the entered swype code
+    std::vector<int> DirectionS; //directions array
 
     cv::Point2d D_coord;
     int Direction;
@@ -164,4 +168,3 @@ private:
     void S1_processor(void);
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 };
-
