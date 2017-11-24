@@ -63,6 +63,8 @@ public class CameraController {
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
 
+    private volatile float detectorFps;
+
     public CameraController() {
     }
 
@@ -95,6 +97,14 @@ public class CameraController {
 
     public void setSwypeDetectorPaused(boolean paused) {
         swypeDetectionPause.notifyEvent(paused);
+    }
+
+    public void onDetectorFpsUpdate(float fps) {
+        detectorFps = fps;
+    }
+
+    public float getDetectorFps() {
+        return detectorFps;
     }
 
     public interface OnPreviewStartListener {

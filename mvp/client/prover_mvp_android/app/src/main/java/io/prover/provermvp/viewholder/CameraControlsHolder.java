@@ -208,7 +208,11 @@ public class CameraControlsHolder implements View.OnClickListener,
     public void onFrameAvailable(Image image) {
         float fps = fpsCounter.addFrame();
         if (fps >= 0) {
-            fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
+            if (cameraController.isRecording()) {
+                fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
+            } else {
+                fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
+            }
         }
     }
 

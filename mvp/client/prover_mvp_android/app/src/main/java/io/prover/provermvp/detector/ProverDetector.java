@@ -9,6 +9,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.util.FrameRateCounter;
 
 import static io.prover.provermvp.Const.TAG;
 
@@ -24,6 +25,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
 
     private final int[] detectionResult = new int[5];
     private final CameraController cameraController;
+    private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 3);
     DetectionState detectionState;
     private long nativeHandler;
     private volatile boolean isDetectionPaused;
@@ -100,6 +102,10 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             if (oldState != null && oldState.state == 2 && newState.state == 0) {
                 setSwype(swypeCode);
             }
+        }
+        float fps = fpsCounter.addFrame();
+        if (fps >= 0) {
+            cameraController.onDetectorFpsUpdate(fps);
         }
     }
 
