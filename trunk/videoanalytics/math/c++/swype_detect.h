@@ -47,9 +47,6 @@ private:
 	int Direction;
 	bool fl_dir;
 
-	time_t seconds_1;
-	time_t seconds_2;
-
 	std::vector<cv::Point2d> koord_Sw_points;
 	cv::UMat buf1ft;
 	cv::UMat buf2ft;

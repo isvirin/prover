@@ -121,7 +121,6 @@ void SwypeDetect::Delta_Calculation(Point2d output)
 		if ((Mean_Alfa >= 202.5) && (Mean_Alfa < 247.5)) Direction = 2;
 		if ((Mean_Alfa >= 247.5) && (Mean_Alfa < 292.5)) Direction = 3;
 		if ((Mean_Alfa >= 292.5) && (Mean_Alfa < 337.5)) Direction = 4;
-		cout << Direction << endl;
 		call++;
 	}
 }
@@ -366,9 +365,6 @@ SwypeDetect::SwypeDetect()
 	D_coord.y = 0;
 	Direction = 0;
 
-	seconds_1 = 0;
-	seconds_2 = 0;
-
 	Delta.clear();
 
 	koord_Sw_points.reserve(10);
@@ -495,7 +491,9 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
 		}
 	}
-	state = S;
+	x = static_cast<int>(floor(D_coord.x));
+	y = static_cast<int>(floor(D_coord.y));
+	state = S
 }
 
 
@@ -530,9 +528,6 @@ void SwypeDetect::Reset(void)
 	D_coord.y = 0;
 	
 	Direction = 0;
-
-	seconds_1 = 0;
-	seconds_2 = 0;
 
 	frame1.release();
 	buf1ft.release();
