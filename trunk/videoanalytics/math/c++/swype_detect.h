@@ -162,7 +162,7 @@ private:
 	std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
 	void Delta_Calculation(cv::Point2d output);
 	void Swype_Data(std::vector<cv::Point2d>& koord);
-	ñv::Point2d Frame_processor(cv::Mat &frame_i);
+	cv::Point2d Frame_processor(cv::Mat &frame_i);
 	void S1_processor(void);
 	std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 };
