@@ -22,7 +22,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
         System.loadLibrary("opencv_java3");
     }
 
-    private final int[] detectionResult = new int[4];
+    private final int[] detectionResult = new int[5];
     private final CameraController cameraController;
     DetectionState detectionState;
     private long nativeHandler;

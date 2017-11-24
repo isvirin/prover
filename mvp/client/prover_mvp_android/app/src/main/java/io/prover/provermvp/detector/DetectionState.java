@@ -9,16 +9,18 @@ public class DetectionState {
     public final int index;
     public final int x;
     public final int y;
+    public final int d;
 
     public DetectionState(int[] source) {
         state = source[0];
         index = source[1];
         x = source[2];
         y = source[3];
+        d = source[4];
     }
 
     public boolean isEqualsArray(int[] arr) {
-        return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3];
+        return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
     }
 
     @Override
@@ -31,7 +33,8 @@ public class DetectionState {
         if (state != that.state) return false;
         if (index != that.index) return false;
         if (x != that.x) return false;
-        return y == that.y;
+        if (y != that.y) return false;
+        return d == that.d;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class DetectionState {
         result = 31 * result + index;
         result = 31 * result + x;
         result = 31 * result + y;
+        result = 31 * result + d;
         return result;
     }
 }

@@ -1,5 +1,6 @@
 package io.prover.provermvp.viewholder;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -202,6 +203,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public void onFrameAvailable(Image image) {
         float fps = fpsCounter.addFrame();

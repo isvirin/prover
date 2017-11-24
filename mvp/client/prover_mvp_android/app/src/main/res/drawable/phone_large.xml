@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="256dp"
+    android:height="256dp"
+    android:viewportHeight="256"
+    android:viewportWidth="256">
+
+    <group
+        android:name="phone"
+        android:translateX="128"
+        android:translateY="128">
+
+        <path
+            android:fillColor="#ffffff"
+            android:pathData="M-30,-57.5 m0,6 a6,6 0,0,1 6,-6 l48,0 a6,6 0,0,1 6,6 l0,93 a6,6 0,0,1 -6,6 l-48,0 a6,6 0,0,1 -6,-6 l0,-15
+            l30,0
+            l0,8 -9,0 0,4 18,0 0,-4 -9,0 0,-8
+            l25,0 0,-72 -25,0 -0,-3.5 5,0 a2.5,2.5 0,0,0 0,-5 l-10,0 a2.5,2.5 0,0,0 0,5 l 5,0 0,3.5 -25,0 0,72 -5,0 z" />
+    </group>
+
+    <group
+        android:name="arrows"
+        android:translateX="128"
+        android:translateY="128">
+
+        <group
+            android:name="arrow1"
+            android:rotation="0">
+            <path
+                android:pathData="@string/circle_arrow_60_cw"
+                android:strokeColor="#ffffff"
+                android:strokeWidth="5" />
+        </group>
+
+        <group
+            android:name="arrow2"
+            android:rotation="120">
+            <path
+                android:pathData="@string/circle_arrow_60_cw"
+                android:strokeColor="#ffffff"
+                android:strokeWidth="5" />
+        </group>
+
+        <group
+            android:name="arrow2"
+            android:rotation="240">
+            <path
+                android:pathData="@string/circle_arrow_60_cw"
+                android:strokeColor="#ffffff"
+                android:strokeWidth="5" />
+        </group>
+
+    </group>
+
+
+</vector>

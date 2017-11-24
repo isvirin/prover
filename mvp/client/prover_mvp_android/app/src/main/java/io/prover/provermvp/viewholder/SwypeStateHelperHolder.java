@@ -61,7 +61,7 @@ public class SwypeStateHelperHolder implements
 
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState state) {
-        String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d", state.state, state.index, state.x, state.y);
+        String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d, %d", state.state, state.index, state.x, state.y, state.d);
         setStatusText(stateStr);
         latestState = state.state;
         if (state.state == 1 && swype != null && detectorHandler != null) {
