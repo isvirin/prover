@@ -10,4 +10,6 @@ public interface Settings {
     boolean USE_CAMERA_2 = true;
 
     boolean FAKE_SWYPE_CODE = true;
+
+    boolean SHOW_RENDERER_PREVIEW = false;
 }

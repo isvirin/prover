@@ -19,7 +19,19 @@ public class DetectionState {
         d = source[4];
     }
 
+    public DetectionState(long[] source) {
+        state = (int) source[0];
+        index = (int) source[1];
+        x = (int) source[2];
+        y = (int) source[3];
+        d = (int) source[4];
+    }
+
     public boolean isEqualsArray(int[] arr) {
+        return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+    }
+
+    public boolean isEqualsArray(long[] arr) {
         return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
     }
 

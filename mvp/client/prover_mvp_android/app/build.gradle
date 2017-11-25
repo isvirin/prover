@@ -4,10 +4,10 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.prover.provermvp"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 26
         versionCode 2
-        versionName "0.7"
+        versionName "0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
@@ -31,11 +31,25 @@ android {
         }
     }
 
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            externalNativeBuild {
+                cmake {
+                    cppFlags "-fexceptions -frtti -fPIE -fPIC -std=c++11"
+                    abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "mips", "mips64"
+                }
+            }
+        }
+        debug {
+            externalNativeBuild {
+                cmake {
+                    cppFlags "-fexceptions -frtti -fPIE -funwind-tables -DDEBUG -fPIC  -std=c++11"
+                    abiFilters "armeabi"
+                }
+            }
         }
     }
     externalNativeBuild {

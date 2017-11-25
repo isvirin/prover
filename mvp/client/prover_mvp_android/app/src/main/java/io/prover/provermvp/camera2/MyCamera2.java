@@ -38,10 +38,6 @@ import static io.prover.provermvp.Const.TAG;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MyCamera2 implements ImageReader.OnImageAvailableListener {
-
-    //public static final int IMAGE_FORMAT = ImageFormat.YV12;
-    //public static final int IMAGE_FORMAT = ImageFormat.YUV_420_888;
-
     private final CameraStateListener mCameraStateLisneter;
     private final ResolutionSelector resolutionSelector = new ResolutionSelector();
     private final Camera2PrefsHelper camera2PrefsHelper = new Camera2PrefsHelper();
@@ -164,7 +160,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
 
     private void selectResolutions(Size surfaceSize, Size selectedSize, StreamConfigurationMap map, Context context) {
         mVideoSize = resolutionSelector.selectResolution(selectedSize, cameraResolutions, surfaceSize, context);
-        mCaptureFrameSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(imageFormat), new Size(200, 200), mVideoSize, 2.0f);
+        mCaptureFrameSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(imageFormat), new Size(300, 300), mVideoSize, 2.0f);
         mPreviewSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), surfaceSize, mVideoSize, 0.1f);
     }
 
@@ -218,7 +214,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
     /**
      * Creates a new {@link CameraCaptureSession} for camera preview.
      */
-    public void startPreview(SurfaceTexture texture, Handler backgroundHandler) {
+    public void startPreview(Handler backgroundHandler, SurfaceTexture screenTexture, SurfaceTexture rendererTexture) {
         if (mVideoSessionWrapper == null)
             return;
         mVideoSessionWrapper.closeVideoSession();
@@ -233,10 +229,18 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             mImageReader = ImageReader.newInstance(mCaptureFrameSize.width, mCaptureFrameSize.height, imageFormat, 8);
             mImageReader.setOnImageAvailableListener(this, backgroundHandler);
         }
-        texture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
+        screenTexture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
+        if (rendererTexture != null) {
+            rendererTexture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
+        }
+
+        Surface[] surfaces = rendererTexture == null ?
+                new Surface[]{new Surface(screenTexture), mImageReader.getSurface()}
+                : new Surface[]{new Surface(screenTexture), new Surface(rendererTexture), mImageReader.getSurface()};
+
         Runnable startedNotificator = () -> cameraController.previewStart.postNotifyEvent(cameraResolutions, mVideoSize);
         try {
-            mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, new Surface(texture), mImageReader.getSurface());
+            mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, surfaces);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }

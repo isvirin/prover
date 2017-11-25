@@ -12,7 +12,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.view.Gravity;
-import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import io.prover.provermvp.R;
 import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
@@ -36,82 +36,57 @@ import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICameraViewHolder, CameraController.OnRecordingStartListener {
+public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICameraViewHolder, CameraController.OnRecordingStartListener, SurfacesHolder.SurfacesHolderListener {
 
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
+    private final Activity activity;
     private final FrameLayout mRoot;
+    private final MyCamera2 myCamera;
     private final CameraController cameraController;
+    private final SurfacesHolder surfacesHolder;
     private final Handler foregroundHandler = new Handler(Looper.getMainLooper());
-    AutoFitTextureView textureView;
-    MyCamera2 myCamera;
-    Size selectedSize;
-    private Activity activity;
-    private boolean resumed;
-    private HandlerThread mBackgroundThread;
+
     private Handler mBackgroundHandler;
-    private Size mSurfaceSize;
-    private final TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
-
-        @Override
-        public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
-            openCamera(width, height);
-        }
-
-        @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture texture, int width, int height) {
-            if (myCamera.getPreviewSize() != null && activity != null) {
-                textureView.configureTransform(activity, myCamera.getPreviewSize(), width, height);
-            }
-        }
-
-        @Override
-        public boolean onSurfaceTextureDestroyed(SurfaceTexture texture) {
-            myCamera.closeCamera();
-            return true;
-        }
-
-        @Override
-        public void onSurfaceTextureUpdated(SurfaceTexture texture) {
-        }
-
-    };
+    private HandlerThread mBackgroundThread;
+    private Size selectedSize;
+    private boolean resumed;
     private MediaRecorder mMediaRecorder;
     private File videoFile;
 
-    public CameraViewHolder2(FrameLayout root, Activity activity, CameraController cameraController) {
-        this.mRoot = root;
-        this.textureView = new AutoFitTextureView(root.getContext());
+    public CameraViewHolder2(ViewGroup root, Activity activity, CameraController cameraController) {
+        this.mRoot = root.findViewById(R.id.cameraContainer);
+        AutoFitTextureView textureView = new AutoFitTextureView(root.getContext());
         this.activity = activity;
         this.cameraController = cameraController;
+        AutoFitTextureView supportTextureView = root.findViewById(R.id.supportTextureView);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lp.gravity = Gravity.CENTER;
-        root.addView(textureView, lp);
+        mRoot.addView(textureView, lp);
+
+        surfacesHolder = new SurfacesHolder(activity, textureView, supportTextureView, this);
 
         myCamera = new MyCamera2(this, cameraController);
         cameraController.onRecordingStart.add(this);
     }
 
-    private void openCamera(int width, int height) {
+    private void openCamera() {
         if (!PermissionManager.ensureHaveCameraPermission(activity, null))
             return;
 
-        mSurfaceSize = new Size(width, height);
-        myCamera.openCamera(activity, mBackgroundHandler, mSurfaceSize, selectedSize);
+
+        myCamera.openCamera(activity, mBackgroundHandler, surfacesHolder.getPreviewSurfaceSize(), selectedSize);
         selectedSize = myCamera.getVideoSize();
+        surfacesHolder.setPreviewSize(myCamera.getPreviewSize());
     }
 
     private void startPreview() {
         Size size = myCamera.getPreviewSize();
-        foregroundHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                textureView.configurePreviewSize(size);
-                textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
-
-            }
+        foregroundHandler.post(() -> {
+            surfacesHolder.textureView.configurePreviewSize(size);
+            surfacesHolder.textureView.configureTransform(activity, size, surfacesHolder.textureView.getWidth(), surfacesHolder.textureView.getHeight());
         });
 
-        myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+        myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
     }
 
     private void releaseCamera() {
@@ -129,6 +104,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
 
     public void onPause(Activity activity) {
         resumed = false;
+        //surfacesHolder.onPause();
         cancelRecording();
         myCamera.closeCamera();
         stopBackgroundThread();
@@ -153,16 +129,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
         resumed = true;
 
         startBackgroundThread();
-
-        // When the screen is turned off and turned back on, the SurfaceTexture is already
-        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
-        // the SurfaceTextureListener).
-        if (textureView.isAvailable()) {
-            openCamera(textureView.getWidth(), textureView.getHeight());
-        } else {
-            textureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
+        surfacesHolder.onResume();
     }
 
     @Override
@@ -217,7 +184,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
-            myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+            myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
             videoFile = null;
         };
@@ -228,24 +195,21 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
 
     @Override
     public boolean startRecording(Activity activity, float averageFps) {
-        if (!textureView.isAvailable() || null == myCamera.getVideoSize() || mBackgroundThread == null || !mBackgroundThread.isAlive()) {
+        if (!surfacesHolder.textureView.isAvailable() || null == myCamera.getVideoSize() || mBackgroundThread == null || !mBackgroundThread.isAlive()) {
             return false;
         }
-        mBackgroundHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    prepareMediaRecorder();
-                    SurfaceTexture texture = textureView.getSurfaceTexture();
-                    myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
-                    foregroundHandler.post(() -> {
-                        mRoot.setKeepScreenOn(true);
-                        screenOrientationLock.lockScreenOrientation(activity);
-                    });
+        mBackgroundHandler.post(() -> {
+            try {
+                prepareMediaRecorder();
+                SurfaceTexture texture = surfacesHolder.textureView.getSurfaceTexture();
+                myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
+                foregroundHandler.post(() -> {
+                    mRoot.setKeepScreenOn(true);
+                    screenOrientationLock.lockScreenOrientation(activity);
+                });
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
         return true;
@@ -255,11 +219,12 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     public void setCameraResolution(Size size) {
         if (size == null || !size.equalsIgnoringRotation(selectedSize)) {
             selectedSize = size;
-            if (mSurfaceSize != null) {
-                textureView.configurePreviewSize(size);
-                textureView.configureTransform(activity, size, textureView.getWidth(), textureView.getHeight());
-                myCamera.setResolution(mSurfaceSize, selectedSize, mRoot.getContext());
-                myCamera.startPreview(textureView.getSurfaceTexture(), mBackgroundHandler);
+            if (surfacesHolder.getPreviewSurfaceSize() != null) {
+                surfacesHolder.textureView.configurePreviewSize(size);
+                surfacesHolder.textureView.configureTransform(activity, size, surfacesHolder.textureView.getWidth(), surfacesHolder.textureView.getHeight());
+                myCamera.setResolution(surfacesHolder.getPreviewSurfaceSize(), selectedSize, mRoot.getContext());
+                surfacesHolder.setPreviewSize(myCamera.getPreviewSize());
+                myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
             }
         }
     }
@@ -297,5 +262,15 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     @Override
     public void onRecordingStart(float fps, Size detectorSize) {
         mMediaRecorder.start();
+    }
+
+    @Override
+    public void onSurfaceDestroyed() {
+        myCamera.closeCamera();
+    }
+
+    @Override
+    public void onReady() {
+        openCamera();
     }
 }

@@ -107,8 +107,7 @@
 #include <cstdlib>
 #include <cstring>
 //#include <iostream>
-
-
+#include "opencv2/core/ocl.hpp"
 
 
 class SwypeDetect {
@@ -118,13 +117,13 @@ public:
     ~SwypeDetect();
 
     void init(int fps_e, std::string swype);
-
     void setSwype(std::string swype);
-    void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y);
+
+    void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y, int &debug);
 
     void
     processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index,
-                 int &x, int &y);
+                 int &x, int &y, int &debug);
     void Reset(void);
 
 private:
@@ -134,7 +133,7 @@ private:
     int fps;
 
     //Internal data
-    cv::Mat frame1; //previous frame
+    cv::UMat frame1; //previous frame
     std::vector<cv::Point2d> Delta; //динамический массив перемещений камеры
 
     int S; //Текущий этап распознования
@@ -148,21 +147,19 @@ private:
     int Direction;
     bool fl_dir;
 
-    time_t seconds_1;
-    time_t seconds_2;
-
     std::vector<cv::Point2d> koord_Sw_points;
-    cv::Mat buf1ft;
-    cv::Mat buf2ft;
-    cv::Mat hann;
+    cv::UMat buf1ft;
+    cv::UMat buf2ft;
+    cv::UMat hann;
 
-    std::vector<double> x_corr(void);
     int CircleDetection(void);
     std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
     void Delta_Calculation(cv::Point2d output);
 
     void Swype_Data(std::vector<cv::Point2d> &koord);
     cv::Point2d Frame_processor(cv::Mat &frame_i);
+
+    cv::Point2d Frame_processor1(cv::Mat &frame_i);
     void S1_processor(void);
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 };

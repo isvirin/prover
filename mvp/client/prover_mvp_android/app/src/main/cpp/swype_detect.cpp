@@ -2,10 +2,9 @@
 
 using namespace cv;
 using namespace std;
-//using namespace cv::xfeatures2d;
 
 
-int SwypeDetect::CircleDetection(void)// circle detection algorithm
+int SwypeDetect::CircleDetection(void)
 {
     vector<double> S_L(2);
     double S = 0;
@@ -28,8 +27,7 @@ int SwypeDetect::CircleDetection(void)// circle detection algorithm
 }
 
 
-vector<Point2d>
-SwypeDetect::Koord_Swipe_Points(int width, int height) // coordinates of the swype points
+vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
 {
     vector<Point2d> Result(10);
 
@@ -66,7 +64,7 @@ SwypeDetect::Koord_Swipe_Points(int width, int height) // coordinates of the swy
     return Result;
 }
 
-void SwypeDetect::Delta_Calculation(Point2d output)// offsets calculation for frames
+void SwypeDetect::Delta_Calculation(Point2d output)
 {
     double Mean_Alfa;
     double K;
@@ -88,8 +86,8 @@ void SwypeDetect::Delta_Calculation(Point2d output)// offsets calculation for fr
             D_coord.y = 0;
 
         } else {
-            D_coord.x = D_coord.x - output.y;
-            D_coord.y = D_coord.y - output.x;
+            D_coord.x = D_coord.x + output.y;
+            D_coord.y = D_coord.y + output.x;
 
         }
         Delta.push_back(D_coord);
@@ -126,7 +124,6 @@ void SwypeDetect::Delta_Calculation(Point2d output)// offsets calculation for fr
         if ((Mean_Alfa >= 202.5) && (Mean_Alfa < 247.5)) Direction = 2;
         if ((Mean_Alfa >= 247.5) && (Mean_Alfa < 292.5)) Direction = 3;
         if ((Mean_Alfa >= 292.5) && (Mean_Alfa < 337.5)) Direction = 4;
-        //cout << Direction << endl;
         call++;
     }
 }
@@ -357,6 +354,8 @@ void SwypeDetect::Swype_Data(vector<Point2d> &koord) {
 }
 
 SwypeDetect::SwypeDetect() {
+    ocl::setUseOpenCL(true);
+
     call = 0;
     count_num = -1;
     S = 0;
@@ -367,16 +366,13 @@ SwypeDetect::SwypeDetect() {
     D_coord.y = 0;
     Direction = 0;
 
-    seconds_1 = 0;
-    seconds_2 = 0;
-
     Delta.clear();
 
     koord_Sw_points.reserve(10);
 }
 
 SwypeDetect::~SwypeDetect() {
-
+    ocl::setUseOpenCL(false);
 }
 
 void SwypeDetect::init(int fps_e, string swype = "") {
@@ -396,75 +392,20 @@ void SwypeDetect::setSwype(string swype) {
     }
 }
 
-void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y) {
+void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y, int &debug) {
 
     Point2d shift;
 
-    shift = Frame_processor(frame);
-
-    Delta_Calculation(shift);
-
-    if (S == 0) {
-        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection();
-        state = S;
-        //seconds_1 = time(NULL);
-    } else if (S == 1) {
-        S1_processor();
-        //seconds_2 = time(NULL);
-        //if ((seconds_2 - seconds_1) > 4) Reset();
-    } else if (S == 2) {
-
-        if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
-            DirectionS.push_back(Direction);
-            fl_dir = false;
-            if (DirectionS.size() >= 3) {
-                if ((DirectionS[DirectionS.size() - 1] == DirectionS[DirectionS.size() - 2]) &&
-                    (DirectionS[DirectionS.size() - 2] == DirectionS[DirectionS.size() - 2])) {
-                    count_num++;
-                    Swype_Data(koord_Sw_points);
-                    if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
-                    else {
-                        if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
-                            index = count_num;
-                            x = static_cast<int>(floor((Swype_Koord[count_num].x)));
-                            y = static_cast<int>(floor((Swype_Koord[count_num].y)));
-                            if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
-                                S = 3;
-                                call = 0;
-                            }
-                        } else Reset();
-                    }
-                }
-            }
-
-        }
-    }
-    state = S;
-}
-
-
-void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state,
-                               int &index, int &x, int &y)
-{
-    Point2d shift;
-
-    //NW21 convert
-
-    Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
-    cvtColor(frame, frame, CV_YUV2RGBA_NV21);
-
-    shift = Frame_processor(frame);
+    shift = Frame_processor1(frame);
 
     Delta_Calculation(shift); //Вычисляем перемещение
 
     if (S == 0) {
         if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3))
             S = CircleDetection(); //Определяем круговое движение
-        //seconds_1 = time(NULL);
+        state = S;
     } else if (S == 1) {
         S1_processor();
-        //seconds_2 = time(NULL);
-        //if ((seconds_2 - seconds_1) > 4) Reset();
     } else if (S == 2) {
 
         if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) &&
@@ -494,6 +435,61 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
         }
     }
+    state = S;
+}
+
+
+void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state,
+                               int &index, int &x, int &y, int &debug)
+{
+    Point2d shift;
+
+    //NW21 convert
+
+    Mat frame(height_i, width_i, CV_8UC1, (uchar *) frame_i);
+
+    //cvtColor(frame, frame, CV_YUV2RGBA_NV21);
+
+    shift = Frame_processor(frame);
+
+    Delta_Calculation(shift); //Вычисляем перемещение
+
+    if (S == 0) {
+        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3))
+            S = CircleDetection(); //Определяем круговое движение
+    } else if (S == 1) {
+        S1_processor();
+    } else if (S == 2) {
+
+        if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) &&
+            fl_dir) { //Если приращение по какой-либо из координат больше 3, то это уже направление и его сохраняем в массив
+            DirectionS.push_back(Direction);
+            fl_dir = false;
+            if (DirectionS.size() >= 3) {
+                if ((DirectionS[DirectionS.size() - 1] == DirectionS[DirectionS.size() - 2]) &&
+                    (DirectionS[DirectionS.size() - 2] == DirectionS[DirectionS.size() -
+                                                                     2])) { //если направление сохраняется, то засчитываем определение цифры свайпкода (верное или не верное)
+                    count_num++;
+                    Swype_Data(koord_Sw_points);
+                    if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
+                    else {
+                        if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
+                            index = count_num;
+                            x = static_cast<int>(floor((Swype_Koord[count_num].x)));
+                            y = static_cast<int>(floor((Swype_Koord[count_num].y)));
+                            if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
+                                S = 3;
+                                call = 0;
+                            }
+                        } else Reset();
+                    }
+                }
+            }
+
+        }
+    }
+    x = static_cast<int>(floor(D_coord.x));
+    y = static_cast<int>(floor(D_coord.y));
     state = S;
 }
 
@@ -528,9 +524,6 @@ void SwypeDetect::Reset(void) {
 
     Direction = 0;
 
-    seconds_1 = 0;
-    seconds_2 = 0;
-
     frame1.release();
     buf1ft.release();
     buf2ft.release();
@@ -560,7 +553,41 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b) {
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     Point2d shift;
 
-    cvtColor(frame_i, frame1, CV_RGB2GRAY);// Перевод в градации серого
+    UMat b_frame;
+
+    frame_i.convertTo(b_frame, frame_i.depth());
+
+    //cvtColor(b_frame, frame1, CV_RGB2GRAY);// Перевод в градации серого
+    b_frame.copyTo(frame1);
+
+
+    if (buf1ft.empty()) {
+        frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
+        buf1ft = buf2ft.clone();
+        koord_Sw_points = Koord_Swipe_Points(frame1.cols,
+                                             frame1.rows); //Получаем координаты swipe-точек
+    } else {
+        buf1ft = buf2ft.clone();
+        frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
+    }
+    if (hann.empty()) {
+        createHanningWindow(hann, buf1ft.size(),
+                            CV_64F); //Если окно Ханна не было создано - создаем
+    }
+    shift = phaseCorrelate(buf1ft, buf2ft, hann); //Получаем вектор смещения фазы
+
+    return shift;
+}
+
+Point2d SwypeDetect::Frame_processor1(cv::Mat &frame_i) {
+    Point2d shift;
+
+    UMat b_frame;
+
+    frame_i.convertTo(b_frame, frame_i.depth());
+
+    cvtColor(b_frame, frame1, CV_RGB2GRAY);// Перевод в градации серого
+    //b_frame.copyTo(frame1);
 
 
     if (buf1ft.empty()) {

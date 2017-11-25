@@ -107,14 +107,15 @@ public class Camera2PrefsHelper {
 
     public int selectFormat(StreamConfigurationMap map) {
         int[] outFormats = map.getOutputFormats();
+        if (Arrays.contains(outFormats, ImageFormat.YUV_420_888)) {
+            return ImageFormat.YUV_420_888;
+        }
         if (Arrays.contains(outFormats, ImageFormat.NV21))
             return ImageFormat.NV21;
 /*        if (Arrays.contains(outFormats, ImageFormat.YV12)){
             return ImageFormat.YV12;
         }*/
-        if (Arrays.contains(outFormats, ImageFormat.YUV_420_888)) {
-            return ImageFormat.YUV_420_888;
-        }
+
         return ImageFormat.YUV_420_888;
     }
 }

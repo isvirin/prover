@@ -21,6 +21,12 @@
 
     </FrameLayout>
 
+    <io.prover.provermvp.camera2.AutoFitTextureView
+        android:id="@+id/supportTextureView"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottomControlsLayout"
         android:layout_width="match_parent"
@@ -107,7 +113,9 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <include layout="@layout/swype" />
+    <include
+        layout="@layout/swype"
+        android:visibility="gone" />
 
 
 </android.support.constraint.ConstraintLayout>

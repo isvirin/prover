@@ -24,6 +24,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     }
 
     private final int[] detectionResult = new int[5];
+    private final long[] detectionResult2 = new long[5];
     private final CameraController cameraController;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 3);
     DetectionState detectionState;
@@ -77,6 +78,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
         int width = image.getWidth();
         int height = image.getHeight();
         int format = image.getFormat();
+        boolean isD2 = false;
 
         if (nativeHandler != 0) {
             long time = System.currentTimeMillis();
@@ -85,18 +87,39 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             if (format == ImageFormat.YV12) {
                 detectFrameNV21Buf(nativeHandler, planes[0].getBuffer(), width, height, detectionResult);
             } else if (format == ImageFormat.YUV_420_888) {
-                detectFrameYUV420_888Buf(nativeHandler, planes[0].getBuffer(), planes[1].getBuffer(), planes[2].getBuffer(), width, height, detectionResult);
+                isD2 = true;
+                long d = detectFrameYUV420_888Buf2(nativeHandler, planes[0].getBuffer(), planes[1].getBuffer(), planes[2].getBuffer(), width, height, detectionResult2);
+                //long d = detectFrameY_8Buf(nativeHandler, planes[0].getBuffer(), width, height, detectionResult2);
             }
 
             Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
         }
-        detectionDone();
+        if (isD2)
+            detectionDone2();
+        else
+            detectionDone();
     }
 
     private void detectionDone() {
         if (detectionState == null || !detectionState.isEqualsArray(detectionResult)) {
             final DetectionState oldState = detectionState;
             final DetectionState newState = new DetectionState(detectionResult);
+            detectionState = newState;
+            cameraController.notifyDetectionStateChanged(oldState, newState);
+            if (oldState != null && oldState.state == 2 && newState.state == 0) {
+                setSwype(swypeCode);
+            }
+        }
+        float fps = fpsCounter.addFrame();
+        if (fps >= 0) {
+            cameraController.onDetectorFpsUpdate(fps);
+        }
+    }
+
+    private void detectionDone2() {
+        if (detectionState == null || !detectionState.isEqualsArray(detectionResult2)) {
+            final DetectionState oldState = detectionState;
+            final DetectionState newState = new DetectionState(detectionResult2);
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
             if (oldState != null && oldState.state == 2 && newState.state == 0) {
@@ -137,7 +160,11 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
      */
     private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int[] result);
 
-    private native void detectFrameYUV420_888Buf(long nativeHandler, ByteBuffer planeY, ByteBuffer planeU, ByteBuffer planeV, int width, int height, int[] result);
+    private native int detectFrameYUV420_888Buf(long nativeHandler, ByteBuffer planeY, ByteBuffer planeU, ByteBuffer planeV, int width, int height, int[] result);
+
+    private native long detectFrameYUV420_888Buf2(long nativeHandler, ByteBuffer planeY, ByteBuffer planeU, ByteBuffer planeV, int width, int height, long[] result);
+
+    private native long detectFrameY_8Buf(long nativeHandler, ByteBuffer planeY, int width, int height, long[] result);
 
     private native void detectFrameNV21Buf(long nativeHandler, ByteBuffer data, int width, int height, int[] result);
 

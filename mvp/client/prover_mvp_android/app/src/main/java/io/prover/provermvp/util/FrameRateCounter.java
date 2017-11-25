@@ -24,7 +24,7 @@ public class FrameRateCounter {
         if (pos == frameTimes.length)
             pos = 0;
 
-        if (System.currentTimeMillis() - lastReportTime >= 1000) {
+        if (System.currentTimeMillis() - lastReportTime >= 500) {
             float fps = getFps();
             //Log.d(TAG, String.format("FPS: %.0f", fps));
             lastReportTime = System.currentTimeMillis();

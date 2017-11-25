@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ViewGroup contentRoot = findViewById(R.id.contentRoot);
 
         if (Settings.USE_CAMERA_2)
-            cameraHolder = new CameraViewHolder2(cameraContainer, this, cameraController);
+            cameraHolder = new CameraViewHolder2(contentRoot, this, cameraController);
         else
             cameraHolder = new CameraViewHolder(this, cameraContainer, cameraController);
 

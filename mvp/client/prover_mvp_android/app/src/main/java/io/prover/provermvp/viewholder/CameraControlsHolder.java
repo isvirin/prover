@@ -107,7 +107,7 @@ public class CameraControlsHolder implements View.OnClickListener,
                                     cameraHolder.startRecording(activity, fpsCounter.getAvgFps());
                                     updateControls(false, true);
                                 }
-                            }, 100));
+                            }, 500));
                 }
             }
         }
