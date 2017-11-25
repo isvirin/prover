@@ -146,7 +146,7 @@ private:
     std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
     std::vector<cv::Point2d> Swype_Koord; //the coordinates of the entered swype code
     std::vector<int> DirectionS; //directions array
-
+    std::vector<int> Dir_count;
     cv::Point2d D_coord;
     int Direction;
     bool fl_dir;
@@ -159,7 +159,7 @@ private:
     int CircleDetection(void);
     std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
     void Delta_Calculation(cv::Point2d output);
-    void Swype_Data(std::vector<cv::Point2d>& koord);
+    void Swype_Data(int Dir);
     cv::Point2d Frame_processor(cv::Mat &frame_i);
     cv::Point2d Frame_processor1(cv::Mat &frame_i);
     void S1_processor(void);

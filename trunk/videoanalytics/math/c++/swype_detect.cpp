@@ -126,226 +126,226 @@ void SwypeDetect::Delta_Calculation(Point2d output)
 }
 
 
-void SwypeDetect::Swype_Data(vector<Point2d>& koord) // logic for entering swype numbers
+void SwypeDetect::Swype_Data(int Dir) // logic for entering swype numbers
 {
 
 
-    switch (DirectionS[DirectionS.size() - 1]) {
+    switch (Dir + 1) {
 
         case 1:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 1:
                     Swype_Numbers_Get.push_back(4);
-                    Swype_Koord.push_back(koord[4]);
+                    Swype_Koord.push_back(koord_Sw_points[4]);
                     break;
                 case 2:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 3:
                     Swype_Numbers_Get.push_back(6);
-                    Swype_Koord.push_back(koord[6]);
+                    Swype_Koord.push_back(koord_Sw_points[6]);
                     break;
                 case 4:
                     Swype_Numbers_Get.push_back(7);
-                    Swype_Koord.push_back(koord[7]);
+                    Swype_Koord.push_back(koord_Sw_points[7]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(8);
-                    Swype_Koord.push_back(koord[8]);
+                    Swype_Koord.push_back(koord_Sw_points[8]);
                     break;
                 case 6:
                     Swype_Numbers_Get.push_back(9);
-                    Swype_Koord.push_back(koord[9]);
+                    Swype_Koord.push_back(koord_Sw_points[9]);
                     break;
                 default:
                     Swype_Numbers_Get[count_num] = 0;
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 2:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 1:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 2:
                     Swype_Numbers_Get.push_back(6);
-                    Swype_Koord.push_back(koord[6]);
+                    Swype_Koord.push_back(koord_Sw_points[6]);
                     break;
                 case 4:
                     Swype_Numbers_Get.push_back(8);
-                    Swype_Koord.push_back(koord[8]);
+                    Swype_Koord.push_back(koord_Sw_points[8]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(9);
-                    Swype_Koord.push_back(koord[9]);
+                    Swype_Koord.push_back(koord_Sw_points[9]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 3:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 1:
                     Swype_Numbers_Get.push_back(2);
-                    Swype_Koord.push_back(koord[2]);
+                    Swype_Koord.push_back(koord_Sw_points[2]);
                     break;
                 case 2:
                     Swype_Numbers_Get.push_back(3);
-                    Swype_Koord.push_back(koord[3]);
+                    Swype_Koord.push_back(koord_Sw_points[3]);
                     break;
                 case 4:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(6);
-                    Swype_Koord.push_back(koord[6]);
+                    Swype_Koord.push_back(koord_Sw_points[6]);
                     break;
                 case 7:
                     Swype_Numbers_Get.push_back(8);
-                    Swype_Koord.push_back(koord[8]);
+                    Swype_Koord.push_back(koord_Sw_points[8]);
                     break;
                 case 8:
                     Swype_Numbers_Get.push_back(9);
-                    Swype_Koord.push_back(koord[9]);
+                    Swype_Koord.push_back(koord_Sw_points[9]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 4:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 4:
                     Swype_Numbers_Get.push_back(2);
-                    Swype_Koord.push_back(koord[2]);
+                    Swype_Koord.push_back(koord_Sw_points[2]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(3);
-                    Swype_Koord.push_back(koord[3]);
+                    Swype_Koord.push_back(koord_Sw_points[3]);
                     break;
                 case 7:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 8:
                     Swype_Numbers_Get.push_back(6);
-                    Swype_Koord.push_back(koord[6]);
+                    Swype_Koord.push_back(koord_Sw_points[6]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 5:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 4:
                     Swype_Numbers_Get.push_back(1);
-                    Swype_Koord.push_back(koord[1]);
+                    Swype_Koord.push_back(koord_Sw_points[1]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(2);
-                    Swype_Koord.push_back(koord[2]);
+                    Swype_Koord.push_back(koord_Sw_points[2]);
                     break;
                 case 6:
                     Swype_Numbers_Get.push_back(3);
-                    Swype_Koord.push_back(koord[3]);
+                    Swype_Koord.push_back(koord_Sw_points[3]);
                     break;
                 case 7:
                     Swype_Numbers_Get.push_back(4);
-                    Swype_Koord.push_back(koord[4]);
+                    Swype_Koord.push_back(koord_Sw_points[4]);
                     break;
                 case 8:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 9:
                     Swype_Numbers_Get.push_back(6);
-                    Swype_Koord.push_back(koord[6]);
+                    Swype_Koord.push_back(koord_Sw_points[6]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 6:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 5:
                     Swype_Numbers_Get.push_back(1);
-                    Swype_Koord.push_back(koord[1]);
+                    Swype_Koord.push_back(koord_Sw_points[1]);
                     break;
                 case 6:
                     Swype_Numbers_Get.push_back(2);
-                    Swype_Koord.push_back(koord[2]);
+                    Swype_Koord.push_back(koord_Sw_points[2]);
                     break;
                 case 8:
                     Swype_Numbers_Get.push_back(4);
-                    Swype_Koord.push_back(koord[4]);
+                    Swype_Koord.push_back(koord_Sw_points[4]);
                     break;
                 case 9:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 7:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 2:
                     Swype_Numbers_Get.push_back(1);
-                    Swype_Koord.push_back(koord[1]);
+                    Swype_Koord.push_back(koord_Sw_points[1]);
                     break;
                 case 3:
                     Swype_Numbers_Get.push_back(2);
-                    Swype_Koord.push_back(koord[2]);
+                    Swype_Koord.push_back(koord_Sw_points[2]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(4);
-                    Swype_Koord.push_back(koord[4]);
+                    Swype_Koord.push_back(koord_Sw_points[4]);
                     break;
                 case 6:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 8:
                     Swype_Numbers_Get.push_back(7);
-                    Swype_Koord.push_back(koord[7]);
+                    Swype_Koord.push_back(koord_Sw_points[7]);
                     break;
                 case 9:
                     Swype_Numbers_Get.push_back(8);
-                    Swype_Koord.push_back(koord[8]);
+                    Swype_Koord.push_back(koord_Sw_points[8]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
         case 8:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 2:
                     Swype_Numbers_Get.push_back(4);
-                    Swype_Koord.push_back(koord[4]);
+                    Swype_Koord.push_back(koord_Sw_points[4]);
                     break;
                 case 3:
                     Swype_Numbers_Get.push_back(5);
-                    Swype_Koord.push_back(koord[5]);
+                    Swype_Koord.push_back(koord_Sw_points[5]);
                     break;
                 case 5:
                     Swype_Numbers_Get.push_back(7);
-                    Swype_Koord.push_back(koord[7]);
+                    Swype_Koord.push_back(koord_Sw_points[7]);
                     break;
                 case 6:
                     Swype_Numbers_Get.push_back(8);
-                    Swype_Koord.push_back(koord[8]);
+                    Swype_Koord.push_back(koord_Sw_points[8]);
                     break;
                 default:
                     Swype_Numbers_Get.push_back(0);
-                    Swype_Koord.push_back(koord[0]);
+                    Swype_Koord.push_back(koord_Sw_points[0]);
             }
             break;
     }
@@ -368,6 +368,7 @@ SwypeDetect::SwypeDetect() // initialization
     Delta.clear();
 
     koord_Sw_points.reserve(10);
+    Dir_count.reserve(8);
 }
 
 SwypeDetect::~SwypeDetect()
@@ -396,8 +397,9 @@ void SwypeDetect::setSwype(string swype)
 
 void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y, int &debug) // main logic
 {
-	//NW21 convert
-    Point2d shift;
+	Point2d shift;
+    int Dir_m = -1;
+    int Max_d = 0;
 
     shift = Frame_processor1(frame);
 
@@ -415,24 +417,33 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
         if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
             DirectionS.push_back(Direction);
             fl_dir = false;
-            if (DirectionS.size()>=3) {
-                if ((DirectionS[DirectionS.size()-1] == DirectionS[DirectionS.size() - 2]) && (DirectionS[DirectionS.size() - 2] == DirectionS[DirectionS.size() - 2])) { //если направление сохраняется, то засчитываем определение цифры свайпкода (верное или не верное)
-                    count_num++;
-                    Swype_Data(koord_Sw_points);
-                    if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
-                    else {
-                        if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
-                            index = count_num;
-                            x = static_cast<int>(floor((Swype_Koord[count_num].x)));
-                            y = static_cast<int>(floor((Swype_Koord[count_num].y)));
-                            if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
-                                S = 3;
-                                call = 0;
-                            }
-                        }
-                        else Reset();
+            if (DirectionS.size() >= 20) {
+                for(int i = 0; i < DirectionS.size(); i++){
+                    Dir_count[DirectionS[i]]++;
+                }
+                for(int j = 0; j <8; j++){
+                    if(Dir_count[j]>= Max_d){
+                        Max_d = Dir_count[j];
+                        Dir_m = j;
                     }
                 }
+                Swype_Data(Dir_m);
+                if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] != 0){
+                    count_num++;
+                    if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] == swype_Numbers[count_num]){
+                        index = count_num;
+                        //x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+                        //y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+                        if(Swype_Numbers_Get.size() == swype_Numbers.size()){
+                            S = 3;
+                        }
+                        else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
+                    }
+                    else Reset();
+                }
+                else Reset();
+                DirectionS.clear();
+                DirectionS.resize(0);
             }
 
         }
@@ -444,6 +455,8 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
 {
     Point2d shift;
+    int Dir_m = -1;
+    int Max_d = 0;
 
     //NW21 convert
 
@@ -466,30 +479,41 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
         if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
             DirectionS.push_back(Direction);
             fl_dir = false;
-            if (DirectionS.size() >= 3) {
-                if ((DirectionS[DirectionS.size() - 1] == DirectionS[DirectionS.size() - 2]) && (DirectionS[DirectionS.size() - 2] == DirectionS[DirectionS.size() - 2])) { //если направление сохраняется, то засчитываем определение цифры свайпкода (верное или не верное)
-                    count_num++;
-                    Swype_Data(koord_Sw_points);
-                    if ((Swype_Koord[count_num].x == 0) || (Swype_Koord[count_num].y == 0)) Reset();
-                    else {
-                        if (Swype_Numbers_Get[count_num] == swype_Numbers[count_num]) {
-                            index = count_num;
-                            x = static_cast<int>(floor((Swype_Koord[count_num].x)));
-                            y = static_cast<int>(floor((Swype_Koord[count_num].y)));
-                            if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
-                                S = 3;
-                                call = 0;
-                            }
-                        }
-                        else Reset();
+            if (DirectionS.size() >= 20) {
+                for(int i = 0; i < DirectionS.size(); i++){
+                    Dir_count[DirectionS[i]]++;
+                }
+                for(int j = 0; j <8; j++){
+                    if(Dir_count[j]>= Max_d){
+                        Max_d = Dir_count[j];
+                        Dir_m = j;
                     }
                 }
+                Swype_Data(Dir_m);
+                if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] != 0){
+                    count_num++;
+                    if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] == swype_Numbers[count_num]){
+                        index = count_num;
+                        //x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+                        //y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+                        if(Swype_Numbers_Get.size() == swype_Numbers.size()){
+                            S = 3;
+                        }
+                        else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
+                    }
+                    else Reset();
+                }
+                else Reset();
+                DirectionS.clear();
+                DirectionS.resize(0);
             }
 
         }
     }
     //x = static_cast<int>(floor(D_coord.x));
     //y = static_cast<int>(floor(D_coord.y));
+    x = Swype_Numbers_Get.size();
+    y = swype_Numbers.size();
     debug = Direction;
     state = S;
 }
