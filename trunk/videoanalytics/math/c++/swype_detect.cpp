@@ -125,8 +125,8 @@ void SwypeDetect::Delta_Calculation(Point2d output)
 	}
 }
 
-
-void SwypeDetect::Swype_Data(vector<Point2d>& koord)
+ 
+void SwypeDetect::Swype_Data(vector<Point2d>& koord) // logic for entering swype numbers
 {
 
 	
@@ -351,7 +351,7 @@ void SwypeDetect::Swype_Data(vector<Point2d>& koord)
 	}
 }
 
-SwypeDetect::SwypeDetect()
+SwypeDetect::SwypeDetect() // initialization
 {
 	ocl::setUseOpenCL(true);
 	
@@ -394,17 +394,17 @@ void SwypeDetect::setSwype(string swype)
 	}
 }
 
-void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y, int &debug)
+void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y, int &debug) // main logic
 {
-
+	//NW21 convert
 	Point2d shift;
 	
 	shift = Frame_processor(frame);
 	
-	Delta_Calculation(shift); //Вычисляем перемещение
+	Delta_Calculation(shift);  
 
 	if (S == 0) {
-		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); //Определяем круговое движение
+		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); 
 		state = S;
 	}
 	else if (S == 1) {
@@ -412,7 +412,7 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 	}
 	else if (S == 2) {
 		
-		if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) { //Если приращение по какой-либо из координат больше 3, то это уже направление и его сохраняем в массив
+		if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
 			DirectionS.push_back(Direction);
 			fl_dir = false;
 			if (DirectionS.size()>=3) {
@@ -453,10 +453,10 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
 	shift = Frame_processor(frame);
 	
-	Delta_Calculation(shift); //Вычисляем перемещение
+	Delta_Calculation(shift);
 
 	if (S == 0) {
-		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); //Определяем круговое движение
+		if ((fabs(D_coord.x) > 3) || (fabs(D_coord.x) > 3)) S = CircleDetection(); 
 		//seconds_1 = time(NULL);
 	}
 	else if (S == 1) {
@@ -466,7 +466,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 	}
 	else if (S == 2) {
 
-		if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) { //Если приращение по какой-либо из координат больше 3, то это уже направление и его сохраняем в массив
+		if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
 			DirectionS.push_back(Direction);
 			fl_dir = false;
 			if (DirectionS.size() >= 3) {
@@ -498,7 +498,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
 
 
-void SwypeDetect::Reset(void)
+void SwypeDetect::Reset(void) // reset
 {
 	call = 0;
 	count_num = -1;
@@ -563,22 +563,22 @@ Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i)
 
 	frame_i.convertTo(b_frame, frame_i.depth());
 	
-	cvtColor(b_frame, frame1, CV_RGB2GRAY);// Перевод в градации серого
+	cvtColor(b_frame, frame1, CV_RGB2GRAY);
 	
 	
 	if (buf1ft.empty()) {
-		frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
+		frame1.convertTo(buf2ft, CV_64F);//converting frames to CV_64F type
 		buf1ft = buf2ft.clone();
-		koord_Sw_points = Koord_Swipe_Points(frame1.cols, frame1.rows); //Получаем координаты swipe-точек
+		koord_Sw_points = Koord_Swipe_Points(frame1.cols, frame1.rows); // we get the coordinates of the swipe points
 	}
 	else {
 		buf1ft = buf2ft.clone();
-		frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
+		frame1.convertTo(buf2ft, CV_64F);//converting frames to CV_64F type
 	}
 	if (hann.empty()) {
-		createHanningWindow(hann, buf1ft.size(), CV_64F); //Если окно Ханна не было создано - создаем
+		createHanningWindow(hann, buf1ft.size(), CV_64F);  //  create Hanning window
 	}
-	shift = phaseCorrelate(buf1ft, buf2ft, hann); //Получаем вектор смещения фазы
+	shift = phaseCorrelate(buf1ft, buf2ft, hann);// we calculate a phase offset vector
 										  
 	return shift;
 }
@@ -599,6 +599,6 @@ void SwypeDetect::S1_processor(void)
 		count_num++;
 		Swype_Numbers_Get.push_back(swype_Numbers[0]);
 		Swype_Koord.push_back(koord_Sw_points[swype_Numbers[0]]);
-		S = 2; //Если получили свайпкод, то переходим к детектированию
+		S = 2; // if we have swype then we go to detection swype from video
 	}
 }
