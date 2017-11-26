@@ -73,8 +73,8 @@ void SwypeDetect::Delta_Calculation(Point2d output)
 
     double rez_vec_2_x;
     double rez_vec_2_y;
-    double rez_vec_1_x;
-    double rez_vec_1_y;
+    double rez_vec_1_x = 0;
+    double rez_vec_1_y = 0;
     double pi = 3.1415926535897932384626433832795;
 
     double radius = cv::sqrt(output.x*output.x + output.y*output.y);
@@ -128,11 +128,8 @@ void SwypeDetect::Delta_Calculation(Point2d output)
 
 void SwypeDetect::Swype_Data(int Dir) // logic for entering swype numbers
 {
-
-
-    switch (Dir + 1) {
-
-        case 1:
+	switch (Dir + 1) {
+		case 1:
             switch (Swype_Numbers_Get[count_num - 1]) {
                 case 1:
                     Swype_Numbers_Get.push_back(4);
@@ -386,6 +383,8 @@ void SwypeDetect::setSwype(string swype)
 {
     char t;
     int j;
+	swype_Numbers.clear();
+	swype_Numbers.resize(0);
     if (swype != "") {
         for (int i = 0; i < swype.length(); i++) {
             t = swype.at(i);
@@ -414,41 +413,44 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
     }
     else if (S == 2) {
 
-        if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
-            DirectionS.push_back(Direction);
-            fl_dir = false;
-            if (DirectionS.size() >= 20) {
-                for(int i = 0; i < DirectionS.size(); i++){
-                    Dir_count[DirectionS[i]]++;
-                }
-                for(int j = 0; j <8; j++){
-                    if(Dir_count[j]>= Max_d){
-                        Max_d = Dir_count[j];
-                        Dir_m = j;
-                    }
-                }
-                Swype_Data(Dir_m);
-                if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] != 0){
-                    count_num++;
-                    if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] == swype_Numbers[count_num]){
-                        index = count_num;
-                        //x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
-                        //y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
-                        if(Swype_Numbers_Get.size() == swype_Numbers.size()){
-                            S = 3;
-                        }
-                        else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
-                    }
-                    else Reset();
-                }
-                else Reset();
-                DirectionS.clear();
-                DirectionS.resize(0);
-            }
+		if (fl_dir) {
+			DirectionS.push_back(Direction);
+			fl_dir = false;
+			if (DirectionS.size() >= 10) {
+				for (int i = 0; i < DirectionS.size(); i++) {
+					Dir_count[DirectionS[i]]++;
+				}
+				for (int j = 0; j <8; j++) {
+					if (Dir_count[j] >= Max_d) {
+						Max_d = Dir_count[j];
+						Dir_m = j;
+					}
+				}
+				Swype_Data(Dir_m);
+				if (Swype_Numbers_Get[Swype_Numbers_Get.size() - 1] != 0) {
+					count_num++;
+					if (Swype_Numbers_Get[Swype_Numbers_Get.size() - 1] == swype_Numbers[count_num]) {
+						index = count_num;
+						x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+						y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+						if (Swype_Numbers_Get.size() == swype_Numbers.size()) {
+							S = 3;
+						}
+						else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
+					}
+					else Reset();
+				}
+				else Reset();
+				DirectionS.clear();
+				DirectionS.resize(0);
+			}
 
-        }
+		}
+
+
     }
-    state = S;
+   	debug = Dir_m;
+	state = S;
 }
 
 
@@ -466,8 +468,8 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
     shift = Frame_processor(frame);
 
-    Delta_Calculation(shift); 
-
+    Delta_Calculation(shift);
+	
     if (S == 0) {
         if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) S = CircleDetection(); 
     }
@@ -476,10 +478,10 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
     }
     else if (S == 2) {
 
-        if (((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) && fl_dir) {
+        if (fl_dir) {
             DirectionS.push_back(Direction);
             fl_dir = false;
-            if (DirectionS.size() >= 20) {
+            if (DirectionS.size() >= 10) {
                 for(int i = 0; i < DirectionS.size(); i++){
                     Dir_count[DirectionS[i]]++;
                 }
@@ -489,13 +491,14 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
                         Dir_m = j;
                     }
                 }
+				Dir_count.clear();
                 Swype_Data(Dir_m);
                 if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] != 0){
                     count_num++;
                     if(Swype_Numbers_Get[Swype_Numbers_Get.size()-1] == swype_Numbers[count_num]){
                         index = count_num;
-                        //x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
-                        //y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+                        x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+                        y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
                         if(Swype_Numbers_Get.size() == swype_Numbers.size()){
                             S = 3;
                         }
