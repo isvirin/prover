@@ -144,12 +144,12 @@ private:
     int call; //Number of the frame processing function calls
     int count_num; //Number of the correctly entered swype-numbers
     std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
-    std::vector<cv::Point2d> Swype_Koord; //the coordinates of the entered swype code
     std::vector<int> DirectionS; //directions array
-    std::vector<int> Dir_count;
+    int Dir_count[8];
     cv::Point2d D_coord;
     int Direction;
     bool fl_dir;
+    int Dir_m;
 
     std::vector<cv::Point2d> koord_Sw_points;
     cv::UMat buf1ft;
