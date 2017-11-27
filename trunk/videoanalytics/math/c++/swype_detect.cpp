@@ -417,8 +417,6 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
     Mat frame(height_i+height_i/2 , width_i, CV_8UC1, (uchar *)frame_i);
 
-    //cvtColor(frame, frame, CV_YUV2RGBA_NV21);
-
     shift = Frame_processor(frame);
 
     Delta_Calculation(shift);
@@ -462,7 +460,6 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
         }
     }
-    state = S;
     index = count_num + 1;
     debug = Direction;
 
