@@ -46,12 +46,12 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
         HandlerThread handlerThread = new HandlerThread("SwypeDetectorThread_" + counter++);
         handlerThread.start();
         SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), cameraController);
-        handler.sendInit(fps, swype);
+        handler.sendInit(fps, swype, cameraController.getOrientationHint());
         return handler;
     }
 
-    public void sendInit(int fps, String swype) {
-        sendMessage(obtainMessage(MESSAGE_INIT, fps, 0, swype));
+    public void sendInit(int fps, String swype, int orientationHint) {
+        sendMessage(obtainMessage(MESSAGE_INIT, fps, orientationHint, swype));
     }
 
     public void sendSetSwype(String swype) {
@@ -92,7 +92,7 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
         switch (msg.what) {
             case MESSAGE_INIT:
                 if (!quitRequested)
-                    detector.init(msg.arg1, (String) msg.obj);
+                    detector.init(msg.arg1, msg.arg2, (String) msg.obj);
                 return;
 
             case MESSAGE_SET_SWYPE:

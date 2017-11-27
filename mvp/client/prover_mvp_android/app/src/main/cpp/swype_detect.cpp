@@ -462,10 +462,12 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
     index = count_num + 1;
     debug = Direction;
     state = S;
-    if (S == 2) {
+    x = D_coord.x;
+    y = D_coord.y;
+    /*if(S ==2){
         x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
         y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
-    }
+    }*/
 }
 
 

@@ -115,6 +115,7 @@ class SwypeDetect {
 public:
 
     SwypeDetect();
+
     ~SwypeDetect();
 
     void init(int fps_e, std::string swype);
@@ -125,6 +126,7 @@ public:
     void
     processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index,
                  int &x, int &y, int &debug);
+
     void Reset(void);
     // frame - pointer to a buffer with a frame
     // state - state S
@@ -158,13 +160,19 @@ private:
     cv::UMat hann;
 
     int CircleDetection(void);
+
     std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
+
     void Delta_Calculation(cv::Point2d output);
 
     void Swype_Data(int Dir);
+
     cv::Point2d Frame_processor(cv::Mat &frame_i);
+
     cv::Point2d Frame_processor1(cv::Mat &frame_i);
+
     void S1_processor(void);
+
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 };
 

@@ -202,7 +202,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             try {
                 prepareMediaRecorder();
                 SurfaceTexture texture = surfacesHolder.textureView.getSurfaceTexture();
-                myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler);
+                myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler, activity);
                 foregroundHandler.post(() -> {
                     mRoot.setKeepScreenOn(true);
                     screenOrientationLock.lockScreenOrientation(activity);

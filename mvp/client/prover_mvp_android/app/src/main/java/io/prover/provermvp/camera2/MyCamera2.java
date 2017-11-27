@@ -3,7 +3,10 @@ package io.prover.provermvp.camera2;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.graphics.YuvImage;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -14,6 +17,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -21,6 +25,9 @@ import android.util.Log;
 import android.view.Surface;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +49,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
     private final ResolutionSelector resolutionSelector = new ResolutionSelector();
     private final Camera2PrefsHelper camera2PrefsHelper = new Camera2PrefsHelper();
     private final CameraController cameraController;
+    int saveImages = 0;
     private Integer mSensorOrientation;
     private Size mPreviewSize;
     private Size mCaptureFrameSize;
@@ -246,7 +254,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         }
     }
 
-    public void startVideoRecordingSession(SurfaceTexture texture, MediaRecorder mediaRecorder, float fps, Handler backgroundHandler) {
+    public void startVideoRecordingSession(SurfaceTexture texture, MediaRecorder mediaRecorder, float fps, Handler backgroundHandler, Activity activity) {
         if (mVideoSessionWrapper == null)
             return;
         mVideoSessionWrapper.closeVideoSession();
@@ -261,18 +269,41 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             mImageReader.setOnImageAvailableListener(this, backgroundHandler);
         }
         texture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
-        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, mCaptureFrameSize);
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        Integer orientationHint = OrientationHelper.getOrientationHint(mSensorOrientation, rotation);
+        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, mCaptureFrameSize, orientationHint);
         try {
             mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, new Surface(texture), mediaRecorder.getSurface(), mImageReader.getSurface());
         } catch (CameraAccessException e) {
             Log.e(TAG, e.getMessage(), e);
         }
+        saveImages = 1;
     }
 
     @Override
     public void onImageAvailable(ImageReader reader) {
         try {
             Image image = reader.acquireLatestImage();
+
+            if (saveImages > 0) {
+                saveImages--;
+                Image.Plane plane = image.getPlanes()[0];
+                ByteBuffer buffer = plane.getBuffer();
+                byte[] data = new byte[buffer.capacity() * 3 / 2];
+                buffer.get(data, 0, buffer.capacity());
+                int pos = buffer.capacity();
+                //image.getPlanes()[1].getBuffer().get(data, pos, pos / 4);
+                //image.getPlanes()[2].getBuffer().get(data, pos + pos / 4, pos / 4);
+
+                YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21, image.getWidth(), image.getHeight(), null);
+                File file = new File(Environment.getExternalStorageDirectory(), "out.jpg");
+
+                FileOutputStream filecon = new FileOutputStream(file);
+                yuvImage.compressToJpeg(
+                        new Rect(0, 0, image.getWidth(), image.getHeight()), 92,
+                        filecon);
+            }
+
             if (image != null) {
                 cameraController.frameAvailable2.postNotifyEvent(image);
             }
@@ -280,6 +311,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             Log.e(TAG, e.getMessage(), e);
         }
     }
+
 
     public Size getVideoSize() {
         return mVideoSize;

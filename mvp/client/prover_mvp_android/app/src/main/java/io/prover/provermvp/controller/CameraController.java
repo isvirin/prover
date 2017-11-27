@@ -64,6 +64,7 @@ public class CameraController {
     private SwypeStateHelperHolder swypeStateHelperHolder;
 
     private volatile float detectorFps;
+    private int orientationHint;
 
     public CameraController() {
     }
@@ -72,8 +73,9 @@ public class CameraController {
         return recording;
     }
 
-    public void onRecordingStart(float averageFps, Size detectorSize) {
+    public void onRecordingStart(float averageFps, Size detectorSize, int orientationHint) {
         recording = true;
+        this.orientationHint = orientationHint;
         onRecordingStart.postNotifyEvent(averageFps, detectorSize);
     }
 
@@ -105,6 +107,10 @@ public class CameraController {
 
     public float getDetectorFps() {
         return detectorFps;
+    }
+
+    public int getOrientationHint() {
+        return orientationHint;
     }
 
     public interface OnPreviewStartListener {
