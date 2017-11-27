@@ -114,7 +114,7 @@ public class SwypeStateHelperHolder implements
 
     @Override
     public void onRecordingStart(float fps, Size detectorSize) {
-        detectorHandler = SwypeDetectorHandler.newHandler((int) fps * 2, swype, cameraController);
+        detectorHandler = SwypeDetectorHandler.newHandler((int) fps, swype, cameraController);
         setSwypeStatus("not requesting");
     }
 

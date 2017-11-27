@@ -27,7 +27,8 @@ Java_io_prover_provermvp_detector_ProverDetector_initSwype(JNIEnv *env, jobject 
 
 JNIEXPORT void JNICALL
 Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject instance,
-                                                          jlong nativeHandler, jstring swype_) {
+                                                          jlong nativeHandler, jstring swype_,
+                                                          jint fps) {
     std::string swype;
 
     if (swype_ == NULL) {
@@ -41,7 +42,7 @@ Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject i
     LOGI_NATIVE("detection: set swype %s", swype.c_str());
 
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
-    detector->setSwype(swype);
+    detector->init(fps, swype);
 }
 
 JNIEXPORT void JNICALL

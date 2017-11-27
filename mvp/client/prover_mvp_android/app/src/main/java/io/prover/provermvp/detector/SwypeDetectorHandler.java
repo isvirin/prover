@@ -19,7 +19,7 @@ import static io.prover.provermvp.Const.TAG;
  */
 
 public class SwypeDetectorHandler extends Handler implements CameraController.OnSwypeCodeSetListener {
-    private static final int MAX_FRAMES_IN_QUEUE = 1;
+    private static final int MAX_FRAMES_IN_QUEUE = 2;
 
     private static final int MESSAGE_INIT = 1;
     private static final int MESSAGE_SET_SWYPE = 2;

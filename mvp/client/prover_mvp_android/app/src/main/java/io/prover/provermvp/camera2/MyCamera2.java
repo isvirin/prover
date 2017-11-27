@@ -160,7 +160,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
 
     private void selectResolutions(Size surfaceSize, Size selectedSize, StreamConfigurationMap map, Context context) {
         mVideoSize = resolutionSelector.selectResolution(selectedSize, cameraResolutions, surfaceSize, context);
-        mCaptureFrameSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(imageFormat), new Size(300, 300), mVideoSize, 2.0f);
+        mCaptureFrameSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(imageFormat), new Size(200, 200), mVideoSize, 2.0f);
         mPreviewSize = camera2PrefsHelper.chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class), surfaceSize, mVideoSize, 0.1f);
     }
 

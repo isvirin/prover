@@ -84,7 +84,9 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             currentPoint.setTranslationX(newState.x * xMult);
             currentPoint.setTranslationY(newState.y * yMult);
         }
-        int index = tempGetActualIndex(newState);
+        int index = newState.index - 1;
+        if (index >= swypeSequence.length)
+            index = swypeSequence.length - 1;
         if (!pointVisited[index]) {
             applyAnimatedVectorDrawable(swypeSequence[index], R.drawable.swype_path_point_fill);
             detectProgressPos = index;
@@ -94,18 +96,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 swypeArrowHolder.hide();
             }
         }
-    }
-
-    private int tempGetActualIndex(DetectionState state) {
-        if (state.index == 0)
-            return 0;
-        int index = state.index - 1;
-        int pos = detectProgressPos < 0 ? 0 : detectProgressPos;
-        for (int i = pos; i < sequenceIndices.length; i++) {
-            if (sequenceIndices[i] == index)
-                return i;
-        }
-        return 0;
     }
 
     @Override
