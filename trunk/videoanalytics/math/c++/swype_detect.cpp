@@ -433,7 +433,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
         if (fl_dir) {
             DirectionS.push_back(Direction);
             fl_dir = false;
-            if (DirectionS.size() >= 30) {
+            if (DirectionS.size() >= 20) {
                 for(int i = 0; i < DirectionS.size(); i++){
                     Dir_count[DirectionS.at(i)-1]++;
                 }
@@ -455,7 +455,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
                     if(Swype_Numbers_Get.size() == swype_Numbers.size()) S = 3;
                     else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
                 }
-                else Reset();
+                else Reset();*/
                 DirectionS.clear();
                 DirectionS.resize(0);
             }
