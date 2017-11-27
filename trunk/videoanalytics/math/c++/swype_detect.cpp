@@ -402,11 +402,12 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 
         }
     }
-    state = S;
-    index = count_num + 1;
+    index = Swype_Numbers_Get.back();
     debug = Direction;
+    state = S;
 
 }
+
 
 void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
 {
