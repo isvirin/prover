@@ -390,8 +390,6 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
                 if((Swype_Numbers_Get.back() != 0)&&(Swype_Numbers_Get.back() == swype_Numbers[count_num])){
 
                     index = count_num +1;
-                    x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
-                    y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
                     if(Swype_Numbers_Get.size() == swype_Numbers.size()) S = 3;
                     else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
                 }
@@ -402,10 +400,13 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 
         }
     }
-    index = Swype_Numbers_Get.back();
+    index = count_num + 1;
     debug = Direction;
     state = S;
-
+    if(S ==2){
+        x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+        y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+    }
 }
 
 
@@ -449,8 +450,6 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
                 if((Swype_Numbers_Get.back() != 0)&&(Swype_Numbers_Get.back() == swype_Numbers[count_num])){
 
                     index = count_num +1;
-                    x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
-                    y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
                     if(Swype_Numbers_Get.size() == swype_Numbers.size()) S = 3;
                     else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
                 }
@@ -464,7 +463,10 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
     index = count_num + 1;
     debug = Direction;
     state = S;
-
+    if(S ==2){
+        x = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].x));
+        y = static_cast<int>(floor(koord_Sw_points[swype_Numbers[count_num]].y));
+    }
 }
 
 

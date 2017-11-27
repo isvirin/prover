@@ -107,7 +107,6 @@
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
-//#include <iostream>
 #include "opencv2/core/ocl.hpp"
 
 
