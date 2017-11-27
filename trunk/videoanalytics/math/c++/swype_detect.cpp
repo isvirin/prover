@@ -453,7 +453,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
                     if(Swype_Numbers_Get.size() == swype_Numbers.size()) S = 3;
                     else if (Swype_Numbers_Get.size() > swype_Numbers.size()) Reset();
                 }
-                else Reset();*/
+                else Reset();
                 DirectionS.clear();
                 DirectionS.resize(0);
             }
