@@ -462,6 +462,7 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
     }
     index = count_num + 1;
     debug = Direction;
+    state = S;
 
 }
 
