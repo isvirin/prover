@@ -115,7 +115,9 @@ void SwypeDetect::Delta_Calculation(Point2d output)
         if ((rez_vec_2_x > rez_vec_1_x) && (rez_vec_1_y > rez_vec_2_y))
             Mean_Alfa = 360 - fabs(floor((atan((K)) * 180 / pi)));
         //
-        if (((Mean_Alfa >= 337) && (Mean_Alfa <= 360)) || ((Mean_Alfa >= 0) && (Mean_Alfa < 22.5))) Direction = 7;
+        if (((Mean_Alfa >= 337) && (Mean_Alfa <= 360)) ||
+            ((Mean_Alfa >= 0) && (Mean_Alfa < 22.5)))
+            Direction = 7;
         if ((Mean_Alfa >= 22.5) && (Mean_Alfa < 67.5)) Direction = 8;
         if ((Mean_Alfa >= 67.5) && (Mean_Alfa < 112.5)) Direction = 1;
         if ((Mean_Alfa >= 112.5) && (Mean_Alfa < 157.5)) Direction = 2;

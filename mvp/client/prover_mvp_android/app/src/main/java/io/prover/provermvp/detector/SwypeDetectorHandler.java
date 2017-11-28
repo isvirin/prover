@@ -133,7 +133,7 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
     }
 
     @Override
-    public void onSwypeCodeSet(String swypeCode) {
+    public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         sendSetSwype(swypeCode);
     }
 }

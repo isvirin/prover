@@ -16,6 +16,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -49,6 +50,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
     private final ResolutionSelector resolutionSelector = new ResolutionSelector();
     private final Camera2PrefsHelper camera2PrefsHelper = new Camera2PrefsHelper();
     private final CameraController cameraController;
+    private final Context context;
     int saveImages = 0;
     private Integer mSensorOrientation;
     private Size mPreviewSize;
@@ -114,10 +116,11 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
 
     private Size mVideoSize;
 
-    public MyCamera2(CameraStateListener mCameraStateLisneter, CameraController cameraController) {
+    public MyCamera2(CameraStateListener mCameraStateLisneter, CameraController cameraController, Context context) {
 
         this.mCameraStateLisneter = mCameraStateLisneter;
         this.cameraController = cameraController;
+        this.context = context.getApplicationContext();
     }
 
     @SuppressLint("MissingPermission")
@@ -302,6 +305,8 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
                 yuvImage.compressToJpeg(
                         new Rect(0, 0, image.getWidth(), image.getHeight()), 92,
                         filecon);
+
+                MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, null);
             }
 
             if (image != null) {

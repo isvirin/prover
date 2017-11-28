@@ -381,6 +381,10 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     protected void updatePreviewTexture() {
         mPreviewTexture.updateTexImage();
         mPreviewTexture.getTransformMatrix(mCameraTransformMatrix);
+
+        float[] mtemp = new float[16];
+        float[] mtemp2 = new float[16];
+        //Matrix.setIdentityM(mCameraTransformMatrix, 0);
     }
 
     protected void drawElements() {

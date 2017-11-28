@@ -11,5 +11,5 @@ public interface Settings {
 
     boolean FAKE_SWYPE_CODE = true;
 
-    boolean SHOW_RENDERER_PREVIEW = true;
+    boolean SHOW_RENDERER_PREVIEW = false;
 }
