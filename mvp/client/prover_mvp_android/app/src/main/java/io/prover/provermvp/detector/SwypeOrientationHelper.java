@@ -13,7 +13,7 @@ public class SwypeOrientationHelper {
             return code;
         char[] chars = code.toCharArray();
         float[] pt = new float[2];
-        Matrix m = getSwypeMatrix(orientationHint);
+        Matrix m = getSwypeMatrix(-orientationHint);
         for (int i = 0; i < chars.length; i++) {
             char aChar = chars[i];
             int pos = aChar - '1';
