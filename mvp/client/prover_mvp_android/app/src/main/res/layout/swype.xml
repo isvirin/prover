@@ -103,10 +103,8 @@
         android:id="@+id/swypeCurrentPosition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/swypePoint1"
-        app:layout_constraintLeft_toLeftOf="@+id/swypePoint1"
-        app:layout_constraintRight_toRightOf="@+id/swypePoint1"
-        app:layout_constraintTop_toTopOf="@+id/swypePoint1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_swype_point" />
 
     <android.support.v7.widget.AppCompatImageView

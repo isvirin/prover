@@ -30,7 +30,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private final ImageView currentPoint;
     private final Handler handler = new Handler();
     private final SwypeArrowHolder swypeArrowHolder;
-    private final Matrix matrix = new Matrix();
+    private final Matrix rotateScaleMatrix = new Matrix();
+    private final Matrix pointMatrix = new Matrix();
     private final float[] point = new float[2];
     float xMult, yMult;
     private String swype;
@@ -84,22 +85,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         if (!shouldBeVisible || swypeSequence == null)
             return;
 
-        if (newState.x != 0 || newState.y != 0 || newState.index != 0) {
-            point[0] = newState.x;
-            point[1] = newState.y;
-            matrix.mapPoints(point);
-            int w = swypePoints[2].getLeft() - swypePoints[0].getLeft();
-            int h = swypePoints[6].getTop() - swypePoints[0].getTop();
-            int s = swypePoints[0].getHeight() / 2;
-            int posx = (int) point[0] % (w + s);
-            int posy = (int) point[1] % (h + s);
-            if (posx < -s)
-                posx += w;
-            if (posy < -s)
-                posy += h;
-            currentPoint.setTranslationX(posx);
-            currentPoint.setTranslationY(posy);
-        }
         int index = newState.index - 1;
         if (index >= swypeSequence.length)
             index = swypeSequence.length - 1;
@@ -112,7 +97,15 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             } else {
                 swypeArrowHolder.hide();
             }
+            pointMatrix.set(rotateScaleMatrix);
+            View v = swypeSequence[index];
+            pointMatrix.postTranslate((v.getLeft() + v.getRight()) / 2, (v.getTop() + v.getBottom()) / 2);
         }
+        point[0] = newState.x;
+        point[1] = newState.y;
+        pointMatrix.mapPoints(point);
+        currentPoint.setTranslationX(point[0]);
+        currentPoint.setTranslationY(point[1]);
     }
 
     @Override
@@ -136,11 +129,12 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 sequenceIndices[i] = pos;
             }
         }
-        matrix.reset();
+        rotateScaleMatrix.reset();
         int orientation = cameraController.getOrientationHint();
-        matrix.postScale(1, -1);
-        matrix.postRotate(orientation, 0, 0);
-        matrix.postScale(xMult, yMult);
+        rotateScaleMatrix.postScale(1, -1);
+        rotateScaleMatrix.postRotate(orientation, 0, 0);
+        rotateScaleMatrix.postScale(xMult, yMult);
+
     }
 
     @Override
@@ -193,6 +187,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             cameraController.setSwypeDetectorPaused(false);
         }, animationDuration * (swypeSequence.length + 1));
         currentPoint.bringToFront();
+        pointMatrix.set(rotateScaleMatrix);
     }
 
     private void applyAnimatedVectorDrawable(ImageView view, int id) {
