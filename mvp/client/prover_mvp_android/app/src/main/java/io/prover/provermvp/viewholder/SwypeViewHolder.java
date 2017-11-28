@@ -99,7 +99,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     }
 
     @Override
-    public void onSwypeCodeSet(String swypeCode) {
+    public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         this.swype = swype;
 
         loadDrawables();

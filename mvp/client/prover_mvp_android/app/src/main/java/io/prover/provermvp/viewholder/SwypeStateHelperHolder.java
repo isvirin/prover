@@ -40,6 +40,7 @@ public class SwypeStateHelperHolder implements
     private final CameraController cameraController;
     int latestState = 0;
     private String swype;
+    private String actualSwype;
     private String swypeStatus;
     private SwypeDetectorHandler detectorHandler;
 
@@ -79,12 +80,15 @@ public class SwypeStateHelperHolder implements
             builder.clear();
             builder.append(stateText).append("\n");
             builder.append(swypeStatus);
+            if (actualSwype != null)
+                builder.append("/").append(actualSwype);
             statsText.setText(builder);
         }
     }
 
-    public void setSwype(String swype) {
+    public void setSwype(String swype, String actualSwypeCode) {
         this.swype = swype;
+        this.actualSwype = actualSwypeCode;
         this.swypeStatus = swype;
         if (swype == null) {
             statsText.setText("0");
@@ -120,7 +124,7 @@ public class SwypeStateHelperHolder implements
 
     @Override
     public void onRecordingStop(File file, boolean isVideoConfirmed) {
-        setSwype(null);
+        setSwype(null, null);
         if (detectorHandler != null) {
             detectorHandler.sendQuit();
             detectorHandler = null;
@@ -174,7 +178,7 @@ public class SwypeStateHelperHolder implements
     }
 
     @Override
-    public void onSwypeCodeSet(String swypeCode) {
-        setSwype(swypeCode);
+    public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
+        setSwype(swypeCode, actualSwypeCode);
     }
 }

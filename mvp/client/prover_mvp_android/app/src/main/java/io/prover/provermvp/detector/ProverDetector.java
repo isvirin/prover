@@ -43,11 +43,11 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
 
     public void init(int fps, int orientation, String swype) {
         this.orientationHint = orientation;
-        if (orientationHint == 180)
+        /*if (orientationHint == 180)
             orientationHint = 0;
         else if (orientation == 0) {
             orientationHint = 180;
-        }
+        }*/
         initialFps = fps;
         if (swype != null)
             swype = SwypeOrientationHelper.rotateSwypeCode(swype, orientationHint);
@@ -57,12 +57,13 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     }
 
     public synchronized void setSwype(String swype) {
+        String oldSwype = this.swypeCode;
         this.swypeCode = swype == null ? null : SwypeOrientationHelper.rotateSwypeCode(swype, orientationHint);
 
-        updateSwype();
+        updateSwype(swypeCode != null && !swypeCode.equals(oldSwype));
     }
 
-    private void updateSwype() {
+    private void updateSwype(boolean sendNotification) {
         if (nativeHandler == 0) {
             return;
         }
@@ -72,6 +73,8 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
         fps = Math.min(initialFps, fps);
         Log.d(TAG + "Detector", String.format("initialFps: %d, avgtime: %f, fps: %d", initialFps, avgFrameTime, fps));
         setSwype(nativeHandler, swypeCode, fps);
+        if (sendNotification)
+            cameraController.notifyActualSwypeCodeSet(swypeCode);
     }
 
     public synchronized void release() {
@@ -131,7 +134,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
             if (oldState != null && oldState.state == 2 && newState.state == 0) {
-                updateSwype();
+                updateSwype(true);
             }
         }
         float fps = fpsCounter.addFrame();
@@ -147,7 +150,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
             if (oldState != null && oldState.state == 2 && newState.state == 0) {
-                updateSwype();
+                updateSwype(true);
             }
         }
         float fps = fpsCounter.addFrame();

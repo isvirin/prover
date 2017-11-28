@@ -65,7 +65,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
 
         surfacesHolder = new SurfacesHolder(activity, textureView, supportTextureView, this);
 
-        myCamera = new MyCamera2(this, cameraController);
+        myCamera = new MyCamera2(this, cameraController, root.getContext());
         cameraController.onRecordingStart.add(this);
     }
 

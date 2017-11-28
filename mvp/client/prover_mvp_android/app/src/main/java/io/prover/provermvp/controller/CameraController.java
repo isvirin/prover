@@ -53,8 +53,8 @@ public class CameraController {
     public final ListenerList2<OnDetectionStateCahngedListener, DetectionState, DetectionState> detectionState
             = new ListenerList2<>(handler, OnDetectionStateCahngedListener::onDetectionStateChanged);
 
-    public final ListenerList1<OnSwypeCodeSetListener, String> swypeCodeSet
-            = new ListenerList1<>(handler, OnSwypeCodeSetListener::onSwypeCodeSet);
+    public final ListenerList2<OnSwypeCodeSetListener, String, String> swypeCodeSet
+            = new ListenerList2<>(handler, OnSwypeCodeSetListener::onSwypeCodeSet);
 
     public final ListenerList1<OnDetectorPauseChangedListener, Boolean> swypeDetectionPause
             = new ListenerList1<>(handler, OnDetectorPauseChangedListener::onDetectorPauseChanged);
@@ -65,6 +65,8 @@ public class CameraController {
 
     private volatile float detectorFps;
     private int orientationHint;
+    private String swypeCode;
+    private String actualSwypeCode;
 
     public CameraController() {
     }
@@ -94,7 +96,9 @@ public class CameraController {
     }
 
     public void setSwypeCode(String swypeCode) {
-        swypeCodeSet.postNotifyEvent(swypeCode);
+        this.swypeCode = swypeCode;
+        actualSwypeCode = null;
+        swypeCodeSet.postNotifyEvent(swypeCode, actualSwypeCode);
     }
 
     public void setSwypeDetectorPaused(boolean paused) {
@@ -111,6 +115,11 @@ public class CameraController {
 
     public int getOrientationHint() {
         return orientationHint;
+    }
+
+    public void notifyActualSwypeCodeSet(String swypeCode) {
+        this.actualSwypeCode = swypeCode;
+        swypeCodeSet.postNotifyEvent(this.swypeCode, actualSwypeCode);
     }
 
     public interface OnPreviewStartListener {
@@ -154,7 +163,7 @@ public class CameraController {
     }
 
     public interface OnSwypeCodeSetListener {
-        void onSwypeCodeSet(String swypeCode);
+        void onSwypeCodeSet(String swypeCode, String actualSwypeCode);
     }
 
     public interface OnDetectorPauseChangedListener {

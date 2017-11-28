@@ -14,7 +14,12 @@ Java_io_prover_provermvp_detector_ProverDetector_initSwype(JNIEnv *env, jobject 
         swype = "";
     } else {
         const char *chars = env->GetStringUTFChars(swype_, 0);
+        int len = env->GetStringUTFLength(swype_);
+        char *chars2 = new char[len + 1];;
+        chars2[len] = 0;
+        memcpy(chars2, chars, len);
         swype = std::string(chars);
+        delete chars2;
         env->ReleaseStringUTFChars(swype_, chars);
     }
 
@@ -35,7 +40,12 @@ Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject i
         swype = "";
     } else {
         const char *chars = env->GetStringUTFChars(swype_, 0);
+        int len = env->GetStringUTFLength(swype_);
+        char *chars2 = new char[len + 1];;
+        chars2[len] = 0;
+        memcpy(chars2, chars, len);
         swype = std::string(chars);
+        delete chars2;
         env->ReleaseStringUTFChars(swype_, chars);
     }
 

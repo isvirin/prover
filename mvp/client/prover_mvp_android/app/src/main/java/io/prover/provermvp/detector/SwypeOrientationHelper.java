@@ -1,5 +1,7 @@
 package io.prover.provermvp.detector;
 
+import android.graphics.Matrix;
+
 /**
  * Created by babay on 27.11.2017.
  */
@@ -10,11 +12,28 @@ public class SwypeOrientationHelper {
         if (orientationHint == 0)
             return code;
         char[] chars = code.toCharArray();
+        float[] pt = new float[2];
+        Matrix m = getSwypeMatrix(orientationHint);
         for (int i = 0; i < chars.length; i++) {
             char aChar = chars[i];
-            chars[i] = (char) ('1' + rotateSqypePosition(aChar - '1', orientationHint));
+            int pos = aChar - '1';
+            pt[0] = pos % 3;
+            pt[1] = pos / 3;
+            m.mapPoints(pt);
+            pos = Math.round(pt[1] * 3 + pt[0]);
+
+            chars[i] = (char) ('1' + pos);
         }
         return new String(chars);
+    }
+
+    public static Matrix getSwypeMatrix(int orientationHint) {
+        Matrix matrix = new Matrix();
+        if (orientationHint == 0)
+            return matrix;
+
+        matrix.postRotate(orientationHint, 1, 1);
+        return matrix;
     }
 
     /**
