@@ -8,9 +8,9 @@ cmake_minimum_required(VERSION 3.4.1)
 # Download OpenCV for android 3.3 here: https://opencv.org/releases.html
 # set path to OpenCV
 
-set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../Android/OpenCV-android-sdk)
+set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../../OpenCV)
 include_directories(
-                    ${pathToOpenCv}/sdk/native/jni/include
+                    ${pathToOpenCv}/include
 #                    src/main/cpp/secp256k1
 )
 
