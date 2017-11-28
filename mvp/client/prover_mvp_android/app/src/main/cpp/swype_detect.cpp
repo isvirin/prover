@@ -87,7 +87,7 @@ void SwypeDetect::Delta_Calculation(Point2d output)
             D_coord.y = 0;
 
         } else {
-            D_coord.x = D_coord.x + output.x;
+            D_coord.x = D_coord.x - output.x;
             D_coord.y = D_coord.y + output.y;
 
         }
@@ -115,16 +115,14 @@ void SwypeDetect::Delta_Calculation(Point2d output)
         if ((rez_vec_2_x > rez_vec_1_x) && (rez_vec_1_y > rez_vec_2_y))
             Mean_Alfa = 360 - fabs(floor((atan((K)) * 180 / pi)));
         //
-        if (((Mean_Alfa >= 337) && (Mean_Alfa <= 360)) ||
-            ((Mean_Alfa >= 0) && (Mean_Alfa < 22.5)))
-            Direction = 1;
+        if (((Mean_Alfa >= 337) && (Mean_Alfa <= 360)) || ((Mean_Alfa >= 0) && (Mean_Alfa < 22.5))) Direction = 7;
         if ((Mean_Alfa >= 22.5) && (Mean_Alfa < 67.5)) Direction = 8;
-        if ((Mean_Alfa >= 67.5) && (Mean_Alfa < 112.5)) Direction = 7;
-        if ((Mean_Alfa >= 112.5) && (Mean_Alfa < 157.5)) Direction = 6;
-        if ((Mean_Alfa >= 157.5) && (Mean_Alfa < 202.5)) Direction = 5;
+        if ((Mean_Alfa >= 67.5) && (Mean_Alfa < 112.5)) Direction = 1;
+        if ((Mean_Alfa >= 112.5) && (Mean_Alfa < 157.5)) Direction = 2;
+        if ((Mean_Alfa >= 157.5) && (Mean_Alfa < 202.5)) Direction = 3;
         if ((Mean_Alfa >= 202.5) && (Mean_Alfa < 247.5)) Direction = 4;
-        if ((Mean_Alfa >= 247.5) && (Mean_Alfa < 292.5)) Direction = 3;
-        if ((Mean_Alfa >= 292.5) && (Mean_Alfa < 337.5)) Direction = 2;
+        if ((Mean_Alfa >= 247.5) && (Mean_Alfa < 292.5)) Direction = 5;
+        if ((Mean_Alfa >= 292.5) && (Mean_Alfa < 337.5)) Direction = 6;
         call++;
     }
 }

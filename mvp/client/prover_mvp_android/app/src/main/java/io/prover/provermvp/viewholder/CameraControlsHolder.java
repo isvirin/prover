@@ -211,7 +211,11 @@ public class CameraControlsHolder implements View.OnClickListener,
             if (cameraController.isRecording()) {
                 fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
             } else {
-                fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
+                try {
+                    fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
+                } catch (Exception e){
+                    fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
+                }
             }
         }
     }
