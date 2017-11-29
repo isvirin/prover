@@ -11,7 +11,10 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.graphics.drawable.Animatable2Compat;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,7 +48,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         CameraController.OnPreviewStartListener,
         CameraController.OnFrameAvailableListener,
         CameraController.OnFrameAvailable2Listener,
-        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener {
+        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.OnSwypeCodeSetListener {
     private final ViewGroup root;
     private final Spinner resolutionSpinner;
     private final Activity activity;
@@ -55,6 +58,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private final TextView fpsView;
     private final ImageButton recordButton;
+    private final AppCompatImageView largeImageNotification;
     boolean resumed = false;
     NetworkHolder networkHolder;
     private boolean started;
@@ -71,6 +75,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         resolutionSpinner = root.findViewById(R.id.resolutionSpinner);
         fpsView = root.findViewById(R.id.fpsCounter);
         recordButton = root.findViewById(R.id.recordButton);
+        largeImageNotification = root.findViewById(R.id.largeImageNotification);
 
         resolutionSpinner.setAdapter(cameraResolutionsAdapter);
         resolutionSpinner.setOnItemSelectedListener(this);
@@ -83,6 +88,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         cameraController.frameAvailable2.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
+        cameraController.swypeCodeSet.add(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
@@ -213,7 +219,7 @@ public class CameraControlsHolder implements View.OnClickListener,
             } else {
                 try {
                     fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
-                } catch (Exception e){
+                } catch (Exception e) {
                     fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
                 }
             }
@@ -233,5 +239,23 @@ public class CameraControlsHolder implements View.OnClickListener,
                     .show();
         }
         updateControls(true, false);
+    }
+
+    @Override
+    public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
+        if (actualSwypeCode == null) {
+            AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), R.drawable.phone_large_animated1_fadeout);
+            dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+            largeImageNotification.setImageDrawable(dr);
+            largeImageNotification.setVisibility(View.VISIBLE);
+            dr.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
+                @Override
+                public void onAnimationEnd(Drawable drawable) {
+                    largeImageNotification.setVisibility(View.GONE);
+                    largeImageNotification.setImageDrawable(null);
+                }
+            });
+            dr.start();
+        }
     }
 }
