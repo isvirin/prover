@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="phoneRoot"
+    android:width="120dp"
+    android:height="160dp"
+    android:viewportHeight="160"
+    android:viewportWidth="120">
+
+    <group
+        android:name="purse"
+        android:translateX="0"
+        android:translateY="50">
+
+        <path
+            android:pathData="M7,1.5 m97,10 l0,-6 a4,4 0,0,0 -4,-4 l-28,0 m-13,0 l-48,0 a4,4 0,0,0 -4,4 l0,1.5
+            a4,4 0,0,0 4,4 l l90,0 a10,10 0,0,1 10,10 l0,20
+            l5.5,0 a0.5,0.5 0,0,1 0.5,0.5 l0,22 a0.5,0.5 0,0,1 -0.5,0.5 l-19,0 a11.5,11.5 0,0,1 0,-23 l13.5,0
+            m-11,10 l5,0 a1.5,1.5 0,0,1 0,3 l-5,0 a1.5,1.5 0,0,1 0,-3
+            m11,14 l0,5 l0,20 a10,10 0,0,1 -10,10 l-48,0 m-46,-46 l0,-46"
+            android:strokeColor="#fff"
+            android:strokeWidth="3" />
+
+        <path
+            android:pathData="M1.5,72.5 a33,33 0,0,1 66,0 a33,33 0,0,1 -66,0"
+            android:strokeColor="#fff"
+            android:strokeWidth="3" />
+
+        <path
+            android:fillColor="#fff"
+            android:pathData="M34.5,72.5 m-12,-11 l14,0 a8,8 0,0,1 0,16 l-8,0 0,5
+             -6,0 0,-5 -5,0 0,-5 19,0 a3,3 0,0,0 0,-6 l-8,0 0,6 -6,0 z" />
+
+        <path
+            android:fillColor="#fff"
+            android:pathData="M34.5,72.5 m12.5,7 m-3.5,0 a3.5,3.5 0,0,1 7,0 a3.5,3.5 0,0,1 -7,0" />
+
+    </group>
+
+    <group
+        android:name="coin1"
+        android:translateX="65.5"
+        android:translateY="42.5">
+        <path
+            android:pathData="M-11.5,0 a11.5,11.5 0,0,1 23,0 11.5, 11.5 0,0,1 -23,0"
+            android:strokeColor="#fff"
+            android:strokeWidth="3" />
+    </group>
+
+    <group
+        android:name="coin1"
+        android:translateX="42.5"
+        android:translateY="12.5">
+        <path
+            android:pathData="M-11.5,0 a11.5,11.5 0,0,1 23,0 11.5, 11.5 0,0,1 -23,0"
+            android:strokeColor="#fff"
+            android:strokeWidth="3" />
+    </group>
+
+</vector>
