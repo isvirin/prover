@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.transition.TransitionManager;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     private final TextView fpsView;
     private final ImageButton recordButton;
     private final AppCompatImageView largeImageNotification;
+    private final TextView hintText;
     boolean resumed = false;
     NetworkHolder networkHolder;
     private boolean started;
@@ -76,6 +78,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         fpsView = root.findViewById(R.id.fpsCounter);
         recordButton = root.findViewById(R.id.recordButton);
         largeImageNotification = root.findViewById(R.id.largeImageNotification);
+        hintText = root.findViewById(R.id.hintText);
 
         resolutionSpinner.setAdapter(cameraResolutionsAdapter);
         resolutionSpinner.setOnItemSelectedListener(this);
@@ -253,9 +256,15 @@ public class CameraControlsHolder implements View.OnClickListener,
                 public void onAnimationEnd(Drawable drawable) {
                     largeImageNotification.setVisibility(View.GONE);
                     largeImageNotification.setImageDrawable(null);
+
+                    TransitionManager.beginDelayedTransition(root);
+                    hintText.setVisibility(View.GONE);
                 }
             });
             dr.start();
+
+            hintText.setText(R.string.makeProver);
+            hintText.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -10,4 +10,6 @@
     <string name="info">Info</string>
     <string name="addressCopied">Address copied to clipboard</string>
     <string name="address_">Wallet address:</string>
+    <string name="offline">Offline</string>
+    <string name="makeProver">Do not interrupt video recording, make a circular motion with the phone</string>
 </resources>

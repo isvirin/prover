@@ -1,6 +1,7 @@
 package io.prover.provermvp.viewholder;
 
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import java.util.Locale;
 
 import io.prover.provermvp.R;
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.transport.HelloRequest;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.RequestSwypeCode2;
@@ -49,11 +51,25 @@ public class BalanceStatusHolder implements CameraController.NetworkRequestDoneL
             progressDrawable21.stop();
     }
 
+    private void setStatusIconOffline() {
+        Drawable dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_prover_offline, null);
+        dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+        proverWalletStatusIcon.setImageDrawable(dr);
+        balanceView.setText(R.string.offline);
+        balanceView.setCompoundDrawables(null, null, null, null);
+    }
+
     @Override
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
         if (responce instanceof HelloResponce) {
             String text = String.format(Locale.getDefault(), "%.4f", ((HelloResponce) responce).getDoubleBalance());
             balanceView.setText(text);
+
+            if (balanceView.getCompoundDrawables()[2] == null) {
+                Drawable dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_prover_cur, null);
+                dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+                balanceView.setCompoundDrawables(null, null, dr, null);
+            }
         }
         if (request instanceof RequestSwypeCode1)
             return;
@@ -75,6 +91,11 @@ public class BalanceStatusHolder implements CameraController.NetworkRequestDoneL
 
     @Override
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
+        if (request instanceof HelloRequest) {
+            setStatusIconOffline();
+            return;
+        }
+
         if (request instanceof RequestSwypeCode2)
             return;
 
