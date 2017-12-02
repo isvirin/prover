@@ -27,91 +27,35 @@
         android:layout_height="160dp"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/bottomControlsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:background="@color/controlsBgColor"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <include layout="@layout/bottom_controls" />
 
-        <TextView
-            android:id="@+id/fpsCounter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+    <include layout="@layout/balance" />
 
-        <Spinner
-            android:id="@+id/resolutionSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/fpsCounter"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/infoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_info_outline_white_24dp" />
-
-        <TextView
-            android:id="@+id/statsView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.v7.widget.AppCompatImageButton
-            android:id="@+id/recordButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_start_record_icon" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/balanceContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/balance_background"
-        android:gravity="center_vertical"
-        android:minWidth="160dp"
-        android:orientation="horizontal"
-        android:padding="3dp"
+    <TextView
+        android:id="@+id/hintText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/makeProver"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/largeImageNotification"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/balanceContainer" />
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/proverWalletStatusIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_prover_ok" />
-
-        <TextView
-            android:id="@+id/balanceView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:drawablePadding="2dp"
-            android:drawableRight="@drawable/ic_prover_cur"
-            android:gravity="top"
-            android:text="0"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/largeImageNotification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <include
         layout="@layout/swype"

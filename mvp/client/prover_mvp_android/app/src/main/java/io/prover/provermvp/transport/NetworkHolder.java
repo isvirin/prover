@@ -76,8 +76,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
             Log.d(TAG, "postponed RequestSwypeCode2");
         }
         if (request instanceof RequestSwypeCode1 && FAKE_SWYPE_CODE) {
-            String code = Const.FAKE_SWYPES[(int) (Math.random() * Const.FAKE_SWYPES.length)];
-            handler.postDelayed(() -> cameraController.setSwypeCode(code), 2000);
+            genFakeSwypeCode();
         }
     }
 
@@ -97,6 +96,13 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
         swypeRequestHash = null;
         if (networkSession != null && REQUEST_SWYPE) {
             new RequestSwypeCode1(networkSession, cameraController.networkDelegate).execute();
+        } else if (FAKE_SWYPE_CODE) {
+            genFakeSwypeCode();
         }
+    }
+
+    private void genFakeSwypeCode() {
+        String code = Const.FAKE_SWYPES[(int) (Math.random() * Const.FAKE_SWYPES.length)];
+        handler.postDelayed(() -> cameraController.setSwypeCode(code), 2000);
     }
 }
