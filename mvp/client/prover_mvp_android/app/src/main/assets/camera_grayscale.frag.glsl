@@ -2,6 +2,7 @@
 
 precision mediump float;
 uniform samplerExternalOES camTexture;
+uniform int revOrderTable[256];
 
 varying vec2 v_CamTexCoordinate;
 varying vec2 v_TexCoordinate;
@@ -9,7 +10,11 @@ varying vec2 v_TexCoordinate;
 void main ()
 {
     vec4 cameraColor = texture2D(camTexture, v_CamTexCoordinate);
-    gl_FragColor.r = cameraColor.r;
-    gl_FragColor.g = cameraColor.r;
-    gl_FragColor.b = cameraColor.r;
+    float luminance = 0.299*cameraColor.r + 0.587*cameraColor.g + 0.114*cameraColor.b;
+
+    gl_FragColor.r = luminance;
+    //gl_FragColor.g = luminance;
+    //gl_FragColor.b = luminance;
+    //gl_FragColor.a = luminance;
 }
+

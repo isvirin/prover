@@ -53,6 +53,7 @@ public class FrameBufferHolder {
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
             GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
         }
+
     }
 
     public void deinit() {

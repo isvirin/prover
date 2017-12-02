@@ -2,23 +2,18 @@ package io.prover.provermvp.gl;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.os.Looper;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.gl.lib.EglCore;
-import io.prover.provermvp.gl.lib.GlUtil;
 import io.prover.provermvp.gl.lib.WindowSurface;
 import io.prover.provermvp.gl.prog.CopyProgram;
 import io.prover.provermvp.gl.prog.ReadCameraProgram;
-import io.prover.provermvp.gl.prog.ReadCameraToGrayscaleProgram;
 
 /**
  * Base camera rendering class. Responsible for rendering to proper window contexts, as well as
@@ -30,35 +25,23 @@ import io.prover.provermvp.gl.prog.ReadCameraToGrayscaleProgram;
  */
 
 public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvailableListener {
-    /**
-     * "arbitrary" maximum number of textures. seems that most phones dont like more than 16
-     */
-    public static final int MAX_TEXTURES = 4;
+
     private static final String TAG = CameraRenderer.class.getSimpleName();
     private static final String THREAD_NAME = "CameraRendererThread";
-    /**
-     * Basic mesh rendering code
-     */
-    private static float squareSize = 1.0f;
-    private static float squareCoords[] = {
-            -squareSize, squareSize, // 0.0f,     // top left
-            squareSize, squareSize, // 0.0f,   // top right
-            -squareSize, -squareSize, // 0.0f,   // bottom left
-            squareSize, -squareSize, // 0.0f,   // bottom right
-    };
-    private static short drawOrder[] = {0, 1, 2, 1, 3, 2};
-    private final FrameBufferHolder frameBufferHolder = new FrameBufferHolder();
-    private final ReadCameraToGrayscaleProgram cameraToGrayscaleProgram = new ReadCameraToGrayscaleProgram();
     private final ReadCameraProgram readCameraProgram = new ReadCameraProgram();
     private final CopyProgram copyProgram = new CopyProgram();
-
+    private final PhaseCorrelateProcessor phaseCorrelateProcessor = new PhaseCorrelateProcessor();
+    private final GlTextures textures = new GlTextures();
+    private final CameraTexture cameraTexture = new CameraTexture();
+    private final TexRect texRect = new TexRect();
+    private final ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 1024 * 4);
+    private final ShortBuffer buf2 = ByteBuffer.allocate(512).asShortBuffer();
     /**
      * Current context for use with utility methods
      */
     protected Context mContext;
     protected int mSurfaceWidth, mSurfaceHeight;
     protected float mSurfaceAspectRatio;
-
     /**
      * main texture for display, based on TextureView that is created in activity or fragment
      * and passed in after onSurfaceTextureAvailable is called, guaranteeing its existence.
@@ -73,54 +56,6 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
      */
     private WindowSurface mWindowSurface;
     /**
-     * Texture created for GLES rendering of camera data
-     */
-    private SurfaceTexture mPreviewTexture;
-    private FloatBuffer textureBuffer;
-    private float textureCoords[] = {
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
-    };
-    private FloatBuffer vertexBuffer;
-    private ShortBuffer drawListBuffer;
-    /**
-     * for storing all texture ids from genTextures, and used when binding
-     * after genTextures, id[0] is reserved for camera texture
-     */
-    private int[] mTexturesIds = new int[MAX_TEXTURES];
-    /**
-     * array of proper constants for use in creation,
-     * updating, and drawing. most phones max out at 16
-     * same number as {@link #MAX_TEXTURES}
-     * <p>
-     */
-    private int[] mTextureConsts = {
-            GLES20.GL_TEXTURE1,
-            GLES20.GL_TEXTURE2,
-            GLES20.GL_TEXTURE3,
-            GLES20.GL_TEXTURE4,
-            GLES20.GL_TEXTURE5,
-            GLES20.GL_TEXTURE6,
-            GLES20.GL_TEXTURE7,
-            GLES20.GL_TEXTURE8,
-            GLES20.GL_TEXTURE9,
-            GLES20.GL_TEXTURE10,
-            GLES20.GL_TEXTURE11,
-            GLES20.GL_TEXTURE12,
-            GLES20.GL_TEXTURE13,
-            GLES20.GL_TEXTURE14,
-            GLES20.GL_TEXTURE15,
-            GLES20.GL_TEXTURE16,
-    };
-
-    /**
-     * matrix for transforming our camera texture, available immediately after {@link #mPreviewTexture}s
-     * {@code updateTexImage()} is called in our main {@link #draw()} loop.
-     */
-    private float[] mCameraTransformMatrix = new float[16];
-    /**
      * Handler for communcation with the UI thread. Implementation below at
      * {@link RenderHandler RenderHandler}
      */
@@ -131,7 +66,6 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     private OnRendererReadyListener mOnRendererReadyListener;
     private int mViewportWidth;
     private int mViewportHeight;
-
 
     /**
      * Simple ctor to use default shaders
@@ -174,11 +108,11 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     protected void initGLComponents() {
         onPreSetupGLComponents();
 
-        setupVertexBuffer();
-        setupTextures();
-        setupCameraTexture();
+        texRect.init();
+        textures.init();
+        cameraTexture.init(textures.getNextTexture(), this);
+        phaseCorrelateProcessor.init(mContext, textures);
 
-        cameraToGrayscaleProgram.load(mContext);
         readCameraProgram.load(mContext);
         copyProgram.load(mContext);
 
@@ -191,19 +125,15 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     // ------------------------------------------------------------
 
     public void deinitGL() {
-        deinitGLComponents();
+        cameraTexture.deInit();
+        textures.release();
+        phaseCorrelateProcessor.release();
 
         mWindowSurface.release();
 
         mEglCore.release();
     }
 
-    protected void deinitGLComponents() {
-        GLES20.glDeleteTextures(MAX_TEXTURES, mTexturesIds, 0);
-
-        mPreviewTexture.release();
-        mPreviewTexture.setOnFrameAvailableListener(null);
-    }
 
     // ------------------------------------------------------------
     // setup
@@ -215,49 +145,6 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
      */
     private void onPreSetupGLComponents() {
 
-    }
-
-    protected void setupVertexBuffer() {
-        // Draw list buffer
-        ByteBuffer dlb = ByteBuffer.allocateDirect(drawOrder.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(drawOrder);
-        drawListBuffer.position(0);
-
-        // Initialize the texture holder
-        ByteBuffer bb = ByteBuffer.allocateDirect(squareCoords.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        vertexBuffer = bb.asFloatBuffer();
-        vertexBuffer.put(squareCoords);
-        vertexBuffer.position(0);
-    }
-
-    protected void setupTextures() {
-        ByteBuffer texturebb = ByteBuffer.allocateDirect(textureCoords.length * 4);
-        texturebb.order(ByteOrder.nativeOrder());
-
-        textureBuffer = texturebb.asFloatBuffer();
-        textureBuffer.put(textureCoords);
-        textureBuffer.position(0);
-
-        // Generate the max amount texture ids
-        GLES20.glGenTextures(MAX_TEXTURES, mTexturesIds, 0);
-        GlUtil.checkGlError2("Texture generate");
-    }
-
-    /**
-     * Remember that Android's camera api returns camera texture not as {@link GLES20#GL_TEXTURE_2D}
-     * but rather as {@link GLES11Ext#GL_TEXTURE_EXTERNAL_OES}, which we bind here
-     */
-    protected void setupCameraTexture() {
-        //set texture[0] to camera texture
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTexturesIds[0]);
-        GlUtil.checkGlError2("Texture bind");
-
-        mPreviewTexture = new SurfaceTexture(mTexturesIds[0]);
-        mPreviewTexture.setOnFrameAvailableListener(this);
     }
 
     /**
@@ -318,7 +205,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
         boolean swapResult;
 
         synchronized (this) {
-            updatePreviewTexture();
+            cameraTexture.updatePreviewTexture();
 
             if (mEglCore.getGlVersion() >= 3) {
                 draw();
@@ -351,44 +238,22 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
         GLES20.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        //set shader
-        //GLES20.glUseProgram(mCameraShaderProgram);
-        if (frameBufferHolder.isInitialised()) {
-            cameraToGrayscaleProgram.bind(mTexturesIds[0], mCameraTransformMatrix, textureBuffer, vertexBuffer);
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frameBufferHolder.fboNames[0]);
-            GLES20.glViewport(0, 0, frameBufferHolder.size.width, frameBufferHolder.size.height);
+        if (phaseCorrelateProcessor.isInitialised()) {
+            phaseCorrelateProcessor.draw(cameraTexture, texRect);
 
-            drawElements();
-
-            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            cameraToGrayscaleProgram.unbind();
             GLES20.glViewport(0, 0, mViewportWidth, mViewportHeight);
 
-            copyProgram.bind(frameBufferHolder.textureNames[0], textureBuffer, vertexBuffer);
-            drawElements();
+            copyProgram.bind(phaseCorrelateProcessor.reIndexedImage, texRect);
+            texRect.draw();
             copyProgram.unbind();
+            //phaseCorrelateProcessor.getResultFbo().read(buf, GL_RGBA);
         } else {
-            readCameraProgram.bind(mTexturesIds[0], mCameraTransformMatrix, textureBuffer, vertexBuffer);
-            drawElements();
+            readCameraProgram.bind(cameraTexture.texId, cameraTexture.mCameraTransformMatrix, texRect.textureBuffer, texRect.vertexBuffer);
+            texRect.draw();
+
             readCameraProgram.unbind();
         }
 
-    }
-
-    /**
-     * update the SurfaceTexture to the latest camera image
-     */
-    protected void updatePreviewTexture() {
-        mPreviewTexture.updateTexImage();
-        mPreviewTexture.getTransformMatrix(mCameraTransformMatrix);
-
-        float[] mtemp = new float[16];
-        float[] mtemp2 = new float[16];
-        //Matrix.setIdentityM(mCameraTransformMatrix, 0);
-    }
-
-    protected void drawElements() {
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
     }
 
     //getters and setters
@@ -399,7 +264,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     }
 
     public SurfaceTexture getPreviewTexture() {
-        return mPreviewTexture;
+        return cameraTexture.mCameraInputTexture;
     }
 
     public RenderHandler getRenderHandler() {
@@ -412,8 +277,8 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     }
 
     public void setFrameSize(Size size) {
-        frameBufferHolder.deinit();
-        frameBufferHolder.init(4, size);
+/*        frameBufferHolder.deinit();
+        frameBufferHolder.init(4, size);*/
     }
 
     /**
