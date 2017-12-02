@@ -100,6 +100,9 @@
 
 #pragma once
 
+#define Minimal_circle_area 40
+#define Minimal_shift_radius 5
+
 
 #include <opencv2/opencv.hpp>
 #include <vector>

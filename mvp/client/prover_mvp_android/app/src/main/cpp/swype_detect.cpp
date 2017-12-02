@@ -21,7 +21,7 @@ int SwypeDetect::CircleDetection(void)
         L = L + sqrt(pow(Delta[1].x, 2) + pow(Delta[1].y, 2)) +
             sqrt(pow(Delta[Delta.size() - 1].x, 2) + pow(Delta[Delta.size() - 1].y, 2));
         C = L / sqrt(S);
-        if ((C < 5) && (C > 3)&&(S >= 40)) return 1;
+        if ((C < 5) && (C > 3)&&(S >= Minimal_circle_area)) return 1;
     }
     return 0;
 }
@@ -79,7 +79,7 @@ void SwypeDetect::Delta_Calculation(Point2d output)
     double radius = cv::sqrt(output.x * output.x + output.y * output.y);
 
 
-    if (radius > 5) {
+    if (radius > Minimal_shift_radius) {
 
         fl_dir = true;
         if (call == 0) {
