@@ -88,7 +88,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         int index = newState.index - 1;
         if (index >= swypeSequence.length)
             index = swypeSequence.length - 1;
-        if (!pointVisited[index]) {
+        if (index >= 0 && !pointVisited[index]) {
             pointVisited[index] = true;
             applyAnimatedVectorDrawable(swypeSequence[index], R.drawable.swype_path_point_fill);
             detectProgressPos = index;

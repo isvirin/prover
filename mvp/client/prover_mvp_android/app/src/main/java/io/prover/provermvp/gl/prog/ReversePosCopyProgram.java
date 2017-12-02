@@ -3,8 +3,6 @@ package io.prover.provermvp.gl.prog;
 import android.content.Context;
 import android.opengl.GLES20;
 
-import java.nio.Buffer;
-
 import io.prover.provermvp.gl.TexRect;
 import io.prover.provermvp.gl.Texture;
 
@@ -21,15 +19,16 @@ import static android.opengl.GLES20.glVertexAttribPointer;
  * Created by babay on 24.11.2017.
  */
 
-public class CopyProgram extends GlProgram {
-    protected String FRAGMENT_SHADER = "copy.frag.glsl";
+public class ReversePosCopyProgram extends GlProgram {
+    protected String FRAGMENT_SHADER = "reverse_copy.frag.glsl";
     protected String VERTEX_SHADER = "copy.vert.glsl";
 
     private int texCoordinateLocation;
     private int positionLocation;
     private int textureLocation;
+    private int revOrderTable;
 
-    public CopyProgram() {
+    public ReversePosCopyProgram() {
 
     }
 
@@ -39,27 +38,14 @@ public class CopyProgram extends GlProgram {
         textureLocation = GLES20.glGetUniformLocation(programName, "s_texture");
         texCoordinateLocation = GLES20.glGetAttribLocation(programName, "texCoordinate");
         positionLocation = GLES20.glGetAttribLocation(programName, "position");
+        revOrderTable = GLES20.glGetUniformLocation(programName, "revOrderTable");
     }
 
     @Override
     public void bind() {
     }
 
-    public void bind(int sourceTexture, Buffer texCoords, Buffer positionBuffer) {
-        glUseProgram(programName);
-
-        glActiveTexture(GL_TEXTURE0);//GLES20.GL_TEXTURE0
-        glBindTexture(GL_TEXTURE_2D, sourceTexture);
-        glUniform1i(textureLocation, 0);
-
-        glEnableVertexAttribArray(texCoordinateLocation);
-        glVertexAttribPointer(texCoordinateLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, texCoords);
-
-        glEnableVertexAttribArray(positionLocation);
-        glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, positionBuffer);
-    }
-
-    public void bind(Texture sourceTexture, TexRect texRect) {
+    public void bind(Texture sourceTexture, TexRect texRect, int[] revTable) {
         glUseProgram(programName);
 
         glActiveTexture(GL_TEXTURE0);//GLES20.GL_TEXTURE0
@@ -71,6 +57,8 @@ public class CopyProgram extends GlProgram {
 
         glEnableVertexAttribArray(positionLocation);
         glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, texRect.vertexBuffer);
+
+        GLES20.glUniform1iv(revOrderTable, revTable.length, revTable, 0);
     }
 
     @Override

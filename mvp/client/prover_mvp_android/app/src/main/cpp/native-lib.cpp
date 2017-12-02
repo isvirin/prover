@@ -71,7 +71,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21(
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame((const unsigned char *) frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new((const unsigned char *) frameData, width, height, state, index, x, y,
+                               d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -97,7 +98,7 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21Buf(JNIEnv *env,
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -147,7 +148,7 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameYUV420_1888Buf(JNIEn
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -203,7 +204,7 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameYUV420_1888Buf2(JNIE
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -251,7 +252,7 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameY_18Buf(JNIEnv *env,
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);

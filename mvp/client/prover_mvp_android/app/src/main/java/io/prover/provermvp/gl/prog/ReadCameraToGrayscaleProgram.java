@@ -21,13 +21,13 @@ import static android.opengl.GLES20.glVertexAttribPointer;
 
 public class ReadCameraToGrayscaleProgram extends GlProgram {
     protected String FRAGMENT_SHADER = "camera_grayscale.frag.glsl";
-    protected String VERTEX_SHADER = "camera.vert.glsl";
+    protected String VERTEX_SHADER = "grayscale_camera.vert.glsl";
 
-    private int camTextureName;
     private int camTextureTransformLocation;
     private int camTexCoordinateLocation;
     private int positionLocation;
     private int camTextureLocation;
+    private int revOrderTable;
 
     public ReadCameraToGrayscaleProgram() {
 
@@ -40,13 +40,14 @@ public class ReadCameraToGrayscaleProgram extends GlProgram {
         camTextureTransformLocation = GLES20.glGetUniformLocation(programName, "camTextureTransform");
         camTexCoordinateLocation = GLES20.glGetAttribLocation(programName, "camTexCoordinate");
         positionLocation = GLES20.glGetAttribLocation(programName, "position");
+        revOrderTable = GLES20.glGetUniformLocation(programName, "revOrderTable");
     }
 
     @Override
     public void bind() {
     }
 
-    public void bind(int cameraTexture, float[] cameraTransformmatrix, Buffer texCoords, Buffer positionBuffer) {
+    public void bind(int cameraTexture, float[] cameraTransformmatrix, Buffer texCoords, Buffer positionBuffer, int[] revTable) {
         glUseProgram(programName);
 
         glActiveTexture(GL_TEXTURE0);//GLES20.GL_TEXTURE0
@@ -60,6 +61,8 @@ public class ReadCameraToGrayscaleProgram extends GlProgram {
 
         glEnableVertexAttribArray(positionLocation);
         glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, positionBuffer);
+
+        GLES20.glUniform1iv(revOrderTable, revTable.length, revTable, 0);
     }
 
     @Override

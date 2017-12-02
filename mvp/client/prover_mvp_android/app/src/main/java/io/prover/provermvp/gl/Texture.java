@@ -3,20 +3,22 @@ package io.prover.provermvp.gl;
 /**
  * Internal class for storing refs to mTexturesIds for rendering
  */
-class Texture {
-    public int texNum;
+public class Texture {
     public int texId;
-    public String uniformName;
 
-    Texture(int texNum, int texId, String uniformName) {
-        this.texNum = texNum;
+    public Texture(int texId) {
         this.texId = texId;
-        this.uniformName = uniformName;
+    }
+
+    public Texture() {
+    }
+
+    public void setTexId(int texId) {
+        this.texId = texId;
     }
 
     @Override
     public String toString() {
-        return "[Texture] num: " + texNum + " id: " + texId + ", uniformName: " + uniformName;
+        return "[Texture] id: " + texId;
     }
-
 }
