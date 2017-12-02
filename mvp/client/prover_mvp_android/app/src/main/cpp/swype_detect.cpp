@@ -21,7 +21,7 @@ int SwypeDetect::CircleDetection(void)
         L = L + sqrt(pow(Delta[1].x, 2) + pow(Delta[1].y, 2)) +
             sqrt(pow(Delta[Delta.size() - 1].x, 2) + pow(Delta[Delta.size() - 1].y, 2));
         C = L / sqrt(S);
-        if ((C < 5) && (C > 3)) return 1;
+        if ((C < 5) && (C > 3)&&(S >= 40)) return 1;
     }
     return 0;
 }
@@ -35,32 +35,32 @@ vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
     Result[0].x = 0;
     Result[0].y = 0;
 
-    Result[1].x = floor(2 * width / 8);
-    Result[1].y = floor(2 * height / 8);
+    Result[7].x = floor(1 * width / 4);
+    Result[7].y = floor(1 * height / 4);
 
-    Result[2].x = floor(4 * width / 8);
-    Result[2].y = floor(2 * height / 8);
+    Result[8].x = floor(2 * width / 4);
+    Result[8].y = floor(1 * height / 4);
 
-    Result[3].x = floor(6 * width / 8);
-    Result[3].y = floor(2 * height / 8);
+    Result[9].x = floor(3 * width / 4);
+    Result[9].y = floor(1 * height / 4);
 
-    Result[4].x = floor(2 * width / 8);
-    Result[4].y = floor(4 * height / 8);
+    Result[4].x = floor(1 * width / 4);
+    Result[4].y = floor(2 * height / 4);
 
-    Result[5].x = floor(4 * width / 8);
-    Result[5].y = floor(4 * height / 8);
+    Result[5].x = floor(2 * width / 4);
+    Result[5].y = floor(2 * height / 4);
 
-    Result[6].x = floor(6 * width / 8);
-    Result[6].y = floor(4 * height / 8);
+    Result[6].x = floor(3 * width / 4);
+    Result[6].y = floor(2 * height / 4);
 
-    Result[7].x = floor(2 * width / 8);
-    Result[7].y = floor(6 * height / 8);
+    Result[1].x = floor(1 * width / 4);
+    Result[1].y = floor(3 * height / 4);
 
-    Result[8].x = floor(4 * width / 8);
-    Result[8].y = floor(6 * height / 8);
+    Result[2].x = floor(2 * width / 4);
+    Result[2].y = floor(3 * height / 4);
 
-    Result[9].x = floor(6 * width / 8);
-    Result[9].y = floor(6 * height / 8);
+    Result[3].x = floor(3 * width / 4);
+    Result[3].y = floor(3 * height / 4);
 
     return Result;
 }
@@ -445,7 +445,6 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
                 for (int l = 0; l < 8; l++) Dir_count[l] = 0;
                 Swype_Data(Dir_m);
                 count_num++;
-
                 if ((Swype_Numbers_Get.back() != 0) &&
                     (Swype_Numbers_Get.back() == swype_Numbers[count_num])) {
 
@@ -459,7 +458,6 @@ void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int he
 
         }
     }
-    index = count_num + 1;
     debug = Direction;
     state = S;
     x = D_coord.x;
@@ -493,10 +491,16 @@ void SwypeDetect::Reset(void) {
     koord_Sw_points.clear();
     koord_Sw_points.resize(0);
 
+    Shift_mass.clear();
+    Shift_mass.resize(0);
+
     D_coord.x = 0;
     D_coord.y = 0;
 
     Direction = 0;
+
+    D_coord_new.x = 0;
+    D_coord_new.y = 0;
 
     frame1.release();
     buf1ft.release();
@@ -587,9 +591,64 @@ void SwypeDetect::S1_processor(void) {
         Delta.resize(0);
         DirectionS.clear();
         DirectionS.resize(0);
+        Shift_mass.clear();
+        Shift_mass.resize(0);
         D_coord.x = 0;
         D_coord.y = 0;
         Direction = 0;
+        D_coord_new.x = 0;
+        D_coord_new.y = 0;
         S = 2; // if we have swype then we go to detection swype from video
     }
 }
+
+void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
+{
+    Point2d shift;
+    int Max_d = 0;
+    float delta_x;
+    float delta_y;
+
+    //NW21 convert
+
+    Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
+
+    shift = Frame_processor(frame);
+
+    Delta_Calculation(shift);
+    Shift_mass.push_back(shift);
+
+    if (S == 0) {
+        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) S = CircleDetection();
+    } else if (S == 1) {
+        S1_processor();
+    } else if (S == 2) {
+        if (fl_dir) {
+            fl_dir = false;
+
+            D_coord_new.x = D_coord_new.x + Shift_mass.back().x;
+            D_coord_new.y = D_coord_new.y + Shift_mass.back().y;
+
+            delta_x = fabs(0.2*(koord_Sw_points[swype_Numbers[count_num+1]].x - koord_Sw_points[swype_Numbers[count_num]].x));
+            delta_y = fabs(0.2*(koord_Sw_points[swype_Numbers[count_num+1]].y - koord_Sw_points[swype_Numbers[count_num]].y));
+
+            if(((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x)>=(koord_Sw_points[swype_Numbers[count_num+1]].x - delta_x))&&((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x)<=(koord_Sw_points[swype_Numbers[count_num+1]].x + delta_x))){
+                if(((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y)>=(koord_Sw_points[swype_Numbers[count_num+1]].y - delta_y))&&((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y)<=(koord_Sw_points[swype_Numbers[count_num+1]].y + delta_y))){
+                    count_num++;
+                    D_coord_new.x = 0;
+                    D_coord_new.y = 0;
+                    Shift_mass.clear();
+                    Shift_mass.resize(0);
+                }
+            }
+            if(swype_Numbers.size() == (count_num + 1))  S = 3;
+        }
+    }
+    debug = Direction;
+    state = S;
+    index = count_num + 1;
+    x = D_coord_new.x;
+    y = D_coord_new.y;
+
+}
+

@@ -128,6 +128,8 @@ public:
                  int &x, int &y, int &debug);
 
     void Reset(void);
+
+    void processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug);
     // frame - pointer to a buffer with a frame
     // state - state S
     // index - if state==2, the index  of the last entered swype number
@@ -153,11 +155,14 @@ private:
     int Direction;
     bool fl_dir;
     int Dir_m;
+    cv::Point2d D_coord_new;
 
     std::vector<cv::Point2d> koord_Sw_points;
     cv::UMat buf1ft;
     cv::UMat buf2ft;
     cv::UMat hann;
+
+    std::vector<cv::Point2d> Shift_mass;
 
     int CircleDetection(void);
 
