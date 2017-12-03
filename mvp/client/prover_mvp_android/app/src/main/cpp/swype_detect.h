@@ -102,6 +102,8 @@
 
 #define Minimal_circle_area 40
 #define Minimal_shift_radius 5
+#define Swype_radius 0.2
+#define Swipe_Distance 0.25
 
 
 #include <opencv2/opencv.hpp>
