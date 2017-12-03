@@ -126,9 +126,10 @@ int main(int argc, char *argv[])
                 while((rc=avcodec_receive_frame(codecctx, frame))==0)
                 {
                     int state=-1, index=-1, x=-1, y=-1;
-                    detector.processFrame(frame->data[0], frame->width, frame->height, state, index, x, y);
+                    int debug=-1;
+                    detector.processFrame_new(frame->data[0], frame->width, frame->height, state, index, x, y, debug);
 
-                    fprintf(stderr, "S=%d index=%d x=%d y=%d\n", state, index, x, y);
+                    fprintf(stderr, "S=%d index=%d x=%d y=%d debug=%d\n", state, index, x, y, debug);
                 }
                 if(rc==AVERROR_EOF)
                     break;
