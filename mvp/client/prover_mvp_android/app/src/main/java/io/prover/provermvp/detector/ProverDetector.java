@@ -200,7 +200,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
 
     @Override
     public void onDetectorPauseChanged(boolean isPaused) {
-        this.isDetectionPaused = isPaused;
+        //this.isDetectionPaused = isPaused;
         detectionState = null;
     }
 }

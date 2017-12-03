@@ -131,9 +131,9 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         }
         rotateScaleMatrix.reset();
         int orientation = cameraController.getOrientationHint();
-        //rotateScaleMatrix.postScale(1, -1);
+        rotateScaleMatrix.postScale(1, -1);
         rotateScaleMatrix.postRotate(orientation, 0, 0);
-        rotateScaleMatrix.postScale(xMult, yMult);
+        rotateScaleMatrix.postScale(xMult * 2, yMult * 2);
 
     }
 
