@@ -598,6 +598,10 @@ void SwypeDetect::S1_processor(void) {
         Direction = 0;
         D_coord_new.x = 0;
         D_coord_new.y = 0;
+        frame1.release();
+        buf1ft.release();
+        buf2ft.release();
+        hann.release();
         S = 2; // if we have swype then we go to detection swype from video
     }
 }
