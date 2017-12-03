@@ -104,6 +104,8 @@
 #define Minimal_shift_radius 5
 #define Swype_radius 0.2
 #define Swipe_Distance 0.25
+#define Time_to_state_2 2
+#define Time_swipe 2
 
 
 #include <opencv2/opencv.hpp>
@@ -149,6 +151,9 @@ private:
     //Internal data
     cv::UMat frame1; //previous frame
     std::vector<cv::Point2d> Delta; //dinamic array of moving camera
+
+    time_t seconds_1;
+    time_t seconds_2;
 
     int S; //state S
     int call; //Number of the frame processing function calls

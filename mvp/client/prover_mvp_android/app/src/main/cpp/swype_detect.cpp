@@ -479,6 +479,9 @@ void SwypeDetect::Reset(void) {
     Swype_Numbers_Get.clear();
     Swype_Numbers_Get.resize(0);
 
+    seconds_1 = 0;
+    seconds_2 = 0;
+
     DirectionS.clear();
     DirectionS.resize(0);
 
@@ -602,7 +605,11 @@ void SwypeDetect::S1_processor(void) {
         buf1ft.release();
         buf2ft.release();
         hann.release();
-        S = 2; // if we have swype then we go to detection swype from video
+        if((seconds_2 - seconds_1) > Time_to_state_2) {
+            S = 2; // if we have swype then we go to detection swype from video
+            seconds_1 =  time(NULL);
+            seconds_2 = 0;
+        }
     }
 }
 
@@ -627,7 +634,9 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
 
     if (S == 0) {
         if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) S = CircleDetection();
+        seconds_1 = time(NULL);
     } else if (S == 1) {
+        seconds_2 = time(NULL);
         S1_processor();
     } else if (S == 2) {
         x = D_coord_new.x;
@@ -658,12 +667,15 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
                         D_coord_new.y = 0;
                         Shift_mass.clear();
                         Shift_mass.resize(0);
+                        seconds_1 = time(NULL);
                     }
                 }
                 if (swype_Numbers.size() == (count_num + 1)) S = 3;
             }
             else Reset();
         }
+        seconds_2 = time(NULL);
+        if((seconds_2 - seconds_1)>Time_swipe) Reset();
     }
     debug = Direction;
     state = S;
