@@ -626,7 +626,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         if (fl_dir) {
             fl_dir = false;
 
-            D_coord_new.x = D_coord_new.x + Shift_mass.back().x;
+            D_coord_new.x = D_coord_new.x - Shift_mass.back().x;
             D_coord_new.y = D_coord_new.y + Shift_mass.back().y;
 
             delta_x = fabs(0.2*(koord_Sw_points[swype_Numbers[count_num+1]].x - koord_Sw_points[swype_Numbers[count_num]].x));
