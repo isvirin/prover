@@ -5,14 +5,13 @@ package io.prover.provermvp.detector;
  */
 
 public class DetectionState {
-    public final int state;
+    public final State state;
     public final int index;
     public final int x;
     public final int y;
     public final int d;
-
     public DetectionState(int[] source) {
-        state = source[0];
+        state = State.values()[source[0]];
         index = source[1];
         x = source[2];
         y = source[3];
@@ -20,7 +19,7 @@ public class DetectionState {
     }
 
     public DetectionState(long[] source) {
-        state = (int) source[0];
+        state = State.values()[(int) source[0]];
         index = (int) source[1];
         x = (int) source[2];
         y = (int) source[3];
@@ -28,11 +27,11 @@ public class DetectionState {
     }
 
     public boolean isEqualsArray(int[] arr) {
-        return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
     }
 
     public boolean isEqualsArray(long[] arr) {
-        return state == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
     }
 
     @Override
@@ -51,11 +50,13 @@ public class DetectionState {
 
     @Override
     public int hashCode() {
-        int result = state;
+        int result = state.ordinal();
         result = 31 * result + index;
         result = 31 * result + x;
         result = 31 * result + y;
         result = 31 * result + d;
         return result;
     }
+
+    public enum State {Waiting, GotProverNoCode, GotProverWaiting, InputCode, Confirmed}
 }

@@ -12,6 +12,8 @@ import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.util.FrameRateCounter;
 
 import static io.prover.provermvp.Const.TAG;
+import static io.prover.provermvp.detector.DetectionState.State.InputCode;
+import static io.prover.provermvp.detector.DetectionState.State.Waiting;
 
 /**
  * Created by babay on 11.11.2017.
@@ -133,7 +135,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             final DetectionState newState = new DetectionState(detectionResult);
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
-            if (oldState != null && oldState.state == 2 && newState.state == 0) {
+            if (oldState != null && oldState.state == InputCode && newState.state == Waiting) {
                 updateSwype(true);
             }
         }
@@ -149,7 +151,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             final DetectionState newState = new DetectionState(detectionResult2);
             detectionState = newState;
             cameraController.notifyDetectionStateChanged(oldState, newState);
-            if (oldState != null && oldState.state == 2 && newState.state == 0) {
+            if (oldState != null && oldState.state == InputCode && newState.state == Waiting) {
                 updateSwype(true);
             }
         }

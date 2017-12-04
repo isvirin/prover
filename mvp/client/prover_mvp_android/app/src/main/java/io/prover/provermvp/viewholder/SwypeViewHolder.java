@@ -18,6 +18,9 @@ import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 
+import static io.prover.provermvp.detector.DetectionState.State.GotProverWaiting;
+import static io.prover.provermvp.detector.DetectionState.State.InputCode;
+
 /**
  * Created by babay on 22.11.2017.
  */
@@ -73,7 +76,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         if (detectionPaused)
             return;
         boolean visible = root.getVisibility() == View.VISIBLE;
-        boolean shouldBeVisible = newState.state == 2;
+        boolean shouldBeVisible = (newState.state == InputCode || newState.state == GotProverWaiting);
         if (visible != shouldBeVisible) {
             if (shouldBeVisible)
                 show();

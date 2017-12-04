@@ -23,6 +23,10 @@ import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.LowFundsException;
 
+import static io.prover.provermvp.detector.DetectionState.State.Confirmed;
+import static io.prover.provermvp.detector.DetectionState.State.GotProverNoCode;
+import static io.prover.provermvp.detector.DetectionState.State.Waiting;
+
 /**
  * Created by babay on 11.11.2017.
  */
@@ -38,7 +42,7 @@ public class SwypeStateHelperHolder implements
     private final ViewGroup root;
     private final TextView statsText;
     private final CameraController cameraController;
-    int latestState = 0;
+    DetectionState.State latestState = Waiting;
     private String swype;
     private String actualSwype;
     private String swypeStatus;
@@ -62,10 +66,10 @@ public class SwypeStateHelperHolder implements
 
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState state) {
-        String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d, %d", state.state, state.index, state.x, state.y, state.d);
+        String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d, %d", state.state.ordinal(), state.index, state.x, state.y, state.d);
         setStatusText(stateStr);
         latestState = state.state;
-        if (state.state == 1 && swype != null && detectorHandler != null) {
+        if (state.state == GotProverNoCode && swype != null && detectorHandler != null) {
             detectorHandler.sendSetSwype(swype);
         }
     }
@@ -113,7 +117,7 @@ public class SwypeStateHelperHolder implements
     }
 
     public boolean isVideoConfirmed() {
-        return latestState == 3;
+        return latestState == Confirmed;
     }
 
     @Override

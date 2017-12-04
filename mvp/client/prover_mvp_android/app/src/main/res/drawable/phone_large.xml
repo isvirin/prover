@@ -33,9 +33,27 @@
 
         <group
             android:name="arrow1"
-            android:rotation="90">
+            android:rotation="0">
             <path
-                android:pathData="M-115,0  m-10,10 l10,-10 10,10 m-10,-10  m0,3 a115,115 0,1,0 57.5,-96.6"
+                android:pathData="@string/circle_arrow_60_cw"
+                android:strokeColor="#ffffff"
+                android:strokeWidth="5" />
+        </group>
+
+        <group
+            android:name="arrow2"
+            android:rotation="120">
+            <path
+                android:pathData="@string/circle_arrow_60_cw"
+                android:strokeColor="#ffffff"
+                android:strokeWidth="5" />
+        </group>
+
+        <group
+            android:name="arrow2"
+            android:rotation="240">
+            <path
+                android:pathData="@string/circle_arrow_60_cw"
                 android:strokeColor="#ffffff"
                 android:strokeWidth="5" />
         </group>
