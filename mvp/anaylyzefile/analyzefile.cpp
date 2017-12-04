@@ -34,13 +34,6 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    AVBitStreamFilterContext *bsfctx=av_bitstream_filter_init("h264_mp4toannexb");
-    if(!bsfctx)
-    {
-        fprintf(stderr, "failed to create bitstream filter\n");
-        return 2;
-    }
-
     int videoStreamIndex=-1;
     for(unsigned int index=0; index<formatctx->nb_streams; ++index)
     {
@@ -76,6 +69,30 @@ int main(int argc, char *argv[])
         return 2;
     }
 
+
+    const AVBitStreamFilter *bsf=av_bsf_get_by_name("h264_mp4toannexb");
+    if(!bsf)
+    {
+        fprintf(stderr, "failed to create bitstream filter\n");
+        return 2;
+    }
+
+    AVBSFContext *bsfctx=NULL;
+    if(av_bsf_alloc(bsf, &bsfctx)<0)
+    {
+        fprintf(stderr, "failed to create bitstream filter context\n");
+        return 2;
+    }
+
+    avcodec_parameters_copy(bsfctx->par_in, formatctx->streams[videoStreamIndex]->codecpar);
+//    bsfctx->time_base_in=formatctx->time_base;
+
+    if(av_bsf_init(bsfctx)<0)
+    {
+        fprintf(stderr, "failed to initialize bitstream filter\n");
+        return 2;
+    }
+
     int fps=formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
 
     std::string swype=argv[2];
@@ -95,47 +112,37 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Failed to read packed %d\n", rc);
             break;
         }
+        fprintf(stderr, "Input packet: %d %d\n", packet.stream_index, packet.size);
 
         if(packet.stream_index==videoStreamIndex)
         {
-            uint8_t *data;
-            int size;
-            int shouldFreeNewBuffer;
+            AVPacket *newpacket=av_packet_alloc();
 
-            shouldFreeNewBuffer=av_bitstream_filter_filter(
-                bsfctx,
-                codecctx,
-                NULL,
-                &data,
-                &size,
-                packet.data,
-                packet.size,
-                packet.flags&AV_PKT_FLAG_KEY);
-
-            if(data && size)
+            av_bsf_send_packet(bsfctx, &packet);
+            while((rc=av_bsf_receive_packet(bsfctx, newpacket))==0)
             {
-                AVPacket newpacket;
-                av_init_packet(&newpacket);
-                newpacket.data=data;
-                newpacket.size=size;
-                newpacket.dts=packet.dts;
-                newpacket.pts=packet.pts;
-
-                avcodec_send_packet(codecctx, &newpacket);
+                avcodec_send_packet(codecctx, newpacket);
 
                 while((rc=avcodec_receive_frame(codecctx, frame))==0)
                 {
                     int state=-1, index=-1, x=-1, y=-1;
-                    detector.processFrame(frame->data[0], frame->width, frame->height, state, index, x, y);
+                    int debug=-1;
 
-                    fprintf(stderr, "S=%d index=%d x=%d y=%d\n", state, index, x, y);
+                    detector.processFrame_new(frame->data[0], frame->width, frame->height, state, index, x, y, debug);
+                    fprintf(stderr, "S=%d index=%d x=%d y=%d debug=%d\n", state, index, x, y, debug);
                 }
                 if(rc==AVERROR_EOF)
                     break;
 
-                if(shouldFreeNewBuffer)
-                    av_free(data);
+                av_packet_unref(newpacket);
             }
+
+            if(rc!=AVERROR(EAGAIN))
+            {
+                
+            }
+
+            av_packet_free(&newpacket);
         }
 
         av_packet_unref(&packet);
