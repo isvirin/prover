@@ -104,7 +104,7 @@
 #define Minimal_shift_radius 5
 #define Swype_radius 0.2
 #define Swipe_Distance 0.25
-#define Time_to_state_2 2
+#define Time_to_state_3 2
 #define Time_swipe 2
 
 
@@ -114,7 +114,6 @@
 #include <ctime>
 #include <cstdlib>
 #include <cstring>
-//#include <iostream>
 #include "opencv2/core/ocl.hpp"
 
 

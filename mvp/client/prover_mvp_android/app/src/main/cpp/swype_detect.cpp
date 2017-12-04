@@ -605,12 +605,9 @@ void SwypeDetect::S1_processor(void) {
         buf1ft.release();
         buf2ft.release();
         hann.release();
-        if((seconds_2 - seconds_1) > Time_to_state_2) {
-            S = 2; // if we have swype then we go to detection swype from video
-            seconds_1 =  time(NULL);
-            seconds_2 = 0;
-        }
+        S = 2; // if we have swype then we go to detection swype from video
     }
+    seconds_1 = time(NULL);
 }
 
 void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
@@ -634,11 +631,30 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
 
     if (S == 0) {
         if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) S = CircleDetection();
-        seconds_1 = time(NULL);
     } else if (S == 1) {
-        seconds_2 = time(NULL);
         S1_processor();
-    } else if (S == 2) {
+    } else if(S==2){
+        seconds_2 = time(NULL);
+        if ((seconds_2 - seconds_1)>Time_to_state_3){
+            Delta.clear();
+            Delta.resize(0);
+            DirectionS.clear();
+            DirectionS.resize(0);
+            Shift_mass.clear();
+            Shift_mass.resize(0);
+            D_coord.x = 0;
+            D_coord.y = 0;
+            Direction = 0;
+            D_coord_new.x = 0;
+            D_coord_new.y = 0;
+            frame1.release();
+            buf1ft.release();
+            buf2ft.release();
+            hann.release();
+            S = 3;
+            seconds_1 = time(NULL);
+        }
+    } else if (S == 3) {
         x = D_coord_new.x;
         y = D_coord_new.y;
         if (fl_dir) {
@@ -670,7 +686,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
                         seconds_1 = time(NULL);
                     }
                 }
-                if (swype_Numbers.size() == (count_num + 1)) S = 3;
+                if (swype_Numbers.size() == (count_num + 1)) S = 4;
             }
             else Reset();
         }
