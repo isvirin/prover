@@ -17,7 +17,7 @@ if (!$loadConfig_result[0]) {
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="icon" type="image/x-icon" href="prover-icon-32.png"/>
     <link rel="stylesheet" href="main.css?<?= md5_file('main.css') ?>">
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans">
     <script type="text/javascript" src="upload.js?<?= md5_file('upload.js') ?>" defer></script>
 
     <script>
@@ -28,45 +28,60 @@ if (!$loadConfig_result[0]) {
 
 <body>
 
-<div class="container">
-    <div class="logo">
-        <svg>
-            <use xmlns:xlink="http://www.w3.org/1999/xlink" target="blank" xlink:href="sprite.svg#Prover"></use>
-        </svg>
-    </div>
-    <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
-          onclick="document.getElementById('file').click()">
-        <div class="box__input">
-            <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>
-                <path d="M760.499 493.901c-9.995-9.997-26.206-9.997-36.203 0l-212.296 212.294v-578.195c0-14.138-11.462-25.6-25.6-25.6s-25.6 11.462-25.6 25.6v578.195l-212.298-212.294c-9.998-9.997-26.206-9.997-36.205 0-9.997 9.995-9.997 26.206 0 36.203l256 256c5 4.997 11.55 7.496 18.102 7.496s13.102-2.499 18.102-7.501l256-256c9.997-9.995 9.997-26.203-0.003-36.198z"></path>
-                <path d="M896 972.8h-819.2c-42.347 0-76.8-34.451-76.8-76.8v-102.4c0-14.139 11.462-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 14.115 11.485 25.6 25.6 25.6h819.2c14.115 0 25.6-11.485 25.6-25.6v-102.4c0-14.139 11.461-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 42.349-34.451 76.8-76.8 76.8z"></path>
+<div class="wrapper">
+    <div class="container">
+        <div class="logo">
+            <svg>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" target="blank" xlink:href="sprite.svg#Prover"></use>
             </svg>
-            <input type="file" name="file" id="file" class="box__file">
-            <label class="box__labelFile_default" for="file">
-                <strong>Choose a file</strong>
-                <span class="box__dragndrop"> or drag it here</span>.
-            </label>
-            <label class="box__labelFile_file" for="file"></label>
-            <button type="submit" class="box__button">Upload</button>
+        </div>
+        <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
+              onclick="document.getElementById('file').click()">
+            <div class="box__input">
+                <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>
+                    <path d="M760.499 493.901c-9.995-9.997-26.206-9.997-36.203 0l-212.296 212.294v-578.195c0-14.138-11.462-25.6-25.6-25.6s-25.6 11.462-25.6 25.6v578.195l-212.298-212.294c-9.998-9.997-26.206-9.997-36.205 0-9.997 9.995-9.997 26.206 0 36.203l256 256c5 4.997 11.55 7.496 18.102 7.496s13.102-2.499 18.102-7.501l256-256c9.997-9.995 9.997-26.203-0.003-36.198z"></path>
+                    <path d="M896 972.8h-819.2c-42.347 0-76.8-34.451-76.8-76.8v-102.4c0-14.139 11.462-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 14.115 11.485 25.6 25.6 25.6h819.2c14.115 0 25.6-11.485 25.6-25.6v-102.4c0-14.139 11.461-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 42.349-34.451 76.8-76.8 76.8z"></path>
+                </svg>
+                <input type="file" name="file" id="file" class="box__file">
+                <label class="box__labelFile_default" for="">
+                    <strong>Choose a file</strong>
+                    <span class="box__dragndrop"> or drag it here.</span>
+                </label>
+                <label class="box__labelFile_file" for="file"></label>
+                <button type="submit" class="box__button">Upload</button>
+            </div>
+
+            <div class="box__uploading">Uploading&hellip;</div>
+            <div class="box__success">
+                Done!
+                <br>
+                <span class="box__success_msg"></span>
+                <br>
+                <span class="box__restart">Try another file</span>
+            </div>
+            <div class="box__error">
+                Error!
+                <br>
+                <span></span>
+                <br>
+                <span class="box__restart">Try another file</span>
+            </div>
+        </form>
+        <div class="content">
+            <p>There is really no prescriptive rules on how to best create these guides, but these documents are a source of truth that give me (and hopefully my engineering counterparts) peace of mind. The goal is to have a "pixel-perfect" version of each core component all in one document, so that every screen and state of the application doesn’t need to be drawn for production.</p>
         </div>
 
-        <div class="box__uploading">Uploading&hellip;</div>
-        <div class="box__success">
-            Done!
-            <br>
-            <span class="box__success_msg"></span>
-            <br>
-            <span class="box__restart">Try another file</span>
+        <div class="block_client_address_info"></div>
+    </div>
+    <footer>
+        <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
+        <div class="link social_networks">
+            <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="facebook.png"></a>
+            <a target="_blank" href="https://twitter.com/prover_io"><img src="twitter.png"></a>
+            <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="telegram.png"></a>
         </div>
-        <div class="box__error">
-            Error!
-            <br>
-            <span></span>
-            <br>
-            <span class="box__restart">Try another file</span>
-        </div>
-    </form>
-    <div class="block_client_address_info"></div>
+        <div class="link copyright">Prover © 2017</div>
+    </footer>
 </div>
 
 </body>

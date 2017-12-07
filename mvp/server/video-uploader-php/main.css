@@ -1,48 +1,72 @@
 html {
+    height: 100%;
 }
 
 body {
-    color: #ccc;
-    font: 1rem/1.5 Gilroy, sans-serif;
-    min-height: 100%;
+    background:url('upload.jpg') #100520;
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+    font: 1rem/1.5 Open Sans, sans-serif;
+    height: 100%;
     min-width: 320px;
-    background: #1D1D1D url(pattern.jpg) repeat;
-    padding: 5rem 1.25rem; /* 80 20 */
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper {
+    position: relative;
+    min-height: 100%;
 }
 
 .container {
-    width: 100%;
-    max-width: 680px; /* 800 */
+    width: 75%;
     text-align: center;
     margin: 0 auto;
+    padding-bottom: 48px;
+}
+
+.logo {
+    height: 130px;
 }
 
 .logo svg {
-    width: 100%;
+    width: 11rem;
+    height: 130px;
+    float: right;
 }
 
 .box {
     font-size: 1.25rem; /* 20 */
     background-color: transparent;
     position: relative;
-    padding: 100px 20px;
+    padding: 75px 20px;
     overflow: auto;
     cursor: pointer;
-}
-
-.box:hover {
-    background-color: rgba(255, 0, 0, .1);
+    color: #ffffff;
 }
 
 .box.has-advanced-upload {
-    outline: 2px dashed #E0222D;
-    outline-offset: 0;
+    border: 2px dashed #f04d4f;
+    border-radius: 25px;
     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
     transition: outline-offset .15s ease-in-out, background-color .15s linear;
 }
 
 .box.has-advanced-upload:hover {
+    background-color: rgba(255, 0, 0, .1);
+}
+
+.box.has-advanced-upload:hover {
     outline-offset: -10px;
+}
+
+.box strong {
+    border: 2px solid #ff0000;
+    border-radius: 25px;
+    padding: 5px 10px;
+    margin-right: 15px;
+    font-weight: 100;
 }
 
 .box__dragndrop,
@@ -57,7 +81,7 @@ body {
 .box.has-advanced-upload .box__icon {
     width: 100%;
     height: 80px;
-    fill: #CCC;
+    fill: #ff0000;
     display: block;
     margin-bottom: 40px;
 }
@@ -103,8 +127,8 @@ body {
 }
 
 .box__success_msg, .box__error > span {
+    font-weight: 100;
     text-align: left;
-    font-family: "Courier New", Courier, monospace;
     display: inline-block;
 }
 
@@ -120,7 +144,7 @@ body {
 }
 
 .box__uploading {
-    font-weight: bold;
+    font-weight: 100;
 }
 
 .box__success {
@@ -180,7 +204,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
-    display: inline-block;
+    display: inline;
     overflow: hidden;
 }
 
@@ -224,4 +248,103 @@ body {
 .block_client_address_info {
     margin-top: 2em;
     text-align: left;
+}
+
+.content {
+    width: 66.6%;
+    font-size: 15px;
+    text-align: left;
+    color: #ffffff;
+    margin: 45px auto 0;
+}
+
+footer {
+    font-size: .8rem;
+    text-align: center;
+    position: absolute;
+    left: 25%;
+    bottom: 20px;
+    width: 50%;
+    height: auto;
+    color: #a87ad4;
+    margin: 0 auto;
+}
+
+footer .link {
+    width: 25%;
+    display: inline-block;
+    float: left;
+}
+
+footer .link.social_networks {
+    width: 50%;
+}
+
+footer .link.social_networks a {
+    margin: 0 10px;
+    display: inline-block;
+    line-height: 1rem;
+}
+
+footer .link.mail {
+    text-align: left;
+}
+
+footer .link.copyright {
+    text-align: right;
+}
+
+footer a {
+    color: #a87ad4;
+}
+
+@media screen and (max-width: 700px) {
+    .container,
+    .container .content,
+    footer {
+        width: 100%;
+    }
+    .wrapper {
+        padding: 0 25px;
+    }
+    .box__error {
+        padding: 0 10px;
+    }
+    .box__error > span {
+        text-align: center;
+    }
+
+    footer {
+        box-sizing: border-box;
+        padding: 0 25px;
+        left: 0;
+        bottom: 10px;
+        height: auto;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        padding-bottom: 100px;
+    }
+    .logo svg {
+        float: none;
+    }
+    .js .box__file + label {
+        white-space: pre-line;
+    }
+    .box strong,
+    .js .box__file + label span {
+        display: inline-block;
+        margin: 0 auto 10px;
+        text-align: center;
+    }
+    footer {
+        bottom: 0;
+    }
+    footer .link {
+        width: 100% !important;
+        margin-bottom: 10px;
+        text-align: center !important;
+    }
 }
