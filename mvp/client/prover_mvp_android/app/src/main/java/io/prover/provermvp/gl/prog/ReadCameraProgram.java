@@ -42,10 +42,6 @@ public class ReadCameraProgram extends GlProgram {
         positionLocation = GLES20.glGetAttribLocation(programName, "position");
     }
 
-    @Override
-    public void bind() {
-    }
-
     public void bind(int cameraTexture, float[] cameraTransformmatrix, Buffer texCoords, Buffer positionBuffer) {
         glUseProgram(programName);
 

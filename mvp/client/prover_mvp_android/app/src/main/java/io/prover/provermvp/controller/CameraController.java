@@ -13,6 +13,7 @@ import java.util.List;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 /**
@@ -59,10 +60,13 @@ public class CameraController {
     public final ListenerList1<OnDetectorPauseChangedListener, Boolean> swypeDetectionPause
             = new ListenerList1<>(handler, OnDetectorPauseChangedListener::onDetectorPauseChanged);
 
+    public final ListenerList2<OnFpsUpdateListener, Float, Float> fpsUpdateListener
+            = new ListenerList2<>(handler, OnFpsUpdateListener::OnFpsUpdate);
+
     public final NetworkDelegate networkDelegate = new NetworkDelegate();
+    private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
-
     private volatile float detectorFps;
     private int orientationHint;
     private String swypeCode;
@@ -122,6 +126,17 @@ public class CameraController {
         swypeCodeSet.postNotifyEvent(this.swypeCode, actualSwypeCode);
     }
 
+    public void onFrameDone() {
+        float result = fpsCounter.addFrame();
+        if (result >= 0) {
+            fpsUpdateListener.postNotifyEvent(result, detectorFps);
+        }
+    }
+
+    public float getAvgFps() {
+        return fpsCounter.getAvgFps();
+    }
+
     public interface OnPreviewStartListener {
         void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize);
     }
@@ -132,6 +147,10 @@ public class CameraController {
 
     public interface OnFrameAvailable2Listener {
         void onFrameAvailable(Image image);
+    }
+
+    public interface OnFpsUpdateListener {
+        void OnFpsUpdate(float fps, float processorFps);
     }
 
     public interface OnFrameReleasedListener {

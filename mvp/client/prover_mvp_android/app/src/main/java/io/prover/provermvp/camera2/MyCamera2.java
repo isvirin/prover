@@ -75,7 +75,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             // This method is called when the camera is opened.  We start camera preview here.
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
-            mVideoSessionWrapper = new VideoSessionWrapper(mCameraDevice);
+            mVideoSessionWrapper = new VideoSessionWrapper(mCameraDevice, cameraController);
             mCameraStateLisneter.onCameraOpened(cameraDevice);
         }
 
@@ -242,12 +242,12 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         }
         screenTexture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
         if (rendererTexture != null) {
-            rendererTexture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
+            rendererTexture.setDefaultBufferSize(mVideoSize.width, mVideoSize.height);
         }
 
         Surface[] surfaces = rendererTexture == null ?
                 new Surface[]{new Surface(screenTexture), mImageReader.getSurface()}
-                : new Surface[]{new Surface(screenTexture), new Surface(rendererTexture), mImageReader.getSurface()};
+                : new Surface[]{new Surface(screenTexture), new Surface(rendererTexture) /*, mImageReader.getSurface()*/};
 
         Runnable startedNotificator = () -> cameraController.previewStart.postNotifyEvent(cameraResolutions, mVideoSize);
         try {

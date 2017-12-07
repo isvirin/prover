@@ -7,6 +7,9 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import static android.opengl.GLES20.glEnableVertexAttribArray;
+import static android.opengl.GLES20.glVertexAttribPointer;
+
 /**
  * Created by babay on 01.12.2017.
  */
@@ -57,6 +60,14 @@ public class TexRect {
         textureBuffer = texturebb.asFloatBuffer();
         textureBuffer.put(textureCoords);
         textureBuffer.position(0);
+    }
+
+    public void bindToProgram(int texCoordinateLocation, int positionLocation) {
+        glEnableVertexAttribArray(texCoordinateLocation);
+        glVertexAttribPointer(texCoordinateLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, textureBuffer);
+
+        glEnableVertexAttribArray(positionLocation);
+        glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, vertexBuffer);
     }
 
     public void draw() {

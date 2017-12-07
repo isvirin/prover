@@ -10,10 +10,9 @@ import static android.opengl.GLES20.GL_TEXTURE0;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
+import static android.opengl.GLES20.glUniform1f;
 import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUseProgram;
-import static android.opengl.GLES20.glVertexAttribPointer;
 
 /**
  * Created by babay on 24.11.2017.
@@ -21,12 +20,18 @@ import static android.opengl.GLES20.glVertexAttribPointer;
 
 public class ReversePosCopyProgram extends GlProgram {
     protected String FRAGMENT_SHADER = "reverse_copy.frag.glsl";
-    protected String VERTEX_SHADER = "copy.vert.glsl";
+    protected String VERTEX_SHADER = "copy_scaled.vert.glsl";
 
     private int texCoordinateLocation;
     private int positionLocation;
     private int textureLocation;
+    private int widthLocation;
+    private int heightLocation;
+    private int pxStepXLocation;
+    private int pxStepYLocation;
     private int revOrderTable;
+    private int usedHiBitPart;
+    private int unusedHiBitPart;
 
     public ReversePosCopyProgram() {
 
@@ -39,24 +44,30 @@ public class ReversePosCopyProgram extends GlProgram {
         texCoordinateLocation = GLES20.glGetAttribLocation(programName, "texCoordinate");
         positionLocation = GLES20.glGetAttribLocation(programName, "position");
         revOrderTable = GLES20.glGetUniformLocation(programName, "revOrderTable");
+
+        widthLocation = GLES20.glGetUniformLocation(programName, "width");
+        heightLocation = GLES20.glGetUniformLocation(programName, "height");
+        pxStepXLocation = GLES20.glGetUniformLocation(programName, "pxStepX");
+        pxStepYLocation = GLES20.glGetUniformLocation(programName, "pxStepY");
+        usedHiBitPart = GLES20.glGetUniformLocation(programName, "usedHiBitPart");
+        unusedHiBitPart = GLES20.glGetUniformLocation(programName, "unusedHiBitPart");
     }
 
-    @Override
-    public void bind() {
-    }
-
-    public void bind(Texture sourceTexture, TexRect texRect, int[] revTable) {
+    public void bind(Texture sourceTexture, TexRect texRect, int width, int height, int[] revTable) {
         glUseProgram(programName);
 
         glActiveTexture(GL_TEXTURE0);//GLES20.GL_TEXTURE0
         glBindTexture(GL_TEXTURE_2D, sourceTexture.texId);
         glUniform1i(textureLocation, 0);
 
-        glEnableVertexAttribArray(texCoordinateLocation);
-        glVertexAttribPointer(texCoordinateLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, texRect.textureBuffer);
+        glUniform1f(widthLocation, width);
+        glUniform1f(heightLocation, height);
+        glUniform1f(pxStepXLocation, 0.5f / width);
+        glUniform1f(pxStepYLocation, 0.5f / height);
+        glUniform1i(usedHiBitPart, 4);
+        glUniform1i(unusedHiBitPart, 64);
 
-        glEnableVertexAttribArray(positionLocation);
-        glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, texRect.vertexBuffer);
+        texRect.bindToProgram(texCoordinateLocation, positionLocation);
 
         GLES20.glUniform1iv(revOrderTable, revTable.length, revTable, 0);
     }

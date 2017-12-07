@@ -7,7 +7,8 @@ import android.os.Looper;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.gl.lib.EglCore;
@@ -34,14 +35,17 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     private final GlTextures textures = new GlTextures();
     private final CameraTexture cameraTexture = new CameraTexture();
     private final TexRect texRect = new TexRect();
-    private final ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 1024 * 4);
-    private final ShortBuffer buf2 = ByteBuffer.allocate(512).asShortBuffer();
+    private final ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 1024 * 16).order(ByteOrder.nativeOrder());
+    private final FloatBuffer floatBuf = buf.asFloatBuffer();
     /**
      * Current context for use with utility methods
      */
     protected Context mContext;
     protected int mSurfaceWidth, mSurfaceHeight;
     protected float mSurfaceAspectRatio;
+    private float[] data = new float[1024 * 64 * 4];
+    private short[] dataShort = new short[1024 * 64];
+    private short[] dataShort2 = new short[1024 * 64];
     /**
      * main texture for display, based on TextureView that is created in activity or fragment
      * and passed in after onSurfaceTextureAvailable is called, guaranteeing its existence.
@@ -243,10 +247,26 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
 
             GLES20.glViewport(0, 0, mViewportWidth, mViewportHeight);
 
-            copyProgram.bind(phaseCorrelateProcessor.reIndexedImage, texRect);
+            copyProgram.bind(phaseCorrelateProcessor.getResultFbo(), texRect);
             texRect.draw();
             copyProgram.unbind();
-            //phaseCorrelateProcessor.getResultFbo().read(buf, GL_RGBA);
+            /*phaseCorrelateProcessor.fftFbo2.read(floatBuf, GL_RGBA);
+            buf.position(0);
+            floatBuf.get(data);
+            buf.position(0);
+/*            for (int i=0; i< dataShort.length/2-2; i++){
+                dataShort[2*i] = (short) data[4 * i + 1];
+                dataShort[2*i + 1] = (short) data[4 * i + 2];
+            }
+            int i=0;
+            i++;
+            /*for (int i=0; i < 1024; i++){
+                dataShort[i]= buf.getShort();
+                dataShort2[i] = PhaseCorrelateProcessor.obviousReverse(dataShort[i], 6);
+                buf.get();
+                buf.get();
+            }*/
+
         } else {
             readCameraProgram.bind(cameraTexture.texId, cameraTexture.mCameraTransformMatrix, texRect.textureBuffer, texRect.vertexBuffer);
             texRect.draw();

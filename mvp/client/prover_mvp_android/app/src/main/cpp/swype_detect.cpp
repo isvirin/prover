@@ -669,29 +669,29 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             rad_m = sqrt(pow((koord_Sw_points[swype_Numbers[count_num]].x - koord_Sw_points[swype_Numbers[count_num+1]].x),2) + pow((koord_Sw_points[swype_Numbers[count_num]].y - koord_Sw_points[swype_Numbers[count_num+1]].y),2));
             rad_s = sqrt(pow((koord_Sw_points[swype_Numbers[count_num]].x - D_coord_new.x),2) + pow((koord_Sw_points[swype_Numbers[count_num]].y - D_coord_new.y),2));
 
-            if(rad_m >= rad_s) {
-                if (((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) >=
-                     (koord_Sw_points[swype_Numbers[count_num + 1]].x - delta_x)) &&
-                    ((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) <=
-                     (koord_Sw_points[swype_Numbers[count_num + 1]].x + delta_x))) {
-                    if (((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) >=
-                         (koord_Sw_points[swype_Numbers[count_num + 1]].y - delta_y)) &&
-                        ((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) <=
-                         (koord_Sw_points[swype_Numbers[count_num + 1]].y + delta_y))) {
-                        count_num++;
-                        D_coord_new.x = 0;
-                        D_coord_new.y = 0;
-                        Shift_mass.clear();
-                        Shift_mass.resize(0);
-                        seconds_1 = time(NULL);
-                    }
+            //if(rad_m >= rad_s) {
+            if (((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) >=
+                 (koord_Sw_points[swype_Numbers[count_num + 1]].x - delta_x)) &&
+                ((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) <=
+                 (koord_Sw_points[swype_Numbers[count_num + 1]].x + delta_x))) {
+                if (((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) >=
+                     (koord_Sw_points[swype_Numbers[count_num + 1]].y - delta_y)) &&
+                    ((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) <=
+                     (koord_Sw_points[swype_Numbers[count_num + 1]].y + delta_y))) {
+                    count_num++;
+                    D_coord_new.x = 0;
+                    D_coord_new.y = 0;
+                    Shift_mass.clear();
+                    Shift_mass.resize(0);
+                    //seconds_1 = time(NULL);
                 }
-                if (swype_Numbers.size() == (count_num + 1)) S = 4;
             }
-            else Reset();
+            if (swype_Numbers.size() == (count_num + 1)) S = 4;
+            // }
+            //else Reset();
         }
-        seconds_2 = time(NULL);
-        if((seconds_2 - seconds_1)>Time_swipe) Reset();
+        //seconds_2 = time(NULL);
+        //if((seconds_2 - seconds_1)>Time_swipe) Reset();
     }
     debug = Direction;
     state = S;

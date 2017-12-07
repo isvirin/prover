@@ -4,16 +4,14 @@ import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
-import java.nio.Buffer;
+import io.prover.provermvp.gl.TexRect;
 
 import static android.opengl.GLES20.GL_TEXTURE0;
 import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glUseProgram;
-import static android.opengl.GLES20.glVertexAttribPointer;
 
 /**
  * Created by babay on 24.11.2017.
@@ -43,24 +41,16 @@ public class ReadCameraToGrayscaleProgram extends GlProgram {
         revOrderTable = GLES20.glGetUniformLocation(programName, "revOrderTable");
     }
 
-    @Override
-    public void bind() {
-    }
-
-    public void bind(int cameraTexture, float[] cameraTransformmatrix, Buffer texCoords, Buffer positionBuffer, int[] revTable) {
+    public void bind(int cameraTexture, float[] cameraTransformMatrix, TexRect texRect, int[] revTable) {
         glUseProgram(programName);
 
         glActiveTexture(GL_TEXTURE0);//GLES20.GL_TEXTURE0
         glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, cameraTexture);
         glUniform1i(camTextureLocation, 0);
 
-        glUniformMatrix4fv(camTextureTransformLocation, 1, false, cameraTransformmatrix, 0);
+        glUniformMatrix4fv(camTextureTransformLocation, 1, false, cameraTransformMatrix, 0);
 
-        glEnableVertexAttribArray(camTexCoordinateLocation);
-        glVertexAttribPointer(camTexCoordinateLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, texCoords);
-
-        glEnableVertexAttribArray(positionLocation);
-        glVertexAttribPointer(positionLocation, 2, GLES20.GL_FLOAT, false, 4 * 2, positionBuffer);
+        texRect.bindToProgram(camTexCoordinateLocation, positionLocation);
 
         GLES20.glUniform1iv(revOrderTable, revTable.length, revTable, 0);
     }

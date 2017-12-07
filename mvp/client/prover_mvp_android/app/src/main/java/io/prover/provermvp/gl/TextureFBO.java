@@ -8,6 +8,7 @@ import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.gl.lib.GlUtil;
 
 import static android.opengl.GLES20.GL_COLOR_ATTACHMENT0;
+import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_FRAMEBUFFER;
 import static android.opengl.GLES20.GL_NEAREST;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
@@ -19,7 +20,6 @@ import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDeleteFramebuffers;
 import static android.opengl.GLES20.glGenFramebuffers;
 import static android.opengl.GLES20.glReadPixels;
-import static android.opengl.GLES20.glTexImage2D;
 import static android.opengl.GLES20.glTexParameteri;
 
 /**
@@ -27,18 +27,19 @@ import static android.opengl.GLES20.glTexParameteri;
  */
 
 public class TextureFBO extends Texture {
-    public Size size;
-    int fboNames[] = new int[1];
+    private final int fboNames[] = new int[1];
+    private int name;
 
-    public TextureFBO(int texId, Size size, int format) {
+    public TextureFBO(int texId, Size size, int planes) {
         super(texId);
         this.size = size;
         glGenFramebuffers(1, fboNames, 0);
+        name = fboNames[0];
 
         glBindFramebuffer(GL_FRAMEBUFFER, fboNames[0]);
         glBindTexture(GL_TEXTURE_2D, texId);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_UNSIGNED_BYTE, null);
+        doTexImage(planes, null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -49,16 +50,33 @@ public class TextureFBO extends Texture {
         GlUtil.checkGlError2("TextureFBO generate");
     }
 
+
     public void release() {
-        if (fboNames != null) {
+        if (name != 0) {
             glDeleteFramebuffers(fboNames.length, fboNames, 0);
+            name = 0;
         }
     }
 
     public void read(Buffer target, int format) {
         target.position(0);
         glBindFramebuffer(GL_FRAMEBUFFER, fboNames[0]);
-        glReadPixels(0, 0, size.width, size.height, format, GL_UNSIGNED_BYTE, target);
+        int valueFormat = GL_UNSIGNED_BYTE;
+        if (isFloat)
+            valueFormat = GL_FLOAT;
+        else if (isHalfFloat)
+            valueFormat = GL_HALF_FLOAT_OES;
+        glReadPixels(0, 0, size.width, size.height, format, valueFormat, target);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
     }
+
+    public void bindAsTarget() {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, name);
+        GLES20.glViewport(0, 0, size.width, size.height);
+    }
+
+    public void unbindAsTarget() {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+    }
+
 }

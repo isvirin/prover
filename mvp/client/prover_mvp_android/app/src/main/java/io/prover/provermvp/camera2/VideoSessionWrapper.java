@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.TotalCaptureResult;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,6 +16,8 @@ import android.view.Surface;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.prover.provermvp.controller.CameraController;
+
 import static io.prover.provermvp.camera.MyCamera.TAG;
 
 /**
@@ -23,13 +26,14 @@ import static io.prover.provermvp.camera.MyCamera.TAG;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class VideoSessionWrapper {
+    private final CameraController cameraController;
     private CameraDevice mCameraDevice;
-
     private CaptureRequest.Builder mPreviewRequestBuilder;
     private CameraCaptureSession mCameraVideoSession;
 
-    public VideoSessionWrapper(CameraDevice cameraDevice) {
+    public VideoSessionWrapper(CameraDevice cameraDevice, CameraController cameraController) {
         this.mCameraDevice = cameraDevice;
+        this.cameraController = cameraController;
     }
 
     public synchronized void closeVideoSession() {
@@ -72,7 +76,12 @@ public class VideoSessionWrapper {
                 mCameraVideoSession = cameraCaptureSession;
                 try {
                     mPreviewRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
-                    mCameraVideoSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, mBackgroundHandler);
+                    mCameraVideoSession.setRepeatingRequest(mPreviewRequestBuilder.build(), new CameraCaptureSession.CaptureCallback() {
+                        @Override
+                        public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                            cameraController.onFrameDone();
+                        }
+                    }, mBackgroundHandler);
                 } catch (CameraAccessException e) {
                     e.printStackTrace();
                 }
