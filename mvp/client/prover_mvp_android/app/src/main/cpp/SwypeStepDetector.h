@@ -16,10 +16,12 @@
  * Y axis directed from top to bottom
  *
  */
+
+#define MAX_ATTRACT_ANGLE 45
 class SwypeStepDetector {
 public:
 
-    virtual void Add(VectorExplained other);
+    virtual void Add(VectorExplained);
 
     void Reset();
 
@@ -29,7 +31,7 @@ public:
      * @param height
      * @param speedMult
      */
-    void Configure(int width, int height, float speedMult, float maxDeviation);
+    void Configure(int width, int height, float speedMult, float maxDeviation, float attraction);
 
     /**
      * configures for movement between adjacent swype points currentPoint to nextPoint
@@ -56,14 +58,13 @@ public:
 private:
     int _count = 0;
 
-    //float _targetX = 0;
-    //float _targetY = 0;
     float _speedMultX = 0;
     float _speedMultY = 0;
     float _maxDeviation = 0;
     float _targetRadius = 0;
 
-    //int _targetDirection = 0;
+    float _attraction = 0;
+
     int _currentSwypePoint = 0;
     int _nextSwypePoint = 0;
     bool _isDiagonal;

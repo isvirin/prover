@@ -34,8 +34,19 @@ public:
 
     void operator*=(float mul);
 
+    void AttractTo(Vector other, float force);
+
     inline int DirectionDiff(VectorExplained other) {
         return (_direction - other._direction + 12) % 8 - 4;
+    }
+
+    /**
+     * calculates angle to another vector, result in [-180, 180]
+     * @param other
+     * @return
+     */
+    inline float AngleTo(VectorExplained other) {
+        return fmodf(other._angle - _angle + 540.0f, 360.0f) - 180.0f;
     }
 
     float _mod = 0;

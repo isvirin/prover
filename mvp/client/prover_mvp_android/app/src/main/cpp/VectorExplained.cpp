@@ -3,6 +3,7 @@
 //
 
 #include "VectorExplained.h"
+#include "common.h"
 
 void VectorExplained::Set(cv::Point2d other) {
     _x = (float) other.x;
@@ -76,6 +77,16 @@ void VectorExplained::SetLength(float length) {
         _y *= mul;
         _mod = fabsf(length);
     }
+}
+
+void VectorExplained::AttractTo(Vector other, float force) {
+    float mod = _mod;
+    LOGI_NATIVE("Detect2 attract (%f, %f) to (%f, (%f), len: %f, force: %f", _x, _y, other._x,
+                other._y, mod, force);
+    Vector::Add(other._x * force, other._y * force);
+    _mod = Length();
+    SetLength(mod);
+    LOGI_NATIVE("Detect2 attracted (%f, %f)", _x, _y);
 }
 
 

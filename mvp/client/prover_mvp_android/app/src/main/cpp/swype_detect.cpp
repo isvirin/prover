@@ -660,7 +660,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             seconds_1 = time(NULL);
             _currentShift.Reset();
             _swipeStepDetector.Reset();
-            _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.18f);
+            _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.18f, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
         }
     } else if (S == 3) {

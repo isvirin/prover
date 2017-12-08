@@ -5,11 +5,21 @@
 #include "SwypeStepDetector.h"
 #include "common.h"
 
-void SwypeStepDetector::Add(VectorExplained other) {
+void SwypeStepDetector::Add(VectorExplained shift) {
     //LOGI_NATIVE("detect2 add vector (%f, %f)", other._x, other._y);
-    other._x *= _speedMultX;
-    other._y *= _speedMultY;
-    _current.Add(other);
+    shift._x *= _speedMultX;
+    shift._y *= _speedMultY;
+
+    float angle = fabsf(shift.AngleTo(_target));
+    if (angle < MAX_ATTRACT_ANGLE) {
+        shift._mod = shift.Length();
+        //float attraction = angle/MAX_ATTRACT_ANGLE * CV_PI / 2
+        float attraction = (MAX_ATTRACT_ANGLE - angle) / MAX_ATTRACT_ANGLE;
+        attraction *= attraction * _attraction;
+        shift.AttractTo(_target, attraction);
+    }
+
+    _current.Add(shift);
     //LOGI_NATIVE("detect2 added vector (%f, %f), got (%f, %f)", other._x, other._y, _x, _y);
     _count++;
 }
@@ -23,11 +33,13 @@ void SwypeStepDetector::Reset() {
     _isDiagonal = false;
 }
 
-void SwypeStepDetector::Configure(int width, int height, float speedMult, float maxDeviation) {
+void SwypeStepDetector::Configure(int width, int height, float speedMult, float maxDeviation,
+                                  float attraction) {
     int size = width < height ? width : height;
     _speedMultX = 2.0f / size * speedMult;
     _speedMultY = 2.0f / size * speedMult;
     _maxDeviation = maxDeviation;
+    _attraction = attraction;
 }
 
 bool SwypeStepDetector::SetSwipeStep(int currentPoint, int nextPoint) {
