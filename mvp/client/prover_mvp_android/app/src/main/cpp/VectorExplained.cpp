@@ -89,4 +89,8 @@ void VectorExplained::AttractTo(Vector other, float force) {
     LOGI_NATIVE("Detect2 attracted (%f, %f)", _x, _y);
 }
 
+void VectorExplained::Log() {
+    LOGI_NATIVE("Detect2 vector (%f,%f) angle %f, mod %f ", _x, _y, _angle, _mod);
+}
+
 

@@ -40,6 +40,8 @@ public:
         return (_direction - other._direction + 12) % 8 - 4;
     }
 
+    void Log();
+
     /**
      * calculates angle to another vector, result in [-180, 180]
      * @param other

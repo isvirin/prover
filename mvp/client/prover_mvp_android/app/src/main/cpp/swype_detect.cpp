@@ -4,8 +4,7 @@ using namespace cv;
 using namespace std;
 
 
-int SwypeDetect::CircleDetection(void)
-{
+int SwypeDetect::CircleDetection(void) {
     vector<double> S_L(2);
     double S = 0;
     double L = 0;
@@ -21,21 +20,19 @@ int SwypeDetect::CircleDetection(void)
         L = L + sqrt(pow(Delta[1].x, 2) + pow(Delta[1].y, 2)) +
             sqrt(pow(Delta[Delta.size() - 1].x, 2) + pow(Delta[Delta.size() - 1].y, 2));
         C = L / sqrt(S);
-        if ((C < 5) && (C > 3)&&(S >= Minimal_circle_area)) return 1;
+        if ((C < 5) && (C > 3) && (S >= Minimal_circle_area)) return 1;
     }
     return 0;
 }
 
 
-
-vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
-{
+vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height) {
     vector<Point2d> Result(10);
 
     Result[0].x = 0;
     Result[0].y = 0;
 
-    Result[7].x = floor(1 * width* Swipe_Distance);
+    Result[7].x = floor(1 * width * Swipe_Distance);
     Result[7].y = floor(1 * height * Swipe_Distance);
 
     Result[8].x = floor(2 * width * Swipe_Distance);
@@ -54,19 +51,18 @@ vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
     Result[6].y = floor(2 * height * Swipe_Distance);
 
     Result[1].x = floor(1 * width * Swipe_Distance);
-    Result[1].y = floor(3 * height* Swipe_Distance);
+    Result[1].y = floor(3 * height * Swipe_Distance);
 
-    Result[2].x = floor(2 * width* Swipe_Distance);
-    Result[2].y = floor(3 * height* Swipe_Distance);
+    Result[2].x = floor(2 * width * Swipe_Distance);
+    Result[2].y = floor(3 * height * Swipe_Distance);
 
     Result[3].x = floor(3 * width * Swipe_Distance);
-    Result[3].y = floor(3 * height* Swipe_Distance);
+    Result[3].y = floor(3 * height * Swipe_Distance);
 
     return Result;
 }
 
-void SwypeDetect::Delta_Calculation(Point2d shift)
-{
+void SwypeDetect::Delta_Calculation(Point2d shift) {
     double Mean_Alfa;
     double K;
 
@@ -411,8 +407,7 @@ void SwypeDetect::processFrame(Mat frame, int &state, int &index, int &x, int &y
 
 
 void SwypeDetect::processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state,
-                               int &index, int &x, int &y, int &debug)
-{
+                               int &index, int &x, int &y, int &debug) {
     Point2d shift;
     int Max_d = 0;
 
@@ -612,35 +607,29 @@ void SwypeDetect::S1_processor(void) {
     seconds_1 = time(NULL);
 }
 
-void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
-{
+void
+SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state,
+                              int &index, int &x, int &y, int &debug) {
     Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
 
     Point2d shift = Frame_processor(frame);
     _currentShift.SetMul(shift, -1, -1);
 
     if (S == 0) {
-        _circleDetector.AddShift(_currentShift);
-        //LOGI_NATIVE("detect2: IsCircle Start");
-        /*if (_circleDetector.IsCircle()){
-            S = 1;
-            _circleDetector.Reset();
-        }*/
-        //LOGI_NATIVE("detect2: IsCircle End");
-        if (_currentShift._mod > Minimal_shift_radius) {
-            //Delta_Calculation(shift);
-            D_coord.x = D_coord.x - shift.x;
-            D_coord.y = D_coord.y + shift.y;
-            Delta.push_back(D_coord);
-            call++;
-        };
-        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3))
-            S = CircleDetection();
+        if (_currentShift._mod > 2) {
+            _circleDetector.AddShift(_currentShift);
+            //LOGI_NATIVE("detect2: IsCircle Start");
+            if (_circleDetector.IsCircle()) {
+                S = 1;
+                _circleDetector.Reset();
+            }
+            //LOGI_NATIVE("detect2: IsCircle End");
+        }
     } else if (S == 1) {
         S1_processor();
-    } else if(S==2){
+    } else if (S == 2) {
         seconds_2 = time(NULL);
-        if ((seconds_2 - seconds_1)>Time_to_state_3){
+        if ((seconds_2 - seconds_1) > Time_to_state_3) {
             Delta.clear();
             Delta.resize(0);
             DirectionS.clear();

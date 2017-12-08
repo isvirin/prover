@@ -9,7 +9,7 @@
 #include "VectorExplained.h"
 
 #define SHIFTS 64
-#define MIN_CIRCLE_AREA 40
+#define MIN_CIRCLE_AREA 2000
 
 class SwipeCircleDetector {
 public:
@@ -22,8 +22,10 @@ public:
         total_ = 0;
     }
 
+    const float Circle_S_by_P2 = (const float) (0.25f / CV_PI);
+
 private:
-    float Area(int amount);
+    float Area(int amount, float &perimeter);
 
     VectorExplained shifts_[SHIFTS];
     int pos_ = 0;
