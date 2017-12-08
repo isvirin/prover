@@ -10,11 +10,13 @@ import sys, os, json, hashlib, traceback, binascii
 if str==bytes:
     from urlparse import parse_qs, parse_qsl
     from urllib import urlencode
-    from urllib import urlopen
+    from urllib2 import urlopen
+    from urllib2 import Request
 else:
     from urllib.parse import parse_qs, parse_qsl
     from urllib.parse import urlencode
     from urllib.request import urlopen
+    from urllib.request import Request
     sys.stdout=sys.stdout.buffer
     sys.stdin=sys.stdin.buffer
 
@@ -53,7 +55,8 @@ if address is not None:
     rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getTransactionCount", "params":[address, "latest"], "id":"tc"})
     rpcrequest.append({"jsonrpc":"2.0", "method":"eth_getBalance", "params":[address, "latest"], "id":"b"})
 
-reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+request=Request("http://"+config["node"], data=json.dumps(rpcrequest).encode("latin1"), headers={"Content-Type": "application/json"})
+reply=urlopen(request)
 if reply.getcode()!=200:
     sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
     sys.exit(0)

@@ -51,11 +51,13 @@ def generateSwype(blockHash, txHash):
 if str==bytes:
     from urlparse import parse_qs, parse_qsl
     from urllib import urlencode
-    from urllib import urlopen
+    from urllib2 import urlopen
+    from urllib2 import Request
 else:
     from urllib.parse import parse_qs, parse_qsl
     from urllib.parse import urlencode
     from urllib.request import urlopen
+    from urllib.request import Request
     sys.stdout=sys.stdout.buffer
     sys.stdin=sys.stdin.buffer
 
@@ -94,7 +96,8 @@ if "hex" in query_args:
 
     rpcrequest={"jsonrpc":"2.0", "method":"eth_sendRawTransaction", "params":[tx], "id":0}
 
-    reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+    request=Request("http://"+config["node"], data=json.dumps(rpcrequest).encode("latin1"), headers={"Content-Type": "application/json"})
+    reply=urlopen(request)
     if reply.getcode()!=200:
         sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
         sys.exit(0)
@@ -109,7 +112,8 @@ elif "txhash" in query_args:
 
     rpcrequest={"jsonrpc":"2.0", "method":"eth_getTransactionByHash", "params":[txhash], "id":0}
 
-    reply=urlopen("http://"+config["node"], json.dumps(rpcrequest).encode("latin1"))
+    request=Request("http://"+config["node"], data=json.dumps(rpcrequest).encode("latin1"), headers={"Content-Type": "application/json"})
+    reply=urlopen(request)
     if reply.getcode()!=200:
         sys.stdout.write(b"Status: 500 Internal Server Error\n\nNode error\n")
         sys.exit(0)
