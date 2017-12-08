@@ -7,25 +7,24 @@
 void VectorExplained::Set(cv::Point2d other) {
     _x = (float) other.x;
     _y = (float) other.y;
-    _mod = sqrtf(_x * _x + _y * _y);
-    CalculateAngle();
+    CalculateExplained();
 }
 
 void VectorExplained::SetMul(cv::Point2d other, float mulX, float mulY) {
     _x = (float) other.x * mulX;
     _y = (float) other.y * mulY;
-    _mod = sqrtf(_x * _x + _y * _y);
-    CalculateAngle();
+    CalculateExplained();
 }
 
 void VectorExplained::Add(VectorExplained other) {
     if (other._mod > 0) {
         (*this) += other;
-        CalculateAngle();
+        CalculateExplained();
     }
 }
 
-void VectorExplained::CalculateAngle() {
+void VectorExplained::CalculateExplained() {
+    _mod = Length();
     if (_mod <= 0) {
         _angle = 0;
         return;
@@ -58,13 +57,7 @@ void VectorExplained::CalculateAngle() {
      */
 }
 
-void VectorExplained::Reset() {
-    _x = 0;
-    _y = 0;
-    _mod = 0;
-    _angle = 0;
-    _direction = 0;
-}
+
 
 void VectorExplained::operator*=(float mul) {
     _x *= mul;
@@ -73,6 +66,15 @@ void VectorExplained::operator*=(float mul) {
     if (mul < 0) {
         _direction = _direction < 5 ? _direction + 4 : _direction - 4;
         _angle = _angle < 180 ? _angle + 180 : _angle - 180;
+    }
+}
+
+void VectorExplained::SetLength(float length) {
+    if (_mod > 0) {
+        float mul = length / _mod;
+        _x *= mul;
+        _y *= mul;
+        _mod = fabsf(length);
     }
 }
 

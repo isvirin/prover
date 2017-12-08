@@ -9,16 +9,15 @@ void SwypeStepDetector::Add(VectorExplained other) {
     //LOGI_NATIVE("detect2 add vector (%f, %f)", other._x, other._y);
     other._x *= _speedMultX;
     other._y *= _speedMultY;
-    VectorExplained::Add(other);
+    _current.Add(other);
     //LOGI_NATIVE("detect2 added vector (%f, %f), got (%f, %f)", other._x, other._y, _x, _y);
     _count++;
 }
 
 void SwypeStepDetector::Reset() {
-    VectorExplained::Reset();
+    _current.Reset();
+    _target.Reset();
     _count = 0;
-    _targetX = 0;
-    _targetY = 0;
     _currentSwypePoint = 0;
     _nextSwypePoint = 0;
     _isDiagonal = false;
@@ -39,14 +38,13 @@ bool SwypeStepDetector::SetSwipeStep(int currentPoint, int nextPoint) {
 
 bool SwypeStepDetector::AdvanceSwipeStep(int nextPoint) {
     _count = 0;
-    _x -= _targetX;
-    _y -= _targetY;
+    _current -= _target;
     _currentSwypePoint = _nextSwypePoint;
     return SetNextSwipePoint(nextPoint);
 }
 
 int SwypeStepDetector::CheckState() {
-    bool reachedBounds = _mod > (_isDiagonal ? _sqrt2 : 1.0);
+    bool reachedBounds = _current._mod > (_isDiagonal ? _sqrt2 : 1.0);
 
 #ifdef REQUIRE_REACH_BOUNDS
     if (reachedBounds) {
@@ -55,20 +53,22 @@ int SwypeStepDetector::CheckState() {
         return distance <= _targetRadius ? 1 : -1;
     }
 #else
-    float distance = pointDistance(_x, _y, _targetX, _targetY);
+    float distance = _current.distanceTo(_target);
     if (distance <= _targetRadius)
         return 1;
     if (reachedBounds) {
-        LOGI_NATIVE("detect2 failing (%f %f) target (%f %f) distance %f max %f mod %f", _x, _y,
-                    _targetX, _targetY, distance, (_isDiagonal ? _sqrt2 : 1.0), _mod);
+        LOGI_NATIVE("detect2 failing (%f %f) target (%f %f) distance %f max %f mod %f", _current._x,
+                    _current._y,
+                    _target._x, _target._y, distance, (_isDiagonal ? _sqrt2 : 1.0), _current._mod);
         return -1;
     }
 #endif
 
-    int directionDiff = (_direction - _targetDirection + 12) % 8 - 4;
-    if (abs(directionDiff) > 2 && _mod > _badDirectionMaxRadius) {
-        LOGI_NATIVE("detect2 bad direction: cur: %d, target: %d, diff: %d, mod: %f", _direction,
-                    _targetDirection, directionDiff, _mod);
+    int directionDiff = _current.DirectionDiff(_target);
+    if (abs(directionDiff) > 2 && _current._mod > _badDirectionMaxRadius) {
+        LOGI_NATIVE("detect2 bad direction: cur: %d, target: %d, diff: %d, mod: %f",
+                    _current._direction,
+                    _target._direction, directionDiff, _current._mod);
         return -1;
     }
     return 0;
@@ -87,15 +87,13 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
         return false;
 
     _isDiagonal = dx != 0 && dy != 0;
-    _targetX = dx;
-    _targetY = dy;
+    _target.Set(dx, dy);
+
     _targetRadius = _isDiagonal ? _maxDeviation * _sqrt2 : _maxDeviation;
 
-    VectorExplained temp = VectorExplained(_targetX, _targetY);
-    _targetDirection = temp._direction;
     _nextSwypePoint = nextPoint + 1;
     LOGI_NATIVE("detect2 select src: %d, dst: %d, dx %d, dy %d, dir %d", currentPoint, nextPoint,
-                dx, dy, _targetDirection);
+                dx, dy, _target._direction);
     return true;
 }
 

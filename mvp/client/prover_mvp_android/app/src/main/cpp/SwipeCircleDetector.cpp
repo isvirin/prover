@@ -14,12 +14,12 @@ void SwipeCircleDetector::AddShift(VectorExplained shift) {
 }
 
 bool SwipeCircleDetector::IsCircle() {
-    Vector sum = shifts_[pos_];
+    VectorExplained sum = shifts_[pos_];
     //Vector centerSum = sum;
 
     for (int i = 1; i <= total_; i++) {
         int pos = (pos_ - i + SHIFTS) % SHIFTS;
-        sum += shifts_[pos];
+        sum.Add(shifts_[pos]);
         //centerSum += sum;
         if (sum._mod < 5 && i > 5) {
             float area = Area(pos);

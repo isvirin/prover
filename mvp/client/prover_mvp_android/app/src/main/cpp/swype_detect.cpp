@@ -685,10 +685,10 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
                     break;
             }
         }
-        x = (int) (_swipeStepDetector._x * 1024);
-        y = (int) (_swipeStepDetector._y * 1024);
+        x = (int) (_swipeStepDetector._current._x * 1024);
+        y = (int) (_swipeStepDetector._current._y * 1024);
     }
-    debug = _swipeStepDetector._direction;
+    debug = _currentShift._direction;
     state = S;
     index = count_num + 1;
 }

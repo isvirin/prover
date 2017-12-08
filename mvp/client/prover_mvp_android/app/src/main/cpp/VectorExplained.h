@@ -13,18 +13,32 @@ public:
     VectorExplained() {};
 
     VectorExplained(float x, float y) : Vector(x, y) {
-        CalculateAngle();
+        CalculateExplained();
     };
 
     void Set(cv::Point2d other);
+
+    void Set(float x, float y) {
+        _x = x;
+        _y = y;
+        CalculateExplained();
+    }
 
     void SetMul(cv::Point2d other, float mulX, float mulY);
 
     virtual void Add(VectorExplained other);
 
-    virtual void Reset();
+    inline void Reset();
+
+    void SetLength(float length);
 
     void operator*=(float mul);
+
+    inline int DirectionDiff(VectorExplained other) {
+        return (_direction - other._direction + 12) % 8 - 4;
+    }
+
+    float _mod = 0;
 
     float _angle = 0;
     /**
@@ -33,8 +47,15 @@ public:
     int _direction = 0;
 
 private:
-    void CalculateAngle();
+    void CalculateExplained();
 };
 
+inline void VectorExplained::Reset() {
+    _x = 0;
+    _y = 0;
+    _mod = 0;
+    _angle = 0;
+    _direction = 0;
+}
 
 #endif //PROVER_MVP_ANDROID_VECTOREXPLAINED_H

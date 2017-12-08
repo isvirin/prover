@@ -16,12 +16,12 @@
  * Y axis directed from top to bottom
  *
  */
-class SwypeStepDetector : public VectorExplained {
+class SwypeStepDetector {
 public:
 
     virtual void Add(VectorExplained other);
 
-    virtual void Reset();
+    void Reset();
 
     /**
      * configures detector for specific width, height and speed multiplier
@@ -50,16 +50,20 @@ public:
      */
     int CheckState();
 
+    VectorExplained _target;
+    VectorExplained _current;
+
 private:
     int _count = 0;
-    float _targetX = 0;
-    float _targetY = 0;
+
+    //float _targetX = 0;
+    //float _targetY = 0;
     float _speedMultX = 0;
     float _speedMultY = 0;
     float _maxDeviation = 0;
     float _targetRadius = 0;
 
-    int _targetDirection = 0;
+    //int _targetDirection = 0;
     int _currentSwypePoint = 0;
     int _nextSwypePoint = 0;
     bool _isDiagonal;

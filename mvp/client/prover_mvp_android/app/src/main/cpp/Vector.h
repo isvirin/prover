@@ -13,27 +13,43 @@ public:
 
     Vector() {}
 
-    Vector(float _x, float _y) : _x(_x), _y(_y) {
-        _mod = sqrtf(_x * _x + _y * _y);
-    }
+    Vector(float _x, float _y) : _x(_x), _y(_y) {}
 
     inline void operator+=(Vector other) {
         _x += other._x;
         _y += other._y;
-        _mod = sqrtf(_x * _x + _y * _y);
     };
 
-    void SetLength(float length);
+    inline Vector operator+(Vector other) {
+        return Vector(_x + other._x, _y + other._y);
+    }
+
+    inline float operator*(Vector other) {
+        return _x * other._x + _y * other._y;
+    }
+
+    inline void operator-=(Vector other) {
+        _x -= other._x;
+        _y -= other._y;
+    }
+
+    inline float Length() {
+        return sqrtf(_x * _x + _y * _y);
+    }
+
+    inline float distanceTo(Vector other) {
+        float dx = other._x - _x;
+        float dy = other._y - _y;
+        return sqrtf(dx * dx + dy * dy);
+    }
 
     float _x = 0;
     float _y = 0;
-    float _mod = 0;
 
 protected:
     inline void Add(float x, float y) {
         _x += x;
         _y += y;
-        _mod = sqrtf(_x * _x + _y * _y);
     }
 };
 
