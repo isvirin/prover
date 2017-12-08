@@ -65,7 +65,7 @@ vector<Point2d> SwypeDetect::Koord_Swipe_Points(int width, int height)
     return Result;
 }
 
-void SwypeDetect::Delta_Calculation(Point2d output)
+void SwypeDetect::Delta_Calculation(Point2d shift)
 {
     double Mean_Alfa;
     double K;
@@ -76,21 +76,21 @@ void SwypeDetect::Delta_Calculation(Point2d output)
     double rez_vec_1_y = 0;
     double pi = 3.1415926535897932384626433832795;
 
-    double radius = cv::sqrt(output.x * output.x + output.y * output.y);
+    double radius = cv::sqrt(shift.x * shift.x + shift.y * shift.y);
 
 
     if (radius > Minimal_shift_radius) {
 
         fl_dir = true;
-        if (call == 0) {
+        /*if (call == 0) {
             D_coord.x = 0;
             D_coord.y = 0;
 
-        } else {
-            D_coord.x = D_coord.x - output.x;
-            D_coord.y = D_coord.y + output.y;
+        } else {*/
+        D_coord.x = D_coord.x - shift.x;
+        D_coord.y = D_coord.y + shift.y;
 
-        }
+        //}
         Delta.push_back(D_coord);
 
 
@@ -324,7 +324,7 @@ SwypeDetect::SwypeDetect() // initialization
     Delta.resize(0);
 
     koord_Sw_points.reserve(10);
-
+    Delta.push_back(D_coord);
 }
 
 SwypeDetect::~SwypeDetect() {
@@ -345,7 +345,7 @@ void SwypeDetect::setSwype(string swype) {
     if (swype != "") {
         for (int i = 0; i < swype.length(); i++) {
             t = swype.at(i);
-            j = atoi(&t);
+            j = t - '0';
             swype_Numbers.push_back(j);
         }
         r = swype_Numbers.front();
@@ -494,8 +494,8 @@ void SwypeDetect::Reset(void) {
     koord_Sw_points.clear();
     koord_Sw_points.resize(0);
 
-    Shift_mass.clear();
-    Shift_mass.resize(0);
+    Shift_arr.clear();
+    Shift_arr.resize(0);
 
     D_coord.x = 0;
     D_coord.y = 0;
@@ -510,6 +510,7 @@ void SwypeDetect::Reset(void) {
     buf2ft.release();
     hann.release();
 
+    Delta.push_back(D_coord);
 }
 
 
@@ -594,8 +595,8 @@ void SwypeDetect::S1_processor(void) {
         Delta.resize(0);
         DirectionS.clear();
         DirectionS.resize(0);
-        Shift_mass.clear();
-        Shift_mass.resize(0);
+        Shift_arr.clear();
+        Shift_arr.resize(0);
         D_coord.x = 0;
         D_coord.y = 0;
         Direction = 0;
@@ -612,25 +613,21 @@ void SwypeDetect::S1_processor(void) {
 
 void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug)
 {
-    Point2d shift;
-    int Max_d = 0;
-    float delta_x;
-    float delta_y;
-
-    float rad_m;
-    float rad_s;
-
-    //NW21 convert
-
     Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
 
-    shift = Frame_processor(frame);
-
-    Delta_Calculation(shift);
-    Shift_mass.push_back(shift);
+    Point2d shift = Frame_processor(frame);
+    _currentShift.SetMul(shift, -1, -1);
 
     if (S == 0) {
-        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3)) S = CircleDetection();
+        if (_currentShift._mod > Minimal_shift_radius) {
+            //Delta_Calculation(shift);
+            D_coord.x = D_coord.x - shift.x;
+            D_coord.y = D_coord.y + shift.y;
+            Delta.push_back(D_coord);
+            call++;
+        };
+        if ((fabs(D_coord.x) > 3) || (fabs(D_coord.y) > 3))
+            S = CircleDetection();
     } else if (S == 1) {
         S1_processor();
     } else if(S==2){
@@ -640,8 +637,8 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             Delta.resize(0);
             DirectionS.clear();
             DirectionS.resize(0);
-            Shift_mass.clear();
-            Shift_mass.resize(0);
+            Shift_arr.clear();
+            Shift_arr.resize(0);
             D_coord.x = 0;
             D_coord.y = 0;
             Direction = 0;
@@ -653,47 +650,37 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             hann.release();
             S = 3;
             seconds_1 = time(NULL);
+            _currentShift.Reset();
+            _swipeStepDetector.Reset();
+            _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.18f);
+            _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
         }
     } else if (S == 3) {
-        x = D_coord_new.x;
-        y = D_coord_new.y;
-        if (fl_dir) {
-            fl_dir = false;
+        if (_currentShift._mod > Minimal_shift_radius) {
+            _swipeStepDetector.Add(_currentShift);
+            int status = _swipeStepDetector.CheckState();
+            switch (status) {
+                case 1:
+                    ++count_num;
+                    if (swype_Numbers.size() == (count_num + 1)) {
+                        S = 4;
+                    } else {
+                        _swipeStepDetector.AdvanceSwipeStep(swype_Numbers[count_num + 1]);
+                    }
+                    break;
 
-            D_coord_new.x = D_coord_new.x - Shift_mass.back().x;
-            D_coord_new.y = D_coord_new.y + Shift_mass.back().y;
+                case 0:
+                    break;
 
-            delta_x = fabs(Swype_radius*(koord_Sw_points[swype_Numbers[count_num+1]].x - koord_Sw_points[swype_Numbers[count_num]].x));
-            delta_y = fabs(Swype_radius*(koord_Sw_points[swype_Numbers[count_num+1]].y - koord_Sw_points[swype_Numbers[count_num]].y));
-
-            rad_m = sqrt(pow((koord_Sw_points[swype_Numbers[count_num]].x - koord_Sw_points[swype_Numbers[count_num+1]].x),2) + pow((koord_Sw_points[swype_Numbers[count_num]].y - koord_Sw_points[swype_Numbers[count_num+1]].y),2));
-            rad_s = sqrt(pow((koord_Sw_points[swype_Numbers[count_num]].x - D_coord_new.x),2) + pow((koord_Sw_points[swype_Numbers[count_num]].y - D_coord_new.y),2));
-
-            //if(rad_m >= rad_s) {
-            if (((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) >=
-                 (koord_Sw_points[swype_Numbers[count_num + 1]].x - delta_x)) &&
-                ((koord_Sw_points[swype_Numbers[count_num]].x + D_coord_new.x) <=
-                 (koord_Sw_points[swype_Numbers[count_num + 1]].x + delta_x))) {
-                if (((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) >=
-                     (koord_Sw_points[swype_Numbers[count_num + 1]].y - delta_y)) &&
-                    ((koord_Sw_points[swype_Numbers[count_num]].y + D_coord_new.y) <=
-                     (koord_Sw_points[swype_Numbers[count_num + 1]].y + delta_y))) {
-                    count_num++;
-                    D_coord_new.x = 0;
-                    D_coord_new.y = 0;
-                    Shift_mass.clear();
-                    Shift_mass.resize(0);
-                    //seconds_1 = time(NULL);
-                }
+                case -1:
+                    S = 0;
+                    break;
             }
-            if (swype_Numbers.size() == (count_num + 1)) S = 4;
-            // }
-            //else Reset();
         }
-        //seconds_2 = time(NULL);
-        //if((seconds_2 - seconds_1)>Time_swipe) Reset();
+        x = (int) (_swipeStepDetector._x * 1024);
+        y = (int) (_swipeStepDetector._y * 1024);
     }
-    debug = Direction;
+    debug = _currentShift._direction;
     state = S;
     index = count_num + 1;
 }

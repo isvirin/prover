@@ -1,6 +1,7 @@
 package io.prover.provermvp.viewholder;
 
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,7 +31,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private final ConstraintLayout root;
     private final CameraController cameraController;
     private final ImageView[] swypePoints = new ImageView[9];
-    private final ImageView currentPoint;
+    private final ImageView redPoint;
     private final Handler handler = new Handler();
     private final SwypeArrowHolder swypeArrowHolder;
     private final Matrix rotateScaleMatrix = new Matrix();
@@ -43,8 +44,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private boolean[] pointVisited;
     private int detectProgressPos;
     private VectorDrawableCompat emptyPointDrawable;
-    private boolean detectionPaused = false;
-    private Size detectorSize;
 
 
     public SwypeViewHolder(ConstraintLayout root, CameraController cameraController) {
@@ -61,7 +60,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         swypePoints[7] = root.findViewById(R.id.swypePoint8);
         swypePoints[8] = root.findViewById(R.id.swypePoint9);
 
-        currentPoint = root.findViewById(R.id.swypeCurrentPosition);
+        redPoint = root.findViewById(R.id.swypeCurrentPosition);
         swypeArrowHolder = new SwypeArrowHolder(root, swypePoints);
 
         cameraController.detectionState.add(this);
@@ -73,10 +72,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
 
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
-        if (detectionPaused)
-            return;
         boolean visible = root.getVisibility() == View.VISIBLE;
-        boolean shouldBeVisible = (newState.state == InputCode || newState.state == GotProverWaiting);
+        boolean shouldBeVisible = (newState.state == InputCode || newState.state == GotProverWaiting) && swypeSequence != null;
         if (visible != shouldBeVisible) {
             if (shouldBeVisible)
                 show();
@@ -100,15 +97,13 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             } else {
                 swypeArrowHolder.hide();
             }
-            pointMatrix.set(rotateScaleMatrix);
-            View v = swypeSequence[index];
-            pointMatrix.postTranslate((v.getLeft() + v.getRight()) / 2, (v.getTop() + v.getBottom()) / 2);
+            setRedPointPositionMatrixTo(swypeSequence[index]);
         }
         point[0] = newState.x;
         point[1] = newState.y;
         pointMatrix.mapPoints(point);
-        currentPoint.setTranslationX(point[0]);
-        currentPoint.setTranslationY(point[1]);
+        redPoint.setTranslationX(point[0]);
+        redPoint.setTranslationY(point[1]);
     }
 
     @Override
@@ -134,25 +129,24 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         }
         rotateScaleMatrix.reset();
         int orientation = cameraController.getOrientationHint();
-        rotateScaleMatrix.postScale(1, -1);
+        rotateScaleMatrix.postScale(1, 1);
         rotateScaleMatrix.postRotate(orientation, 0, 0);
-        rotateScaleMatrix.postScale(xMult * 2, yMult * 2);
+        rotateScaleMatrix.postScale(xMult, yMult);
 
     }
 
     @Override
     public void onRecordingStart(float fps, Size detectorSize) {
-        float size = root.getResources().getDisplayMetrics().density * (60 + 60 + 36);
-        this.detectorSize = detectorSize;
-        xMult = size / detectorSize.width;
-        yMult = size / detectorSize.height;
+        float size = root.getResources().getDisplayMetrics().density * 96;
+        xMult = size / 1024.0f;
+        yMult = size / 1024.0f;
     }
 
     private void resetDetectionPosition() {
         detectProgressPos = -1;
 
-        currentPoint.setTranslationX(estimatePointCoord(sequenceIndices[0] % 3));
-        currentPoint.setTranslationY(estimatePointCoord(sequenceIndices[0] / 3));
+        redPoint.setTranslationX(estimatePointCoord(sequenceIndices[0] % 3));
+        redPoint.setTranslationY(estimatePointCoord(sequenceIndices[0] / 3));
     }
 
     private int estimatePointCoord(int line) {
@@ -169,7 +163,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private void show() {
         root.setVisibility(View.VISIBLE);
         resetDetectionPosition();
-        detectionPaused = true;
         cameraController.setSwypeDetectorPaused(true);
         int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration);
         Arrays.fill(pointVisited, false);
@@ -184,13 +177,14 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             }, animationDuration * i);
         }
 
-        applyAnimatedVectorDrawable(currentPoint, R.drawable.swype_track_point_blink);
+        setRedPointPositionMatrixTo(swypeSequence[0]);
+        redPoint.setVisibility(View.GONE);
         handler.postDelayed(() -> {
-            detectionPaused = false;
+            applyAnimatedVectorDrawable(redPoint, R.drawable.swype_track_point_blink);
+            redPoint.setVisibility(View.VISIBLE);
+            redPoint.bringToFront();
             cameraController.setSwypeDetectorPaused(false);
         }, animationDuration * (swypeSequence.length + 1));
-        currentPoint.bringToFront();
-        pointMatrix.set(rotateScaleMatrix);
     }
 
     private void applyAnimatedVectorDrawable(ImageView view, int id) {
@@ -207,6 +201,19 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 imageView.setImageDrawable(emptyPointDrawable);
             }
         }
+    }
+
+    private void setRedPointPositionMatrixTo(View v) {
+        pointMatrix.set(rotateScaleMatrix);
+        int dx = redPoint.getWidth() / 2;
+        int dy = redPoint.getHeight() / 2;
+        if (dx == 0 || dy == 0) {
+            Drawable dr = redPoint.getDrawable();
+            dx = dr.getIntrinsicWidth() / 2;
+            dy = dr.getIntrinsicHeight() / 2;
+        }
+        pointMatrix.postTranslate(-dx, -dy);
+        pointMatrix.postTranslate((v.getLeft() + v.getRight()) / 2, (v.getTop() + v.getBottom()) / 2);
     }
 
     @Override

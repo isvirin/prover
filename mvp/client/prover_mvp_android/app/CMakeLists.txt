@@ -8,18 +8,20 @@ cmake_minimum_required(VERSION 3.4.1)
 # Download OpenCV for android 3.3 here: https://opencv.org/releases.html
 # set path to OpenCV
 
-set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../../OpenCV)
-include_directories(
-                    ${pathToOpenCv}/include
-#                    src/main/cpp/secp256k1
-)
+#include_directories( src/main/cpp/secp256k1 )
 
 MESSAGE( STATUS "CMAKE_SOURCE_DIR:         " ${CMAKE_SOURCE_DIR} )
-MESSAGE( STATUS "pathToOpenCv:         " ${pathToOpenCv} )
+
+# configure path toOpenCV here:
+include(${CMAKE_SOURCE_DIR}/CMakeLists_includeOpenCV.txt)
+
+
 
 add_library( native-lib SHARED
              src/main/cpp/native-lib.cpp
              src/main/cpp/swype_detect.cpp
+             src/main/cpp/VectorExplained.cpp
+             src/main/cpp/SwypeStepDetector.cpp
 
 #             src/main/cpp/keccak.c src/main/cpp/rlp.c  src/main/cpp/sign_eth_tx.c src/main/cpp/secp256k1/src/secp256k1.c
               )

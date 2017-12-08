@@ -1,0 +1,15 @@
+# For more information about using CMake with Android Studio, read the
+# documentation: https://d.android.com/studio/projects/add-native-code.html
+
+# Sets the minimum version of CMake required to build the native library.
+
+#cmake_minimum_required(VERSION 3.4.1)
+
+# Download OpenCV for android 3.3 here: https://opencv.org/releases.html
+# set path to OpenCV
+
+set(pathToOpenCv ${CMAKE_SOURCE_DIR}/../../../../../../../Android/OpenCV-android-sdk)
+include_directories(
+                    ${pathToOpenCv}/sdk/native/jni/include
+)
+MESSAGE( STATUS "pathToOpenCv:         " ${pathToOpenCv} )

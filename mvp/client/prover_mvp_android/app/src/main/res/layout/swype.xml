@@ -9,6 +9,11 @@
     app:layout_constraintRight_toRightOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
+    <!--
+    swipe circle size = 36dp
+    distance between swipe point centers is 60 + 36 = 96dp
+    -->
+
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/swypePoint1"
         android:layout_width="wrap_content"

@@ -34,10 +34,12 @@
 //   a swype-code (this state is available for the first use-case only, when
 //   the swype-code was not set yet; transition to S2 occurs after setting
 //   a swype-code);
-// * S2 (index of a last recognized symbol in the code, coordinates of the
+// * S2 (no): circular motion is detected, we have a swype-code and we are
+//   waiting for some time: user should stabilize camera before entering swype-code
+// * S3 (index of a last recognized symbol in the code, coordinates of the
 //   current point of the image for trajectory visualization): entering
 //   a swype-code is in progess.
-// * S3 (no): swype-code entering is finished.
+// * S4 (no): swype-code entering is finished.
 //
 // IV. Algorithm description
 //
@@ -101,7 +103,7 @@
 #pragma once
 
 #define Minimal_circle_area 40
-#define Minimal_shift_radius 5
+#define Minimal_shift_radius 3
 #define Swype_radius 0.4
 #define Swipe_Distance 0.25
 #define Time_to_state_3 2
@@ -115,6 +117,8 @@
 #include <cstdlib>
 #include <cstring>
 #include "opencv2/core/ocl.hpp"
+#include "VectorExplained.h"
+#include "SwypeStepDetector.h"
 
 
 class SwypeDetect {
@@ -149,7 +153,7 @@ private:
 
     //Internal data
     cv::UMat frame1; //previous frame
-    std::vector<cv::Point2d> Delta; //dinamic array of moving camera
+    std::vector<cv::Point2d> Delta; //dynamic array of moving camera
 
     time_t seconds_1;
     time_t seconds_2;
@@ -171,13 +175,13 @@ private:
     cv::UMat buf2ft;
     cv::UMat hann;
 
-    std::vector<cv::Point2d> Shift_mass;
+    std::vector<cv::Point2d> Shift_arr;
 
     int CircleDetection(void);
 
     std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
 
-    void Delta_Calculation(cv::Point2d output);
+    void Delta_Calculation(cv::Point2d shift);
 
     void Swype_Data(int Dir);
 
@@ -188,6 +192,10 @@ private:
     void S1_processor(void);
 
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
+
+    VectorExplained _currentShift;
+    SwypeStepDetector _swipeStepDetector;
+
 };
 
 
