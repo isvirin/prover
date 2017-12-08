@@ -6,13 +6,14 @@
 #define PROVER_MVP_ANDROID_VECTOREXPLAINED_H
 
 #include <opencv2/opencv.hpp>
+#include "Vector.h"
 
-class VectorExplained {
+class VectorExplained : public Vector {
 public:
     VectorExplained() {};
 
-    VectorExplained(float x, float y) : _x(x), _y(y) {
-        CalculateValues();
+    VectorExplained(float x, float y) : Vector(x, y) {
+        CalculateAngle();
     };
 
     void Set(cv::Point2d other);
@@ -21,23 +22,18 @@ public:
 
     virtual void Add(VectorExplained other);
 
-    void SetLength(float length);
-
     virtual void Reset();
 
     void operator*=(float mul);
 
-    float _x = 0;
-    float _y = 0;
-    float _mod = 0;
     float _angle = 0;
     /**
      * 1 -- down, 3 -- left, 5 -- top, 7 -- right, 8 -- bottom-right
      */
     int _direction = 0;
 
-protected:
-    void CalculateValues();
+private:
+    void CalculateAngle();
 };
 
 

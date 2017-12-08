@@ -7,25 +7,25 @@
 void VectorExplained::Set(cv::Point2d other) {
     _x = (float) other.x;
     _y = (float) other.y;
-    CalculateValues();
+    _mod = sqrtf(_x * _x + _y * _y);
+    CalculateAngle();
 }
 
 void VectorExplained::SetMul(cv::Point2d other, float mulX, float mulY) {
     _x = (float) other.x * mulX;
     _y = (float) other.y * mulY;
-    CalculateValues();
+    _mod = sqrtf(_x * _x + _y * _y);
+    CalculateAngle();
 }
 
 void VectorExplained::Add(VectorExplained other) {
     if (other._mod > 0) {
-        _x += other._x;
-        _y += other._y;
-        CalculateValues();
+        (*this) += other;
+        CalculateAngle();
     }
 }
 
-void VectorExplained::CalculateValues() {
-    _mod = (float) sqrt(_x * _x + _y * _y);
+void VectorExplained::CalculateAngle() {
     if (_mod <= 0) {
         _angle = 0;
         return;
@@ -34,22 +34,15 @@ void VectorExplained::CalculateValues() {
     if (_x == 0) {
         _angle = _y > 0 ? 270 : 90;
     } else {
-        float k = _y / _x;
-        float atan_deg = (float) (fabs(atan((k)) * 180 / CV_PI));
-        if (_x > 0 && _y >= 0) {
-            _angle = 360 - atan_deg;
-        } else if (_x < 0 && _y >= 0) {
-            _angle = 180 + atan_deg;
-        } else if (_x < 0) {
-            _angle = 180 - atan_deg;
-        } else {
-            _angle = atan_deg;
-        }
+        float k = -_y / _x;
+        _angle = (float) (atan(k) * 180 / CV_PI);
+        if (_x < 0)
+            _angle += 180.0f;
+        _angle = fmodf(_angle + 360.0f, 360.0f);
     }
 
     _direction = (int) (floor((360 - _angle - 22.5) / 45));
-    if (_direction <= 0)
-        _direction += 8;
+    _direction = (_direction + 7) % 8 + 1;
 
     /*
      if (((_angle >= 337) && (_angle <= 360)) ||
@@ -63,15 +56,6 @@ void VectorExplained::CalculateValues() {
     if ((_angle >= 247.5) && (_angle < 292.5)) _direction = 5;
     if ((_angle >= 292.5) && (_angle < 337.5)) _direction = 6;
      */
-}
-
-void VectorExplained::SetLength(float length) {
-    if (_mod > 0) {
-        float mul = length / _mod;
-        _x *= mul;
-        _y *= mul;
-        _mod = length;
-    }
 }
 
 void VectorExplained::Reset() {

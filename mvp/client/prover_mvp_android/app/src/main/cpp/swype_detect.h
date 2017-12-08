@@ -103,7 +103,7 @@
 #pragma once
 
 #define Minimal_circle_area 40
-#define Minimal_shift_radius 3
+#define Minimal_shift_radius 2
 #define Swype_radius 0.4
 #define Swipe_Distance 0.25
 #define Time_to_state_3 2
@@ -119,6 +119,7 @@
 #include "opencv2/core/ocl.hpp"
 #include "VectorExplained.h"
 #include "SwypeStepDetector.h"
+#include "SwipeCircleDetector.h"
 
 
 class SwypeDetect {
@@ -195,6 +196,7 @@ private:
 
     VectorExplained _currentShift;
     SwypeStepDetector _swipeStepDetector;
+    SwipeCircleDetector _circleDetector;
 
 };
 

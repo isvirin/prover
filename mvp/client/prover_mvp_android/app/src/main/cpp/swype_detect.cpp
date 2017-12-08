@@ -511,6 +511,7 @@ void SwypeDetect::Reset(void) {
     hann.release();
 
     Delta.push_back(D_coord);
+    _circleDetector.Reset();
 }
 
 
@@ -619,6 +620,13 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     _currentShift.SetMul(shift, -1, -1);
 
     if (S == 0) {
+        _circleDetector.AddShift(_currentShift);
+        //LOGI_NATIVE("detect2: IsCircle Start");
+        /*if (_circleDetector.IsCircle()){
+            S = 1;
+            _circleDetector.Reset();
+        }*/
+        //LOGI_NATIVE("detect2: IsCircle End");
         if (_currentShift._mod > Minimal_shift_radius) {
             //Delta_Calculation(shift);
             D_coord.x = D_coord.x - shift.x;
@@ -680,7 +688,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         x = (int) (_swipeStepDetector._x * 1024);
         y = (int) (_swipeStepDetector._y * 1024);
     }
-    debug = _currentShift._direction;
+    debug = _swipeStepDetector._direction;
     state = S;
     index = count_num + 1;
 }
