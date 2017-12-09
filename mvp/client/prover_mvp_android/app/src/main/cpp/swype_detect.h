@@ -99,6 +99,34 @@
 //    int        &index,
 //    int        &x,
 //    int        &y);
+//
+//
+//
+// /**
+//  * @param frame_i frame data, only Luminance channel
+//  * @param width_i frame width
+//  * @param height_i frame height
+//  * @param timestamp timestamp of frame relative to video start
+//  * @param state [out] state S
+//  * @param index [out] only for state==2, index of recognized digit of the
+//  *         swype-code
+//  * @param x, y [out] only for state==2, trajectory coordinates for
+//  *         visualization
+//  * @param debug - some debug data
+//  */
+//  void processFrame_new(
+//     const unsigned char *frame_i,
+//     int width_i,
+//     int height_i,
+//     uint timestamp,
+//     int &state,
+//     int &index,
+//     int &x,
+//     int &y,
+//     int &debug);
+
+
+
 
 #pragma once
 
@@ -142,6 +170,18 @@ public:
 
     void Reset(void);
 
+    /**
+     *
+     * @param frame_i
+     * @param width_i
+     * @param height_i
+     * @param timestamp
+     * @param state
+     * @param index
+     * @param x
+     * @param y
+     * @param debug
+     */
     void processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
                           uint timestamp, int &state, int &index, int &x, int &y,
                           int &debug);
