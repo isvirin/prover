@@ -474,9 +474,6 @@ void SwypeDetect::Reset(void) {
     Swype_Numbers_Get.clear();
     Swype_Numbers_Get.resize(0);
 
-    seconds_1 = 0;
-    seconds_2 = 0;
-
     DirectionS.clear();
     DirectionS.resize(0);
 
@@ -529,17 +526,34 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b) {
 }
 
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
-    Point2d shift;
 
-    UMat b_frame;
 
-    frame_i.convertTo(b_frame, frame_i.depth());
-
+    frame_i.convertTo(frame1, frame_i.depth());
+    //UMat b_frame;
+    //frame_i.convertTo(b_frame, frame_i.depth());
     //cvtColor(b_frame, frame1, CV_RGB2GRAY);// converting frames to CV_64F type
-    b_frame.copyTo(frame1);
+    //b_frame.copyTo(frame1);
 
+    cv::UMat *buf1 = _tickTock ? &buf1ft : &buf2ft;
+    cv::UMat *buf2 = _tickTock ? &buf2ft : &buf1ft;;
+    _tickTock = !_tickTock;
 
-    if (buf1ft.empty()) {
+    if (buf1->empty()) {
+        frame1.convertTo(*buf1, CV_64F);//Преобразование фреймов в тип CV_64F
+        *buf2 = buf1->clone();
+        // we get the coordinates of the swipe points
+        koord_Sw_points = Koord_Swipe_Points(frame1.cols, frame1.rows);
+    } else {
+        frame1.convertTo(*buf2, CV_64F);//converting frames to CV_64F type
+    }
+
+    if (hann.empty()) {
+        createHanningWindow(hann, buf1ft.size(), CV_64F); //  create Hanning window
+    }
+
+    return phaseCorrelate(*buf1, *buf2, hann); // we calculate a phase offset vector
+
+    /*if (buf1ft.empty()) {
         frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
         buf1ft = buf2ft.clone();
         koord_Sw_points = Koord_Swipe_Points(frame1.cols,
@@ -551,9 +565,8 @@ Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     if (hann.empty()) {
         createHanningWindow(hann, buf1ft.size(), CV_64F); //  create Hanning window
     }
-    shift = phaseCorrelate(buf1ft, buf2ft, hann); // we calculate a phase offset vector
 
-    return shift;
+    return phaseCorrelate(buf1ft, buf2ft, hann); // we calculate a phase offset vector*/
 }
 
 Point2d SwypeDetect::Frame_processor1(cv::Mat &frame_i) {
@@ -604,63 +617,55 @@ void SwypeDetect::S1_processor(void) {
         hann.release();
         S = 2; // if we have swype then we go to detection swype from video
     }
-    seconds_1 = time(NULL);
 }
 
 void
-SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state,
-                              int &index, int &x, int &y, int &debug) {
+SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
+                              uint timestamp, int &state, int &index, int &x, int &y,
+                              int &debug) {
     Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
 
     Point2d shift = Frame_processor(frame);
     _currentShift.SetMul(shift, -1, -1);
+    _currentShift._timestamp = timestamp;
 
     if (S == 0) {
         if (_currentShift._mod > 2) {
             _circleDetector.AddShift(_currentShift);
-            //LOGI_NATIVE("detect2: IsCircle Start");
             if (_circleDetector.IsCircle()) {
-                S = 1;
+                MoveToState(1, timestamp, 0);
                 _circleDetector.Reset();
             }
-            //LOGI_NATIVE("detect2: IsCircle End");
         }
     } else if (S == 1) {
         S1_processor();
+        if (S == 2) {
+            MoveToState(2, timestamp, PAUSE_TO_STATE_3_MS);
+        }
     } else if (S == 2) {
-        seconds_2 = time(NULL);
-        if ((seconds_2 - seconds_1) > Time_to_state_3) {
-            Delta.clear();
-            Delta.resize(0);
-            DirectionS.clear();
-            DirectionS.resize(0);
-            Shift_arr.clear();
-            Shift_arr.resize(0);
-            D_coord.x = 0;
-            D_coord.y = 0;
-            Direction = 0;
-            D_coord_new.x = 0;
-            D_coord_new.y = 0;
+        if (timestamp >= _maxStateEndTime) {
             frame1.release();
             buf1ft.release();
             buf2ft.release();
             hann.release();
-            S = 3;
-            seconds_1 = time(NULL);
+
             _currentShift.Reset();
-            _swipeStepDetector.Reset();
             _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.18f, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
+
+            MoveToState(3, timestamp, TIME_PER_EACH_SWIPE_STEP * (uint) (swype_Numbers.size()));
         }
     } else if (S == 3) {
-        if (_currentShift._mod > Minimal_shift_radius) {
+        if (timestamp > _maxStateEndTime) {
+            MoveToState(0, timestamp, 0);
+        } else if (_currentShift._mod > Minimal_shift_radius) {
             _swipeStepDetector.Add(_currentShift);
             int status = _swipeStepDetector.CheckState();
             switch (status) {
                 case 1:
                     ++count_num;
                     if (swype_Numbers.size() == (count_num + 1)) {
-                        S = 4;
+                        MoveToState(4, timestamp, 0);
                     } else {
                         _swipeStepDetector.AdvanceSwipeStep(swype_Numbers[count_num + 1]);
                     }
@@ -670,7 +675,7 @@ SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int hei
                     break;
 
                 case -1:
-                    S = 0;
+                    MoveToState(0, timestamp, 0);
                     break;
             }
         }
@@ -680,5 +685,11 @@ SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int hei
     debug = _currentShift._direction;
     state = S;
     index = count_num + 1;
+}
+
+void SwypeDetect::MoveToState(int state, uint currentTimestamp, uint maxStateDuration) {
+    S = state;
+    _stateStartTime = currentTimestamp;
+    _maxStateEndTime = maxStateDuration == 0 ? (uint) -1 : currentTimestamp + maxStateDuration;
 }
 

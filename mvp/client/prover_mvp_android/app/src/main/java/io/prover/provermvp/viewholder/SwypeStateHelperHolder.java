@@ -1,7 +1,6 @@
 package io.prover.provermvp.viewholder;
 
 import android.hardware.Camera;
-import android.media.Image;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.LowFundsException;
+import io.prover.provermvp.util.Frame;
 
 import static io.prover.provermvp.detector.DetectionState.State.Confirmed;
 import static io.prover.provermvp.detector.DetectionState.State.GotProverNoCode;
@@ -150,13 +150,13 @@ public class SwypeStateHelperHolder implements
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onFrameAvailable(Image image) {
+    public void onFrameAvailable(Frame frame) {
         if (detectorHandler != null) {
-            if (!detectorHandler.sendProcesstFrame(image)) {
-                image.close();
+            if (!detectorHandler.sendProcesstFrame(frame)) {
+                frame.recycle();
             }
         } else {
-            image.close();
+            frame.recycle();
         }
     }
 

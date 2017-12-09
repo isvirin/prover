@@ -59,6 +59,8 @@ public:
      */
     int _direction = 0;
 
+    uint _timestamp = 0;
+
 private:
     void CalculateExplained();
 };

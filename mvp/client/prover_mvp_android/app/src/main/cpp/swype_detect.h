@@ -107,6 +107,8 @@
 #define Swype_radius 0.4
 #define Swipe_Distance 0.25
 #define Time_to_state_3 2
+#define PAUSE_TO_STATE_3_MS 1500
+#define TIME_PER_EACH_SWIPE_STEP 1500
 #define Time_swipe 5
 
 
@@ -140,7 +142,9 @@ public:
 
     void Reset(void);
 
-    void processFrame_new(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index, int &x, int &y, int &debug);
+    void processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
+                          uint timestamp, int &state, int &index, int &x, int &y,
+                          int &debug);
     // frame - pointer to a buffer with a frame
     // state - state S
     // index - if state==2, the index  of the last entered swype number
@@ -155,9 +159,6 @@ private:
     //Internal data
     cv::UMat frame1; //previous frame
     std::vector<cv::Point2d> Delta; //dynamic array of moving camera
-
-    time_t seconds_1;
-    time_t seconds_2;
 
     int S; //state S
     int call; //Number of the frame processing function calls
@@ -194,10 +195,15 @@ private:
 
     std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
 
+    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
+
     VectorExplained _currentShift;
     SwypeStepDetector _swipeStepDetector;
     SwipeCircleDetector _circleDetector;
+    uint _stateStartTime = 0;
+    uint _maxStateEndTime = 0;
 
+    bool _tickTock = false;
 };
 
 

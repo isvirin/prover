@@ -33,7 +33,7 @@ public class ListenerList1<T, Q> {
         handler.post(() -> notifyEvent(param1));
     }
 
-    public void notifyEvent(final Q param1) {
+    void notifyEvent(final Q param1) {
         for (T listener : listeners) {
             notificationRunner.doNotification(listener, param1);
         }

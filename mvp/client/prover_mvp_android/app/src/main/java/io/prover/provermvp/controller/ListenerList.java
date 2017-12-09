@@ -30,11 +30,11 @@ public class ListenerList<T> {
         listeners.remove(listener);
     }
 
-    public void postNotifyEvent() {
+    void postNotifyEvent() {
         handler.post(this::notifyEvent);
     }
 
-    public void notifyEvent() {
+    void notifyEvent() {
         for (T listener : listeners) {
             notificationRunner.doNotification(listener);
         }

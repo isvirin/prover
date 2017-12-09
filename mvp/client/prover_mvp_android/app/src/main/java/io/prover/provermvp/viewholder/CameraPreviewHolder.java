@@ -109,7 +109,7 @@ public class CameraPreviewHolder implements SurfaceHolder.Callback {
             try {
                 camera.setPreviewDisplay(surfaceView.getHolder());
                 camera.startPreview();
-                cameraController.previewStart.postNotifyEvent(mCamera.getAvailableResolutions(), cameraResolution);
+                cameraController.onPreviewStart(mCamera.getAvailableResolutions(), cameraResolution);
                 isPreviewRunning = true;
             } catch (Exception e) {
                 Log.d(getClass().getSimpleName(), "Cannot start preview", e);

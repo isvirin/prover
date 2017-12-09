@@ -207,10 +207,9 @@ public class MyCamera implements CameraController.OnPreviewStartListener, Camera
         }
     }
 
-
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        cameraController.frameAvailable.postNotifyEvent(data, camera);
+        cameraController.onFrameAvailable(data, camera);
     }
 
     @Override

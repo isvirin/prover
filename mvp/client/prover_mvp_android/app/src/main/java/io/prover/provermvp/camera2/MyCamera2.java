@@ -249,7 +249,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
                 new Surface[]{new Surface(screenTexture), mImageReader.getSurface()}
                 : new Surface[]{new Surface(screenTexture), new Surface(rendererTexture) /*, mImageReader.getSurface()*/};
 
-        Runnable startedNotificator = () -> cameraController.previewStart.postNotifyEvent(cameraResolutions, mVideoSize);
+        Runnable startedNotificator = () -> cameraController.onPreviewStart(cameraResolutions, mVideoSize);
         try {
             mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, surfaces);
         } catch (CameraAccessException e) {
@@ -310,7 +310,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             }
 
             if (image != null) {
-                cameraController.frameAvailable2.postNotifyEvent(image);
+                cameraController.onFrameAvailable(image);
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

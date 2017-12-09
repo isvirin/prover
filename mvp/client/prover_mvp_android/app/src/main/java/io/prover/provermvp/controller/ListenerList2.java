@@ -29,11 +29,11 @@ public class ListenerList2<T, Q, R> {
         listeners.remove(listener);
     }
 
-    public void postNotifyEvent(final Q param1, final R param2) {
+    void postNotifyEvent(final Q param1, final R param2) {
         handler.post(() -> notifyEvent(param1, param2));
     }
 
-    public void notifyEvent(final Q param1, final R param2) {
+    void notifyEvent(final Q param1, final R param2) {
         for (T listener : listeners) {
             notificationRunner.doNotification(listener, param1, param2);
         }

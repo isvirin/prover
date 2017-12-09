@@ -16,12 +16,15 @@ void SwipeCircleDetector::AddShift(VectorExplained shift) {
 bool SwipeCircleDetector::IsCircle() {
     int pos = (pos_ - 1 + SHIFTS) % SHIFTS;
     VectorExplained sum = shifts_[pos];
-    //Vector centerSum = sum;
+    uint noFramesBefore = shifts_[pos]._timestamp - MAX_CIRCLE_DURATION_MS;
 
     for (int i = 2; i <= total_; i++) {
         int pos = (pos_ - i + SHIFTS) % SHIFTS;
+        if (shifts_[pos]._timestamp < noFramesBefore)
+            return false;
+
         sum.Add(shifts_[pos]);
-        //centerSum += sum;
+
         if (sum._mod < 5 && i > 5) {
             float perimeter;
             float area = fabsf(Area(i, perimeter));

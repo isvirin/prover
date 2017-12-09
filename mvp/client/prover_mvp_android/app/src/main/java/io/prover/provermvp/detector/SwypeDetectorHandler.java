@@ -1,6 +1,5 @@
 package io.prover.provermvp.detector;
 
-import android.media.Image;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -11,6 +10,7 @@ import android.util.Log;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.util.Frame;
 
 import static io.prover.provermvp.Const.TAG;
 
@@ -70,7 +70,7 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
         }
     }
 
-    public boolean sendProcesstFrame(Image image) {
+    public boolean sendProcesstFrame(Frame image) {
         int inQueue = framesInQueue.get();
         if (inQueue < MAX_FRAMES_IN_QUEUE) {
             framesInQueue.incrementAndGet();
@@ -108,12 +108,12 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
 
             case MESSAGE_PROCESS_FRAME2:
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    Image image = (Image) msg.obj;
+                    Frame image = (Frame) msg.obj;
                     if (quitRequested) {
-                        image.close();
+                        image.recycle();
                     } else {
                         detector.detectFrame(image);
-                        image.close();
+                        image.recycle();
                     }
                 }
                 framesInQueue.decrementAndGet();

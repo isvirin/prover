@@ -71,8 +71,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21(
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame_new((const unsigned char *) frameData, width, height, state, index, x, y,
-                               d);
+    detector->processFrame_new((const unsigned char *) frameData, width, height, 0, state, index, x,
+                               y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -98,7 +98,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21Buf(JNIEnv *env,
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, 0, state, index, x,
+                               y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -148,7 +149,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameYUV420_1888Buf(JNIEn
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, 0, state, index, x,
+                               y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -204,7 +206,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameYUV420_1888Buf2(JNIE
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, 0, state, index, x,
+                               y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);
@@ -225,7 +228,7 @@ JNIEXPORT jlong JNICALL
 Java_io_prover_provermvp_detector_ProverDetector_detectFrameY_18Buf(JNIEnv *env, jobject instance,
                                                                     jlong nativeHandler,
                                                                     jobject planeY, jint width,
-                                                                    jint height,
+                                                                    jint height, jint timestamp,
                                                                     jlongArray result_) {
     jlong *res = env->GetLongArrayElements(result_, NULL);
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
@@ -252,7 +255,8 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameY_18Buf(JNIEnv *env,
 
     int state = 0, index = 0, x = 0, y = 0, d = 0;
 
-    detector->processFrame_new(frameData, width, height, state, index, x, y, d);
+    detector->processFrame_new(frameData, width, height, timestamp, state, index, x,
+                               y, d);
     res[0] = static_cast<jint>(state);
     res[1] = static_cast<jint>(index);
     res[2] = static_cast<jint>(x);

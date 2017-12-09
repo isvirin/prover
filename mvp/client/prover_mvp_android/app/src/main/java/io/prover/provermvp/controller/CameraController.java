@@ -2,10 +2,12 @@ package io.prover.provermvp.controller;
 
 import android.hardware.Camera;
 import android.media.Image;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 
 import java.io.File;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
@@ -33,7 +36,7 @@ public class CameraController {
     public final ListenerList1<OnFrameReleasedListener, byte[]> frameReleased
             = new ListenerList1<>(handler, OnFrameReleasedListener::onFrameReleased);
 
-    public final ListenerList1<OnFrameAvailable2Listener, Image> frameAvailable2
+    public final ListenerList1<OnFrameAvailable2Listener, Frame> frameAvailable2
             = new ListenerList1<>(handler, OnFrameAvailable2Listener::onFrameAvailable);
 
     public final ListenerList2<OnRecordingStartListener, Float, Size> onRecordingStart
@@ -71,6 +74,7 @@ public class CameraController {
     private int orientationHint;
     private String swypeCode;
     private String actualSwypeCode;
+    private long videoStartTime;
 
     public CameraController() {
     }
@@ -83,6 +87,7 @@ public class CameraController {
         recording = true;
         this.orientationHint = orientationHint;
         onRecordingStart.postNotifyEvent(averageFps, detectorSize);
+        videoStartTime = System.currentTimeMillis();
     }
 
     public void onRecordingStop(File file) {
@@ -137,6 +142,22 @@ public class CameraController {
         return fpsCounter.getAvgFps();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void onFrameAvailable(Image image) {
+        Frame frame = Frame.obtain();
+        frame.setImage(image, (int) (System.currentTimeMillis() - videoStartTime));
+        frameAvailable2.postNotifyEvent(frame);
+    }
+
+    public void onPreviewStart(List<Size> cameraResolutions, Size mVideoSize) {
+        previewStart.postNotifyEvent(cameraResolutions, mVideoSize);
+        videoStartTime = System.currentTimeMillis();
+    }
+
+    public void onFrameAvailable(byte[] data, Camera camera) {
+        frameAvailable.postNotifyEvent(data, camera);
+    }
+
     public interface OnPreviewStartListener {
         void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize);
     }
@@ -146,7 +167,7 @@ public class CameraController {
     }
 
     public interface OnFrameAvailable2Listener {
-        void onFrameAvailable(Image image);
+        void onFrameAvailable(Frame frame);
     }
 
     public interface OnFpsUpdateListener {

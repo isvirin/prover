@@ -9,6 +9,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
 
 import static io.prover.provermvp.Const.TAG;
@@ -101,9 +102,10 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void detectFrame(Image image) {
+    public void detectFrame(Frame frame) {
         if (isDetectionPaused)
             return;
+        Image image = frame.image;
         int width = image.getWidth();
         int height = image.getHeight();
         int format = image.getFormat();
@@ -117,8 +119,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
                 detectFrameNV21Buf(nativeHandler, planes[0].getBuffer(), width, height, detectionResult);
             } else if (format == ImageFormat.YUV_420_888) {
                 isD2 = true;
-                //long d = detectFrameYUV420_888Buf2(nativeHandler, planes[0].getBuffer(), planes[1].getBuffer(), planes[2].getBuffer(), width, height, detectionResult2);
-                long d = detectFrameY_8Buf(nativeHandler, planes[0].getBuffer(), width, height, detectionResult2);
+                detectFrameY_8Buf(nativeHandler, planes[0].getBuffer(), width, height, frame.timeStamp, detectionResult2);
             }
             timesCounter.add(System.currentTimeMillis() - time);
             Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
@@ -190,11 +191,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
      */
     private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int[] result);
 
-    private native int detectFrameYUV420_888Buf(long nativeHandler, ByteBuffer planeY, ByteBuffer planeU, ByteBuffer planeV, int width, int height, int[] result);
-
-    private native long detectFrameYUV420_888Buf2(long nativeHandler, ByteBuffer planeY, ByteBuffer planeU, ByteBuffer planeV, int width, int height, long[] result);
-
-    private native long detectFrameY_8Buf(long nativeHandler, ByteBuffer planeY, int width, int height, long[] result);
+    private native long detectFrameY_8Buf(long nativeHandler, ByteBuffer planeY, int width, int height, int timestamp, long[] result);
 
     private native void detectFrameNV21Buf(long nativeHandler, ByteBuffer data, int width, int height, int[] result);
 
