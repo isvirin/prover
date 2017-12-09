@@ -37,10 +37,22 @@ public:
         return sqrtf(_x * _x + _y * _y);
     }
 
-    inline float distanceTo(Vector other) {
+    inline float DistanceTo(Vector other) {
         float dx = other._x - _x;
         float dy = other._y - _y;
         return sqrtf(dx * dx + dy * dy);
+    }
+
+    inline float DistanceTo(float x, float y) {
+        float dx = x - _x;
+        float dy = y - _y;
+        return sqrtf(dx * dx + dy * dy);
+    }
+
+    inline void Mul(float mat[2][2]) {
+        float x = mat[0][0] * _x + mat[0][1] * _y;
+        _y = mat[1][0] * _x + mat[1][1] * _y;
+        _x = x;
     }
 
     float _x = 0;

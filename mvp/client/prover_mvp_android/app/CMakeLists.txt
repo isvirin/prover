@@ -24,6 +24,7 @@ add_library( native-lib SHARED
              src/main/cpp/VectorExplained.cpp
              src/main/cpp/SwypeStepDetector.cpp
              src/main/cpp/SwipeCircleDetector.cpp
+             src/main/cpp/BoundsChecker.cpp
 
 #             src/main/cpp/keccak.c src/main/cpp/rlp.c  src/main/cpp/sign_eth_tx.c src/main/cpp/secp256k1/src/secp256k1.c
               )

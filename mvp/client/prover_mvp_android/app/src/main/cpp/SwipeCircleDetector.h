@@ -10,7 +10,8 @@
 
 #define SHIFTS 64
 #define MIN_CIRCLE_AREA 2000
-#define MAX_CIRCLE_DURATION_MS 3000
+#define MAX_DEVIATION 10
+#define MAX_CIRCLE_DURATION_MS 2500
 
 class SwipeCircleDetector {
 public:

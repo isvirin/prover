@@ -58,8 +58,6 @@ void VectorExplained::CalculateExplained() {
      */
 }
 
-
-
 void VectorExplained::operator*=(float mul) {
     _x *= mul;
     _y *= mul;
@@ -81,12 +79,9 @@ void VectorExplained::SetLength(float length) {
 
 void VectorExplained::AttractTo(Vector other, float force) {
     float mod = _mod;
-    LOGI_NATIVE("Detect2 attract (%f, %f) to (%f, (%f), len: %f, force: %f", _x, _y, other._x,
-                other._y, mod, force);
     Vector::Add(other._x * force, other._y * force);
     _mod = Length();
     SetLength(mod);
-    LOGI_NATIVE("Detect2 attracted (%f, %f)", _x, _y);
 }
 
 void VectorExplained::Log() {

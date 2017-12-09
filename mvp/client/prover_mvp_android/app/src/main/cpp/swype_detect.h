@@ -108,7 +108,7 @@
 #define Swipe_Distance 0.25
 #define Time_to_state_3 2
 #define PAUSE_TO_STATE_3_MS 1500
-#define TIME_PER_EACH_SWIPE_STEP 1500
+#define TIME_PER_EACH_SWIPE_STEP 2000
 #define Time_swipe 5
 
 

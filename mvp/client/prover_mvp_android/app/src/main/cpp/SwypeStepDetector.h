@@ -6,6 +6,7 @@
 #define PROVER_MVP_ANDROID_SWYPESTEPDETECTOR_H
 
 #include "VectorExplained.h"
+#include "BoundsChecker.h"
 
 //#define REQUIRE_REACH_BOUNDS
 
@@ -18,6 +19,7 @@
  */
 
 #define MAX_ATTRACT_ANGLE 45
+
 class SwypeStepDetector {
 public:
 
@@ -56,6 +58,8 @@ public:
     VectorExplained _current;
 
 private:
+    bool SetNextSwipePoint(int nextPoint);
+
     int _count = 0;
 
     float _speedMultX = 0;
@@ -69,15 +73,9 @@ private:
     int _nextSwypePoint = 0;
     bool _isDiagonal;
 
-    float _sqrt2 = sqrtf(2.0f);
+    const float _sqrt2 = sqrtf(2.0f);
 
-    /**
-     * if we move to a totally different direction (differs from target direction for more then 2)
-     * then we can move not further then this value
-     */
-    const float _badDirectionMaxRadius = 0.3f;
-
-    bool SetNextSwipePoint(int nextPoint);
+    BoundsChecker _BoundsChecker;
 };
 
 

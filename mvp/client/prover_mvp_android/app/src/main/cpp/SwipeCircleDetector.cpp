@@ -25,7 +25,7 @@ bool SwipeCircleDetector::IsCircle() {
 
         sum.Add(shifts_[pos]);
 
-        if (sum._mod < 5 && i > 5) {
+        if (sum._mod < MAX_DEVIATION && i > 5) {
             float perimeter;
             float area = fabsf(Area(i, perimeter));
             float areaByP2 = area / perimeter / perimeter;

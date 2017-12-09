@@ -650,7 +650,7 @@ SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int hei
             hann.release();
 
             _currentShift.Reset();
-            _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.18f, 4);
+            _swipeStepDetector.Configure(width_i, height_i, 1.5f, 0.25f, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
 
             MoveToState(3, timestamp, TIME_PER_EACH_SWIPE_STEP * (uint) (swype_Numbers.size()));
