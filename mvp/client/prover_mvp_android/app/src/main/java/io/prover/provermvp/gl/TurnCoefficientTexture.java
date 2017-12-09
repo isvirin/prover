@@ -46,7 +46,7 @@ public class TurnCoefficientTexture extends Texture {
             bufferFloat.put(row);
         }
         bufferFloat.position(0);
-        doTexImage(2, bufferFloat);
+        doTexImage(2, bufferFloat, true);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

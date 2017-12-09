@@ -3,6 +3,7 @@ package io.prover.provermvp.gl;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import io.prover.provermvp.gl.lib.GlUtil;
 
@@ -17,6 +18,7 @@ public class CameraTexture extends Texture {
      * {@code updateTexImage()} is called in our main {@link CameraRenderer#draw()} loop.
      */
     public final float[] mCameraTransformMatrix = new float[16];
+    public final float[] mScreenTransformMatrix = new float[16];
     public SurfaceTexture mCameraInputTexture;
 
     public CameraTexture() {
@@ -43,9 +45,10 @@ public class CameraTexture extends Texture {
     protected void updatePreviewTexture() {
         mCameraInputTexture.updateTexImage();
         mCameraInputTexture.getTransformMatrix(mCameraTransformMatrix);
+    }
 
-        //float[] mtemp = new float[16];
-        //float[] mtemp2 = new float[16];
-        //Matrix.setIdentityM(mCameraTransformMatrix, 0);
+    public void setScreenRotation(int rotationAngle) {
+        Matrix.setIdentityM(mScreenTransformMatrix, 0);
+        Matrix.rotateM(mScreenTransformMatrix, 0, rotationAngle, 0, 0, 1);
     }
 }

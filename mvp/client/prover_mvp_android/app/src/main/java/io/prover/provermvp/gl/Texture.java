@@ -12,6 +12,7 @@ import static android.opengl.GLES20.GL_LUMINANCE;
 import static android.opengl.GLES20.GL_RGB;
 import static android.opengl.GLES20.GL_RGBA;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.GL_UNSIGNED_BYTE;
 import static android.opengl.GLES20.glGetString;
 import static android.opengl.GLES20.glTexImage2D;
 import static android.opengl.GLES30.GL_R16F;
@@ -83,7 +84,7 @@ public class Texture {
         return 0;
     }
 
-    private static int getFormattOES_texture_float(int colors) {
+    private static int getFormat(int colors) {
         switch (colors) {
             case 1:
                 return GL_LUMINANCE;
@@ -124,22 +125,27 @@ public class Texture {
         return "[Texture] id: " + texId;
     }
 
-    protected void doTexImage(int colors, Buffer pixels) {
-        String extensions = glGetString(GL_EXTENSIONS);
-        if (extensions.contains("GL_EXT_color_buffer_float")) {
-            int formatInt = getFormattGL_EXT_color_buffer_floatInt_32(colors);
-            //int formatInt = getFormattGL_EXT_color_buffer_floatInt_16(colors);
-            int format = getFormattGL_EXT_color_buffer_float(colors);
-            glTexImage2D(GL_TEXTURE_2D, 0, formatInt, size.width, size.height, 0, format, GL_FLOAT, pixels);
-            isFloat = true;
-        } else if (extensions.contains("OES_texture_float")) {
-            int format = getFormattOES_texture_float(colors);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_FLOAT, pixels);
-            isFloat = true;
-        } else if (extensions.contains("OES_texture_half_float")) {
-            int format = getFormattOES_texture_float(colors);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_HALF_FLOAT_OES, pixels);
-            isHalfFloat = true;
+    protected void doTexImage(int colors, Buffer pixels, boolean preferFloat) {
+        if (preferFloat) {
+            String extensions = glGetString(GL_EXTENSIONS);
+            if (extensions.contains("GL_EXT_color_buffer_float")) {
+                int formatInt = getFormattGL_EXT_color_buffer_floatInt_32(colors);
+                //int formatInt = getFormattGL_EXT_color_buffer_floatInt_16(colors);
+                int format = getFormattGL_EXT_color_buffer_float(colors);
+                glTexImage2D(GL_TEXTURE_2D, 0, formatInt, size.width, size.height, 0, format, GL_FLOAT, pixels);
+                isFloat = true;
+            } else if (extensions.contains("OES_texture_float")) {
+                int format = getFormat(colors);
+                glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_FLOAT, pixels);
+                isFloat = true;
+            } else if (extensions.contains("OES_texture_half_float")) {
+                int format = getFormat(colors);
+                glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_HALF_FLOAT_OES, pixels);
+                isHalfFloat = true;
+            }
+        } else {
+            int format = getFormat(colors);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, size.width, size.height, 0, format, GL_UNSIGNED_BYTE, pixels);
         }
     }
 

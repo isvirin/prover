@@ -20,6 +20,7 @@ import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDeleteFramebuffers;
 import static android.opengl.GLES20.glGenFramebuffers;
 import static android.opengl.GLES20.glReadPixels;
+import static android.opengl.GLES20.glTexImage2D;
 import static android.opengl.GLES20.glTexParameteri;
 
 /**
@@ -39,7 +40,27 @@ public class TextureFBO extends Texture {
         glBindFramebuffer(GL_FRAMEBUFFER, fboNames[0]);
         glBindTexture(GL_TEXTURE_2D, texId);
 
-        doTexImage(planes, null);
+        doTexImage(planes, null, true);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        GLES20.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texId, 0);
+
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+        GlUtil.checkGlError2("TextureFBO generate");
+    }
+
+    public TextureFBO(int texId, Size size, int formatInt, int format, int type) {
+        super(texId);
+        this.size = size;
+        glGenFramebuffers(1, fboNames, 0);
+        name = fboNames[0];
+
+        glBindFramebuffer(GL_FRAMEBUFFER, fboNames[0]);
+        glBindTexture(GL_TEXTURE_2D, texId);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, formatInt, size.width, size.height, 0, format, type, null);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -67,6 +88,13 @@ public class TextureFBO extends Texture {
         else if (isHalfFloat)
             valueFormat = GL_HALF_FLOAT_OES;
         glReadPixels(0, 0, size.width, size.height, format, valueFormat, target);
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+    }
+
+    public void read(Buffer target, int format, int type) {
+        target.position(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, fboNames[0]);
+        glReadPixels(0, 0, size.width, size.height, format, type, target);
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
     }
 

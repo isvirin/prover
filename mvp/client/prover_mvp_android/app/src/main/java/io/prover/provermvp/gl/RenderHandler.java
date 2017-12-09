@@ -25,12 +25,12 @@ public class RenderHandler extends Handler {
     /**
      * Our camera renderer ref, weak since we're dealing with static class so it doesn't leak
      */
-    private WeakReference<CameraRenderer> mWeakRenderer;
+    private WeakReference<ICameraRenderer> mWeakRenderer;
 
     /**
      * Call from render thread.
      */
-    public RenderHandler(CameraRenderer rt) {
+    public RenderHandler(ICameraRenderer rt) {
         mWeakRenderer = new WeakReference<>(rt);
     }
 
@@ -48,7 +48,7 @@ public class RenderHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-        CameraRenderer renderer = mWeakRenderer.get();
+        ICameraRenderer renderer = mWeakRenderer.get();
         if (renderer == null) {
             Log.w(TAG, "RenderHandler.handleMessage: weak ref is null");
             return;

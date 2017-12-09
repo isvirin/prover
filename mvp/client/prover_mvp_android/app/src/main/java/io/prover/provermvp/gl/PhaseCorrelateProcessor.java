@@ -93,7 +93,7 @@ public class PhaseCorrelateProcessor {
     public void draw(CameraTexture cam, TexRect texRect) {
         long start = System.currentTimeMillis();
         fftFbo1.bindAsTarget();
-        readCameraProgram.bind(cam.texId, cam.mCameraTransformMatrix, texRect, revOrderTable);
+        readCameraProgram.bind(cam.texId, cam.mCameraTransformMatrix, texRect);
         texRect.draw();
         readCameraProgram.unbind();
 

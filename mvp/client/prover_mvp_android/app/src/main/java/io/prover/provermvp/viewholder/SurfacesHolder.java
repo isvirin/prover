@@ -8,7 +8,10 @@ import android.view.TextureView;
 
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.camera2.AutoFitTextureView;
-import io.prover.provermvp.gl.CameraRenderer;
+import io.prover.provermvp.camera2.OrientationHelper;
+import io.prover.provermvp.gl.CameraLuminanceReaderRenderer;
+import io.prover.provermvp.gl.ICameraRenderer;
+import io.prover.provermvp.gl.OnRendererReadyListener;
 
 import static io.prover.provermvp.Settings.SHOW_RENDERER_PREVIEW;
 
@@ -17,14 +20,14 @@ import static io.prover.provermvp.Settings.SHOW_RENDERER_PREVIEW;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class SurfacesHolder implements CameraRenderer.OnRendererReadyListener {
+public class SurfacesHolder implements OnRendererReadyListener {
 
     private static final Object sync = new Object();
     public final AutoFitTextureView textureView;
     public final AutoFitTextureView supportTextureView;
     private final SurfacesHolderListener listener;
     private final Activity activity;
-    CameraRenderer cameraRenderer;
+    ICameraRenderer cameraRenderer;
     private volatile boolean supportTextureReady;
     private volatile boolean screenTextureReady;
     private volatile boolean cameraRendererReady;
@@ -57,6 +60,7 @@ public class SurfacesHolder implements CameraRenderer.OnRendererReadyListener {
         public void onSurfaceTextureUpdated(SurfaceTexture texture) {
         }
     };
+    private int rotationAngle;
     private Size mSupportSurfaceSize;
     private final TextureView.SurfaceTextureListener mSupportTextureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -99,7 +103,9 @@ public class SurfacesHolder implements CameraRenderer.OnRendererReadyListener {
         }
     }
 
-    public void onResume() {
+    public void onResume(Activity activity) {
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        rotationAngle = OrientationHelper.getRotationAngle(rotation);
         screenTextureReady = false;
         supportTextureReady = false;
         cameraRendererReady = false;
@@ -131,9 +137,9 @@ public class SurfacesHolder implements CameraRenderer.OnRendererReadyListener {
                 cameraRendererReady = true;
         }
         if (SHOW_RENDERER_PREVIEW) {
-            cameraRenderer = new CameraRenderer(activity, supportTextureView.getSurfaceTexture(), width, height);
+            cameraRenderer = new CameraLuminanceReaderRenderer(activity, supportTextureView.getSurfaceTexture(), width, height);
             cameraRenderer.setOnRendererReadyListener(this);
-            cameraRenderer.start();
+            cameraRenderer.start(rotationAngle);
         } else
             onTextureReady();
     }
@@ -173,7 +179,7 @@ public class SurfacesHolder implements CameraRenderer.OnRendererReadyListener {
     }
 
     public SurfaceTexture getRendererInputTexture() {
-        return cameraRenderer == null ? null : cameraRenderer.getPreviewTexture();
+        return cameraRenderer == null ? null : cameraRenderer.getInputTexture();
     }
 
     public interface SurfacesHolderListener {

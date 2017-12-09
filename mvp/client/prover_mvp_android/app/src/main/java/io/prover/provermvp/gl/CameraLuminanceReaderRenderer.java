@@ -21,18 +21,16 @@ import io.prover.provermvp.gl.prog.ReadCameraProgram;
  * TODO: add methods for users to create their own mediarecorders/change basic settings of default mr
  */
 
-public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvailableListener, ICameraRenderer {
+public class CameraLuminanceReaderRenderer extends Thread implements SurfaceTexture.OnFrameAvailableListener, ICameraRenderer {
 
-    private static final String TAG = CameraRenderer.class.getSimpleName();
+    private static final String TAG = CameraLuminanceReaderRenderer.class.getSimpleName();
     private static final String THREAD_NAME = "CameraRendererThread";
     private final ReadCameraProgram readCameraProgram = new ReadCameraProgram();
     private final CopyProgram copyProgram = new CopyProgram();
-    //private final PhaseCorrelateProcessor phaseCorrelateProcessor = new PhaseCorrelateProcessor();
+
     private final GlTextures textures = new GlTextures();
     private final CameraTexture cameraTexture = new CameraTexture();
     private final TexRect texRect = new TexRect();
-    //private final ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 1024 * 16).order(ByteOrder.nativeOrder());
-    //private final FloatBuffer floatBuf = buf.asFloatBuffer();
     private final ReadLuminancePixelsProcessor readLuminancePixelsProcessor = new ReadLuminancePixelsProcessor();
     /**
      * Current context for use with utility methods
@@ -40,9 +38,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     protected Context mContext;
     protected int mSurfaceWidth, mSurfaceHeight;
     protected float mSurfaceAspectRatio;
-    private float[] data = new float[1024 * 64 * 4];
-    private short[] dataShort = new short[1024 * 64];
-    private short[] dataShort2 = new short[1024 * 64];
+
     /**
      * main texture for display, based on TextureView that is created in activity or fragment
      * and passed in after onSurfaceTextureAvailable is called, guaranteeing its existence.
@@ -71,7 +67,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     /**
      * Simple ctor to use default shaders
      */
-    public CameraRenderer(Context context, SurfaceTexture texture, int width, int height) {
+    public CameraLuminanceReaderRenderer(Context context, SurfaceTexture texture, int width, int height) {
         init(context, texture, width, height);
     }
 
@@ -84,7 +80,6 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
         this.mSurfaceWidth = width;
         this.mSurfaceHeight = height;
         this.mSurfaceAspectRatio = (float) width / height;
-
     }
 
     private void initialize() {
@@ -112,7 +107,6 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
         texRect.init();
         textures.init();
         cameraTexture.init(textures.getNextTexture(), this);
-        //phaseCorrelateProcessor.init(mContext, textures);
         readLuminancePixelsProcessor.init(mContext, textures, new Size(320, 240));
 
         readCameraProgram.load(mContext);
@@ -129,11 +123,8 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     public void deinitGL() {
         cameraTexture.deInit();
         textures.release();
-        //phaseCorrelateProcessor.release();
         readLuminancePixelsProcessor.release();
-
         mWindowSurface.release();
-
         mEglCore.release();
     }
 
@@ -163,6 +154,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     public synchronized void start(int rotationAngle) {
         initialize();
         cameraTexture.setScreenRotation(rotationAngle);
+
         if (mOnRendererReadyListener == null)
             throw new RuntimeException("OnRenderReadyListener is not set! Set listener prior to calling start()");
 
@@ -251,40 +243,12 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
             copyProgram.bind(readLuminancePixelsProcessor.fbo, texRect);
             texRect.draw();
             copyProgram.unbind();
-        }
-        /*if (phaseCorrelateProcessor.isInitialised()) {
-            phaseCorrelateProcessor.draw(cameraTexture, texRect);
-
-            GLES20.glViewport(0, 0, mViewportWidth, mViewportHeight);
-
-            copyProgram.bind(phaseCorrelateProcessor.getResultFbo(), texRect);
-            texRect.draw();
-            copyProgram.unbind();
-            /*phaseCorrelateProcessor.fftFbo2.read(floatBuf, GL_RGBA);
-            buf.position(0);
-            floatBuf.get(data);
-            buf.position(0);
-/*            for (int i=0; i< dataShort.length/2-2; i++){
-                dataShort[2*i] = (short) data[4 * i + 1];
-                dataShort[2*i + 1] = (short) data[4 * i + 2];
-            }
-            int i=0;
-            i++;
-            /*for (int i=0; i < 1024; i++){
-                dataShort[i]= buf.getShort();
-                dataShort2[i] = PhaseCorrelateProcessor.obviousReverse(dataShort[i], 6);
-                buf.get();
-                buf.get();
-            }*/
-
-        //}
-        else {
+        } else {
             readCameraProgram.bind(cameraTexture.texId, cameraTexture.mCameraTransformMatrix, texRect.textureBuffer, texRect.vertexBuffer);
             texRect.draw();
 
             readCameraProgram.unbind();
         }
-
     }
 
     //getters and setters
@@ -307,6 +271,7 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
     @Override
     public void setOnRendererReadyListener(OnRendererReadyListener listener) {
         mOnRendererReadyListener = listener;
+
     }
 
     @Override
@@ -314,4 +279,5 @@ public class CameraRenderer extends Thread implements SurfaceTexture.OnFrameAvai
 /*        frameBufferHolder.deinit();
         frameBufferHolder.init(4, size);*/
     }
+
 }

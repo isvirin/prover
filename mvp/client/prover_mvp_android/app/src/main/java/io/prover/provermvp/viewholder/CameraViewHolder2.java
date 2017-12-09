@@ -129,7 +129,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
         resumed = true;
 
         startBackgroundThread();
-        surfacesHolder.onResume();
+        surfacesHolder.onResume(activity);
     }
 
     @Override

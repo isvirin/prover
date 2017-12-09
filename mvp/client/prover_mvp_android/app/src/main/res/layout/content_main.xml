@@ -23,8 +23,8 @@
 
     <io.prover.provermvp.camera2.AutoFitTextureView
         android:id="@+id/supportTextureView"
-        android:layout_width="1024px"
-        android:layout_height="1024px"
+        android:layout_width="512px"
+        android:layout_height="512px"
         app:layout_constraintRight_toRightOf="parent" />
 
     <include layout="@layout/bottom_controls" />
