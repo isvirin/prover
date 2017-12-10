@@ -90,8 +90,6 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
     }
 
     public void detectFrame(byte[] frameData, int width, int height) {
-        if (swypeCodeConfirmed)
-            return;
         if (nativeHandler != 0) {
             long time = System.currentTimeMillis();
             detectFrameNV21(nativeHandler, frameData, width, height, detectionResult);
@@ -104,8 +102,6 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void detectFrame(Frame frame) {
-        if (swypeCodeConfirmed)
-            return;
         Image image = frame.image;
         int width = image.getWidth();
         int height = image.getHeight();
@@ -140,7 +136,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             if (oldState != null && oldState.state == InputCode && newState.state == Waiting) {
                 updateSwype(true);
             }
-            if (detectionState.state == Confirmed) {
+            if (detectionState != null && detectionState.state == Confirmed && !swypeCodeConfirmed) {
                 cameraController.onSwypeCodeConfirmed();
                 swypeCodeConfirmed = true;
             }
@@ -160,7 +156,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             if (oldState != null && oldState.state == InputCode && newState.state == Waiting) {
                 updateSwype(true);
             }
-            if (detectionState != null && detectionState.state == Confirmed) {
+            if (detectionState != null && detectionState.state == Confirmed && !swypeCodeConfirmed) {
                 cameraController.onSwypeCodeConfirmed();
                 swypeCodeConfirmed = true;
             }

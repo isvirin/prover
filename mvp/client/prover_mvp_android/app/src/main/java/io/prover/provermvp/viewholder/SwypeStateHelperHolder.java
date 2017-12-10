@@ -189,9 +189,11 @@ public class SwypeStateHelperHolder implements
 
     @Override
     public void onSwypeCodeConfirmed() {
-        if (detectorHandler != null) {
-            detectorHandler.sendQuit();
-            detectorHandler = null;
-        }
+        cameraController.handler.postDelayed(() -> {
+            if (detectorHandler != null) {
+                detectorHandler.sendQuit();
+                detectorHandler = null;
+            }
+        }, 1000);
     }
 }

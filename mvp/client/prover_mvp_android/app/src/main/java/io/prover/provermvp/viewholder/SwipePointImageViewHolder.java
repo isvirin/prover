@@ -19,6 +19,8 @@ public class SwipePointImageViewHolder extends ImageViewHolder {
     }
 
     public void setState(@NonNull State state) {
+        if (this.state == state)
+            return;
         switch (state) {
             case None:
                 setVectorDrawable(R.drawable.ic_swype_empty);

@@ -650,6 +650,7 @@ SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int hei
                     ++count_num;
                     if (swype_Numbers.size() == (count_num + 1)) {
                         MoveToState(4, timestamp, 0);
+                        _swipeStepDetector.FinishStep();
                     } else {
                         _swipeStepDetector.AdvanceSwipeStep(swype_Numbers[count_num + 1]);
                     }
@@ -663,6 +664,10 @@ SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int hei
                     break;
             }
         }
+        x = (int) (_swipeStepDetector._current._x * 1024);
+        y = (int) (_swipeStepDetector._current._y * 1024);
+    } else if (S == 4) {
+        _swipeStepDetector.Add(_currentShift);
         x = (int) (_swipeStepDetector._current._x * 1024);
         y = (int) (_swipeStepDetector._current._y * 1024);
     }

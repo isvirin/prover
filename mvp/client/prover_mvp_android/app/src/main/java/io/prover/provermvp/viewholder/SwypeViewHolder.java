@@ -277,7 +277,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
 
             case Completed:
                 showCompleted();
-                return false;
+                return true;
 
             case Failed:
                 showFailed();

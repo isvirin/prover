@@ -45,6 +45,8 @@ public:
 
     bool AdvanceSwipeStep(int nextPoint);
 
+    void FinishStep();
+
     /**
      * checks current state;
      * @return
