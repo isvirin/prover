@@ -39,6 +39,7 @@
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
         android:text="@string/makeProver"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#fff"

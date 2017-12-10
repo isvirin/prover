@@ -49,7 +49,7 @@
     <group
         android:name="coin1"
         android:translateX="42.5"
-        android:translateY="12.5">
+        android:translateY="15">
         <path
             android:pathData="M-11.5,0 a11.5,11.5 0,0,1 23,0 11.5, 11.5 0,0,1 -23,0"
             android:strokeColor="#fff"

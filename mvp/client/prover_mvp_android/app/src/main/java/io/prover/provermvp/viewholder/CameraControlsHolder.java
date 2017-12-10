@@ -33,7 +33,11 @@ import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.permissions.PermissionManager;
+import io.prover.provermvp.transport.HelloRequest;
 import io.prover.provermvp.transport.NetworkHolder;
+import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.transport.SubmitVideoHashRequest;
+import io.prover.provermvp.transport.responce.HelloResponce;
 import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.UtilFile;
 
@@ -47,7 +51,7 @@ import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_Y;
 public class CameraControlsHolder implements View.OnClickListener,
         AdapterView.OnItemSelectedListener,
         CameraController.OnPreviewStartListener,
-        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.OnSwypeCodeSetListener, CameraController.OnFpsUpdateListener, CameraController.OnDetectionStateCahngedListener {
+        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.OnSwypeCodeSetListener, CameraController.OnFpsUpdateListener, CameraController.OnDetectionStateCahngedListener, CameraController.NetworkRequestDoneListener, CameraController.NetworkRequestErrorListener, CameraController.NetworkRequestStartListener {
     private final ViewGroup root;
     private final Spinner resolutionSpinner;
     private final Activity activity;
@@ -92,6 +96,9 @@ public class CameraControlsHolder implements View.OnClickListener,
         cameraController.swypeCodeSet.add(this);
         cameraController.fpsUpdateListener.add(this);
         cameraController.detectionState.add(this);
+        cameraController.onNetworkRequestDone.add(this);
+        cameraController.onNetworkRequestError.add(this);
+        cameraController.onNetworkRequestStart.add(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
@@ -300,5 +307,32 @@ public class CameraControlsHolder implements View.OnClickListener,
             handler.postDelayed(hide, timeout);
         }
         dr.start();
+    }
+
+    @Override
+    public void onNetworkRequestDone(NetworkRequest request, Object responce) {
+        if (request instanceof SubmitVideoHashRequest) {
+            showHint(R.string.videoHashPosted, 3000, 0, false);
+        } else if (request instanceof HelloRequest) {
+            HelloResponce hello = (HelloResponce) responce;
+            if (hello.getDoubleBalance() == 0) {
+                showImageNotificationAnim(R.drawable.no_money_anim, 3000);
+                showHint(R.string.notEnoughMoney, 3500, 0, false);
+            }
+        }
+    }
+
+    @Override
+    public void onNetworkRequestError(NetworkRequest request, Exception e) {
+        if (request instanceof SubmitVideoHashRequest) {
+            showHint(R.string.videoHashPosted, 3000, 0, false);
+        }
+    }
+
+    @Override
+    public void onNetworkRequestStart(NetworkRequest request) {
+        if (request instanceof SubmitVideoHashRequest) {
+            showHint(R.string.calculatingVideoHash, 4000, 0, false);
+        }
     }
 }

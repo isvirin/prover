@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.SpannableStringBuilder;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.Locale;
 
+import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.R;
 import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
@@ -63,6 +65,7 @@ public class SwypeStateHelperHolder implements
         cameraController.detectionState.add(this);
         cameraController.swypeCodeSet.add(this);
         cameraController.swypeCodeConfirmed.add(this);
+        statsText.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
     }
 
     @Override

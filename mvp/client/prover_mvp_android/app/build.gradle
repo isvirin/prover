@@ -4,10 +4,10 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.prover.provermvp"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 26
-        versionCode 2
-        versionName "0.12.2"
+        versionCode 6
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
@@ -27,7 +27,7 @@ android {
     ).all { variant ->
 
         variant.outputs.all {
-            outputFileName = "../../../../../../build/${variant.applicationId}-${variant.flavorName}-${variant.versionName}.apk"
+            outputFileName = "../../../../../../build/${variant.applicationId}-${variant.flavorName}-${variant.versionName}_${variant.versionCode}.apk"
         }
     }
 
@@ -66,6 +66,7 @@ android {
     flavorDimensions "main"
     productFlavors {
         arm {
+            versionCode = android.defaultConfig.versionCode + 1
             dimension "main"
             ndk {
                 abiFilters "armeabi",  "arm64-v8a"
@@ -88,9 +89,10 @@ android {
                     abiFilters "arm64-v8a"
                 }
             }
-        }
+        }//*/
 
-/*        armeabi_v7a {
+        armeabi_v7a {
+            versionCode = android.defaultConfig.versionCode
             dimension "main"
             ndk {
                 abiFilter "armeabi-v7a"
@@ -103,6 +105,7 @@ android {
         }
 
         x86 {
+            versionCode = android.defaultConfig.versionCode + 2
             dimension "main"
             ndk {
                 abiFilter "x86"
@@ -115,6 +118,7 @@ android {
         }
 
         x86_64 {
+            versionCode = android.defaultConfig.versionCode + 3
             dimension "main"
             ndk {
                 abiFilter "x86_64"
@@ -127,6 +131,7 @@ android {
         }
 
         mips {
+            versionCode = android.defaultConfig.versionCode + 4
             dimension "main"
             ndk {
                 abiFilter "mips"
@@ -139,6 +144,7 @@ android {
         }
 
         mips64 {
+            versionCode = android.defaultConfig.versionCode + 5
             dimension "main"
             ndk {
                 abiFilter "mips64"
