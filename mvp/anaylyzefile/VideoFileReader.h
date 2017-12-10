@@ -21,6 +21,7 @@ public:
     bool isError() const; // Valid, error happened during packet reading
     const AVCodecParameters *getCodecParameters() const;
     const AVRational *getTimeBase() const;
+    double getOrientationAngle() const;
 
     // If the function returns true, packet should be av_packet_unref'ed after
     // use.
@@ -29,6 +30,7 @@ public:
 private:
     AVFormatContext *_formatctx;
     int              _videoStreamIndex;
+    double           _orientationAngle;
     AVBSFContext    *_bsfctx;
     bool             _eof;
     bool             _error;

@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <cmath>
 #include <getopt.h>
 #include <png.h>
 
@@ -9,6 +10,7 @@ extern "C"
 }
 
 #include "VideoFileReader.h"
+#include "ImageProcessor.h"
 #include "swype_detect.h"
 
 bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
@@ -68,13 +70,30 @@ int main(int argc, char *argv[])
     if(argc<=2)
         return 1;
 
-    av_log_set_level(48);
+//    av_log_set_level(48);
     av_register_all();
     avcodec_register_all();
+    avfilter_register_all();
 
     VideoFileReader reader(argv[1], true);
     if(!reader.isValid())
         return 2;
+
+    unsigned int sourceWidth=reader.getCodecParameters()->width;
+    unsigned int sourceHeight=reader.getCodecParameters()->height;
+    int pixelFormat=reader.getCodecParameters()->format;
+    const AVRational *timeBase=reader.getTimeBase();
+    unsigned int targetWidth=(sourceWidth>sourceHeight)?320:240;
+    unsigned int targetHeight=320*240/targetWidth;
+
+    ImageProcessor processor(
+        sourceWidth,
+        sourceHeight,
+        pixelFormat,
+        timeBase,
+        targetWidth,
+        targetHeight,
+        (int)floor(-reader.getOrientationAngle()));
 
     AVCodec *codec=avcodec_find_decoder(reader.getCodecParameters()->codec_id);
     if(!codec)
@@ -117,15 +136,20 @@ int main(int argc, char *argv[])
 
         while((rc=avcodec_receive_frame(codecctx, frame))==0)
         {
+            int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
+
+            processor.processImage(frame);
+            char filename[20];
+            snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
+            debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
+        
             int state=-1, index=-1, x=-1, y=-1;
             int debug=-1;
 
-            int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
 
             detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
             fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d\n", (long long)timestamp, state, index, x, y, debug);
 
-            debug_save_image_to_png(frame->data[0], frame->width, frame->height, std::to_string(timestamp)+".png");
         }
         if(rc==AVERROR_EOF)
             break;

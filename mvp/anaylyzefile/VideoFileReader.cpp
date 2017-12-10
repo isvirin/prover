@@ -13,6 +13,7 @@ extern "C"
 VideoFileReader::VideoFileReader(const char *filename, bool h264toannexb) :
     _formatctx(NULL),
     _videoStreamIndex(-1),
+    _orientationAngle(0.0),
     _bsfctx(NULL),
     _eof(false),
     _error(false),
@@ -49,7 +50,7 @@ VideoFileReader::VideoFileReader(const char *filename, bool h264toannexb) :
         formatctx->streams[videoStreamIndex],
         AV_PKT_DATA_DISPLAYMATRIX,
         NULL);
-    printf("%f\n", av_display_rotation_get(displaymatrix));
+    double orientationAngle=av_display_rotation_get(displaymatrix);
 
     if(h264toannexb)
     {
@@ -81,6 +82,7 @@ VideoFileReader::VideoFileReader(const char *filename, bool h264toannexb) :
 
     _formatctx=formatctx;
     _videoStreamIndex=videoStreamIndex;
+    _orientationAngle=orientationAngle;
     _bsfctx=bsfctx;
 }
 
@@ -119,6 +121,11 @@ const AVRational *VideoFileReader::getTimeBase() const
         return &_formatctx->streams[_videoStreamIndex]->time_base;
     else
         return NULL;
+}
+
+double VideoFileReader::getOrientationAngle() const
+{
+    return _orientationAngle;
 }
 
 bool VideoFileReader::readPacket(AVPacket *packet)
