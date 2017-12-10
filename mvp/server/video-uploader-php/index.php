@@ -33,7 +33,7 @@ if (!$loadConfig_result[0]) {
     <div class="container">
         <div class="logo">
             <a href="https://prover.io"><img class="logo__img" src="images/logo.svg"></a>
-            <a href="#"><img class="google__play" src="images/gplay_eng.svg"></a>
+            <a target="_blank" href="https://play.google.com/store/apps/details?id=io.prover.provermvp"><img class="google__play" src="images/gplay_eng.svg"></a>
         </div>
         <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
               onclick="document.getElementById('file').click()">
@@ -43,11 +43,11 @@ if (!$loadConfig_result[0]) {
                     <path d="M896 972.8h-819.2c-42.347 0-76.8-34.451-76.8-76.8v-102.4c0-14.139 11.462-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 14.115 11.485 25.6 25.6 25.6h819.2c14.115 0 25.6-11.485 25.6-25.6v-102.4c0-14.139 11.461-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 42.349-34.451 76.8-76.8 76.8z"></path>
                 </svg>
                 <input type="file" name="file" id="file" class="box__file">
-                <label class="box__labelFile_default" for="file">
+                <label class="box__labelFile_default" for="">
                     <strong>Choose a file</strong>
                     <span class="box__dragndrop"> or drag it here.</span>
                 </label>
-                <label class="box__labelFile_file" for="file"></label>
+                <label class="box__labelFile_file" for=""></label>
                 <button type="submit" class="box__button">Upload</button>
             </div>
 
