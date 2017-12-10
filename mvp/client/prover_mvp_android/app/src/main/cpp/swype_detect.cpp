@@ -526,34 +526,17 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b) {
 }
 
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
+    Point2d shift;
 
+    UMat b_frame;
 
-    frame_i.convertTo(frame1, frame_i.depth());
-    //UMat b_frame;
-    //frame_i.convertTo(b_frame, frame_i.depth());
+    frame_i.convertTo(b_frame, frame_i.depth());
+
     //cvtColor(b_frame, frame1, CV_RGB2GRAY);// converting frames to CV_64F type
-    //b_frame.copyTo(frame1);
+    b_frame.copyTo(frame1);
 
-    cv::UMat *buf1 = _tickTock ? &buf1ft : &buf2ft;
-    cv::UMat *buf2 = _tickTock ? &buf2ft : &buf1ft;;
-    _tickTock = !_tickTock;
 
-    if (buf1->empty()) {
-        frame1.convertTo(*buf1, CV_64F);//Преобразование фреймов в тип CV_64F
-        *buf2 = buf1->clone();
-        // we get the coordinates of the swipe points
-        koord_Sw_points = Koord_Swipe_Points(frame1.cols, frame1.rows);
-    } else {
-        frame1.convertTo(*buf2, CV_64F);//converting frames to CV_64F type
-    }
-
-    if (hann.empty()) {
-        createHanningWindow(hann, buf1ft.size(), CV_64F); //  create Hanning window
-    }
-
-    return phaseCorrelate(*buf1, *buf2, hann); // we calculate a phase offset vector
-
-    /*if (buf1ft.empty()) {
+    if (buf1ft.empty()) {
         frame1.convertTo(buf2ft, CV_64F);//Преобразование фреймов в тип CV_64F
         buf1ft = buf2ft.clone();
         koord_Sw_points = Koord_Swipe_Points(frame1.cols,
@@ -565,8 +548,9 @@ Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     if (hann.empty()) {
         createHanningWindow(hann, buf1ft.size(), CV_64F); //  create Hanning window
     }
+    shift = phaseCorrelate(buf1ft, buf2ft, hann); // we calculate a phase offset vector
 
-    return phaseCorrelate(buf1ft, buf2ft, hann); // we calculate a phase offset vector*/
+    return shift;
 }
 
 Point2d SwypeDetect::Frame_processor1(cv::Mat &frame_i) {
