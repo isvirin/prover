@@ -98,7 +98,7 @@ body {
 
 input.btn {
     background-color: #100520;
-    width: 330px;
+    width: 250px;
     font-size: 0.8em;
     text-align: center;
     height: 30px;
@@ -107,6 +107,11 @@ input.btn {
 
 #get_eth_result_text > a {
     color: white;
+}
+
+.blink {
+    transition: 5s !important;
+    background: #ffffff !important;
 }
 
 .box {
