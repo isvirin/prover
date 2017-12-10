@@ -102,6 +102,7 @@ input.btn {
     font-size: 0.8em;
     text-align: center;
     height: 30px;
+    vertical-align: bottom;
 }
 
 .box {
