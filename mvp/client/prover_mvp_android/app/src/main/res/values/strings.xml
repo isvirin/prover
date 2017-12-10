@@ -20,4 +20,5 @@
     <string name="videoHashPosted">Video hash posted to blockchain.</string>
     <string name="videoHashPostFailed">Error sending video hash to blockchain.</string>
     <string name="notEnoughMoney">Not enough funds on your account.</string>
+    <string name="videoNotConfirmed">Your video has not been verified yet!</string>
 </resources>

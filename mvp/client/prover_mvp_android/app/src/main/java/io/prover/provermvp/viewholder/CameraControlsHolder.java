@@ -238,6 +238,10 @@ public class CameraControlsHolder implements View.OnClickListener,
         }
         updateControls(true, false);
         allDoneHolder.view.setVisibility(View.GONE);
+        if (file != null && !isVideoConfirmed) {
+            showImageNotificationAnim(R.drawable.ic_not_verified_anim, 3000);
+            showHint(R.string.videoNotConfirmed, 4000, 0, false);
+        }
     }
 
     @Override
