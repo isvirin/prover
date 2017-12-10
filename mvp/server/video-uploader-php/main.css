@@ -78,35 +78,61 @@ body {
     color: #ffffff;
     margin-top: 20px;
     display: inline-block;
-    font-size: 20px;
-    border-radius: 25px;
+    font-size: 24px;
+    border-radius: 35px;
     padding: 10px 30px;
     text-decoration: none;
-    border: 2px solid rgba(110, 58, 128, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     transition: 1s;
     cursor: pointer;
 }
 
+.controllers > .btn:nth-child(odd) {
+    margin-right: 35px;
+}
+
 .btn:hover {
     transition: 1s;
-    background: rgba(110, 58, 128, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#get_eth_block {
+    margin-top: 20px;
+    border-radius: 35px;
+    padding-left: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .content.error {
-    color: red;
+    color: #ff0000;
 }
 
-input.btn {
-    background-color: #100520;
+input[type='search'].btn {
+    margin: 0;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    background: transparent;
     width: 330px;
-    font-size: 0.8em;
-    text-align: center;
-    height: 30px;
-    vertical-align: bottom;
+    padding: 0;
 }
 
-#get_eth_result_text > a {
-    color: white;
+#get_eth_block a.btn {
+    padding: 10px 38px;
+    margin: 0;
+    border: none;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0 35px 35px 0;
+}
+
+input[type='search'].btn::-webkit-input-placeholder {color:#ffffff;font-size: 24px;}
+input[type='search'].btn::-moz-placeholder          {color:#ffffff;font-size: 24px;}
+input[type='search'].btn:-moz-placeholder           {color:#ffffff;font-size: 24px;}
+input[type='search'].btn:-ms-input-placeholder      {color:#ffffff;font-size: 24px;}
+
+.controllers {
+    width: 85%;
+    margin: 0 auto;
 }
 
 .box {
@@ -756,21 +782,33 @@ footer a {
     .manual .container .content h3 {
         padding: 0;
     }
+    .controllers {
+        width: 100%;
+    }
+    .controllers .btn {
+        padding: 10px 25px;
+    }
+    #get_eth_block {
+        padding-left: 20px;
+    }
+    #get_eth_block a.btn {
+        padding: 10px 32px;
+    }
 }
 
 @media screen and (max-width: 768px) {
-    .manual .container,
-    .manual .container .content,
-    .manual footer {
+    .container,
+    .container .content,
+    footer {
         width: 100%;
     }
-    .wrapper.manual {
+    .wrapper {
         padding: 0 25px;
     }
-    .manual .box__error {
+    .box__error {
         padding: 0 10px;
     }
-    .manual .box__error > span {
+    .box__error > span {
         text-align: center;
     }
     .manual section {
@@ -787,31 +825,9 @@ footer a {
         position: relative;
         display: inline-block;
     }
-    .manual footer {
-        box-sizing: border-box;
-        padding: 0 25px;
-        left: 0;
-        bottom: 10px;
-        height: auto;
+    input[type='search'].btn {
+        width: auto;
     }
-}
-
-@media screen and (max-width: 700px) {
-    .container,
-    .container .content,
-    footer {
-        width: 100%;
-    }
-    .wrapper {
-        padding: 0 25px;
-    }
-    .box__error {
-        padding: 0 10px;
-    }
-    .box__error > span {
-        text-align: center;
-    }
-
     footer {
         box-sizing: border-box;
         padding: 0 25px;
@@ -831,11 +847,46 @@ footer a {
         margin: 0 auto 10px;
         text-align: center;
     }
+    .controllers > .btn:nth-child(odd) {
+        margin-right: 0;
+    }
+    #get_eth_block {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+    input[type='search'].btn {
+        padding: 14px 30px;
+        margin-top: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 35px;
+        outline: none;
+        text-align: center;
+        -webkit-appearance: none;
+        background: transparent;
+        width: 330px;
+    }
+    #get_eth_block a.btn {
+        padding: 10px 30px;
+        margin-top: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 35px;
+    }
+    input[type='search'].btn::-webkit-input-placeholder {text-align: center;}
+    input[type='search'].btn::-moz-placeholder          {text-align: center;}
+    input[type='search'].btn:-moz-placeholder           {text-align: center;}
+    input[type='search'].btn:-ms-input-placeholder      {text-align: center;}
 }
 
 @media screen and (max-width: 400px) {
     .container {
         padding-bottom: 100px;
+    }
+    #get_eth_block {
+        width: 100%;
+    }
+    input[type='search'].btn {
+        width: 100%;
     }
     footer {
         bottom: 0;

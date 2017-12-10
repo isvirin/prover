@@ -72,22 +72,23 @@ if (!$loadConfig_result[0]) {
                 swype code. In the case of coincidence of hashes and swype codes - the video file will be considered as
                 authentic.</p>
         </div>
-        <a href="manual.html" class="btn">how it works</a>
-        <a class="btn" id="get_eth_open">get ropsten testnet ether</a>
-        <span id="get_eth_block" style="display: none;">
-            <br>
-            <input type="text" placeholder="address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn" id="send_eth_btn">send 0.05 Eth</a>
-        </span>
-        <span id="get_eth_loading" class="content" style="display: none;">
-            <br>
-            <br>
-            Loading...
-        </span>
-        <span id="get_eth_result" class="content" style="display: none;">
-            <br>
-            <br>
-            <span id="get_eth_result_text"></span>
-        </span>
+        <div class="controllers">
+            <a href="manual.html" class="btn">How it works</a>
+            <a class="btn" id="get_eth_open">Get ropsten testnet ether</a>
+            <span id="get_eth_block" style="display: none;">
+                <input type="search" placeholder="Your wallet address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn btn-send" id="send_eth_btn">Send 0.05 Eth</a>
+            </span>
+                <span id="get_eth_loading" class="content" style="display: none;">
+                <br>
+                <br>
+                Loading...
+            </span>
+                <span id="get_eth_result" class="content" style="display: none;">
+                <br>
+                <br>
+                <span id="get_eth_result_text"></span>
+            </span>
+        </div>
         <div class="block_client_address_info"></div>
     </div>
     <footer>
