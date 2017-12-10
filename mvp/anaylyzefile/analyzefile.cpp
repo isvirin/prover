@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <string>
 #include <getopt.h>
+#include <png.h>
 
 extern "C"
 {
@@ -9,10 +10,55 @@ extern "C"
 
 #include "swype_detect.h"
 
-
-void debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
+bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
 {
-    // TODO
+    png_bytep rows[height];
+    for(unsigned int i=0; i<height; ++i)
+        rows[i]=(png_bytep)(data+i*width);
+
+    png_structp png=png_create_write_struct(
+        PNG_LIBPNG_VER_STRING,
+        NULL,
+        NULL,
+        NULL);
+    if(!png)
+        return false;
+
+    png_infop info=png_create_info_struct(png);
+    if(!info)
+    {
+        png_destroy_write_struct(&png, (png_infopp)NULL);
+        return false;
+    }
+
+    if(setjmp(png_jmpbuf(png)))
+    {
+        png_destroy_write_struct(&png, &info);
+        return false;
+    }
+
+    FILE *f=fopen(filename.c_str(), "wb");
+    png_init_io(png, f);
+
+    png_set_IHDR(
+        png,
+        info,
+        width,
+        height,
+        8,
+        PNG_COLOR_TYPE_GRAY,
+        PNG_INTERLACE_NONE,
+        PNG_COMPRESSION_TYPE_DEFAULT,
+        PNG_FILTER_TYPE_DEFAULT);
+
+    png_set_rows(png, info, rows);
+
+    png_write_png(png, info, 0, NULL);
+
+    png_destroy_write_struct(&png, &info);
+    fclose(f);
+
+    return true;
 }
 
 int main(int argc, char *argv[])
