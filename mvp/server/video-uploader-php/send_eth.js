@@ -1,5 +1,5 @@
 document.getElementById('get_eth_open').addEventListener('click', function (e) {
-    document.getElementById('get_eth_block').style.display = 'inline';
+    document.getElementById('get_eth_block').style.display = 'inline-block';
     document.getElementById('get_eth_loading').style.display = 'none';
     document.getElementById('get_eth_result').style.display = 'none';
 });
