@@ -105,6 +105,10 @@ input.btn {
     vertical-align: bottom;
 }
 
+#get_eth_result_text > a {
+    color: white;
+}
+
 .box {
     font-size: 1.25rem; /* 20 */
     background-color: transparent;

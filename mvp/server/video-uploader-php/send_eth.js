@@ -19,7 +19,10 @@ document.getElementById('send_eth_btn').addEventListener('click', function (e) {
                 document.getElementById('get_eth_result_text').innerHTML = result.message;
             } else {
                 resultBlock.classList.remove('error');
-                document.getElementById('get_eth_result_text').innerHTML = 'Success<br>' + result.message;
+                document.getElementById('get_eth_result_text').innerHTML = 'Success<br>' +
+                    '<a href="https://ropsten.etherscan.io/tx/' + result.message + '" target="_blank">' +
+                    result.message +
+                    '</a>';
             }
             document.getElementById('get_eth_block').style.display = 'none';
             document.getElementById('get_eth_loading').style.display = 'none';
