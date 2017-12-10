@@ -11,7 +11,11 @@
         android:animation="@animator/rotate360_ccw" />
 
     <target
-        android:name="phoneRoot"
-        android:animation="@animator/fadeout_phone" />
+        android:name="arrow1Path"
+        android:animation="@animator/fadeout_stroke_delay1500" />
+
+    <!--    <target
+            android:name="phoneRoot"
+            android:animation="@animator/fadeout_phone" /> -->
 
 </animated-vector>

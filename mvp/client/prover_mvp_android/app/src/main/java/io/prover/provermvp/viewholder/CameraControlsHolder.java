@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
@@ -28,6 +30,7 @@ import java.util.Locale;
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.transport.NetworkHolder;
 import io.prover.provermvp.util.Etherium;
@@ -43,20 +46,18 @@ import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_Y;
 public class CameraControlsHolder implements View.OnClickListener,
         AdapterView.OnItemSelectedListener,
         CameraController.OnPreviewStartListener,
-        //CameraController.OnFrameAvailableListener,
-        //CameraController.OnFrameAvailable2Listener,
-        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.OnSwypeCodeSetListener, CameraController.OnFpsUpdateListener {
+        CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener, CameraController.OnSwypeCodeSetListener, CameraController.OnFpsUpdateListener, CameraController.OnDetectionStateCahngedListener {
     private final ViewGroup root;
     private final Spinner resolutionSpinner;
     private final Activity activity;
     private final ICameraViewHolder cameraHolder;
     private final ArrayAdapter<Size> cameraResolutionsAdapter;
     private final CameraController cameraController;
-    //private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private final TextView fpsView;
     private final ImageButton recordButton;
     private final AppCompatImageView largeImageNotification;
     private final TextView hintText;
+    private final Handler handler = new Handler();
     boolean resumed = false;
     NetworkHolder networkHolder;
     private boolean started;
@@ -83,17 +84,30 @@ public class CameraControlsHolder implements View.OnClickListener,
 
         fpsView.bringToFront();
         cameraController.previewStart.add(this);
-        //cameraController.frameAvailable.add(this);
-        //cameraController.frameAvailable2.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
         cameraController.swypeCodeSet.add(this);
         cameraController.fpsUpdateListener.add(this);
+        cameraController.detectionState.add(this);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
         Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
         if (resolution != null)
             cameraHolder.setCameraResolution(resolution);
+    }
+
+    private static Animatable2Compat.AnimationCallback animationCallbackOfRunnables(Runnable onStart, Runnable onEnd) {
+        return new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationStart(Drawable drawable) {
+                onStart.run();
+            }
+
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                onEnd.run();
+            }
+        };
     }
 
     @Override
@@ -183,24 +197,6 @@ public class CameraControlsHolder implements View.OnClickListener,
 
     }
 
-
-    @Override
-    public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
-        cameraResolutionsAdapter.clear();
-        cameraResolutionsAdapter.addAll(sizes);
-        int pos = sizes.indexOf(previewSize);
-        if (pos >= 0)
-            resolutionSpinner.setSelection(pos, false);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
-        Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
-        if (!previewSize.equalsIgnoringRotation(resolution)) {
-            SharedPreferences.Editor editor = prefs.edit();
-            previewSize.saveToPreferences(editor, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
-            editor.apply();
-        }
-    }
-
 /*    @Override
     public void onFrameAvailable(byte[] data, Camera camera) {
         float fps = fpsCounter.addFrame();
@@ -227,6 +223,23 @@ public class CameraControlsHolder implements View.OnClickListener,
     }*/
 
     @Override
+    public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
+        cameraResolutionsAdapter.clear();
+        cameraResolutionsAdapter.addAll(sizes);
+        int pos = sizes.indexOf(previewSize);
+        if (pos >= 0)
+            resolutionSpinner.setSelection(pos, false);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(root.getContext());
+        Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
+        if (!previewSize.equalsIgnoringRotation(resolution)) {
+            SharedPreferences.Editor editor = prefs.edit();
+            previewSize.saveToPreferences(editor, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
+            editor.apply();
+        }
+    }
+
+    @Override
     public void onRecordingStart(float fps, Size detectorSize) {
         //updateControls(false, true);
     }
@@ -244,29 +257,51 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         if (actualSwypeCode == null) {
-            AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), R.drawable.phone_large_animated1_fadeout);
-            dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-            largeImageNotification.setImageDrawable(dr);
-            largeImageNotification.setVisibility(View.VISIBLE);
-            dr.registerAnimationCallback(new Animatable2Compat.AnimationCallback() {
-                @Override
-                public void onAnimationEnd(Drawable drawable) {
-                    largeImageNotification.setVisibility(View.GONE);
-                    largeImageNotification.setImageDrawable(null);
-
-                    TransitionManager.beginDelayedTransition(root);
-                    hintText.setVisibility(View.GONE);
-                }
-            });
-            dr.start();
-
-            hintText.setText(R.string.makeProver);
-            hintText.setVisibility(View.VISIBLE);
+            showImageNotificationAnim(R.drawable.phone_large_animated1_fadeout, 3000);
+            showHint(R.string.makeProver, 5000);
         }
     }
 
     @Override
     public void OnFpsUpdate(float fps, float processorFps) {
         fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, processorFps));
+    }
+
+    @Override
+    public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
+        if (oldState != null && oldState.state == DetectionState.State.InputCode && newState.state == DetectionState.State.Waiting) {
+            showHint(R.string.swipeCodeFailedTryAgain, 3500);
+        }
+    }
+
+    private void showHint(int stringId, long timeoutToHide) {
+        hintText.setText(stringId);
+        hintText.setVisibility(View.VISIBLE);
+
+        if (timeoutToHide > 0)
+            handler.postDelayed(() -> {
+                TransitionManager.beginDelayedTransition(root);
+                hintText.setVisibility(View.GONE);
+            }, timeoutToHide);
+    }
+
+    private void showImageNotificationAnim(int vectorDrawableId, long timeout) {
+        TransitionManager.beginDelayedTransition(root);
+        AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), vectorDrawableId);
+        dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+        largeImageNotification.setImageDrawable(dr);
+        largeImageNotification.setVisibility(View.VISIBLE);
+
+        Runnable hide = () -> {
+            TransitionManager.beginDelayedTransition(root);
+            largeImageNotification.setVisibility(View.GONE);
+        };
+
+        if (timeout == 0) {
+            dr.registerAnimationCallback(animationCallbackOfRunnables(null, hide));
+        } else {
+            handler.postDelayed(hide, timeout);
+        }
+        dr.start();
     }
 }

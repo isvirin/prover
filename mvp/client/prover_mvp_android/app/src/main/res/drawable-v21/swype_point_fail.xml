@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_swype_empty">
+
+    <target
+        android:name="circle"
+        android:animation="@animator/stroke_white_to_red" />
+
+</animated-vector>

@@ -47,7 +47,7 @@ bool BoundsChecker::CheckBounds(Vector current) {
     float y = current._y;
 
     if (_isDiagonal) {
-        if (x < -FIT_FACTOR_H | y < -FIT_FACTOR_H)
+        if (x < -FIT_FACTOR_H || y < -FIT_FACTOR_H)
             return false;
 
         if (x + y <= 0)

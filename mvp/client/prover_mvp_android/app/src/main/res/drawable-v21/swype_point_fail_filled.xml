@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_swype_empty">
+
+    <target android:name="centerPoint">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="0"
+                android:propertyName="pathData"
+                android:valueFrom="@string/swype_point_center_filled"
+                android:valueTo="@string/swype_point_center_filled"
+                android:valueType="pathType" />
+        </aapt:attr>
+    </target>
+
+    <target
+        android:name="centerPoint"
+        android:animation="@animator/fill_white_to_red" />
+
+    <target
+        android:name="circle"
+        android:animation="@animator/stroke_white_to_red" />
+
+</animated-vector>

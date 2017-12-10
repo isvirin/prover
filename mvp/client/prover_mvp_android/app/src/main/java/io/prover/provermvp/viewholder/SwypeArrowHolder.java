@@ -16,10 +16,10 @@ import io.prover.provermvp.util.SwypeDirection;
 
 public class SwypeArrowHolder {
     private final ConstraintLayout root;
-    private final ImageView[] swypePoints;
+    private final SwipePointImageViewHolder[] swypePoints;
     private final ImageView arrowView;
 
-    public SwypeArrowHolder(ConstraintLayout root, ImageView[] swypePoints) {
+    public SwypeArrowHolder(ConstraintLayout root, SwipePointImageViewHolder[] swypePoints) {
         this.root = root;
         this.swypePoints = swypePoints;
         arrowView = root.findViewById(R.id.swypeArrow);
@@ -48,7 +48,7 @@ public class SwypeArrowHolder {
 
         arrowView.setRotation(angle);
 
-        positionAtView(swypePoints[from], direction, dr);
+        positionAtView(swypePoints[from].view, direction, dr);
         arrowView.setVisibility(View.VISIBLE);
         if (dr instanceof Animatable)
             ((Animatable) dr).start();

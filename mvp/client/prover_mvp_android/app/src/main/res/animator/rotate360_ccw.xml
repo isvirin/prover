@@ -3,7 +3,8 @@
     <objectAnimator
         android:duration="1000"
         android:propertyName="rotation"
+        android:startOffset="500"
         android:valueFrom="360"
-        android:valueTo="00"
+        android:valueTo="0"
         android:valueType="floatType" />
 </set>

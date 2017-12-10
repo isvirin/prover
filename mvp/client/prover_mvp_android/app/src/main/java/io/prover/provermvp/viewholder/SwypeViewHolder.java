@@ -2,12 +2,14 @@ package io.prover.provermvp.viewholder;
 
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.graphics.drawable.VectorDrawableCompat;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -19,7 +21,6 @@ import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 
-import static io.prover.provermvp.detector.DetectionState.State.GotProverWaiting;
 import static io.prover.provermvp.detector.DetectionState.State.InputCode;
 
 /**
@@ -30,7 +31,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         CameraController.OnSwypeCodeSetListener, CameraController.OnRecordingStartListener, CameraController.OnRecordingStopListener {
     private final ConstraintLayout root;
     private final CameraController cameraController;
-    private final ImageView[] swypePoints = new ImageView[9];
+    private final SwipePointImageViewHolder[] swypePoints = new SwipePointImageViewHolder[9];
+    //private final ImageView[] swypePoints = new ImageView[9];
     private final ImageView redPoint;
     private final Handler handler = new Handler();
     private final SwypeArrowHolder swypeArrowHolder;
@@ -39,26 +41,28 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private final float[] point = new float[2];
     float xMult, yMult;
     private String swype;
-    private ImageView[] swypeSequence;
+    private SwipePointImageViewHolder[] swypeSequence;
     private int[] sequenceIndices;
     private boolean[] pointVisited;
     private int detectProgressPos;
     private VectorDrawableCompat emptyPointDrawable;
+
+    private SwypeHolderState state = SwypeHolderState.Hidden;
 
 
     public SwypeViewHolder(ConstraintLayout root, CameraController cameraController) {
         this.root = root;
         this.cameraController = cameraController;
 
-        swypePoints[0] = root.findViewById(R.id.swypePoint1);
-        swypePoints[1] = root.findViewById(R.id.swypePoint2);
-        swypePoints[2] = root.findViewById(R.id.swypePoint3);
-        swypePoints[3] = root.findViewById(R.id.swypePoint4);
-        swypePoints[4] = root.findViewById(R.id.swypePoint5);
-        swypePoints[5] = root.findViewById(R.id.swypePoint6);
-        swypePoints[6] = root.findViewById(R.id.swypePoint7);
-        swypePoints[7] = root.findViewById(R.id.swypePoint8);
-        swypePoints[8] = root.findViewById(R.id.swypePoint9);
+        swypePoints[0] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint1));
+        swypePoints[1] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint2));
+        swypePoints[2] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint3));
+        swypePoints[3] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint4));
+        swypePoints[4] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint5));
+        swypePoints[5] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint6));
+        swypePoints[6] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint7));
+        swypePoints[7] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint8));
+        swypePoints[8] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint9));
 
         redPoint = root.findViewById(R.id.swypeCurrentPosition);
         swypeArrowHolder = new SwypeArrowHolder(root, swypePoints);
@@ -72,38 +76,30 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
 
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
-        boolean visible = root.getVisibility() == View.VISIBLE;
-        boolean shouldBeVisible = (newState.state == InputCode || newState.state == GotProverWaiting) && swypeSequence != null;
-        if (visible != shouldBeVisible) {
-            if (shouldBeVisible)
-                show();
-            else
-                hide();
-            return;
-        }
+        boolean shouldProcess = setState(newState.state);
 
-        if (!shouldBeVisible || swypeSequence == null)
-            return;
+        if (shouldProcess && swypeSequence != null) {
 
-        int index = newState.index - 1;
-        if (index >= swypeSequence.length)
-            index = swypeSequence.length - 1;
-        if (index >= 0 && !pointVisited[index]) {
-            pointVisited[index] = true;
-            applyAnimatedVectorDrawable(swypeSequence[index], R.drawable.swype_path_point_fill);
-            detectProgressPos = index;
-            if (detectProgressPos < swypeSequence.length - 1) {
-                swypeArrowHolder.show(sequenceIndices[detectProgressPos], sequenceIndices[detectProgressPos + 1]);
-            } else {
-                swypeArrowHolder.hide();
+            int index = newState.index - 1;
+            if (index >= swypeSequence.length)
+                index = swypeSequence.length - 1;
+            if (index >= 0 && !pointVisited[index]) {
+                pointVisited[index] = true;
+                swypeSequence[index].setState(SwipePointImageViewHolder.State.Visited);
+                detectProgressPos = index;
+                if (detectProgressPos < swypeSequence.length - 1) {
+                    swypeArrowHolder.show(sequenceIndices[detectProgressPos], sequenceIndices[detectProgressPos + 1]);
+                } else {
+                    swypeArrowHolder.hide();
+                }
+                setRedPointPositionMatrixTo(swypeSequence[index].view);
             }
-            setRedPointPositionMatrixTo(swypeSequence[index]);
+            point[0] = newState.x;
+            point[1] = newState.y;
+            pointMatrix.mapPoints(point);
+            redPoint.setTranslationX(point[0]);
+            redPoint.setTranslationY(point[1]);
         }
-        point[0] = newState.x;
-        point[1] = newState.y;
-        pointMatrix.mapPoints(point);
-        redPoint.setTranslationX(point[0]);
-        redPoint.setTranslationY(point[1]);
     }
 
     @Override
@@ -111,14 +107,11 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         this.swype = swype;
 
         loadDrawables();
-        swypeSequence = new ImageView[swypeCode.length()];
+        swypeSequence = new SwipePointImageViewHolder[swypeCode.length()];
         sequenceIndices = new int[swypeCode.length()];
         pointVisited = new boolean[swypeCode.length()];
         char[] charArray = swypeCode.toCharArray();
 
-        for (ImageView swypePoint : swypePoints) {
-            swypePoint.setImageDrawable(emptyPointDrawable);
-        }
         for (int i = 0; i < charArray.length; i++) {
             char ch = charArray[i];
             int pos = ch - '1';
@@ -132,7 +125,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         rotateScaleMatrix.postScale(1, 1);
         rotateScaleMatrix.postRotate(orientation, 0, 0);
         rotateScaleMatrix.postScale(xMult, yMult);
-
     }
 
     @Override
@@ -164,7 +156,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         root.setVisibility(View.VISIBLE);
         resetDetectionPosition();
         cameraController.setSwypeDetectorPaused(true);
-        int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration);
+        int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration) * 3 / 2;
         Arrays.fill(pointVisited, false);
         swypeArrowHolder.hide();
 
@@ -173,11 +165,12 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             handler.postDelayed(() -> {
                 if (swypeSequence == null)
                     return;
-                applyAnimatedVectorDrawable(swypeSequence[pos], R.drawable.swype_path_point_blink);
+                swypeSequence[pos].setState(SwipePointImageViewHolder.State.Unvisited);
+                //applyAnimatedVectorDrawable(swypeSequence[pos], R.drawable.swype_path_point_blink);
             }, animationDuration * i);
         }
 
-        setRedPointPositionMatrixTo(swypeSequence[0]);
+        setRedPointPositionMatrixTo(swypeSequence[0].view);
         redPoint.setVisibility(View.GONE);
         handler.postDelayed(() -> {
             applyAnimatedVectorDrawable(redPoint, R.drawable.swype_track_point_blink);
@@ -197,8 +190,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private void hide() {
         root.setVisibility(View.GONE);
         if (swypeSequence != null) {
-            for (ImageView imageView : swypeSequence) {
-                imageView.setImageDrawable(emptyPointDrawable);
+            for (SwipePointImageViewHolder swypePoint : swypePoints) {
+                swypePoint.setState(SwipePointImageViewHolder.State.None, emptyPointDrawable);
             }
         }
     }
@@ -220,5 +213,100 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     public void onRecordingStop(File file, boolean isVideoConfirmed) {
         hide();
         swypeSequence = null;
+    }
+
+    private void showFailed() {
+        for (SwipePointImageViewHolder swypePoint : swypePoints) {
+            swypePoint.setState(SwipePointImageViewHolder.State.Failed);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(root);
+        }
+        redPoint.setVisibility(View.GONE);
+        swypeArrowHolder.hide();
+
+        handler.postDelayed(() -> {
+            if (state == SwypeHolderState.Failed) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition(root);
+                }
+                root.setVisibility(View.GONE);
+            }
+        }, 1500);
+    }
+
+    private void showCompleted() {
+
+    }
+
+    /**
+     * @param state
+     * @return true if state should be processed
+     */
+    public boolean setState(DetectionState.State state) {
+        SwypeHolderState oldState = this.state;
+        this.state = SwypeHolderState.ofDetectorState(state, this.state);
+        if (this.state == SwypeHolderState.Showing && swypeSequence == null) {
+            this.state = SwypeHolderState.Hidden;
+        }
+
+        if (this.state == oldState)
+            return this.state == SwypeHolderState.Showing;
+
+        boolean visible = root.getVisibility() == View.VISIBLE;
+
+        switch (this.state) {
+            case Hidden:
+                if (visible)
+                    hide();
+                return false;
+
+            case Showing:
+                if (!visible)
+                    show();
+                return state == InputCode;
+
+            case Completed:
+                showCompleted();
+                return false;
+
+            case Failed:
+                showFailed();
+                return false;
+
+        }
+        return false;
+    }
+
+    private enum SwypeHolderState {
+        Hidden, Showing, Failed, Completed;
+
+        public static SwypeHolderState ofDetectorState(DetectionState.State state, SwypeHolderState current) {
+            switch (state) {
+                case Waiting:
+                case GotProverNoCode:
+                    switch (current) {
+                        case Failed:
+                        case Showing:
+                            return Failed;
+
+                        case Completed:
+                            return Completed;
+
+                        case Hidden:
+                            return Hidden;
+                    }
+                    return Hidden;
+
+                case GotProverWaiting:
+                case InputCode:
+                    return Showing;
+
+                case Confirmed:
+                    return Completed;
+            }
+            return Hidden;
+        }
     }
 }
