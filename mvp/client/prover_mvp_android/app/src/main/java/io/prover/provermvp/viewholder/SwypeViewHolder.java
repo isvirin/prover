@@ -11,6 +11,7 @@ import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -156,9 +157,13 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         root.setVisibility(View.VISIBLE);
         resetDetectionPosition();
         cameraController.setSwypeDetectorPaused(true);
-        int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration) * 3 / 2;
+        int animationDuration = root.getResources().getInteger(R.integer.swypeBlinkAnimationDuration);
         Arrays.fill(pointVisited, false);
         swypeArrowHolder.hide();
+
+        for (SwipePointImageViewHolder swypePoint : swypePoints) {
+            swypePoint.setState(SwipePointImageViewHolder.State.None, emptyPointDrawable);
+        }
 
         for (int i = 0; i < swypeSequence.length; i++) {
             final int pos = i;
@@ -166,7 +171,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 if (swypeSequence == null)
                     return;
                 swypeSequence[pos].setState(SwipePointImageViewHolder.State.Unvisited);
-                //applyAnimatedVectorDrawable(swypeSequence[pos], R.drawable.swype_path_point_blink);
             }, animationDuration * i);
         }
 
@@ -176,6 +180,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             applyAnimatedVectorDrawable(redPoint, R.drawable.swype_track_point_blink);
             redPoint.setVisibility(View.VISIBLE);
             redPoint.bringToFront();
+            swypeSequence[0].setState(SwipePointImageViewHolder.State.Visited);
             cameraController.setSwypeDetectorPaused(false);
         }, animationDuration * (swypeSequence.length + 1));
     }
@@ -189,11 +194,11 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
 
     private void hide() {
         root.setVisibility(View.GONE);
-        if (swypeSequence != null) {
+        /*if (swypeSequence != null) {
             for (SwipePointImageViewHolder swypePoint : swypePoints) {
                 swypePoint.setState(SwipePointImageViewHolder.State.None, emptyPointDrawable);
             }
-        }
+        }*/
     }
 
     private void setRedPointPositionMatrixTo(View v) {
@@ -231,13 +236,16 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     TransitionManager.beginDelayedTransition(root);
                 }
-                root.setVisibility(View.GONE);
+                hide();
             }
         }, 1500);
     }
 
     private void showCompleted() {
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition((ViewGroup) root.getParent());
+        }
+        hide();
     }
 
     /**

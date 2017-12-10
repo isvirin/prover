@@ -38,7 +38,7 @@ public class SwypeStateHelperHolder implements
         CameraController.OnRecordingStartListener,
         CameraController.OnRecordingStopListener,
         CameraController.NetworkRequestStartListener,
-        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener {
+        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener, CameraController.SwypeCodeConfirmedListener {
     private final ViewGroup root;
     private final TextView statsText;
     private final CameraController cameraController;
@@ -62,6 +62,7 @@ public class SwypeStateHelperHolder implements
         cameraController.onRecordingStop.add(this);
         cameraController.detectionState.add(this);
         cameraController.swypeCodeSet.add(this);
+        cameraController.swypeCodeConfirmed.add(this);
     }
 
     @Override
@@ -184,5 +185,13 @@ public class SwypeStateHelperHolder implements
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         setSwype(swypeCode, actualSwypeCode);
+    }
+
+    @Override
+    public void onSwypeCodeConfirmed() {
+        if (detectorHandler != null) {
+            detectorHandler.sendQuit();
+            detectorHandler = null;
+        }
     }
 }

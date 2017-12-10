@@ -1,5 +1,7 @@
 package io.prover.provermvp.detector;
 
+import io.prover.provermvp.BuildConfig;
+
 /**
  * Created by babay on 11.11.2017.
  */
@@ -27,11 +29,19 @@ public class DetectionState {
     }
 
     public boolean isEqualsArray(int[] arr) {
-        return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        if (BuildConfig.DEBUG) {
+            return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        } else {
+            return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3];
+        }
     }
 
     public boolean isEqualsArray(long[] arr) {
-        return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        if (BuildConfig.DEBUG) {
+            return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3] && d == arr[4];
+        } else {
+            return state.ordinal() == arr[0] && index == arr[1] && x == arr[2] && y == arr[3];
+        }
     }
 
     @Override
@@ -45,7 +55,7 @@ public class DetectionState {
         if (index != that.index) return false;
         if (x != that.x) return false;
         if (y != that.y) return false;
-        return d == that.d;
+        return !BuildConfig.DEBUG || d == that.d;
     }
 
     @Override

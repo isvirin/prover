@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.graphics.drawable.Animatable2Compat;
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
@@ -58,6 +59,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     private final AppCompatImageView largeImageNotification;
     private final TextView hintText;
     private final Handler handler = new Handler();
+    private final AllDoneImageHolder allDoneHolder;
     boolean resumed = false;
     NetworkHolder networkHolder;
     private boolean started;
@@ -76,6 +78,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         recordButton = root.findViewById(R.id.recordButton);
         largeImageNotification = root.findViewById(R.id.largeImageNotification);
         hintText = root.findViewById(R.id.hintText);
+        allDoneHolder = new AllDoneImageHolder(root.findViewById(R.id.allDoneIcon));
 
         resolutionSpinner.setAdapter(cameraResolutionsAdapter);
         resolutionSpinner.setOnItemSelectedListener(this);
@@ -197,31 +200,6 @@ public class CameraControlsHolder implements View.OnClickListener,
 
     }
 
-/*    @Override
-    public void onFrameAvailable(byte[] data, Camera camera) {
-        float fps = fpsCounter.addFrame();
-        if (fps >= 0) {
-            fpsView.setText(String.format(Locale.getDefault(), "%.1f fps", fps));
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onFrameAvailable(Image image) {
-        float fps = fpsCounter.addFrame();
-        if (fps >= 0) {
-            if (cameraController.isRecording()) {
-                fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
-            } else {
-                try {
-                    fpsView.setText(String.format(Locale.getDefault(), "%.1f fps 0x%x %dx%d", fps, image.getFormat(), image.getWidth(), image.getHeight()));
-                } catch (Exception e) {
-                    fpsView.setText(String.format(Locale.getDefault(), "%.1f/%.1f fps ", fps, cameraController.getDetectorFps()));
-                }
-            }
-        }
-    }*/
-
     @Override
     public void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize) {
         cameraResolutionsAdapter.clear();
@@ -252,13 +230,14 @@ public class CameraControlsHolder implements View.OnClickListener,
                     .show();
         }
         updateControls(true, false);
+        allDoneHolder.view.setVisibility(View.GONE);
     }
 
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         if (actualSwypeCode == null) {
-            showImageNotificationAnim(R.drawable.phone_large_animated1_fadeout, 3000);
-            showHint(R.string.makeProver, 5000);
+            showImageNotificationAnim(R.drawable.phone_large_animated1_fadeout, 2000);
+            showHint(R.string.makeProver, 5000, 0, false);
         }
     }
 
@@ -270,11 +249,28 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
         if (oldState != null && oldState.state == DetectionState.State.InputCode && newState.state == DetectionState.State.Waiting) {
-            showHint(R.string.swipeCodeFailedTryAgain, 3500);
+            showHint(R.string.swipeCodeFailedTryAgain, 3500, 0, false);
+        } else if (newState.state == DetectionState.State.Confirmed) {
+            allDoneHolder.show();
+            handler.postDelayed(allDoneHolder::animateMove, 1000);
         }
     }
 
-    private void showHint(int stringId, long timeoutToHide) {
+    private void showHint(int stringId, long timeoutToHide, int anchor, boolean isAbove) {
+        ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) hintText.getLayoutParams();
+        if (anchor == 0) {
+            lp.topToBottom = R.id.balanceContainer;
+            lp.bottomToTop = ConstraintLayout.LayoutParams.UNSET;
+        } else if (isAbove) {
+            lp.topToBottom = ConstraintLayout.LayoutParams.UNSET;
+            lp.bottomToTop = anchor;
+        } else {
+            lp.topToBottom = anchor;
+            lp.bottomToTop = ConstraintLayout.LayoutParams.UNSET;
+        }
+        hintText.setLayoutParams(lp);
+
+        TransitionManager.beginDelayedTransition(root);
         hintText.setText(stringId);
         hintText.setVisibility(View.VISIBLE);
 
