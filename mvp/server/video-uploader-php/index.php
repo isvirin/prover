@@ -31,9 +31,8 @@ if (!$loadConfig_result[0]) {
 <div class="wrapper">
     <div class="container">
         <div class="logo">
-            <svg>
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" target="blank" xlink:href="sprite.svg#Prover"></use>
-            </svg>
+            <a href="https://prover.io"><img class="logo__img" src="images/logo.svg"></a>
+            <a href="#"><img class="google__play" src="images/gplay_eng.svg"></a>
         </div>
         <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
               onclick="document.getElementById('file').click()">
@@ -43,7 +42,7 @@ if (!$loadConfig_result[0]) {
                     <path d="M896 972.8h-819.2c-42.347 0-76.8-34.451-76.8-76.8v-102.4c0-14.139 11.462-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 14.115 11.485 25.6 25.6 25.6h819.2c14.115 0 25.6-11.485 25.6-25.6v-102.4c0-14.139 11.461-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 42.349-34.451 76.8-76.8 76.8z"></path>
                 </svg>
                 <input type="file" name="file" id="file" class="box__file">
-                <label class="box__labelFile_default" for="">
+                <label class="box__labelFile_default" for="file">
                     <strong>Choose a file</strong>
                     <span class="box__dragndrop"> or drag it here.</span>
                 </label>
@@ -68,22 +67,21 @@ if (!$loadConfig_result[0]) {
             </div>
         </form>
         <div class="content">
-            <p>There is really no prescriptive rules on how to best create these guides, but these documents are a source of truth that give me (and hopefully my engineering counterparts) peace of mind. The goal is to have a "pixel-perfect" version of each core component all in one document, so that every screen and state of the application doesn’t need to be drawn for production.</p>
+            <p>To authenticate a file, please upload your video. Our system will verify the file hash and existence of swype code. In the case of coincidence of hashes and swype codes - the video file will be considered as authentic.</p>
         </div>
-
+        <a href="manual.html" class="btn">how it works</a>
         <div class="block_client_address_info"></div>
     </div>
     <footer>
         <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
         <div class="link social_networks">
-            <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="facebook.png"></a>
-            <a target="_blank" href="https://twitter.com/prover_io"><img src="twitter.png"></a>
-            <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="telegram.png"></a>
+            <a target="_blank" href="https://www.facebook.com/prover.blockchain/" ><img src="images/facebook.svg"></a>
+            <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
+            <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
         </div>
         <div class="link copyright">Prover © 2017</div>
     </footer>
 </div>
-
 </body>
 
 </html>
