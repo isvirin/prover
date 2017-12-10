@@ -49,6 +49,11 @@ function loadConfig()
         DEFINE('MVP_CGI_BIN_URL', $config['mvpCgiBinUrl']);
     }
 
+    if (!isset($config['sendEthPassword'])) {
+        $config['sendEthPassword'] = '';
+    }
+    DEFINE('SEND_ETH_PASSWORD', $config['sendEthPassword']);
+
     // если конфиг отличается после проверки всех параметров
     if (json_encode($config) !== json_encode($config_saved)) {
         error_log("CONFIG CHANGES SAVED\nNEW:\n" . json_encode($config) . "\nOLD:\n" . json_encode($config_saved));
