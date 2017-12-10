@@ -8,6 +8,7 @@ extern "C"
 #include <libavformat/avformat.h>
 }
 
+#include "VideoFileReader.h"
 #include "swype_detect.h"
 
 bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
@@ -61,44 +62,21 @@ bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsi
     return true;
 }
 
+
 int main(int argc, char *argv[])
 {
     if(argc<=2)
         return 1;
 
+    av_log_set_level(48);
     av_register_all();
     avcodec_register_all();
 
-    AVFormatContext *formatctx=NULL;
-
-    int rc=avformat_open_input(&formatctx, argv[1], NULL, NULL);
-    if(rc<0)
-    {
-        fprintf(stderr, "avformat_open_input failed\n");
+    VideoFileReader reader(argv[1], true);
+    if(!reader.isValid())
         return 2;
-    }
 
-    fprintf(stderr, "calling avformat_find_stream_info\n");
-    rc=avformat_find_stream_info(formatctx, NULL);
-    if(rc<0)
-    {
-        fprintf(stderr, "failed rc=%d\n", rc);
-        return 2;
-    }
-
-    int videoStreamIndex=-1;
-    for(unsigned int index=0; index<formatctx->nb_streams; ++index)
-    {
-        if(formatctx->streams[index]->codecpar->codec_type==AVMEDIA_TYPE_VIDEO)
-            videoStreamIndex=index;
-    }
-    if(videoStreamIndex==-1)
-    {
-        fprintf(stderr, "No video stream found\n");
-        return 2;
-    }
-
-    AVCodec *codec=avcodec_find_decoder(formatctx->streams[videoStreamIndex]->codecpar->codec_id);
+    AVCodec *codec=avcodec_find_decoder(reader.getCodecParameters()->codec_id);
     if(!codec)
     {
         fprintf(stderr, "no codec found\n");
@@ -114,91 +92,43 @@ int main(int argc, char *argv[])
 
     avcodec_open2(codecctx, codec, NULL);
 
-    rc=avcodec_parameters_to_context(codecctx, formatctx->streams[videoStreamIndex]->codecpar);
+    int rc;
+    
+    rc=avcodec_parameters_to_context(codecctx, reader.getCodecParameters());
     if(rc<0)
     {
         fprintf(stderr, "avcodec_parameters_to_context failed %d\n", rc);
         return 2;
     }
 
-
-    const AVBitStreamFilter *bsf=av_bsf_get_by_name("h264_mp4toannexb");
-    if(!bsf)
-    {
-        fprintf(stderr, "failed to create bitstream filter\n");
-        return 2;
-    }
-
-    AVBSFContext *bsfctx=NULL;
-    if(av_bsf_alloc(bsf, &bsfctx)<0)
-    {
-        fprintf(stderr, "failed to create bitstream filter context\n");
-        return 2;
-    }
-
-    avcodec_parameters_copy(bsfctx->par_in, formatctx->streams[videoStreamIndex]->codecpar);
-//    bsfctx->time_base_in=formatctx->time_base;
-
-    if(av_bsf_init(bsfctx)<0)
-    {
-        fprintf(stderr, "failed to initialize bitstream filter\n");
-        return 2;
-    }
-
-    int fps=formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
+    int fps=30;//formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
 
     std::string swype=argv[2];
     SwypeDetect detector;
     detector.init(fps, swype);
 
     AVFrame *frame=av_frame_alloc();
-    while(true)
+
+    AVPacket packet;
+    av_init_packet(&packet);
+    while(reader.readPacket(&packet))
     {
-        AVPacket packet;
-        int rc;
+        avcodec_send_packet(codecctx, &packet);
 
-        av_init_packet(&packet);
-
-        if((rc=av_read_frame(formatctx, &packet))!=0)
+        while((rc=avcodec_receive_frame(codecctx, frame))==0)
         {
-            fprintf(stderr, "Failed to read packed %d\n", rc);
+            int state=-1, index=-1, x=-1, y=-1;
+            int debug=-1;
+
+            int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
+
+            detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
+            fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d\n", (long long)timestamp, state, index, x, y, debug);
+
+            debug_save_image_to_png(frame->data[0], frame->width, frame->height, std::to_string(timestamp)+".png");
+        }
+        if(rc==AVERROR_EOF)
             break;
-        }
-
-        if(packet.stream_index==videoStreamIndex)
-        {
-            AVPacket *newpacket=av_packet_alloc();
-
-            av_bsf_send_packet(bsfctx, &packet);
-            while((rc=av_bsf_receive_packet(bsfctx, newpacket))==0)
-            {
-                avcodec_send_packet(codecctx, newpacket);
-
-                while((rc=avcodec_receive_frame(codecctx, frame))==0)
-                {
-                    int state=-1, index=-1, x=-1, y=-1;
-                    int debug=-1;
-
-                    int64_t timestamp=frame->pts*1000*formatctx->streams[videoStreamIndex]->time_base.num/formatctx->streams[videoStreamIndex]->time_base.den;
-
-                    detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
-                    fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d\n", (long long)timestamp, state, index, x, y, debug);
-
-                    debug_save_image_to_png(frame->data[0], frame->width, frame->height, std::to_string(timestamp)+".png");
-                }
-                if(rc==AVERROR_EOF)
-                    break;
-
-                av_packet_unref(newpacket);
-            }
-
-            if(rc!=AVERROR(EAGAIN))
-            {
-                
-            }
-
-            av_packet_free(&newpacket);
-        }
 
         av_packet_unref(&packet);
     }
