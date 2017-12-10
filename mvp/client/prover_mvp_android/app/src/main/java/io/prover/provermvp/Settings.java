@@ -9,7 +9,7 @@ public interface Settings {
     boolean REUSE_PREVIEW_BUFFERS = true;
     boolean USE_CAMERA_2 = true;
 
-    boolean FAKE_SWYPE_CODE = true;
+    boolean FAKE_SWYPE_CODE = BuildConfig.DEBUG;
 
     boolean SHOW_RENDERER_PREVIEW = false;
 }

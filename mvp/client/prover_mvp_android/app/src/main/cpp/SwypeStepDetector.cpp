@@ -47,10 +47,14 @@ bool SwypeStepDetector::SetSwipeStep(int currentPoint, int nextPoint) {
 }
 
 bool SwypeStepDetector::AdvanceSwipeStep(int nextPoint) {
+    FinishStep();
+    return SetNextSwipePoint(nextPoint);
+}
+
+void SwypeStepDetector::FinishStep() {
     _count = 0;
     _current -= _target;
     _currentSwypePoint = _nextSwypePoint;
-    return SetNextSwipePoint(nextPoint);
 }
 
 int SwypeStepDetector::CheckState() {
@@ -101,3 +105,4 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
                 dx, dy, _target._direction);
     return true;
 }
+

@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.view.TextureView;
 
+import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.camera2.AutoFitTextureView;
 import io.prover.provermvp.camera2.OrientationHelper;
@@ -107,8 +108,8 @@ public class SurfacesHolder implements OnRendererReadyListener {
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         rotationAngle = OrientationHelper.getRotationAngle(rotation);
         screenTextureReady = false;
-        supportTextureReady = false;
-        cameraRendererReady = false;
+        supportTextureReady = !Settings.SHOW_RENDERER_PREVIEW;
+        cameraRendererReady = !Settings.SHOW_RENDERER_PREVIEW;
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open

@@ -66,6 +66,9 @@ public class CameraController {
     public final ListenerList2<OnFpsUpdateListener, Float, Float> fpsUpdateListener
             = new ListenerList2<>(handler, OnFpsUpdateListener::OnFpsUpdate);
 
+    public final ListenerList<SwypeCodeConfirmedListener> swypeCodeConfirmed
+            = new ListenerList<>(handler, SwypeCodeConfirmedListener::onSwypeCodeConfirmed);
+
     public final NetworkDelegate networkDelegate = new NetworkDelegate();
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
     private boolean recording;
@@ -158,6 +161,14 @@ public class CameraController {
         frameAvailable.postNotifyEvent(data, camera);
     }
 
+    public void onSwypeCodeConfirmed() {
+        swypeCodeConfirmed.postNotifyEvent();
+    }
+
+
+
+
+
     public interface OnPreviewStartListener {
         void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize);
     }
@@ -209,6 +220,11 @@ public class CameraController {
     public interface OnDetectorPauseChangedListener {
         void onDetectorPauseChanged(boolean isPaused);
     }
+
+    public interface SwypeCodeConfirmedListener {
+        void onSwypeCodeConfirmed();
+    }
+
 
     private class NetworkDelegate implements NetworkRequest.NetworkRequestListener {
         @Override

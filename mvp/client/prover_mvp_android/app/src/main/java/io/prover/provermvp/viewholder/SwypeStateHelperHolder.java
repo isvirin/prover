@@ -6,12 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.text.SpannableStringBuilder;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.File;
 import java.util.Locale;
 
+import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.R;
 import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
@@ -38,7 +40,7 @@ public class SwypeStateHelperHolder implements
         CameraController.OnRecordingStartListener,
         CameraController.OnRecordingStopListener,
         CameraController.NetworkRequestStartListener,
-        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener {
+        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener, CameraController.SwypeCodeConfirmedListener {
     private final ViewGroup root;
     private final TextView statsText;
     private final CameraController cameraController;
@@ -62,6 +64,8 @@ public class SwypeStateHelperHolder implements
         cameraController.onRecordingStop.add(this);
         cameraController.detectionState.add(this);
         cameraController.swypeCodeSet.add(this);
+        cameraController.swypeCodeConfirmed.add(this);
+        statsText.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -184,5 +188,15 @@ public class SwypeStateHelperHolder implements
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         setSwype(swypeCode, actualSwypeCode);
+    }
+
+    @Override
+    public void onSwypeCodeConfirmed() {
+        cameraController.handler.postDelayed(() -> {
+            if (detectorHandler != null) {
+                detectorHandler.sendQuit();
+                detectorHandler = null;
+            }
+        }, 1000);
     }
 }

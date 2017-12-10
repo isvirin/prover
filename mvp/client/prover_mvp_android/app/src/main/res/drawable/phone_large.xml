@@ -35,28 +35,29 @@
             android:name="arrow1"
             android:rotation="0">
             <path
-                android:pathData="@string/circle_arrow_60_cw"
+                android:name="arrow1Path"
+                android:pathData="@string/circle_arrow_300_cw"
                 android:strokeColor="#ffffff"
                 android:strokeWidth="5" />
         </group>
 
-        <group
-            android:name="arrow2"
-            android:rotation="120">
-            <path
-                android:pathData="@string/circle_arrow_60_cw"
-                android:strokeColor="#ffffff"
-                android:strokeWidth="5" />
-        </group>
+        <!--        <group
+                    android:name="arrow2"
+                    android:rotation="120">
+                    <path
+                        android:pathData="@string/circle_arrow_60_cw"
+                        android:strokeColor="#ffffff"
+                        android:strokeWidth="5" />
+                </group>
 
-        <group
-            android:name="arrow2"
-            android:rotation="240">
-            <path
-                android:pathData="@string/circle_arrow_60_cw"
-                android:strokeColor="#ffffff"
-                android:strokeWidth="5" />
-        </group>
+                <group
+                    android:name="arrow2"
+                    android:rotation="240">
+                    <path
+                        android:pathData="@string/circle_arrow_60_cw"
+                        android:strokeColor="#ffffff"
+                        android:strokeWidth="5" />
+                </group> -->
 
     </group>
 

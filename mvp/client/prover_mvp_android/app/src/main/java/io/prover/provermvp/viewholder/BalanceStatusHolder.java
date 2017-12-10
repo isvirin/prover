@@ -62,7 +62,8 @@ public class BalanceStatusHolder implements CameraController.NetworkRequestDoneL
     @Override
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
         if (responce instanceof HelloResponce) {
-            String text = String.format(Locale.getDefault(), "%.4f", ((HelloResponce) responce).getDoubleBalance());
+            HelloResponce hello = (HelloResponce) responce;
+            String text = String.format(Locale.getDefault(), "%.4f", hello.getDoubleBalance());
             balanceView.setText(text);
 
             if (balanceView.getCompoundDrawables()[2] == null) {
@@ -70,6 +71,8 @@ public class BalanceStatusHolder implements CameraController.NetworkRequestDoneL
                 dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
                 balanceView.setCompoundDrawables(null, null, dr, null);
             }
+            int color = hello.getDoubleBalance() > 0 ? 0xFFFFFFFF : balanceView.getResources().getColor(R.color.colorAccent);
+            balanceView.setTextColor(color);
         }
         if (request instanceof RequestSwypeCode1)
             return;

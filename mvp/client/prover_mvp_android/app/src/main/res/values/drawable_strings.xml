@@ -17,6 +17,6 @@
     <string name="circle_arrow_90_ccw" translatable="false">M-115,0  m-10,-10 l10,10 10,-10 m-10,10  m0,-3 a115,115 0,0,1 115,-112</string>
     <string name="circle_arrow_60_ccw" translatable="false">M-115,0  m-10,-10 l10,10 10,-10 m-10,10  m0,-3 a115,115 0,0,1 57.5,-96.6</string>
     <string name="circle_arrow_60_cw" translatable="false">M-115,0  m-10,10 l10,-10 10,10 m-10,-10  m0,3 a115,115 0,0,0 57.5,96.6</string>
-    <string name="circle_arrow_300_cw" translatable="false">M-115,0  m-10,10 l10,-10 10,10 m-10,-10  m0,3 a115,115 0,1,0 57.5,-96.6</string>
+    <string name="circle_arrow_300_cw" translatable="false">M-115,0  m-10,10 l10,-10 10,10 m-10,-10  m0,3 a115,115 0,1,0 57.5,-102</string>
 
 </resources>

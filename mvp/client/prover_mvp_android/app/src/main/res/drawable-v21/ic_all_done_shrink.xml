@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_all_done">
+
+    <!--    <target
+            android:name="root"
+            android:animation="@animator/ic_all_done_resize" />
+
+        <target
+            android:name="rootGroup"
+            android:animation="@animator/ic_all_done_translate_root" /> -->
+
+    <target
+        android:name="circle1"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="circle2"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="circle3"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="circle4"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="line1"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="line2"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="line3"
+        android:animation="@animator/fadeout_fill" />
+
+    <target
+        android:name="line4"
+        android:animation="@animator/fadeout_fill" />
+
+
+</animated-vector>

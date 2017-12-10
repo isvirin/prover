@@ -3,6 +3,7 @@
     <objectAnimator
         android:duration="1000"
         android:propertyName="rotation"
+        android:startOffset="500"
         android:valueFrom="0"
         android:valueTo="360"
         android:valueType="floatType" />

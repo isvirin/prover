@@ -19,6 +19,7 @@ if (!$loadConfig_result[0]) {
     <link rel="stylesheet" href="main.css?<?= md5_file('main.css') ?>">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans">
     <script type="text/javascript" src="upload.js?<?= md5_file('upload.js') ?>" defer></script>
+    <script type="text/javascript" src="send_eth.js?<?= md5_file('send_eth.js') ?>" defer></script>
 
     <script>
         var r = document.querySelectorAll("html")[0];
@@ -67,15 +68,32 @@ if (!$loadConfig_result[0]) {
             </div>
         </form>
         <div class="content">
-            <p>To authenticate a file, please upload your video. Our system will verify the file hash and existence of swype code. In the case of coincidence of hashes and swype codes - the video file will be considered as authentic.</p>
+            <p>To authenticate a file, please upload your video. Our system will verify the file hash and existence of
+                swype code. In the case of coincidence of hashes and swype codes - the video file will be considered as
+                authentic.</p>
         </div>
         <a href="manual.html" class="btn">how it works</a>
+        <a class="btn" id="get_eth_open">get ropsten testnet ether</a>
+        <span id="get_eth_block" style="display: none;">
+            <br>
+            <input type="text" placeholder="address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn" id="send_eth_btn">send 0.5 Eth</a>
+        </span>
+        <span id="get_eth_loading" class="content" style="display: none;">
+            <br>
+            <br>
+            Loading...
+        </span>
+        <span id="get_eth_result" class="content" style="display: none;">
+            <br>
+            <br>
+            <span id="get_eth_result_text"></span>
+        </span>
         <div class="block_client_address_info"></div>
     </div>
     <footer>
         <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
         <div class="link social_networks">
-            <a target="_blank" href="https://www.facebook.com/prover.blockchain/" ><img src="images/facebook.svg"></a>
+            <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="images/facebook.svg"></a>
             <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
             <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
         </div>

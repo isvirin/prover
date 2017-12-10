@@ -3,10 +3,7 @@ package io.prover.provermvp.camera2;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
-import android.graphics.YuvImage;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -16,9 +13,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.media.MediaRecorder;
-import android.media.MediaScannerConnection;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -26,9 +21,6 @@ import android.util.Log;
 import android.view.Surface;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -288,7 +280,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         try {
             Image image = reader.acquireLatestImage();
 
-            if (saveImages > 0) {
+            /*if (saveImages > 0) {
                 saveImages--;
                 Image.Plane plane = image.getPlanes()[0];
                 ByteBuffer buffer = plane.getBuffer();
@@ -307,7 +299,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
                         filecon);
 
                 MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, null);
-            }
+            }*/
 
             if (image != null) {
                 cameraController.onFrameAvailable(image);

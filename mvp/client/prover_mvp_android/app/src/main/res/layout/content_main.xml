@@ -25,6 +25,7 @@
         android:id="@+id/supportTextureView"
         android:layout_width="512px"
         android:layout_height="512px"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent" />
 
     <include layout="@layout/bottom_controls" />
@@ -37,12 +38,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
         android:text="@string/makeProver"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#fff"
         android:textStyle="bold"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/largeImageNotification"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/balanceContainer" />
@@ -51,11 +53,21 @@
         android:id="@+id/largeImageNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/hintText" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/allDoneIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hintText" />
 
     <include
         layout="@layout/swype"

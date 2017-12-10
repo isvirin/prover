@@ -39,7 +39,7 @@ body {
     width: 75%;
     text-align: center;
     margin: 0 auto;
-    padding-bottom: 48px;
+    padding-bottom: 75px;
     position: relative;
     z-index: 10;
 }
@@ -84,11 +84,24 @@ body {
     text-decoration: none;
     border: 2px solid rgba(110, 58, 128, 0.8);
     transition: 1s;
+    cursor: pointer;
 }
 
 .btn:hover {
     transition: 1s;
     background: rgba(110, 58, 128, 0.3);
+}
+
+.content.error {
+    color: red;
+}
+
+input.btn {
+    background-color: #100520;
+    width: 330px;
+    font-size: 0.8em;
+    text-align: center;
+    height: 30px;
 }
 
 .box {
