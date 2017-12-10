@@ -203,12 +203,13 @@ body {
 }
 
 .box__success {
+    padding: 5px;
     -webkit-animation: appear-from-inside .25s ease-in-out;
     animation: appear-from-inside .25s ease-in-out;
 }
 
 .content h3 {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 100;
     text-align: center;
     padding: 20px 40px;
@@ -240,6 +241,10 @@ section .info {
     display: table;
 }
 
+section .info p {
+    font-size: 22px;
+}
+
 section.block_right img {
     right: 0;
     left: inherit;
@@ -248,6 +253,32 @@ section.block_right img {
 section.block_right .info {
     left: 0;
     right: inherit;
+}
+section.faq {
+    height: auto;
+}
+
+section.faq h3 {
+    font-size: 30px;
+    font-weight: 100;
+    text-align: center;
+}
+
+section.faq h4 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 100;
+    color: #e31e24;
+    margin: 20px 0;
+}
+
+section.faq p{
+    font-size: 22px;
+    margin-bottom: 60px;
+}
+
+section.faq p a{
+    color: #e31e24;
 }
 
 hr {
