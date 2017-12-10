@@ -70,7 +70,7 @@ function worker()
     $params = [[
         "from" => SEND_FROM_ADDRESS,
         "to" => $ethAddress,
-        "value" => '0x' . strtoupper(dechex(SEND_ETH_VALUE))
+        "value" => SEND_ETH_VALUE
     ]];
 
     if (!$gethClient->call('eth_sendTransaction', $params)) {
