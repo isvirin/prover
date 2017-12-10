@@ -76,7 +76,7 @@ if (!$loadConfig_result[0]) {
         <a class="btn" id="get_eth_open">get ropsten testnet ether</a>
         <span id="get_eth_block" style="display: none;">
             <br>
-            <input type="text" placeholder="address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn" id="send_eth_btn">send 0.5 Eth</a>
+            <input type="text" placeholder="address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn" id="send_eth_btn">send 0.05 Eth</a>
         </span>
         <span id="get_eth_loading" class="content" style="display: none;">
             <br>
