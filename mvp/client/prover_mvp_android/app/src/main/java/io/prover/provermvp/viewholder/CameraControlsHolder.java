@@ -252,6 +252,7 @@ public class CameraControlsHolder implements View.OnClickListener,
             showHint(R.string.swipeCodeFailedTryAgain, 3500, 0, false);
         } else if (newState.state == DetectionState.State.Confirmed) {
             allDoneHolder.show();
+            showHint(R.string.swypeCodeOk, 3500, 0, false);
             handler.postDelayed(allDoneHolder::animateMove, 1000);
         }
     }

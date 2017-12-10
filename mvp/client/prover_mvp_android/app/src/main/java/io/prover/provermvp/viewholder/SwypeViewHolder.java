@@ -1,5 +1,8 @@
 package io.prover.provermvp.viewholder;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -94,6 +97,9 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                     swypeArrowHolder.hide();
                 }
                 setRedPointPositionMatrixTo(swypeSequence[index].view);
+                if (index + 1 < swypeSequence.length) {
+                    swypeSequence[index + 1].setState(SwipePointImageViewHolder.State.Unvisited);
+                }
             }
             point[0] = newState.x;
             point[1] = newState.y;
@@ -245,7 +251,17 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             TransitionManager.beginDelayedTransition((ViewGroup) root.getParent());
         }
-        hide();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(root, "alpha", 1, 0);
+        animator.setDuration(400);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                root.setVisibility(View.GONE);
+                root.setAlpha(1);
+            }
+        });
+        animator.start();
     }
 
     /**

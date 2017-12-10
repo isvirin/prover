@@ -22,7 +22,7 @@ public class AllDoneImageHolder extends ImageViewHolder {
 
     public void show() {
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-        lp.topToBottom = R.id.balanceContainer;
+        lp.topToBottom = R.id.hintText;
         lp.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
         lp.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
         lp.topToTop = ConstraintLayout.LayoutParams.UNSET;
