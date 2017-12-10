@@ -34,12 +34,12 @@
 
     <TextView
         android:id="@+id/hintText"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
         android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         android:text="@string/makeProver"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#fff"
