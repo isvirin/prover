@@ -135,6 +135,11 @@ input[type='search'].btn:-ms-input-placeholder      {color:#ffffff;font-size: 24
     margin: 0 auto;
 }
 
+.blink {
+    transition: 5s !important;
+    background: #ffffff !important;
+}
+
 .box {
     font-size: 1.25rem; /* 20 */
     background-color: transparent;
