@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <string>
+#include <getopt.h>
 
 extern "C"
 {
@@ -8,6 +9,11 @@ extern "C"
 
 #include "swype_detect.h"
 
+
+void debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
+{
+    // TODO
+}
 
 int main(int argc, char *argv[])
 {
@@ -112,7 +118,6 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Failed to read packed %d\n", rc);
             break;
         }
-        fprintf(stderr, "Input packet: %d %d\n", packet.stream_index, packet.size);
 
         if(packet.stream_index==videoStreamIndex)
         {
@@ -128,8 +133,12 @@ int main(int argc, char *argv[])
                     int state=-1, index=-1, x=-1, y=-1;
                     int debug=-1;
 
-                    detector.processFrame_new(frame->data[0], frame->width, frame->height, state, index, x, y, debug);
-                    fprintf(stderr, "S=%d index=%d x=%d y=%d debug=%d\n", state, index, x, y, debug);
+                    int64_t timestamp=frame->pts*1000*formatctx->streams[videoStreamIndex]->time_base.num/formatctx->streams[videoStreamIndex]->time_base.den;
+
+                    detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
+                    fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d\n", (long long)timestamp, state, index, x, y, debug);
+
+                    debug_save_image_to_png(frame->data[0], frame->width, frame->height, std::to_string(timestamp)+".png");
                 }
                 if(rc==AVERROR_EOF)
                     break;
