@@ -24,7 +24,7 @@ public:
         return Vector(_x + other._x, _y + other._y);
     }
 
-    inline float operator*(Vector other) {
+    inline double operator*(Vector other) {
         return _x * other._x + _y * other._y;
     }
 
@@ -38,14 +38,14 @@ public:
     }
 
     inline double DistanceTo(Vector other) {
-        float dx = other._x - _x;
-        float dy = other._y - _y;
+        double dx = other._x - _x;
+        double dy = other._y - _y;
         return sqrt(dx * dx + dy * dy);
     }
 
     inline double DistanceTo(float x, float y) {
-        float dx = x - _x;
-        float dy = y - _y;
+        double dx = x - _x;
+        double dy = y - _y;
         return sqrt(dx * dx + dy * dy);
     }
 
