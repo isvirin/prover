@@ -64,6 +64,36 @@ bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsi
     return true;
 }
 
+std::string transformSwypeCode(const std::string &swype, const char *transformation)
+{
+    std::string res;
+    for(auto c: swype)
+    {
+        if(c>='1' && c<='9')
+            c=transformation[c-'1'];
+        res.push_back(c);
+    }
+    return res;
+}
+
+std::string rotateSwypeCode(const std::string &swype, int rotation)
+{
+    //   0:  123456789
+    // -90:  741852963
+    //  90:  369258147
+    // 180:  987654321
+
+    if(rotation==0)
+        return swype;
+    else if(rotation==-90 || rotation==270)
+        return transformSwypeCode(swype, "741852963");
+    else if(rotation==90 || rotation==-270)
+        return transformSwypeCode(swype, "369258147");
+    else if(rotation==180 || rotation==-180)
+        return transformSwypeCode(swype, "987654321");
+    else
+        abort();
+}
 
 int main(int argc, char *argv[])
 {
@@ -92,8 +122,9 @@ int main(int argc, char *argv[])
         pixelFormat,
         timeBase,
         targetWidth,
-        targetHeight,
-        (int)floor(-reader.getOrientationAngle()));
+        targetHeight);
+
+    //(int)floor(-reader.getOrientationAngle()));
 
     AVCodec *codec=avcodec_find_decoder(reader.getCodecParameters()->codec_id);
     if(!codec)
@@ -123,38 +154,63 @@ int main(int argc, char *argv[])
     int fps=30;//formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
 
     std::string swype=argv[2];
+    fprintf(stderr, "Specified swype-code: %s\n", swype.c_str());
+    swype=rotateSwypeCode(swype, (int)floor(reader.getOrientationAngle()));
+    fprintf(stderr, "Transformed swype-code: %s\n", swype.c_str());
     SwypeDetect detector;
     detector.init(fps, swype);
 
+    int64_t swypeBeginTimestamp=-1;
+    int64_t swypeEndTimestamp=-1;
+
     AVFrame *frame=av_frame_alloc();
 
-    AVPacket packet;
-    av_init_packet(&packet);
-    while(reader.readPacket(&packet))
+    AVPacket *packet=av_packet_alloc();
+    while(reader.readPacket(packet))
     {
-        avcodec_send_packet(codecctx, &packet);
+        avcodec_send_packet(codecctx, packet);
 
         while((rc=avcodec_receive_frame(codecctx, frame))==0)
         {
             int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
 
             processor.processImage(frame);
+#if 1
             char filename[20];
             snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
             debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
-        
+#endif
             int state=-1, index=-1, x=-1, y=-1;
             int debug=-1;
 
-
             detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
-            fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d\n", (long long)timestamp, state, index, x, y, debug);
 
+            if(state==3 && swypeBeginTimestamp==-1)
+                swypeBeginTimestamp=timestamp;
+            else if(state==4 && swypeBeginTimestamp!=-1 && swypeEndTimestamp==-1)
+                swypeEndTimestamp=timestamp;
+            else if(state!=3 && state!=4)
+                swypeBeginTimestamp=swypeEndTimestamp=-1;
+
+            fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d %lld %lld\n", (long long)timestamp, state, index, x, y, debug, (long long)swypeBeginTimestamp, (long long)swypeEndTimestamp);
+
+            if(swypeBeginTimestamp!=-1 && swypeEndTimestamp!=-1)
+                break;
         }
         if(rc==AVERROR_EOF)
             break;
 
-        av_packet_unref(&packet);
+        av_packet_unref(packet);
+    }
+    av_packet_free(&packet);
+
+    if(swypeBeginTimestamp!=-1 && swypeEndTimestamp!=-1)
+    {
+        printf("{\"result\":{\"time-begin\":%.3f, \"time-end\":%.3f}}\n", swypeBeginTimestamp/1000.0, swypeEndTimestamp/1000.0);
+    }
+    else
+    {
+        printf("{\"result\":null}\n");
     }
 
     return 0;

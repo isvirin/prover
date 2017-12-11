@@ -19,8 +19,7 @@ ImageProcessor::ImageProcessor(
     int               pixelFormat,
     const AVRational *timeBase,
     unsigned int      targetWidth,
-    unsigned int      targetHeight,
-    int               rotationAngle) :
+    unsigned int      targetHeight) :
 
     _graph(NULL),
     _buffer(NULL),
@@ -31,16 +30,14 @@ ImageProcessor::ImageProcessor(
     const AVFilter *buffer=avfilter_get_by_name("buffer");
     const AVFilter *planeExtractor=avfilter_get_by_name("extractplanes");
     const AVFilter *scaler=avfilter_get_by_name("scale");
-    const AVFilter *rotator=avfilter_get_by_name("rotate");
     const AVFilter *buffersink=avfilter_get_by_name("buffersink");
 
-    if(!buffer || !planeExtractor || !scaler || !rotator || !buffersink)
+    if(!buffer || !planeExtractor || !scaler || !buffersink)
         return;
 
     AVFilterContext *bufferContext=NULL;
     AVFilterContext *planeExtractorContext=NULL;
     AVFilterContext *scalerContext=NULL;
-    AVFilterContext *rotatorContext=NULL;
     AVFilterContext *buffersinkContext=NULL;
 
     char configstr[200];
@@ -67,45 +64,25 @@ ImageProcessor::ImageProcessor(
         avfilter_graph_free(&graph);
         return;
     }
-/*    if(rotationAngle==0)
-        snprintf(configstr, 200, "angle=0:bilinear=0:ow=iw:oh:ih");
-    else if(rotationAngle==90 || rotationAngle==-270)
-        snprintf(configstr, 200, "angle=PI/2:bilinear=0:ow=ih:oh:iw");
-    else if(rotationAngle==180 || rotationAngle==-180)
-        snprintf(configstr, 200, "angle=PI:bilinear=0:ow=iw:oh:ih");
-    else if(rotationAngle==270 || rotationAngle==-90)
-        snprintf(configstr, 200, "angle=-PI/2:bilinear=0:ow=ih:oh:iw");*/
-    snprintf(configstr, 200, "angle=PI*%d/180:bilinear=0", rotationAngle);
-    if(avfilter_graph_create_filter(&rotatorContext, rotator, NULL, configstr, NULL, graph)!=0)
-    {
-        fprintf(stderr, "Failed to initialize \"buffersink\" context\n");
-        avfilter_free(bufferContext);
-        avfilter_free(planeExtractorContext);
-        avfilter_free(scalerContext);
-        avfilter_graph_free(&graph);
-    }
     if(avfilter_graph_create_filter(&buffersinkContext, buffersink, NULL, "", NULL, graph)!=0)
     {
         fprintf(stderr, "Failed to initialize \"buffersink\" context\n");
         avfilter_free(bufferContext);
         avfilter_free(planeExtractorContext);
         avfilter_free(scalerContext);
-        avfilter_free(rotatorContext);
         avfilter_graph_free(&graph);
         return;
     }
 
     if(avfilter_link(bufferContext, 0, planeExtractorContext, 0)!=0 ||
        avfilter_link(planeExtractorContext, 0, scalerContext, 0)!=0 ||
-       avfilter_link(scalerContext, 0, rotatorContext, 0)!=0 ||
-       avfilter_link(rotatorContext, 0, buffersinkContext, 0)!=0 ||
+       avfilter_link(scalerContext, 0, buffersinkContext, 0)!=0 ||
        avfilter_graph_config(graph, NULL)!=0)
     {
         fprintf(stderr, "Failed to link filters\n");
         avfilter_free(bufferContext);
         avfilter_free(planeExtractorContext);
         avfilter_free(scalerContext);
-        avfilter_free(rotatorContext);
         avfilter_free(buffersinkContext);
         avfilter_graph_free(&graph);
         return;
