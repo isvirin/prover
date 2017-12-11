@@ -139,6 +139,15 @@
 #define TIME_PER_EACH_SWIPE_STEP 2000
 #define Time_swipe 5
 
+#ifdef __ANDROID_API__
+#define MAX_DETECTOR_DEVIATION 0.25
+
+#else
+
+#define MAX_DETECTOR_DEVIATION 0.27
+
+#endif
+
 
 #include <opencv2/opencv.hpp>
 #include <vector>

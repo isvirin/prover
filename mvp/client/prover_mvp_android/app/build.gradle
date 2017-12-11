@@ -91,7 +91,7 @@ android {
             }
         }//*/
 
-        armeabi_v7a {
+/*        armeabi_v7a {
             versionCode = android.defaultConfig.versionCode + 1
             dimension "main"
             ndk {
