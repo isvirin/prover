@@ -16,12 +16,15 @@ void SwipeCircleDetector::AddShift(VectorExplained shift) {
 bool SwipeCircleDetector::IsCircle() {
     int pos = (pos_ - 1 + SHIFTS) % SHIFTS;
     VectorExplained sum = shifts_[pos];
+
     uint noFramesBefore = shifts_[pos]._timestamp - MAX_CIRCLE_DURATION_MS;
+    int timestamp = shifts_[pos]._timestamp;
 
     for (int i = 2; i <= total_; i++) {
         int pos = (pos_ - i + SHIFTS) % SHIFTS;
-        if (shifts_[pos]._timestamp < noFramesBefore)
+        if (shifts_[pos]._timestamp < noFramesBefore) {
             return false;
+        }
 
         sum.Add(shifts_[pos]);
 
@@ -29,8 +32,8 @@ bool SwipeCircleDetector::IsCircle() {
             float perimeter;
             float area = fabsf(Area(i, perimeter));
             float areaByP2 = area / perimeter / perimeter;
-            LOGI_NATIVE("detect2: vertices: %d, area: %f, areaByP2 to target: %f", i + 1, area,
-                        areaByP2 / Circle_S_by_P2);
+            LOGI_NATIVE("detect2: %d vertices: %d, area: %f, areaByP2 to target: %f", timestamp,
+                        i + 1, area, areaByP2 / Circle_S_by_P2);
             return !(fabsf(area) < MIN_CIRCLE_AREA || areaByP2 < Circle_S_by_P2 / 1.5f);
         }
     }
