@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
             int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
 
             processor.processImage(frame);
-#if 1
+#if 0
             char filename[20];
             snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
             debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
@@ -183,7 +183,15 @@ int main(int argc, char *argv[])
             int state=-1, index=-1, x=-1, y=-1;
             int debug=-1;
 
-            detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
+            unsigned char *pidorbuf=new unsigned char[3*frame->width*frame->height];
+            memset(pidorbuf, 0, 3*frame->width*frame->height);
+            memcpy(pidorbuf+frame->width*frame->height, frame->data[0], frame->width*frame->height);
+
+//            detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
+            detector.processFrame_new(pidorbuf+frame->width*frame->height, frame->width, frame->height, timestamp, state, index, x, y, debug);
+
+
+            delete [] pidorbuf;
 
             if(state==3 && swypeBeginTimestamp==-1)
                 swypeBeginTimestamp=timestamp;
@@ -192,7 +200,7 @@ int main(int argc, char *argv[])
             else if(state!=3 && state!=4)
                 swypeBeginTimestamp=swypeEndTimestamp=-1;
 
-            fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d %lld %lld\n", (long long)timestamp, state, index, x, y, debug, (long long)swypeBeginTimestamp, (long long)swypeEndTimestamp);
+//            fprintf(stderr, "TS=%lld S=%d index=%d x=%d y=%d debug=%d %lld %lld\n", (long long)timestamp, state, index, x, y, debug, (long long)swypeBeginTimestamp, (long long)swypeEndTimestamp);
 
             if(swypeBeginTimestamp!=-1 && swypeEndTimestamp!=-1)
                 break;
