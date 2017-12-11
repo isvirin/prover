@@ -36,20 +36,18 @@ document.getElementById('send_eth_btn').addEventListener('click', function (e) {
     return false;
 });
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
     var hash = window.location.hash.substr(1);
     if (hash === 'get_ropsten_testnet_ether') {
         document.getElementById('get_eth_open').click();
-        setTimeout(function(){
+        setTimeout(function () {
             document.getElementById('send_eth_addr').tabIndex = "-1";
             document.getElementById('send_eth_addr').focus();
         }, 100);
 
-        document.getElementById('send_eth_btn').classList.add('blink');
-        document.getElementById('send_eth_addr').classList.add('blink');
+        document.getElementById('get_eth_block').style.backgroundColor = '#ffffff';
         setTimeout(function () {
-            document.getElementById('send_eth_btn').classList.remove('blink');
-            document.getElementById('send_eth_addr').classList.remove('blink');
-        }, 1000);
+            document.getElementById('get_eth_block').style.backgroundColor = '';
+        }, 500);
     }
 });

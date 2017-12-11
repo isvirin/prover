@@ -117,6 +117,10 @@ input[type='search'].btn {
     padding: 0;
 }
 
+#get_eth_block {
+    transition: background 5s;
+}
+
 #get_eth_block a.btn {
     padding: 10px 38px;
     margin: 0;
@@ -133,11 +137,6 @@ input[type='search'].btn:-ms-input-placeholder      {color:#ffffff;font-size: 24
 .controllers {
     width: 85%;
     margin: 0 auto;
-}
-
-.blink {
-    transition: 5s !important;
-    background: #ffffff !important;
 }
 
 .box {
