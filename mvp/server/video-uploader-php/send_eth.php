@@ -6,6 +6,8 @@ if (!$loadConfig_result[0]) {
     exit(1);
 }
 
+saveClientInfo('sendeth');
+
 define('SEND_ETH_DIR', __DIR__ . '/send_eth');
 define('SEND_ETH_REPEAT_TIME_MIN', 86400);
 define('SEND_ETH_VALUE', '0xB1A2BC2EC50000'); // 0.05 Eth ('0x' . dechex(0.05 * pow(10, 18)))
