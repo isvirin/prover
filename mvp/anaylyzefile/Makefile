@@ -28,4 +28,5 @@ prepare:
 	g++ $^ -o $@ $(LFLAGS)
 
 clean:
-	rm -rf .obj .bin
+	rm -rf .obj .bin/$(TARGET)
+	rmdir --ignore-fail-on-non-empty .bin
