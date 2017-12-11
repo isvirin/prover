@@ -64,6 +64,36 @@ bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsi
     return true;
 }
 
+std::string transformSwypeCode(const std::string &swype, const char *transformation)
+{
+    std::string res;
+    for(auto c: swype)
+    {
+        if(c>='1' && c<='9')
+            c=transformation[c-'1'];
+        res.push_back(c);
+    }
+    return res;
+}
+
+std::string rotateSwypeCode(const std::string &swype, int rotation)
+{
+    //   0:  123456789
+    // -90:  741852963
+    //  90:  369258147
+    // 180:  987654321
+
+    if(rotation==0)
+        return swype;
+    else if(rotation==-90 || rotation==270)
+        return transformSwypeCode(swype, "741852963");
+    else if(rotation==90 || rotation==-270)
+        return transformSwypeCode(swype, "369258147");
+    else if(rotation==180 || rotation==-180)
+        return transformSwypeCode(swype, "987654321");
+    else
+        abort();
+}
 
 int main(int argc, char *argv[])
 {
@@ -92,8 +122,9 @@ int main(int argc, char *argv[])
         pixelFormat,
         timeBase,
         targetWidth,
-        targetHeight,
-        (int)floor(-reader.getOrientationAngle()));
+        targetHeight);
+
+    //(int)floor(-reader.getOrientationAngle()));
 
     AVCodec *codec=avcodec_find_decoder(reader.getCodecParameters()->codec_id);
     if(!codec)
@@ -123,6 +154,9 @@ int main(int argc, char *argv[])
     int fps=30;//formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
 
     std::string swype=argv[2];
+    fprintf(stderr, "Specified swype-code: %s\n", swype.c_str());
+    swype=rotateSwypeCode(swype, (int)floor(reader.getOrientationAngle()));
+    fprintf(stderr, "Transformed swype-code: %s\n", swype.c_str());
     SwypeDetect detector;
     detector.init(fps, swype);
 
