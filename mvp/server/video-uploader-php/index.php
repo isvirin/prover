@@ -5,6 +5,8 @@ if (!$loadConfig_result[0]) {
     echo $loadConfig_result[1];
     exit(1);
 }
+
+saveClientInfo('index');
 ?>
 
 <!DOCTYPE html>

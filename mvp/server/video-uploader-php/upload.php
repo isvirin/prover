@@ -6,6 +6,8 @@ if (!$loadConfig_result[0]) {
     exit(1);
 }
 
+saveClientInfo('upload');
+
 define('GETLOGS_FILE_EVENT_ID', '0x461afacbe8920fcf3516d8b18e2634291cc96d0151ab7d324cca32fb77c44986');
 define('USER_ADDRESS_FILTER', null);
 define('EXAMPLE_FILE_HASH', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
@@ -23,13 +25,6 @@ function uploadResult($isSuccess, $transactions, $error, $debug = false)
 
 // для вывода результата строго в JSON делаем фокус
 error_reporting(0); //show all errors
-register_shutdown_function(function () {
-    $lastError = error_get_last();
-    if ($lastError) {
-        $error = "Server internal error: {$lastError['message']} ({$lastError['line']})";
-        die(uploadResult(false, [], $error));
-    }
-});
 
 function callAnalyticProgramm($blockHash, $hash)
 {
