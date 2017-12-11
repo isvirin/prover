@@ -77,6 +77,7 @@ saveClientInfo('index');
         <div class="controllers">
             <a href="manual.html" class="btn">How it works</a>
             <a class="btn" id="get_eth_open">Get ropsten testnet ether</a>
+            <br>
             <span id="get_eth_block" style="display: none;">
                 <input type="search" placeholder="Your wallet address" class="btn" id="send_eth_addr"><a href="manual.html" class="btn btn-send" id="send_eth_btn">Send 0.05 Eth</a>
             </span>

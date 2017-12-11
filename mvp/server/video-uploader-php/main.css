@@ -110,12 +110,18 @@ body {
 input[type='search'].btn {
     margin: 0;
     border: none;
+    border-radius: 0;
     outline: none;
     -webkit-appearance: none;
     background: transparent;
     width: 330px;
     padding: 0;
 }
+
+input[type='search'].btn::-webkit-search-decoration,
+input[type='search'].btn::-webkit-search-cancel-button,
+input[type='search'].btn::-webkit-search-results-button,
+input[type='search'].btn::-webkit-search-results-decoration { display: none; }
 
 #get_eth_block {
     transition: background 5s;
