@@ -13,7 +13,7 @@ public:
 
     Vector() {}
 
-    Vector(float _x, float _y) : _x(_x), _y(_y) {}
+    Vector(double _x, double _y) : _x(_x), _y(_y) {}
 
     inline void operator+=(Vector other) {
         _x += other._x;
@@ -33,33 +33,33 @@ public:
         _y -= other._y;
     }
 
-    inline float Length() {
-        return sqrtf(_x * _x + _y * _y);
+    inline double Length() {
+        return sqrt(_x * _x + _y * _y);
     }
 
-    inline float DistanceTo(Vector other) {
+    inline double DistanceTo(Vector other) {
         float dx = other._x - _x;
         float dy = other._y - _y;
-        return sqrtf(dx * dx + dy * dy);
+        return sqrt(dx * dx + dy * dy);
     }
 
-    inline float DistanceTo(float x, float y) {
+    inline double DistanceTo(float x, float y) {
         float dx = x - _x;
         float dy = y - _y;
-        return sqrtf(dx * dx + dy * dy);
+        return sqrt(dx * dx + dy * dy);
     }
 
-    inline void Mul(float mat[2][2]) {
-        float x = mat[0][0] * _x + mat[0][1] * _y;
+    inline void Mul(double mat[2][2]) {
+        double x = mat[0][0] * _x + mat[0][1] * _y;
         _y = mat[1][0] * _x + mat[1][1] * _y;
         _x = x;
     }
 
-    float _x = 0;
-    float _y = 0;
+    double _x = 0;
+    double _y = 0;
 
 protected:
-    inline void Add(float x, float y) {
+    inline void Add(double x, double y) {
         _x += x;
         _y += y;
     }

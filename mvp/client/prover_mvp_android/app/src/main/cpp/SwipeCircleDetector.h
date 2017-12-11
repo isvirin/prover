@@ -37,10 +37,10 @@ public:
         total_ = 0;
     }
 
-    const float Circle_S_by_P2 = (const float) (0.25f / CV_PI);
+    const double Circle_S_by_P2 = (const double) (0.25f / CV_PI);
 
 private:
-    float Area(int amount, float &perimeter);
+    double Area(int amount, double &perimeter);
 
     VectorExplained shifts_[SHIFTS];
     int pos_ = 0;

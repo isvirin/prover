@@ -9,11 +9,11 @@ void SwypeStepDetector::Add(VectorExplained shift) {
     shift._x *= _speedMultX;
     shift._y *= _speedMultY;
 
-    float angle = fabsf(shift.AngleTo(_target));
+    double angle = fabs(shift.AngleTo(_target));
     if (angle < MAX_ATTRACT_ANGLE) {
         shift._mod = shift.Length();
         //float attraction = angle/MAX_ATTRACT_ANGLE * CV_PI / 2
-        float attraction = (MAX_ATTRACT_ANGLE - angle) / MAX_ATTRACT_ANGLE;
+        double attraction = (MAX_ATTRACT_ANGLE - angle) / MAX_ATTRACT_ANGLE;
         attraction *= attraction * _attraction;
         shift.AttractTo(_target, attraction);
     }
@@ -31,11 +31,11 @@ void SwypeStepDetector::Reset() {
     _isDiagonal = false;
 }
 
-void SwypeStepDetector::Configure(int width, int height, float speedMult, float maxDeviation,
-                                  float attraction) {
+void SwypeStepDetector::Configure(int width, int height, double speedMult, double maxDeviation,
+                                  double attraction) {
     int size = width < height ? width : height;
-    _speedMultX = 2.0f / size * speedMult;
-    _speedMultY = 2.0f / size * speedMult;
+    _speedMultX = 2.0 / size * speedMult;
+    _speedMultY = 2.0 / size * speedMult;
     _maxDeviation = maxDeviation;
     _attraction = attraction;
 }
@@ -67,7 +67,7 @@ int SwypeStepDetector::CheckState() {
         return distance <= _targetRadius ? 1 : -1;
     }
 #else
-    float distance = _current.DistanceTo(_target);
+    double distance = _current.DistanceTo(_target);
     if (distance <= _targetRadius)
         return 1;
     if (reachedBounds) {

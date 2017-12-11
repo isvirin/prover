@@ -12,29 +12,29 @@ class VectorExplained : public Vector {
 public:
     VectorExplained() {};
 
-    VectorExplained(float x, float y) : Vector(x, y) {
+    VectorExplained(double x, double y) : Vector(x, y) {
         CalculateExplained();
     };
 
     void Set(cv::Point2d other);
 
-    void Set(float x, float y) {
+    void Set(double x, double y) {
         _x = x;
         _y = y;
         CalculateExplained();
     }
 
-    void SetMul(cv::Point2d other, float mulX, float mulY);
+    void SetMul(cv::Point2d other, double mulX, double mulY);
 
     virtual void Add(VectorExplained other);
 
     inline void Reset();
 
-    void SetLength(float length);
+    void SetLength(double length);
 
-    void operator*=(float mul);
+    void operator*=(double mul);
 
-    void AttractTo(Vector other, float force);
+    void AttractTo(Vector other, double force);
 
     inline int DirectionDiff(VectorExplained other) {
         return (_direction - other._direction + 12) % 8 - 4;
@@ -47,13 +47,13 @@ public:
      * @param other
      * @return
      */
-    inline float AngleTo(VectorExplained other) {
-        return fmodf(other._angle - _angle + 540.0f, 360.0f) - 180.0f;
+    inline double AngleTo(VectorExplained other) {
+        return fmod(other._angle - _angle + 540.0f, 360.0f) - 180.0f;
     }
 
-    float _mod = 0;
+    double _mod = 0;
 
-    float _angle = 0;
+    double _angle = 0;
     /**
      * 1 -- down, 3 -- left, 5 -- top, 7 -- right, 8 -- bottom-right
      */

@@ -33,7 +33,7 @@ public:
      * @param height
      * @param speedMult
      */
-    void Configure(int width, int height, float speedMult, float maxDeviation, float attraction);
+    void Configure(int width, int height, double speedMult, double maxDeviation, double attraction);
 
     /**
      * configures for movement between adjacent swype points currentPoint to nextPoint
@@ -64,18 +64,18 @@ private:
 
     int _count = 0;
 
-    float _speedMultX = 0;
-    float _speedMultY = 0;
-    float _maxDeviation = 0;
-    float _targetRadius = 0;
+    double _speedMultX = 0;
+    double _speedMultY = 0;
+    double _maxDeviation = 0;
+    double _targetRadius = 0;
 
-    float _attraction = 0;
+    double _attraction = 0;
 
     int _currentSwypePoint = 0;
     int _nextSwypePoint = 0;
     bool _isDiagonal;
 
-    const float _sqrt2 = sqrtf(2.0f);
+    const double _sqrt2 = sqrtf(2.0f);
 
     BoundsChecker _BoundsChecker;
 };

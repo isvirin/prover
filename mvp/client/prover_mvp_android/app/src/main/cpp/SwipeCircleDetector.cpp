@@ -29,14 +29,13 @@ bool SwipeCircleDetector::IsCircle() {
         sum.Add(shifts_[pos]);
 
         if (sum._mod < MAX_DEVIATION && i > 5) {
-            float perimeter;
-            float area = fabsf(Area(i, perimeter));
-            float areaByP2 = area / perimeter / perimeter;
-            float areaByP2ToCircle = areaByP2 / Circle_S_by_P2;
+            double perimeter;
+            double area = fabs(Area(i, perimeter));
+            double areaByP2 = area / perimeter / perimeter;
+            double areaByP2ToCircle = areaByP2 / Circle_S_by_P2;
             LOGI_NATIVE("detect2: %d vertices: %d, diff: %f, area: %f, areaByP2 to target: %f",
-                        timestamp, sum._mod,
-                        i + 1, area, areaByP2 / Circle_S_by_P2);
-            if (fabsf(area) >= MIN_CIRCLE_AREA && areaByP2ToCircle >= MIN_AREA_BY_P2_TO_CIRCLE)
+                        timestamp, i + 1, sum._mod, area, areaByP2 / Circle_S_by_P2);
+            if (fabs(area) >= MIN_CIRCLE_AREA && areaByP2ToCircle >= MIN_AREA_BY_P2_TO_CIRCLE)
                 return true;
             //return (fabsf(area) >= MIN_CIRCLE_AREA && areaByP2 >= Circle_S_by_P2 / 1.5f);
         }
@@ -45,7 +44,7 @@ bool SwipeCircleDetector::IsCircle() {
     return false;
 }
 
-float SwipeCircleDetector::Area(int amount, float &perimeter) {
+double SwipeCircleDetector::Area(int amount, double &perimeter) {
     Vector sum = shifts_[pos_];
     Vector sumPrev = sum;
     perimeter = shifts_[pos_]._mod;
@@ -56,7 +55,7 @@ float SwipeCircleDetector::Area(int amount, float &perimeter) {
         int pos = (pos_ - i + SHIFTS) % SHIFTS;
         sum += shifts_[pos];
         perimeter += shifts_[pos]._mod;
-        float triangleArea = (sum._x * sumPrev._y - sum._y * sumPrev._x) / 2;
+        double triangleArea = (sum._x * sumPrev._y - sum._y * sumPrev._x) / 2;
         area += triangleArea;
         sumPrev = sum;
         //shifts_[pos].Log();

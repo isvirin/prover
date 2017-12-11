@@ -11,7 +11,7 @@ void VectorExplained::Set(cv::Point2d other) {
     CalculateExplained();
 }
 
-void VectorExplained::SetMul(cv::Point2d other, float mulX, float mulY) {
+void VectorExplained::SetMul(cv::Point2d other, double mulX, double mulY) {
     _x = (float) other.x * mulX;
     _y = (float) other.y * mulY;
     CalculateExplained();
@@ -34,11 +34,11 @@ void VectorExplained::CalculateExplained() {
     if (_x == 0) {
         _angle = _y > 0 ? 270 : 90;
     } else {
-        float k = -_y / _x;
-        _angle = (float) (atan(k) * 180 / CV_PI);
+        double k = -_y / _x;
+        _angle = atan(k) * 180 / CV_PI;
         if (_x < 0)
             _angle += 180.0f;
-        _angle = fmodf(_angle + 360.0f, 360.0f);
+        _angle = fmod(_angle + 360.0f, 360.0f);
     }
 
     _direction = (int) (floor((360 - _angle - 22.5) / 45));
@@ -58,27 +58,27 @@ void VectorExplained::CalculateExplained() {
      */
 }
 
-void VectorExplained::operator*=(float mul) {
+void VectorExplained::operator*=(double mul) {
     _x *= mul;
     _y *= mul;
-    _mod *= fabsf(mul);
+    _mod *= fabs(mul);
     if (mul < 0) {
         _direction = _direction < 5 ? _direction + 4 : _direction - 4;
         _angle = _angle < 180 ? _angle + 180 : _angle - 180;
     }
 }
 
-void VectorExplained::SetLength(float length) {
+void VectorExplained::SetLength(double length) {
     if (_mod > 0) {
-        float mul = length / _mod;
+        double mul = length / _mod;
         _x *= mul;
         _y *= mul;
-        _mod = fabsf(length);
+        _mod = fabs(length);
     }
 }
 
-void VectorExplained::AttractTo(Vector other, float force) {
-    float mod = _mod;
+void VectorExplained::AttractTo(Vector other, double force) {
+    double mod = _mod;
     Vector::Add(other._x * force, other._y * force);
     _mod = Length();
     SetLength(mod);
