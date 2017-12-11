@@ -29,6 +29,7 @@ import io.prover.provermvp.R;
 import io.prover.provermvp.camera.ResolutionSelector;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.util.Frame;
 
 import static io.prover.provermvp.Const.TAG;
 
@@ -266,7 +267,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         texture.setDefaultBufferSize(mPreviewSize.width, mPreviewSize.height);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         Integer orientationHint = OrientationHelper.getOrientationHint(mSensorOrientation, rotation);
-        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, mCaptureFrameSize, orientationHint);
+        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, mCaptureFrameSize, mVideoSize, orientationHint);
         try {
             mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, new Surface(texture), mediaRecorder.getSurface(), mImageReader.getSurface());
         } catch (CameraAccessException e) {
@@ -302,7 +303,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
             }*/
 
             if (image != null) {
-                cameraController.onFrameAvailable(image);
+                cameraController.onFrameAvailable(Frame.obtain(image));
             }
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);

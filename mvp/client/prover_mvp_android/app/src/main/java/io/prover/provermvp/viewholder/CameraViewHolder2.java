@@ -181,6 +181,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     @Override
     public void finishRecording() {
         Runnable r = () -> {
+            cameraController.beforeRecordingStop();
             myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
@@ -232,6 +233,8 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     @Override
     public void cancelRecording() {
         if (mMediaRecorder != null && cameraController.isRecording()) {
+            cameraController.beforeRecordingStop();
+            myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
             videoFile.delete();

@@ -16,12 +16,13 @@ import java.util.List;
 import io.prover.provermvp.Const;
 import io.prover.provermvp.Settings;
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.util.Frame;
 
 /**
  * Created by babay on 09.12.2016.
  */
 
-public class MyCamera implements CameraController.OnPreviewStartListener, CameraController.OnRecordingStartListener, Camera.PreviewCallback, CameraController.OnFrameReleasedListener, CameraController.OnRecordingStopListener {
+public class MyCamera implements CameraController.OnPreviewStartListener, CameraController.OnRecordingStartListener, Camera.PreviewCallback, CameraController.OnRecordingStopListener, Frame.ReleaseListener {
     public static final String TAG = Const.TAG + "Camera";
     public final int id;
     private final Camera.CameraInfo cameraInfo;
@@ -37,7 +38,6 @@ public class MyCamera implements CameraController.OnPreviewStartListener, Camera
         cameraController.previewStart.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
-        cameraController.frameReleased.add(this);
         open();
     }
 
@@ -209,16 +209,7 @@ public class MyCamera implements CameraController.OnPreviewStartListener, Camera
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        cameraController.onFrameAvailable(data, camera);
-    }
-
-    @Override
-    public void onFrameReleased(byte[] data) {
-        if (camera != null) {
-            if (Settings.REUSE_PREVIEW_BUFFERS) {
-                camera.addCallbackBuffer(data);
-            }
-        }
+        cameraController.onFrameAvailable(Frame.obtain(data, camera, this));
     }
 
     @Override
@@ -230,5 +221,14 @@ public class MyCamera implements CameraController.OnPreviewStartListener, Camera
     @Override
     public void onRecordingStop(File file, boolean isVideoConfirmed) {
         setRecording(false);
+    }
+
+    @Override
+    public void onFrameRelease(Frame frame) {
+        if (camera != null) {
+            if (Settings.REUSE_PREVIEW_BUFFERS) {
+                camera.addCallbackBuffer(frame.data);
+            }
+        }
     }
 }

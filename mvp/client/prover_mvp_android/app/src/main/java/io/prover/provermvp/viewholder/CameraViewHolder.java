@@ -62,7 +62,8 @@ public class CameraViewHolder implements ICameraViewHolder {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
             mRoot.setKeepScreenOn(true);
-            cameraController.onRecordingStart(averageFps, previewHolder.getCameraResolution(), 0);
+            Size res = previewHolder.getCameraResolution();
+            cameraController.onRecordingStart(averageFps, res, res, 0);
             return true;
         }
         return false;
@@ -70,6 +71,7 @@ public class CameraViewHolder implements ICameraViewHolder {
 
     @Override
     public void finishRecording() {
+        cameraController.beforeRecordingStop();
         mRoot.setKeepScreenOn(false);
         screenOrientationLock.unlockScreen(activity);
         boolean stoppedOk = false;
@@ -94,6 +96,7 @@ public class CameraViewHolder implements ICameraViewHolder {
     @Override
     public void cancelRecording() {
         screenOrientationLock.unlockScreen(activity);
+        cameraController.beforeRecordingStop();
         mRoot.setKeepScreenOn(false);
         try {
             mMediaRecorder.stop();  // stop the recording
