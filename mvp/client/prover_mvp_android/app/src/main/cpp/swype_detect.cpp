@@ -528,7 +528,7 @@ vector<double> SwypeDetect::S_L_define(Point2d a, Point2d b) {
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     Point2d shift;
 
-    UMat b_frame;
+    //UMat b_frame;
     //frame_i.convertTo(frame1, CV_64F);
 
     //cvtColor(b_frame, frame1, CV_RGB2GRAY);// converting frames to CV_64F type
@@ -606,7 +606,7 @@ void
 SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
                               uint timestamp, int &state, int &index, int &x, int &y,
                               int &debug) {
-    Mat frame(height_i + height_i / 2, width_i, CV_8UC1, (uchar *) frame_i);
+    Mat frame(height_i, width_i, CV_8UC1, (uchar *) frame_i);
 
     Point2d shift = Frame_processor(frame);
     _currentShift.SetMul(shift, -1, -1);
