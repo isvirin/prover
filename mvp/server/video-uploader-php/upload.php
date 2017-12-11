@@ -25,13 +25,6 @@ function uploadResult($isSuccess, $transactions, $error, $debug = false)
 
 // для вывода результата строго в JSON делаем фокус
 error_reporting(0); //show all errors
-register_shutdown_function(function () {
-    $lastError = error_get_last();
-    if ($lastError) {
-        $error = "Server internal error: {$lastError['message']} ({$lastError['line']})";
-        die(uploadResult(false, [], $error));
-    }
-});
 
 function callAnalyticProgramm($blockHash, $hash)
 {
