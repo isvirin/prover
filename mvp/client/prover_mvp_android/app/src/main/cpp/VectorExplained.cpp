@@ -38,7 +38,7 @@ void VectorExplained::CalculateExplained() {
         _angle = atan(k) * 180 / CV_PI;
         if (_x < 0)
             _angle += 180.0f;
-        _angle = fmod(_angle + 360.0f, 360.0f);
+        _angle = fmod(_angle + 360.0, 360.0);
     }
 
     _direction = (int) (floor((360 - _angle - 22.5) / 45));

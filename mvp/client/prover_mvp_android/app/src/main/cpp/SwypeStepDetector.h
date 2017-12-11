@@ -75,7 +75,7 @@ private:
     int _nextSwypePoint = 0;
     bool _isDiagonal;
 
-    const double _sqrt2 = sqrtf(2.0f);
+    const double _sqrt2 = sqrtf(2.0);
 
     BoundsChecker _BoundsChecker;
 };

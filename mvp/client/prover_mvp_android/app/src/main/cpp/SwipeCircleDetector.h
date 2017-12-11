@@ -37,7 +37,7 @@ public:
         total_ = 0;
     }
 
-    const double Circle_S_by_P2 = (const double) (0.25f / CV_PI);
+    const double Circle_S_by_P2 = 0.25 / CV_PI;
 
 private:
     double Area(int amount, double &perimeter);

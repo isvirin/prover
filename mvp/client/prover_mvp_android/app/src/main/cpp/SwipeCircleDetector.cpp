@@ -21,7 +21,7 @@ bool SwipeCircleDetector::IsCircle() {
     int timestamp = shifts_[pos]._timestamp;
 
     for (int i = 2; i <= total_; i++) {
-        int pos = (pos_ - i + SHIFTS) % SHIFTS;
+        pos = (pos_ - i + SHIFTS) % SHIFTS;
         if (shifts_[pos]._timestamp < noFramesBefore) {
             return false;
         }

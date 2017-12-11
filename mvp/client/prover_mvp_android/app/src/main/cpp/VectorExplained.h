@@ -48,7 +48,7 @@ public:
      * @return
      */
     inline double AngleTo(VectorExplained other) {
-        return fmod(other._angle - _angle + 540.0f, 360.0f) - 180.0f;
+        return fmod(other._angle - _angle + 540.0, 360.0) - 180.0;
     }
 
     double _mod = 0;
