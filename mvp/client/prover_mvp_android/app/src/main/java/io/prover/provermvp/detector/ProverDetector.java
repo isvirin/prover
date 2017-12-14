@@ -6,7 +6,10 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
+import java.util.Locale;
 
+import io.prover.provermvp.BuildConfig;
+import io.prover.provermvp.Settings;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
@@ -95,7 +98,15 @@ public class ProverDetector {
             }
 
             timesCounter.add(System.currentTimeMillis() - time);
-            Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
+            if (Settings.ENABLE_SCREEN_LOG) {
+                String text = String.format(Locale.getDefault(), "Detector: %dx%d, f%d %d,%d,%d,%d,%d, %d ms",
+                        width, height, frame.format,
+                        detectionResult[0], detectionResult[1], detectionResult[2], detectionResult[3], detectionResult[4],
+                        System.currentTimeMillis() - time);
+                cameraController.addToScreenLog(text);
+            }
         }
         detectionDone();
     }

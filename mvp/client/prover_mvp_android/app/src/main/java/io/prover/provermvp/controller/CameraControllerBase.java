@@ -11,6 +11,7 @@ import java.util.List;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.viewholder.ScreenLogger;
 
 /**
  * Created by babay on 11.12.2017.
@@ -51,6 +52,21 @@ public class CameraControllerBase {
 
     public final ListenerList<SwypeCodeConfirmedListener> swypeCodeConfirmed
             = new ListenerList<>(handler, SwypeCodeConfirmedListener::onSwypeCodeConfirmed);
+    private ScreenLogger screenLogger;
+
+    public void setScreenLogger(ScreenLogger screenLogger) {
+        this.screenLogger = screenLogger;
+    }
+
+    public void addToScreenLog(CharSequence text) {
+        if (screenLogger != null) {
+            if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
+                screenLogger.addText(text);
+            } else {
+                handler.post(() -> screenLogger.addText(text));
+            }
+        }
+    }
 
     public interface OnPreviewStartListener {
         void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize);

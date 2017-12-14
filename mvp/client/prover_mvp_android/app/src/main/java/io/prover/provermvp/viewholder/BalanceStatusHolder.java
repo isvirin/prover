@@ -41,7 +41,7 @@ public class BalanceStatusHolder implements CameraController.NetworkRequestDoneL
         cameraController.onNetworkRequestStart.add(this);
         cameraController.onNetworkRequestError.add(this);
 
-        root.setOnClickListener(this);
+        this.root.setOnClickListener(this);
     }
 
     private void setStatusIconOk() {
