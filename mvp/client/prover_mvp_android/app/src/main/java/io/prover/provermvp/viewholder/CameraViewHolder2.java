@@ -105,7 +105,9 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     public void onPause(Activity activity) {
         resumed = false;
         //surfacesHolder.onPause();
-        cancelRecording();
+        if (cameraController.isRecording()) {
+            finishRecording();
+        }
         myCamera.closeCamera();
         stopBackgroundThread();
     }
@@ -185,7 +187,8 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
-            myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
+            if (resumed)
+                myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
             videoFile = null;
         };
