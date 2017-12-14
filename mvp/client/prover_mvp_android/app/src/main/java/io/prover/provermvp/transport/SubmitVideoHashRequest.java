@@ -50,7 +50,9 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
             try {
                 SubmitVideoHashResponce responce = postTransaction(METHOD, "hex=0x", null);
                 session.increaseNonce();
-                listener.onNetworkRequestDone(this, responce);
+                if (!cancelled) {
+                    listener.onNetworkRequestDone(this, responce);
+                }
             } catch (FixableEtheriumExcetion e) {
                 if (debugData != null) {
                     debugData.setException(e).log();

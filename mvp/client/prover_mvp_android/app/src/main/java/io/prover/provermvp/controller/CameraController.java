@@ -1,7 +1,10 @@
 package io.prover.provermvp.controller;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import org.ethereum.crypto.ECKey;
 
 import java.io.File;
 import java.util.List;
@@ -9,6 +12,8 @@ import java.util.List;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
+import io.prover.provermvp.transport.NetworkHolder;
+import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
@@ -19,7 +24,9 @@ import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 public class CameraController extends CameraControllerBase {
 
+    public final NetworkHolder networkHolder;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
+    boolean resumed;
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
     private volatile float detectorFps;
@@ -29,7 +36,10 @@ public class CameraController extends CameraControllerBase {
     private long videoStartTime;
     private SwypeDetectorHandler swypeDetectorHandler;
 
-    public CameraController() {
+    public CameraController(Context context) {
+        Etherium etherium = Etherium.getInstance(context);
+        ECKey key = etherium.getKey();
+        networkHolder = new NetworkHolder(key, this);
     }
 
     public boolean isRecording() {
@@ -116,6 +126,18 @@ public class CameraController extends CameraControllerBase {
 
     public void onSwypeCodeConfirmed() {
         swypeCodeConfirmed.postNotifyEvent();
+    }
+
+    public void onResume() {
+        resumed = true;
+        networkHolder.doHello();
+        handler.postDelayed(() -> {
+            if (resumed) networkHolder.doHello();
+        }, 30_000);
+    }
+
+    public void onPause() {
+        resumed = false;
     }
 
 }

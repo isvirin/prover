@@ -27,11 +27,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
-    CameraController cameraController = new CameraController();
+    private CameraController cameraController;
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
-    private BalanceStatusHolder balanceStatusHolder;
-    private SwypeViewHolder swypeViewHolder;
     private boolean resumed;
     private boolean started;
 
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cameraController = new CameraController(this);
         setContentView(R.layout.activity_main);
         FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
         ViewGroup contentRoot = findViewById(R.id.contentRoot);
@@ -50,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         cameraControlsHolder = new CameraControlsHolder(this, contentRoot, cameraHolder, cameraController);
         swypeStateHelperHolder = new SwypeStateHelperHolder(contentRoot, cameraController);
-        balanceStatusHolder = new BalanceStatusHolder(contentRoot, cameraController);
-        swypeViewHolder = new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
+        BalanceStatusHolder balanceStatusHolder = new BalanceStatusHolder(contentRoot, cameraController);
+        SwypeViewHolder swypeViewHolder = new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,16 +84,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        cameraController.onPause();
         cameraHolder.onPause(this);
-        cameraControlsHolder.onPause();
         resumed = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        cameraController.onResume();
         cameraHolder.onResume(this);
-        cameraControlsHolder.onResume();
         resumed = true;
     }
 

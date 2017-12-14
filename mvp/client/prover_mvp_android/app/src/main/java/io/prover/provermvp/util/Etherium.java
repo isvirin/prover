@@ -38,7 +38,7 @@ public class Etherium {
         Security.insertProviderAt(provider, 1);
     }
 
-    ECKey keyPair;
+    private ECKey keyPair;
 
     public Etherium(Context context) {
         keyPair = loadKey(context);

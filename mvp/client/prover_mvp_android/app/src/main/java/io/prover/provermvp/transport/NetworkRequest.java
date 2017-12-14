@@ -34,6 +34,7 @@ public abstract class NetworkRequest<T> implements Runnable {
     protected final NetworkRequestListener listener;
     protected RequestLog debugData;
     protected String charset = "UTF-8";
+    volatile boolean cancelled;
 
     public NetworkRequest(NetworkRequestListener listener) {
         this.listener = listener;
@@ -110,7 +111,9 @@ public abstract class NetworkRequest<T> implements Runnable {
         try {
             String responceStr = postEnclosingRequest(method, requestType, requestBody);
             T responce = parse(responceStr);
-            listener.onNetworkRequestDone(this, responce);
+            if (!cancelled) {
+                listener.onNetworkRequestDone(this, responce);
+            }
         } catch (IOException | JSONException ex) {
             handleException(ex);
         }
@@ -165,6 +168,10 @@ public abstract class NetworkRequest<T> implements Runnable {
 
     protected Transaction createTransaction() {
         return null;
+    }
+
+    public void cancel() {
+        cancelled = true;
     }
 
     public interface NetworkRequestListener {

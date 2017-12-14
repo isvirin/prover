@@ -34,11 +34,9 @@ import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.transport.HelloRequest;
-import io.prover.provermvp.transport.NetworkHolder;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.SubmitVideoHashRequest;
 import io.prover.provermvp.transport.responce.HelloResponce;
-import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.UtilFile;
 
 import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_X;
@@ -64,8 +62,6 @@ public class CameraControlsHolder implements View.OnClickListener,
     private final TextView hintText;
     private final Handler handler = new Handler();
     private final AllDoneImageHolder allDoneHolder;
-    boolean resumed = false;
-    NetworkHolder networkHolder;
     private boolean started;
 
     public CameraControlsHolder(Activity activity, ViewGroup root, ICameraViewHolder cameraHolder, CameraController cameraController) {
@@ -169,23 +165,6 @@ public class CameraControlsHolder implements View.OnClickListener,
         }
 
         resolutionSpinner.setEnabled(!playing);
-    }
-
-    public void onPause() {
-        resumed = false;
-    }
-
-    public void onResume() {
-        resumed = true;
-
-        if (networkHolder == null) {
-            Etherium etherium = Etherium.getInstance(activity);
-            if (etherium.getKey() != null || !etherium.getKey().equals(networkHolder.key)) {
-                networkHolder = new NetworkHolder(etherium.getKey(), cameraController);
-            }
-        }
-        if (networkHolder != null)
-            networkHolder.doHello();
     }
 
     public void onStart() {
