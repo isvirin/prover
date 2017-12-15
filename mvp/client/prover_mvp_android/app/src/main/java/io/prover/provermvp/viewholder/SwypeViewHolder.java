@@ -1,8 +1,5 @@
 package io.prover.provermvp.viewholder;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.res.Resources;
 import android.graphics.Matrix;
 import android.os.Build;
@@ -15,7 +12,6 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -189,7 +185,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         dr.start();
     }
 
-    private void hide() {
+    public void hide() {
         root.setVisibility(View.GONE);
     }
 
@@ -220,7 +216,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         }, 1500);
     }
 
-    private void showCompleted() {
+
+    /*private void showCompleted() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             TransitionManager.beginDelayedTransition((ViewGroup) root.getParent());
         }
@@ -234,7 +231,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
             }
         });
         animator.start();
-    }
+    }*/
 
     /**
      * @param state
@@ -246,13 +243,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         if (this.state == SwypeHolderState.Showing && swypeSequence == null) {
             this.state = SwypeHolderState.Hidden;
         }
-
-        //if (this.state == oldState)
-        //    return this.state == SwypeHolderState.Showing;
-
-        boolean olsStateShowing = (oldState == SwypeHolderState.Showing || oldState == SwypeHolderState.Completed);
-
-        boolean visible = root.getVisibility() == View.VISIBLE;
 
         switch (this.state) {
             case Hidden:
@@ -266,8 +256,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 return state == InputCode;
 
             case Completed:
-                if (oldState != this.state)
-                    showCompleted();
+                /*if (oldState != this.state)
+                    showCompleted();*/
                 return true;
 
             case Failed:

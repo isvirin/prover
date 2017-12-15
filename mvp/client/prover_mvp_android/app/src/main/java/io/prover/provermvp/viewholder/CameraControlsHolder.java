@@ -62,6 +62,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     private final TextView hintText;
     private final Handler handler = new Handler();
     private final AllDoneImageHolder allDoneHolder;
+    private final SwypeViewHolder swypeViewHolder;
     private boolean started;
 
     public CameraControlsHolder(Activity activity, ViewGroup root, ICameraViewHolder cameraHolder, CameraController cameraController) {
@@ -100,6 +101,7 @@ public class CameraControlsHolder implements View.OnClickListener,
         Size resolution = Size.fromPreferences(prefs, KEY_SELECTED_RESOLUTION_X, KEY_SELECTED_RESOLUTION_Y);
         if (resolution != null)
             cameraHolder.setCameraResolution(resolution);
+        swypeViewHolder = new SwypeViewHolder(root.findViewById(R.id.swypeView), cameraController);
     }
 
     private static Animatable2Compat.AnimationCallback animationCallbackOfRunnables(Runnable onStart, Runnable onEnd) {
@@ -216,18 +218,21 @@ public class CameraControlsHolder implements View.OnClickListener,
                     .show();
         }
         updateControls(true, false);
-        allDoneHolder.view.setVisibility(View.GONE);
+        allDoneHolder.setVectorDrawable();
+        allDoneHolder.hide();
         if (file != null && !isVideoConfirmed) {
-            showImageNotificationAnim(R.drawable.ic_not_verified_anim, 3000);
-            showHint(R.string.videoNotConfirmed, 4000, 0, false);
+            TransitionManager.beginDelayedTransition(root);
+            showImageNotificationAnim(R.drawable.ic_not_verified_anim, 3000, false);
+            showHint(R.string.videoNotConfirmed, 4000, 0, false, false);
         }
     }
 
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         if (actualSwypeCode == null) {
-            showImageNotificationAnim(R.drawable.phone_large_animated1_fadeout, 2000);
-            showHint(R.string.makeProver, 5000, 0, false);
+            TransitionManager.beginDelayedTransition(root);
+            showImageNotificationAnim(R.drawable.phone_large_animated1_fadeout, 2000, false);
+            showHint(R.string.makeProver, 5000, 0, false, false);
         }
     }
 
@@ -239,15 +244,18 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
         if (oldState != null && oldState.state == DetectionState.State.InputCode && newState.state == DetectionState.State.Waiting) {
-            showHint(R.string.swipeCodeFailedTryAgain, 3500, 0, false);
+            showHint(R.string.swipeCodeFailedTryAgain, 3500, 0, false, true);
         } else if (newState.state == DetectionState.State.Confirmed) {
+            allDoneHolder.setVectorDrawable();
+            TransitionManager.beginDelayedTransition(root);
             allDoneHolder.show();
-            showHint(R.string.swypeCodeOk, 3500, 0, false);
+            swypeViewHolder.hide();
+            showHint(R.string.swypeCodeOk, 3500, 0, false, false);
             handler.postDelayed(allDoneHolder::animateMove, 1000);
         }
     }
 
-    private void showHint(int stringId, long timeoutToHide, int anchor, boolean isAbove) {
+    private void showHint(int stringId, long timeoutToHide, int anchor, boolean isAbove, boolean animate) {
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) hintText.getLayoutParams();
         if (anchor == 0) {
             lp.topToBottom = R.id.balanceContainer;
@@ -261,7 +269,9 @@ public class CameraControlsHolder implements View.OnClickListener,
         }
         hintText.setLayoutParams(lp);
 
-        TransitionManager.beginDelayedTransition(root);
+        if (animate)
+            TransitionManager.beginDelayedTransition(root);
+
         hintText.setText(stringId);
         hintText.setVisibility(View.VISIBLE);
 
@@ -272,7 +282,7 @@ public class CameraControlsHolder implements View.OnClickListener,
             }, timeoutToHide);
     }
 
-    private void showImageNotificationAnim(int vectorDrawableId, long timeout) {
+    private void showImageNotificationAnim(int vectorDrawableId, long timeout, boolean animateAppear) {
         TransitionManager.beginDelayedTransition(root);
         AnimatedVectorDrawableCompat dr = AnimatedVectorDrawableCompat.create(root.getContext(), vectorDrawableId);
         dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
@@ -295,12 +305,13 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
         if (request instanceof SubmitVideoHashRequest) {
-            showHint(R.string.videoHashPosted, 3000, 0, false);
+            showHint(R.string.videoHashPosted, 3000, 0, false, true);
         } else if (request instanceof HelloRequest) {
             HelloResponce hello = (HelloResponce) responce;
             if (hello.getDoubleBalance() == 0) {
-                showImageNotificationAnim(R.drawable.no_money_anim, 3000);
-                showHint(R.string.notEnoughMoney, 3500, 0, false);
+                TransitionManager.beginDelayedTransition(root);
+                showImageNotificationAnim(R.drawable.no_money_anim, 3000, false);
+                showHint(R.string.notEnoughMoney, 3500, 0, false, false);
             }
         }
     }
@@ -308,14 +319,14 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
         if (request instanceof SubmitVideoHashRequest) {
-            showHint(R.string.videoHashPosted, 3000, 0, false);
+            showHint(R.string.videoHashPosted, 3000, 0, false, true);
         }
     }
 
     @Override
     public void onNetworkRequestStart(NetworkRequest request) {
         if (request instanceof SubmitVideoHashRequest) {
-            showHint(R.string.calculatingVideoHash, 4000, 0, false);
+            showHint(R.string.calculatingVideoHash, 4000, 0, false, true);
         }
     }
 }

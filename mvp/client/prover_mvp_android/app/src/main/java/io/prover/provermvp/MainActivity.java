@@ -21,7 +21,6 @@ import io.prover.provermvp.viewholder.CameraViewHolder2;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.ScreenLogger;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
-import io.prover.provermvp.viewholder.SwypeViewHolder;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cameraControlsHolder = new CameraControlsHolder(this, contentRoot, cameraHolder, cameraController);
         swypeStateHelperHolder = new SwypeStateHelperHolder(contentRoot, cameraController);
         new BalanceStatusHolder(contentRoot, cameraController);
-        new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
+
 
         if (Settings.ENABLE_SCREEN_LOG) {
             ScreenLogger logger = new ScreenLogger(contentRoot);
