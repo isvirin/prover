@@ -6,34 +6,18 @@
 extern "C" {
 
 JNIEXPORT jlong JNICALL
-Java_io_prover_provermvp_detector_ProverDetector_initSwype(JNIEnv *env, jobject instance, jint fps,
-                                                           jstring swype_) {
-    std::string swype;
-
-    if (swype_ == NULL) {
-        swype = "";
-    } else {
-        const char *chars = env->GetStringUTFChars(swype_, 0);
-        int len = env->GetStringUTFLength(swype_);
-        char *chars2 = new char[len + 1];;
-        chars2[len] = 0;
-        memcpy(chars2, chars, len);
-        swype = std::string(chars);
-        delete[] chars2;
-        env->ReleaseStringUTFChars(swype_, chars);
-    }
-
-    LOGI_NATIVE("initialising detector, fps %d, swype %s ", fps, swype.c_str());
-
+Java_io_prover_provermvp_detector_ProverDetector_initSwype(JNIEnv *env, jobject instance,
+                                                           jfloat videoAspectRatio,
+                                                           jint detectorWidth,
+                                                           jint detectorHeight) {
     SwypeDetect *detector = new SwypeDetect();
-    detector->init(fps, swype);
+    detector->init(videoAspectRatio, detectorWidth, detectorHeight);
     return (jlong) detector;
 }
 
 JNIEXPORT void JNICALL
 Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject instance,
-                                                          jlong nativeHandler, jstring swype_,
-                                                          jint fps) {
+                                                          jlong nativeHandler, jstring swype_) {
     std::string swype;
 
     if (swype_ == NULL) {
@@ -52,7 +36,7 @@ Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject i
     LOGI_NATIVE("detection: set swype %s", swype.c_str());
 
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
-    detector->init(fps, swype);
+    detector->setSwype(swype);
 }
 
 JNIEXPORT void JNICALL

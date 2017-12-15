@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.Settings;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
@@ -33,25 +34,22 @@ public class ProverDetector {
     private final CameraController cameraController;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 3);
     private final DetectorTimesCounter timesCounter = new DetectorTimesCounter(120);
+    long detectionTimeSum = 0;
+    int detectionCalls = 0;
     private DetectionState detectionState;
-    private int initialFps;
     private int orientationHint;
     private boolean swypeCodeConfirmed = false;
     private long nativeHandler;
     private String swypeCode;
 
-
     public ProverDetector(CameraController cameraController) {
         this.cameraController = cameraController;
     }
 
-    public void init(int fps, int orientation, String swype) {
+    public void init(Size videoSize, Size detectorSize, int orientation) {
         this.orientationHint = orientation;
-        initialFps = fps;
-        if (swype != null)
-            swype = SwypeOrientationHelper.rotateSwypeCode(swype, orientationHint);
         if (nativeHandler == 0) {
-            nativeHandler = initSwype(fps, swype);
+            nativeHandler = initSwype(videoSize.ratio, detectorSize.width, detectorSize.height);
         }
     }
 
@@ -67,11 +65,7 @@ public class ProverDetector {
             return;
         }
 
-        float avgFrameTime = timesCounter.getAverageTime();
-        int fps = avgFrameTime == 0 ? initialFps : (int) (1000 / avgFrameTime);
-        fps = Math.min(initialFps, fps);
-        Log.d(TAG + "Detector", String.format("initialFps: %d, avgtime: %f, fps: %d", initialFps, avgFrameTime, fps));
-        setSwype(nativeHandler, swypeCode, fps);
+        setSwype(nativeHandler, swypeCode);
         if (sendNotification)
             cameraController.notifyActualSwypeCodeSet(swypeCode);
     }
@@ -81,6 +75,7 @@ public class ProverDetector {
             releaseNativeHandler(nativeHandler);
         }
         nativeHandler = 0;
+        Log.d(TAG, String.format("detect3 average detect time: %f", detectionTimeSum / (double) detectionCalls));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -98,6 +93,8 @@ public class ProverDetector {
             }
 
             timesCounter.add(System.currentTimeMillis() - time);
+            detectionTimeSum += (System.currentTimeMillis() - time);
+            detectionCalls++;
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
             if (Settings.ENABLE_SCREEN_LOG) {
@@ -134,20 +131,20 @@ public class ProverDetector {
     /**
      * initialize swype with specific fps and swype code
      *
-     * @param fps
-     * @param swype
-     * @return
+     *
+     * @param videoAspectRatio
+     * @param detectorWidth
+     *@param detectorHeight
      */
-    private native long initSwype(int fps, String swype);
+    private native long initSwype(float videoAspectRatio, int detectorWidth, int detectorHeight);
 
     /**
      * set swype code
      *
      * @param nativeHandler
      * @param swype
-     * @param fps
      */
-    private native void setSwype(long nativeHandler, String swype, int fps);
+    private native void setSwype(long nativeHandler, String swype);
 
 
     /**

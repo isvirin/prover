@@ -213,7 +213,7 @@ public class MyCamera implements CameraController.OnPreviewStartListener, Camera
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         setRecording(true);
     }
 

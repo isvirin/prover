@@ -26,8 +26,8 @@ public class CameraControllerBase {
     public final ListenerList2<OnPreviewStartListener, List<Size>, Size> previewStart
             = new ListenerList2<>(handler, OnPreviewStartListener::onPreviewStart);
 
-    public final ListenerList2<OnRecordingStartListener, Float, Size> onRecordingStart
-            = new ListenerList2<>(handler, OnRecordingStartListener::onRecordingStart);
+    public final ListenerList<OnRecordingStartListener> onRecordingStart
+            = new ListenerList<>(handler, OnRecordingStartListener::onRecordingStart);
 
     public final ListenerList2<OnRecordingStopListener, File, Boolean> onRecordingStop
             = new ListenerList2<>(handler, OnRecordingStopListener::onRecordingStop);
@@ -77,7 +77,7 @@ public class CameraControllerBase {
     }
 
     public interface OnRecordingStartListener {
-        void onRecordingStart(float fps, Size detectorSize);
+        void onRecordingStart();
     }
 
     public interface OnRecordingStopListener {

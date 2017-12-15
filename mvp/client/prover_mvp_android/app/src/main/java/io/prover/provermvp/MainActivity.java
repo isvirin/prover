@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ScreenLogger logger = new ScreenLogger(contentRoot);
             cameraController.setScreenLogger(logger);
         }
+        findViewById(R.id.infoButton).setOnClickListener(this);
     }
 
     @Override

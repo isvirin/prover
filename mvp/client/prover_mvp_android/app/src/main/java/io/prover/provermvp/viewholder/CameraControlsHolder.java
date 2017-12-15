@@ -124,13 +124,13 @@ public class CameraControlsHolder implements View.OnClickListener,
                 cameraHolder.finishRecording();
             } else {
                 if (PermissionManager.checkHaveWriteSdcardPermission(activity)) {
-                    cameraHolder.startRecording(activity, cameraController.getAvgFps());
+                    cameraHolder.startRecording(activity);
                     updateControls(false, true);
                 } else {
                     PermissionManager.ensureHaveWriteSdcardPermission(activity, () ->
                             cameraController.handler.postDelayed(() -> {
                                 if (started) {
-                                    cameraHolder.startRecording(activity, cameraController.getAvgFps());
+                                    cameraHolder.startRecording(activity);
                                     updateControls(false, true);
                                 }
                             }, 500));
@@ -204,7 +204,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         //updateControls(false, true);
     }
 

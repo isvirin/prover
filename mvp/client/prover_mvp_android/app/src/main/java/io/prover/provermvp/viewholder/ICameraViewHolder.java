@@ -9,7 +9,7 @@ import io.prover.provermvp.camera.Size;
  */
 
 public interface ICameraViewHolder {
-    boolean startRecording(Activity activity, float averageFps);
+    boolean startRecording(Activity activity);
 
     void finishRecording();
 

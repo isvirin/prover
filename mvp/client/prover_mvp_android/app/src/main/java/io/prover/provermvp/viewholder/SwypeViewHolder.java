@@ -23,7 +23,6 @@ import java.util.Arrays;
 
 import io.prover.provermvp.Const;
 import io.prover.provermvp.R;
-import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 
@@ -133,7 +132,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         float size = res.getDisplayMetrics().density * 96;
         xMult = size / 1024.0f;
         yMult = size / 1024.0f;

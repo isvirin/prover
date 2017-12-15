@@ -57,13 +57,13 @@ public class CameraViewHolder implements ICameraViewHolder {
     }
 
     @Override
-    public boolean startRecording(Activity activity, float averageFps) {
+    public boolean startRecording(Activity activity) {
         if (prepareRecording()) {
             screenOrientationLock.lockScreenOrientation(activity);
             mMediaRecorder.start();
             mRoot.setKeepScreenOn(true);
             Size res = previewHolder.getCameraResolution();
-            cameraController.onRecordingStart(averageFps, res, res, 0);
+            cameraController.onRecordingStart(res, res, 0);
             return true;
         }
         return false;

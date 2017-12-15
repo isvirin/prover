@@ -208,7 +208,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         }
     }
 
-    public void startVideoRecordingSession(SurfaceTexture texture, MediaRecorder mediaRecorder, float fps, Handler backgroundHandler, Activity activity) {
+    public void startVideoRecordingSession(SurfaceTexture texture, MediaRecorder mediaRecorder, Handler backgroundHandler, Activity activity) {
         if (mVideoSessionWrapper == null || camera2Config == null)
             return;
         mVideoSessionWrapper.closeVideoSession();
@@ -219,7 +219,7 @@ public class MyCamera2 implements ImageReader.OnImageAvailableListener {
         texture.setDefaultBufferSize(camera2Config.mPreviewSize.width, camera2Config.mPreviewSize.height);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         Integer orientationHint = OrientationHelper.getOrientationHint(camera2Config.mSensorOrientation, rotation);
-        Runnable startedNotificator = () -> cameraController.onRecordingStart(fps, camera2Config.mCaptureFrameSize, camera2Config.mVideoSize, orientationHint);
+        Runnable startedNotificator = () -> cameraController.onRecordingStart(camera2Config.mCaptureFrameSize, camera2Config.mVideoSize, orientationHint);
         try {
             mVideoSessionWrapper.startVideoSession(backgroundHandler, startedNotificator, new Surface(texture), mediaRecorder.getSurface(), mImageReader.getSurface());
         } catch (CameraAccessException e) {

@@ -10,6 +10,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.controller.CameraControllerBase;
 import io.prover.provermvp.util.Frame;
@@ -34,29 +35,33 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
     private final ProverDetector detector;
     private final AtomicInteger framesInQueue = new AtomicInteger();
     private final CameraController cameraController;
+    private final Size videoSize;
+    private final Size detectorSize;
     private volatile boolean processing = true;
     private boolean quitDone = false;
 
-    public SwypeDetectorHandler(Looper looper, CameraController cameraController) {
+    public SwypeDetectorHandler(Looper looper, CameraController cameraController, Size videoSize, Size detectorSize) {
         super(looper);
         handlerThread = (HandlerThread) looper.getThread();
         detector = new ProverDetector(cameraController);
         this.cameraController = cameraController;
+        this.videoSize = videoSize;
+        this.detectorSize = detectorSize;
         cameraController.swypeCodeSet.add(this);
         cameraController.onRecordingStop.add(this);
         cameraController.swypeCodeConfirmed.add(this);
     }
 
-    public static SwypeDetectorHandler newHandler(int fps, String swype, CameraController cameraController) {
+    public static SwypeDetectorHandler newHandler(Size videoSize, Size detectorSize, CameraController cameraController) {
         HandlerThread handlerThread = new HandlerThread("SwypeDetectorThread_" + counter++);
         handlerThread.start();
-        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), cameraController);
-        handler.sendInit(fps, swype, cameraController.getOrientationHint());
+        SwypeDetectorHandler handler = new SwypeDetectorHandler(handlerThread.getLooper(), cameraController, videoSize, detectorSize);
+        handler.sendInit(cameraController.getOrientationHint());
         return handler;
     }
 
-    public void sendInit(int fps, String swype, int orientationHint) {
-        sendMessage(obtainMessage(MESSAGE_INIT, fps, orientationHint, swype));
+    public void sendInit(int orientationHint) {
+        sendMessage(obtainMessage(MESSAGE_INIT, orientationHint, 0));
     }
 
     public void sendSetSwype(String swype) {
@@ -99,8 +104,9 @@ public class SwypeDetectorHandler extends Handler implements CameraController.On
     public void handleMessage(Message msg) {
         switch (msg.what) {
             case MESSAGE_INIT:
-                if (processing)
-                    detector.init(msg.arg1, msg.arg2, (String) msg.obj);
+                if (processing) {
+                    detector.init(videoSize, detectorSize, msg.arg1);
+                }
                 return;
 
             case MESSAGE_SET_SWYPE:

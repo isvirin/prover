@@ -46,12 +46,12 @@ public class CameraController extends CameraControllerBase {
         return recording;
     }
 
-    public void onRecordingStart(float averageFps, Size detectorSize, Size videoSize, int orientationHint) {
+    public void onRecordingStart(Size detectorSize, Size videoSize, int orientationHint) {
         recording = true;
         this.orientationHint = orientationHint;
-        onRecordingStart.postNotifyEvent(averageFps, detectorSize);
+        onRecordingStart.postNotifyEvent();
         videoStartTime = System.currentTimeMillis();
-        swypeDetectorHandler = SwypeDetectorHandler.newHandler((int) averageFps, swypeCode, this);
+        swypeDetectorHandler = SwypeDetectorHandler.newHandler(videoSize, detectorSize, this);
     }
 
     public void beforeRecordingStop() {

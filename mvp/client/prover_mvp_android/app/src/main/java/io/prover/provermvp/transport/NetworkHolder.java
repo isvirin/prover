@@ -10,7 +10,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import io.prover.provermvp.Const;
-import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.transport.responce.HelloResponce;
 import io.prover.provermvp.transport.responce.SwypeResponce1;
@@ -110,7 +109,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         swypeResponce2 = null;
         swypeRequestHash = null;
         if (networkSession != null && REQUEST_SWYPE) {

@@ -13,7 +13,6 @@ import java.util.Locale;
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.R;
 import io.prover.provermvp.Settings;
-import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.transport.NetworkRequest;
@@ -111,7 +110,7 @@ public class SwypeStateHelperHolder implements
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         setSwypeStatus("not requesting");
     }
 

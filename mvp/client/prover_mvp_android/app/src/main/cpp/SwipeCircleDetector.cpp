@@ -27,7 +27,6 @@ bool SwipeCircleDetector::IsCircle() {
         }
 
         sum.Add(shifts_[pos]);
-
         if (sum._mod < MAX_DEVIATION && i > 5) {
             double perimeter;
             double area = fabs(Area(i, perimeter));
@@ -37,10 +36,8 @@ bool SwipeCircleDetector::IsCircle() {
                         timestamp, i + 1, sum._mod, area, areaByP2 / Circle_S_by_P2);
             if (fabs(area) >= MIN_CIRCLE_AREA && areaByP2ToCircle >= MIN_AREA_BY_P2_TO_CIRCLE)
                 return true;
-            //return (fabsf(area) >= MIN_CIRCLE_AREA && areaByP2 >= Circle_S_by_P2 / 1.5f);
         }
     }
-
     return false;
 }
 
@@ -49,7 +46,6 @@ double SwipeCircleDetector::Area(int amount, double &perimeter) {
     Vector sumPrev = sum;
     perimeter = shifts_[pos_]._mod;
     float area = 0;
-    //shifts_[pos_].Log();
 
     for (int i = 2; i <= amount; i++) {
         int pos = (pos_ - i + SHIFTS) % SHIFTS;
@@ -58,7 +54,6 @@ double SwipeCircleDetector::Area(int amount, double &perimeter) {
         double triangleArea = (sum._x * sumPrev._y - sum._y * sumPrev._x) / 2;
         area += triangleArea;
         sumPrev = sum;
-        //shifts_[pos].Log();
     }
     return area;
 }
