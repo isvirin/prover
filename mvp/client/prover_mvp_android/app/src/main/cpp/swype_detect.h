@@ -163,6 +163,12 @@ public:
 
     ~SwypeDetect();
 
+    /**
+     *
+     * @param sourceAspectRatio - aspect ratio (width / height) of original video
+     * @param detectorWidth - detector frame width, px
+     * @param detectorHeight - detector frame height, px
+     */
     void init(double sourceAspectRatio, int detectorWidth, int detectorHeight);
 
     void setSwype(std::string swype);// setting the swype code
