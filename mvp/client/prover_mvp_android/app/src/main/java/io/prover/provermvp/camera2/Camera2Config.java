@@ -19,7 +19,7 @@ import io.prover.provermvp.camera.Size;
 
 public class Camera2Config {
 
-    private static final int MIN_CAPTURE_SIZE = 200;
+    private static final int MIN_CAPTURE_SIZE = 100;
     public final List<Size> cameraResolutions;
     public final int mImageFormat;
     public final int mSensorOrientation;
