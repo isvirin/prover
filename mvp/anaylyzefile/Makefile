@@ -1,5 +1,6 @@
 TARGET := analyzefile
-CXXFLAGS := -Wall -pipe -std=c++14 -O0 -ggdb
+CXXFLAGS := -Wall -pipe -std=c++14
+# -O0 -ggdb
 LFLAGS := -lavformat -lavcodec -lavutil -lavfilter -lopencv_features2d -lopencv_imgproc -lopencv_core -lpng
 VPATH := . ../client/prover_mvp_android/app/src/main/cpp
 CXXFLAGS += -I../client/prover_mvp_android/app/src/main/cpp
