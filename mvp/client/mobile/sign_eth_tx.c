@@ -127,3 +127,36 @@ ssize_t build_submitMediaHash_tx(
         privkey,
         pbuffer);
 }
+
+ssize_t build_submitMessage_tx(
+    const uint8_t   nonce[32],
+    const uint8_t   gasPrice[32],
+    const uint8_t   contractAddress[20],
+    const char     *message,
+    const uint8_t   privkey[32],
+    uint8_t       **pbuffer)
+{
+    size_t l=strlen(message);
+    size_t datasize=4+32+32+(l+31)/32*32;
+    uint8_t *data=(uint8_t *)calloc(datasize, 1);
+
+    memcpy(data+0, "\x70\x8b\x34\xfe", 4); // Keccak("submitMessage(string)")[0:4]
+    data[4+31]=0x20;
+    data[4+60]=(l>>24)&0xFF;
+    data[4+61]=(l>>16)&0xFF;
+    data[4+62]=(l>> 8)&0xFF;
+    data[4+63]=(l    )&0xFF;
+    memcpy(data+(4+64), message, l);
+
+    ssize_t res=build_tx(
+        nonce,
+        gasPrice,
+        contractAddress,
+        data,
+        datasize,
+        privkey,
+        pbuffer);
+
+    free(data);
+    return res;
+}
