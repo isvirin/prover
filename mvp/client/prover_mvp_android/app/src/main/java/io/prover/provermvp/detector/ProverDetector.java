@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.util.Locale;
 
 import io.prover.provermvp.BuildConfig;
-import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.util.Frame;
@@ -86,10 +85,10 @@ public class ProverDetector {
         if (nativeHandler != 0) {
             long time = System.currentTimeMillis();
             if (frame.image != null) {
-                Image.Plane[] planes = frame.image.getPlanes();
-                detectFrameY_8Buf(nativeHandler, planes[0].getBuffer(), width, height, frame.timeStamp, detectionResult);
+                Image.Plane plane = frame.image.getPlanes()[0];
+                detectFrameY_8BufStrided(nativeHandler, plane.getBuffer(), plane.getRowStride(), plane.getPixelStride(), width, height, frame.timeStamp, detectionResult);
             } else if (frame.data != null) {
-                detectFrameNV21(nativeHandler, frame.data, width, height, detectionResult);
+                detectFrameNV21(nativeHandler, frame.data, width, height, frame.timeStamp, detectionResult);
             }
 
             timesCounter.add(System.currentTimeMillis() - time);
@@ -97,9 +96,12 @@ public class ProverDetector {
             detectionCalls++;
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
-            if (Settings.ENABLE_SCREEN_LOG) {
-                String text = String.format(Locale.getDefault(), "Detector: %dx%d, f%d %d,%d,%d,%d,%d, %d ms",
-                        width, height, frame.format,
+            if (cameraController.enableScreenLog) {
+                int rowStride = frame.image == null ? width : frame.image.getPlanes()[0].getRowStride();
+                int pixelStride = frame.image == null ? width : frame.image.getPlanes()[0].getPixelStride();
+                int bufSize = frame.image == null ? frame.data.length : frame.image.getPlanes()[0].getBuffer().limit();
+                String text = String.format(Locale.getDefault(), "Detector: %dx%d=%d, f%d(%d,%d) %d,%d,%d,%d,%d, %d ms",
+                        width, height, bufSize, frame.format, rowStride, pixelStride,
                         detectionResult[0], detectionResult[1], detectionResult[2], detectionResult[3], detectionResult[4],
                         System.currentTimeMillis() - time);
                 cameraController.addToScreenLog(text);
@@ -131,10 +133,9 @@ public class ProverDetector {
     /**
      * initialize swype with specific fps and swype code
      *
-     *
      * @param videoAspectRatio
      * @param detectorWidth
-     *@param detectorHeight
+     * @param detectorHeight
      */
     private native long initSwype(float videoAspectRatio, int detectorWidth, int detectorHeight);
 
@@ -155,9 +156,9 @@ public class ProverDetector {
      * @param height
      * @param result    -- an array with 4 items: State, Index, X, Y
      */
-    private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int[] result);
+    private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int timestamp, int[] result);
 
-    private native long detectFrameY_8Buf(long nativeHandler, ByteBuffer planeY, int width, int height, int timestamp, int[] result);
+    private native void detectFrameY_8BufStrided(long nativeHandler, ByteBuffer planeY, int rowStride, int pixelStride, int width, int height, int timestamp, int[] result);
 
     private native void releaseNativeHandler(long nativeHandler);
 }

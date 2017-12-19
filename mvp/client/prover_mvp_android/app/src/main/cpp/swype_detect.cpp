@@ -6,7 +6,6 @@ using namespace std;
 SwypeDetect::SwypeDetect() // initialization
 {
     ocl::setUseOpenCL(true);
-
     count_num = -1;
     S = 0;
 }
@@ -65,10 +64,9 @@ Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
     }
 }
 
-void
-SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
-                              uint timestamp, int &state, int &index, int &x, int &y,
-                              int &debug) {
+void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
+                                   uint timestamp, int &state, int &index, int &x, int &y,
+                                   int &debug) {
     Mat frame(height_i, width_i, CV_8UC1, (uchar *) frame_i);
     Point2d shift = Frame_processor(frame);
 

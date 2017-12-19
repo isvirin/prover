@@ -52,10 +52,16 @@ public class CameraControllerBase {
 
     public final ListenerList<SwypeCodeConfirmedListener> swypeCodeConfirmed
             = new ListenerList<>(handler, SwypeCodeConfirmedListener::onSwypeCodeConfirmed);
+
+    public volatile boolean enableScreenLog;
     private ScreenLogger screenLogger;
 
     public void setScreenLogger(ScreenLogger screenLogger) {
+        if (this.screenLogger != null) {
+            this.screenLogger.removeFromParent();
+        }
         this.screenLogger = screenLogger;
+        enableScreenLog = screenLogger != null;
     }
 
     public void addToScreenLog(CharSequence text) {
@@ -63,7 +69,9 @@ public class CameraControllerBase {
             if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
                 screenLogger.addText(text);
             } else {
-                handler.post(() -> screenLogger.addText(text));
+                handler.post(() -> {
+                    if (screenLogger != null) screenLogger.addText(text);
+                });
             }
         }
     }

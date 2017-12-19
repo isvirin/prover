@@ -171,7 +171,11 @@ public:
      */
     void init(double sourceAspectRatio, int detectorWidth, int detectorHeight);
 
-    void setSwype(std::string swype);// setting the swype code
+    /**
+     * set swype code
+     * @param swype
+     */
+    void setSwype(std::string swype);
 
     /**
      *
@@ -190,18 +194,18 @@ public:
                           int &debug);
     // frame - pointer to a buffer with a frame
     // state - state S
-    // index - if state==2, the index  of the last entered swype number
-    // x - if state==2, the X coordinate for visualisation
-    // y - if state==2, the Y coordinate for visualisation
+    // index - if state==3, the index  of the last entered swype number
+    // x - if state==3, the X coordinate for visualisation
+    // y - if state==3, the Y coordinate for visualisation
 private:
-
     void SetDetectorSize(int detectorWidth, int detectorHeight);
+
+    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
+
+    cv::Point2d Frame_processor(cv::Mat &frame_i);
 
     //External data
     std::vector<int> swype_Numbers;//we have swype code or we will wait swype code
-
-    //Internal data
-    cv::UMat frame1; //previous frame
 
     int S; //state S
     int count_num; //Number of the correctly entered swype-numbers
@@ -209,11 +213,6 @@ private:
     cv::UMat buf1ft;
     cv::UMat buf2ft;
     cv::UMat hann;
-
-    cv::Point2d Frame_processor(cv::Mat &frame_i);
-
-
-    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
 
     SwypeStepDetector _swipeStepDetector;
     SwipeCircleDetector _circleDetector;

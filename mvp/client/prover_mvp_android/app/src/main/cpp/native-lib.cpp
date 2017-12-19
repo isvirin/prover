@@ -3,6 +3,35 @@
 #include "swype_detect.h"
 #include "common.h"
 
+void parseRowPaddedPlane(const unsigned char *frameData, unsigned int width, unsigned int height,
+                         unsigned int rowStride, unsigned char *dest) {
+    int i = 0;
+    if (frameData == dest) {
+        frameData += rowStride;
+        dest += width;
+        i = 1;
+    }
+    for (; i < height; i++) {
+        memcpy(dest, frameData, width);
+        frameData += rowStride;
+        dest += width;
+    }
+}
+
+void parsePixelPaddedPlane(const unsigned char *frameData, unsigned int width, unsigned int height,
+                           unsigned int rowStride, unsigned int pixelStride,
+                           unsigned char *dest) {
+    for (int row = 0; row < height; row++) {
+        const unsigned char *srcPos = frameData;
+        for (int col = 0; col < width; col++) {
+            *dest = *srcPos;
+            ++dest;
+            srcPos += pixelStride;
+        }
+        frameData += rowStride;
+    }
+}
+
 extern "C" {
 
 JNIEXPORT jlong JNICALL
@@ -40,11 +69,11 @@ Java_io_prover_provermvp_detector_ProverDetector_setSwype(JNIEnv *env, jobject i
 }
 
 JNIEXPORT void JNICALL
-Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21(
-        JNIEnv *env, jobject instance,
-        jlong nativeHandler,
-        jbyteArray frameData_, jint width,
-        jint height, jintArray result_) {
+Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21(JNIEnv *env, jobject instance,
+                                                                 jlong nativeHandler,
+                                                                 jbyteArray frameData_, jint width,
+                                                                 jint height, jint timestamp,
+                                                                 jintArray result_) {
 
     SwypeDetect *detector = (SwypeDetect *) nativeHandler;
     jbyte *frameData = env->GetByteArrayElements(frameData_, NULL);
@@ -53,54 +82,56 @@ Java_io_prover_provermvp_detector_ProverDetector_detectFrameNV21(
     static long counter = 0;
     LOGI_NATIVE("start frame detection %ld", counter);
 
-    int state = 0, index = 0, x = 0, y = 0, d = 0;
-
-    detector->processFrame_new((const unsigned char *) frameData, width, height, 0, state, index, x,
-                               y, d);
-    res[0] = static_cast<jint>(state);
-    res[1] = static_cast<jint>(index);
-    res[2] = static_cast<jint>(x);
-    res[3] = static_cast<jint>(y);
-    res[4] = static_cast<jint>(d);
-//    LOGI_NATIVE("done frame detection %ld", counter++);
+    detector->processFrame_new((const unsigned char *) frameData, width, height, (uint) timestamp,
+                               res[0], res[1], res[2], res[3], res[4]);
 
     env->ReleaseIntArrayElements(result_, res, JNI_COMMIT_AND_RELEASE);
     env->ReleaseByteArrayElements(frameData_, frameData, JNI_ABORT);
 }
 
-JNIEXPORT jlong JNICALL
-Java_io_prover_provermvp_detector_ProverDetector_detectFrameY_18Buf(JNIEnv *env, jobject instance,
-                                                                    jlong nativeHandler,
-                                                                    jobject planeY, jint width,
-                                                                    jint height, jint timestamp,
-                                                                    jintArray result_) {
+JNIEXPORT void JNICALL
+Java_io_prover_provermvp_detector_ProverDetector_detectFrameY_18BufStrided(JNIEnv *env,
+                                                                           jobject instance,
+                                                                           jlong nativeHandler,
+                                                                           jobject planeY,
+                                                                           jint rowStride,
+                                                                           jint pixelStride,
+                                                                           jint width, jint height,
+                                                                           jint timestamp,
+                                                                           jintArray result_) {
     jint *res = env->GetIntArrayElements(result_, NULL);
-    SwypeDetect *detector = (SwypeDetect *) nativeHandler;
 
-    const unsigned char *frameData = (unsigned char *) env->GetDirectBufferAddress(planeY);
+    int rowWidth = width * pixelStride;
+    int rowPadding = rowStride - rowWidth;
+    int pixelPadding = pixelStride - 1;
+    jlong extectedBufferSize = height * rowStride - rowPadding - pixelPadding;
     jlong len = env->GetDirectBufferCapacity(planeY);
-    jlong expectedLength = width * height;
 
-
-    if (len < expectedLength) {
-        LOGE_NATIVE("detector buffers sizes: %zd, expected: %zd", len, expectedLength);
+    if (len < extectedBufferSize) {
+        LOGE_NATIVE("detector buffers sizes: %zd, expected: %zd", len, extectedBufferSize);
         res[0] = static_cast<jint>(len);
-        res[1] = static_cast<jint>(expectedLength);
+        res[1] = static_cast<jint>(extectedBufferSize);
         env->ReleaseIntArrayElements(result_, res, JNI_COMMIT_AND_RELEASE);
-        return 0;
+        return;
     }
 
-    int state = 0, index = 0, x = 0, y = 0, d = 0;
+    unsigned char *frameData = (unsigned char *) env->GetDirectBufferAddress(planeY);
 
-    detector->processFrame_new(frameData, width, height, (uint) timestamp, state, index, x, y, d);
-    res[0] = state;
-    res[1] = index;
-    res[2] = x;
-    res[3] = y;
-    res[4] = d;
+    if (rowStride > width) {
+        if (pixelStride == 1) {
+            parseRowPaddedPlane(frameData, (unsigned int) width, (unsigned int) height,
+                                (unsigned int) rowStride, frameData);
+        } else {
+            parsePixelPaddedPlane(frameData, (unsigned int) width, (unsigned int) height,
+                                  (unsigned int) rowStride, (unsigned int) pixelStride, frameData);
+        }
+    }
 
-    env->ReleaseIntArrayElements(result_, res, 0);
-    return d;
+    SwypeDetect *detector = (SwypeDetect *) nativeHandler;
+    detector->processFrame_new(frameData, width, height, (uint) timestamp, res[0], res[1], res[2],
+                               res[3], res[4]);
+
+    env->ReleaseIntArrayElements(result_, res, JNI_COMMIT_AND_RELEASE);
 }
 
 JNIEXPORT void JNICALL

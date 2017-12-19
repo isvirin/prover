@@ -2,13 +2,17 @@ package io.prover.provermvp.viewholder;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.prover.provermvp.R;
@@ -30,7 +34,6 @@ public class ScreenLogger {
         lp.bottomToTop = R.id.bottomControlsLayout;
         root.addView(textView, lp);
         textView.setGravity(Gravity.BOTTOM);
-        textView.setText(new SpannableStringBuilder());
         textView.setMaxWidth((int) (res.getDisplayMetrics().widthPixels * 0.85f));
 
         int color = res.getColor(R.color.controlsBgColor);
@@ -40,6 +43,10 @@ public class ScreenLogger {
         int pad = (int) (res.getDisplayMetrics().density * 4);
         textView.setPadding(pad, pad, pad, pad);
         textView.setAlpha(0.6f);
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append("Screen Log");
+        builder.setSpan(new StyleSpan(Typeface.BOLD), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(builder);
     }
 
     private static int nextEndLine(CharSequence text, TextPaint tp, int start, int maxWidth) {
@@ -76,7 +83,7 @@ public class ScreenLogger {
         if (maxHeight > 0 && lineHeight > 0) {
             TextPaint tp = textView.getPaint();
             int maxWidth = getMaxTextWidth();
-            int maxLines = maxHeight / lineHeight;
+            int maxLines = maxHeight / lineHeight - 1;
             int lineCount = 0;
             int cutoffIndex = 0;
             int index = 0;
@@ -90,7 +97,12 @@ public class ScreenLogger {
                 }
             }
             if (cutoffIndex > 0) {
-                builder.replace(0, cutoffIndex, "");
+                int start = 0;
+                StyleSpan[] spans = builder.getSpans(0, builder.length(), StyleSpan.class);
+                if (spans != null && spans.length > 0) {
+                    start = builder.getSpanEnd(spans[0]) + 1;
+                }
+                builder.replace(start, cutoffIndex, "");
             }
         }
         if (builder.length() > 0 && builder.charAt(builder.length() - 1) == '\n')
@@ -117,5 +129,12 @@ public class ScreenLogger {
         maxHeight -= belowView.getBottom();
         ConstraintLayout.LayoutParams lp = (ConstraintLayout.LayoutParams) textView.getLayoutParams();
         return maxHeight - textView.getTotalPaddingTop() - textView.getTotalPaddingBottom() - lp.topMargin - lp.bottomMargin;
+    }
+
+    public void removeFromParent() {
+        ViewGroup parent = (ViewGroup) textView.getParent();
+        if (parent != null) {
+            parent.removeView(textView);
+        }
     }
 }

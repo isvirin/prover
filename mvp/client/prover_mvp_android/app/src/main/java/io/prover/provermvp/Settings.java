@@ -12,6 +12,4 @@ public interface Settings {
     boolean FAKE_SWYPE_CODE = BuildConfig.DEBUG;
 
     boolean SHOW_RENDERER_PREVIEW = false;
-
-    boolean ENABLE_SCREEN_LOG = false;
 }

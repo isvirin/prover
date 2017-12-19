@@ -22,7 +22,7 @@ import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.ScreenLogger;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
@@ -51,11 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         new BalanceStatusHolder(contentRoot, cameraController);
 
 
-        if (Settings.ENABLE_SCREEN_LOG) {
-            ScreenLogger logger = new ScreenLogger(contentRoot);
-            cameraController.setScreenLogger(logger);
-        }
-        findViewById(R.id.infoButton).setOnClickListener(this);
+        View infoButton = findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(this);
+        infoButton.setOnLongClickListener(this);
     }
 
     @Override
@@ -125,5 +123,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new InfoDialog(this).show();
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.infoButton:
+                if (cameraController != null) {
+                    if (cameraController.enableScreenLog) {
+                        cameraController.setScreenLogger(null);
+                    } else {
+                        ConstraintLayout contentRoot = findViewById(R.id.contentRoot);
+                        ScreenLogger logger = new ScreenLogger(contentRoot);
+                        cameraController.setScreenLogger(logger);
+                    }
+                }
+                return true;
+        }
+        return false;
     }
 }
