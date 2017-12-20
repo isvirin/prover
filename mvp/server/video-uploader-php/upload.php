@@ -132,6 +132,8 @@ function worker()
                 $swype = 0;
                 $beginSwypeTime = 0;
                 $endSwypeTime = 0;
+                $transaction1_details = json_decode(json_encode($transaction));
+                $transaction2_details = [];
 
                 $submitMediaHash_block = getBlockByHash($gethClient, $transaction->blockHash);
                 $requestSwypeCode_block = [];
@@ -165,6 +167,7 @@ function worker()
                     ) {
                         if ($transactionDetails->input === TRANSACTIONBYHASH_CORRECT_INPUT) {
                             if ($transactionDetails->blockHash) {
+                                $transaction2_details = json_decode(json_encode($transactionDetails));
                                 $analyticResult = callAnalyticProgramm($transactionDetails->blockHash, $transactionDetails->hash);
                                 $validated = $analyticResult['validated'];
                                 $swype = $analyticResult['swype'];
@@ -176,6 +179,8 @@ function worker()
                 }
 
                 $transactions[] = [
+                    'transaction1_details' => $transaction1_details,
+                    'transaction2_details' => $transaction2_details,
                     'senderAddress' => $senderAddress,
                     'validated' => $validated,
                     'submitMediaHash_block' => $submitMediaHash_block,
