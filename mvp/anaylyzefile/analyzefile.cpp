@@ -12,6 +12,8 @@ extern "C"
 #include "VideoFileReader.h"
 #include "ImageProcessor.h"
 #include "swype_detect.h"
+#include "sha256.h"
+
 
 bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
 {
@@ -95,17 +97,144 @@ std::string rotateSwypeCode(const std::string &swype, int rotation)
         abort();
 }
 
+bool parseHash(std::string hashstr, uint8_t *outbuf)
+{
+    if(hashstr.compare(0, 2, "0x")==0)
+        hashstr=hashstr.substr(2);
+
+    if(hashstr.size()!=64)
+        return false;
+
+    for(const char *p=hashstr.c_str(); *p; p+=2)
+    {
+        char twochar[3]={*p, *(p+1), '\0'};
+        char *endp;
+        *outbuf++=strtoul(twochar, &endp, 16);
+        if(endp!=twochar+2)
+            return false;
+    }
+
+    return true;
+}
+
+std::string calculateSwypeCode(const std::string &txhash, const std::string &blockhash, unsigned int modulo)
+{
+    uint8_t bytes[32+32];
+    if(!parseHash(txhash, bytes+32) || !parseHash(blockhash, bytes+0))
+    {
+        return std::string();
+    }
+
+    uint8_t hash[32];
+    sha256_simple(hash, bytes, 64);
+
+    unsigned int swypeid=0;
+    for(unsigned int i=0; i<32; ++i)
+    {
+        swypeid=(swypeid*256+hash[i])%modulo;
+    }
+
+    std::string swypecode="5";
+    unsigned int m=1;
+    while(m<modulo)
+    {
+        static const int neighbours[9][9]=
+        {
+            {3, 2, 4, 5},
+            {5, 1, 3, 4, 5, 6},
+            {3, 2, 5, 6},
+            {5, 1, 2, 5, 7, 8},
+            {8, 1, 2, 3, 4, 6, 7, 8, 9},
+            {5, 2, 3, 5, 8, 9},
+            {3, 4, 5, 8},
+            {5, 4, 5, 6, 7, 9},
+            {3, 5, 6, 8}
+        };
+
+        int curpt=swypecode.back()-'0';
+        int nc=neighbours[curpt-1][0];
+        int nextpt=neighbours[curpt-1][1+swypeid*nc/modulo];
+
+        m*=nc;
+        swypeid=(swypeid*nc)%modulo;
+
+        swypecode.push_back('0'+nextpt);
+    }
+
+    return swypecode;
+}
+
 int main(int argc, char *argv[])
 {
-    if(argc<=2)
+    static const struct option long_options[]=
+    {
+        {"width",     required_argument, 0, 'w'},
+        {"height",    required_argument, 0, 'h'},
+        {"swype",     required_argument, 0,  0 }, // #2
+        {"txhash",    required_argument, 0,  0 }, // #3
+        {"blockhash", required_argument, 0,  0 }, // #4
+        {0,           0,                 0,  0 }
+    };
+
+    int opt;
+    int option_index;
+
+    int scaleWidth=320;
+    int scaleHeight=240;
+
+    std::string swypecode;
+    std::string txhash;
+    std::string blockhash;
+
+    while((opt=getopt_long(argc, argv, "w:h:", long_options, &option_index))!=-1)
+    {
+        switch(opt)
+        {
+        case 'w':
+            scaleWidth=atoi(optarg);
+            break;
+        case 'h':
+            scaleHeight=atoi(optarg);
+            break;
+        case 0:
+            switch(option_index)
+            {
+            case 2:
+                swypecode=optarg;
+                break;
+            case 3:
+                txhash=optarg;
+                break;
+            case 4:
+                blockhash=optarg;
+                break;
+            }
+            break;
+        case '?':
+            break;
+        }
+    }
+
+    if(swypecode.empty() && (txhash.empty() || blockhash.empty()))
         return 1;
+
+    if(optind>=argc)
+        return 1;
+
+    std::string filename=argv[optind];
+
+    if(swypecode.empty())
+    {
+        swypecode=calculateSwypeCode(txhash, blockhash, 27000);
+    }
 
 //    av_log_set_level(48);
     av_register_all();
     avcodec_register_all();
     avfilter_register_all();
 
-    VideoFileReader reader(argv[1], true);
+    std::cerr<<"Opening file "<<filename<<"\n";
+    VideoFileReader reader(filename.c_str(), true);
     if(!reader.isValid())
         return 2;
 
@@ -113,8 +242,8 @@ int main(int argc, char *argv[])
     unsigned int sourceHeight=reader.getCodecParameters()->height;
     int pixelFormat=reader.getCodecParameters()->format;
     const AVRational *timeBase=reader.getTimeBase();
-    unsigned int targetWidth=(sourceWidth>sourceHeight)?320:240;
-    unsigned int targetHeight=320*240/targetWidth;
+    unsigned int targetWidth=(sourceWidth>sourceHeight)?scaleWidth:scaleHeight;
+    unsigned int targetHeight=scaleWidth*scaleHeight/targetWidth;
 
     ImageProcessor processor(
         sourceWidth,
@@ -141,7 +270,7 @@ int main(int argc, char *argv[])
     avcodec_open2(codecctx, codec, NULL);
 
     int rc;
-    
+
     rc=avcodec_parameters_to_context(codecctx, reader.getCodecParameters());
     if(rc<0)
     {
@@ -149,17 +278,16 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    std::string swype=argv[2];
-    fprintf(stderr, "Specified swype-code: %s\n", swype.c_str());
-    swype=rotateSwypeCode(swype, (int)floor(reader.getOrientationAngle()));
-    fprintf(stderr, "Transformed swype-code: %s\n", swype.c_str());
+    fprintf(stderr, "Specified swype-code: %s\n", swypecode.c_str());
+    swypecode=rotateSwypeCode(swypecode, (int)floor(reader.getOrientationAngle()));
+    fprintf(stderr, "Transformed swype-code: %s\n", swypecode.c_str());
 
     SwypeDetect detector;
     detector.init(
         (double)sourceWidth/(double)sourceHeight,
         targetWidth,
         targetHeight);
-    detector.setSwype(swype);
+    detector.setSwype(swypecode);
 
     int64_t swypeBeginTimestamp=-1;
     int64_t swypeEndTimestamp=-1;
