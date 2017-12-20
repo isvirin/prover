@@ -50,7 +50,9 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
             try {
                 SubmitVideoHashResponce responce = postTransaction(METHOD, "hex=0x", null);
                 session.increaseNonce();
-                listener.onNetworkRequestDone(this, responce);
+                if (!cancelled) {
+                    listener.onNetworkRequestDone(this, responce);
+                }
             } catch (FixableEtheriumExcetion e) {
                 if (debugData != null) {
                     debugData.setException(e).log();
@@ -72,10 +74,10 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
 
     @Override
     protected Transaction createTransaction() {
-        byte[] gasLimit = BigInteger.valueOf(GAS_LIMIT).toByteArray();
-        byte[] operation = BigInteger.valueOf(SUDMIT_VIDEO_FILE_DATA).toByteArray();
+        byte[] gasLimit = toUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
+        byte[] operation = toUnsignedByteArray(BigInteger.valueOf(SUDMIT_VIDEO_FILE_DATA));
         byte[] data = Arrays.concatenate(operation, videoFileHash, responce1.hashBytes);
-        byte[] nonce = session.getNonce().toByteArray();
+        byte[] nonce = toUnsignedByteArray(session.getNonce());
         Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;

@@ -130,14 +130,9 @@
 
 #pragma once
 
-#define Minimal_circle_area 40
-#define Minimal_shift_radius 2
-#define Swype_radius 0.4
-#define Swipe_Distance 0.25
-#define Time_to_state_3 2
+#define MIN_SHIFT_RADIUS 0.016
 #define PAUSE_TO_STATE_3_MS 1500
 #define TIME_PER_EACH_SWIPE_STEP 2000
-#define Time_swipe 5
 
 #ifdef __ANDROID_API__
 #define MAX_DETECTOR_DEVIATION 0.25
@@ -168,16 +163,19 @@ public:
 
     ~SwypeDetect();
 
-    void init(int fps_e, std::string swype);
+    /**
+     *
+     * @param sourceAspectRatio - aspect ratio (width / height) of original video
+     * @param detectorWidth - detector frame width, px
+     * @param detectorHeight - detector frame height, px
+     */
+    void init(double sourceAspectRatio, int detectorWidth, int detectorHeight);
 
-    void setSwype(std::string swype);// setting the swype code
-    void processFrame(cv::Mat frame, int &state, int &index, int &x, int &y, int &debug);
-
-    void
-    processFrame(const unsigned char *frame_i, int width_i, int height_i, int &state, int &index,
-                 int &x, int &y, int &debug);
-
-    void Reset(void);
+    /**
+     * set swype code
+     * @param swype
+     */
+    void setSwype(std::string swype);
 
     /**
      *
@@ -196,63 +194,35 @@ public:
                           int &debug);
     // frame - pointer to a buffer with a frame
     // state - state S
-    // index - if state==2, the index  of the last entered swype number
-    // x - if state==2, the X coordinate for visualisation
-    // y - if state==2, the Y coordinate for visualisation
+    // index - if state==3, the index  of the last entered swype number
+    // x - if state==3, the X coordinate for visualisation
+    // y - if state==3, the Y coordinate for visualisation
 private:
+    void SetDetectorSize(int detectorWidth, int detectorHeight);
+
+    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
+
+    cv::Point2d Frame_processor(cv::Mat &frame_i);
 
     //External data
     std::vector<int> swype_Numbers;//we have swype code or we will wait swype code
-    int fps;
-
-    //Internal data
-    cv::UMat frame1; //previous frame
-    std::vector<cv::Point2d> Delta; //dynamic array of moving camera
 
     int S; //state S
-    int call; //Number of the frame processing function calls
     int count_num; //Number of the correctly entered swype-numbers
-    std::vector<int> Swype_Numbers_Get; //the entered numbers of the swype code
-    std::vector<int> DirectionS; //directions array
-    int Dir_count[8];
-    cv::Point2d D_coord;
-    int Direction;
-    bool fl_dir;
-    int Dir_m;
-    cv::Point2d D_coord_new;
 
-    std::vector<cv::Point2d> koord_Sw_points;
     cv::UMat buf1ft;
     cv::UMat buf2ft;
     cv::UMat hann;
 
-    std::vector<cv::Point2d> Shift_arr;
-
-    int CircleDetection(void);
-
-    std::vector<cv::Point2d> Koord_Swipe_Points(int width, int height);
-
-    void Delta_Calculation(cv::Point2d shift);
-
-    void Swype_Data(int Dir);
-
-    cv::Point2d Frame_processor(cv::Mat &frame_i);
-
-    cv::Point2d Frame_processor1(cv::Mat &frame_i);
-
-    void S1_processor(void);
-
-    std::vector<double> S_L_define(cv::Point2d a, cv::Point2d b);
-
-    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
-
-    VectorExplained _currentShift;
     SwypeStepDetector _swipeStepDetector;
     SwipeCircleDetector _circleDetector;
-    uint _stateStartTime = 0;
     uint _maxStateEndTime = 0;
 
     bool _tickTock = false;
+
+    double _videoAspect = 0.0;
+    int _detectorWidth = 0;
+    int _detecttorHeight = 0;
+    double _xMult = 0.0;
+    double _yMult = 0.0;
 };
-
-

@@ -1,20 +1,19 @@
 package io.prover.provermvp.controller;
 
-import android.hardware.Camera;
-import android.media.Image;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
+
+import org.ethereum.crypto.ECKey;
 
 import java.io.File;
 import java.util.List;
 
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.transport.NetworkRequest;
+import io.prover.provermvp.detector.SwypeDetectorHandler;
+import io.prover.provermvp.transport.NetworkHolder;
+import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
@@ -23,54 +22,11 @@ import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
  * Created by babay on 17.11.2017.
  */
 
-public class CameraController {
+public class CameraController extends CameraControllerBase {
 
-    public final Handler handler = new Handler(Looper.getMainLooper());
-
-    public final ListenerList2<OnPreviewStartListener, List<Size>, Size> previewStart
-            = new ListenerList2<>(handler, OnPreviewStartListener::onPreviewStart);
-
-    public final ListenerList2<OnFrameAvailableListener, byte[], Camera> frameAvailable
-            = new ListenerList2<>(handler, OnFrameAvailableListener::onFrameAvailable);
-
-    public final ListenerList1<OnFrameReleasedListener, byte[]> frameReleased
-            = new ListenerList1<>(handler, OnFrameReleasedListener::onFrameReleased);
-
-    public final ListenerList1<OnFrameAvailable2Listener, Frame> frameAvailable2
-            = new ListenerList1<>(handler, OnFrameAvailable2Listener::onFrameAvailable);
-
-    public final ListenerList2<OnRecordingStartListener, Float, Size> onRecordingStart
-            = new ListenerList2<>(handler, OnRecordingStartListener::onRecordingStart);
-
-    public final ListenerList2<OnRecordingStopListener, File, Boolean> onRecordingStop
-            = new ListenerList2<>(handler, OnRecordingStopListener::onRecordingStop);
-
-    public final ListenerList1<NetworkRequestStartListener, NetworkRequest> onNetworkRequestStart
-            = new ListenerList1<>(handler, NetworkRequestStartListener::onNetworkRequestStart);
-
-    public final ListenerList2<NetworkRequestDoneListener, NetworkRequest, Object> onNetworkRequestDone
-            = new ListenerList2<>(handler, NetworkRequestDoneListener::onNetworkRequestDone);
-
-    public final ListenerList2<NetworkRequestErrorListener, NetworkRequest, Exception> onNetworkRequestError
-            = new ListenerList2<>(handler, NetworkRequestErrorListener::onNetworkRequestError);
-
-    public final ListenerList2<OnDetectionStateCahngedListener, DetectionState, DetectionState> detectionState
-            = new ListenerList2<>(handler, OnDetectionStateCahngedListener::onDetectionStateChanged);
-
-    public final ListenerList2<OnSwypeCodeSetListener, String, String> swypeCodeSet
-            = new ListenerList2<>(handler, OnSwypeCodeSetListener::onSwypeCodeSet);
-
-    public final ListenerList1<OnDetectorPauseChangedListener, Boolean> swypeDetectionPause
-            = new ListenerList1<>(handler, OnDetectorPauseChangedListener::onDetectorPauseChanged);
-
-    public final ListenerList2<OnFpsUpdateListener, Float, Float> fpsUpdateListener
-            = new ListenerList2<>(handler, OnFpsUpdateListener::OnFpsUpdate);
-
-    public final ListenerList<SwypeCodeConfirmedListener> swypeCodeConfirmed
-            = new ListenerList<>(handler, SwypeCodeConfirmedListener::onSwypeCodeConfirmed);
-
-    public final NetworkDelegate networkDelegate = new NetworkDelegate();
+    public final NetworkHolder networkHolder;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 10);
+    boolean resumed;
     private boolean recording;
     private SwypeStateHelperHolder swypeStateHelperHolder;
     private volatile float detectorFps;
@@ -78,24 +34,38 @@ public class CameraController {
     private String swypeCode;
     private String actualSwypeCode;
     private long videoStartTime;
+    private SwypeDetectorHandler swypeDetectorHandler;
 
-    public CameraController() {
+    public CameraController(Context context) {
+        Etherium etherium = Etherium.getInstance(context);
+        ECKey key = etherium.getKey();
+        networkHolder = new NetworkHolder(key, this);
     }
 
     public boolean isRecording() {
         return recording;
     }
 
-    public void onRecordingStart(float averageFps, Size detectorSize, int orientationHint) {
+    public void onRecordingStart(Size detectorSize, Size videoSize, int orientationHint) {
         recording = true;
         this.orientationHint = orientationHint;
-        onRecordingStart.postNotifyEvent(averageFps, detectorSize);
+        onRecordingStart.postNotifyEvent();
         videoStartTime = System.currentTimeMillis();
+        swypeDetectorHandler = SwypeDetectorHandler.newHandler(videoSize, detectorSize, this);
+    }
+
+    public void beforeRecordingStop() {
+        SwypeDetectorHandler sdh = swypeDetectorHandler;
+        if (sdh != null) {
+            sdh.quitSync();
+            swypeDetectorHandler = null;
+        }
     }
 
     public void onRecordingStop(File file) {
         recording = false;
         boolean isVideoConfirmed = swypeStateHelperHolder.isVideoConfirmed();
+        actualSwypeCode = swypeCode = null;
         onRecordingStop.postNotifyEvent(file, isVideoConfirmed);
     }
 
@@ -113,16 +83,8 @@ public class CameraController {
         swypeCodeSet.postNotifyEvent(swypeCode, actualSwypeCode);
     }
 
-    public void setSwypeDetectorPaused(boolean paused) {
-        swypeDetectionPause.notifyEvent(paused);
-    }
-
     public void onDetectorFpsUpdate(float fps) {
         detectorFps = fps;
-    }
-
-    public float getDetectorFps() {
-        return detectorFps;
     }
 
     public int getOrientationHint() {
@@ -145,11 +107,16 @@ public class CameraController {
         return fpsCounter.getAvgFps();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void onFrameAvailable(Image image) {
-        Frame frame = Frame.obtain();
-        frame.setImage(image, (int) (System.currentTimeMillis() - videoStartTime));
-        frameAvailable2.postNotifyEvent(frame);
+    public void onFrameAvailable(Frame frame) {
+        SwypeDetectorHandler sdh = swypeDetectorHandler;
+        if (sdh == null) {
+            frame.recycle();
+        } else if (sdh.isAlive()) {
+            frame.setTimeStamp((int) (System.currentTimeMillis() - videoStartTime));
+            sdh.onFrameAvailable(frame);
+        } else {
+            swypeDetectorHandler = null;
+        }
     }
 
     public void onPreviewStart(List<Size> cameraResolutions, Size mVideoSize) {
@@ -157,89 +124,20 @@ public class CameraController {
         videoStartTime = System.currentTimeMillis();
     }
 
-    public void onFrameAvailable(byte[] data, Camera camera) {
-        frameAvailable.postNotifyEvent(data, camera);
-    }
-
     public void onSwypeCodeConfirmed() {
         swypeCodeConfirmed.postNotifyEvent();
     }
 
-
-
-
-
-    public interface OnPreviewStartListener {
-        void onPreviewStart(@NonNull List<Size> sizes, @NonNull Size previewSize);
+    public void onResume() {
+        resumed = true;
+        networkHolder.doHello();
+        handler.postDelayed(() -> {
+            if (resumed) networkHolder.doHello();
+        }, 30_000);
     }
 
-    public interface OnFrameAvailableListener {
-        void onFrameAvailable(byte[] data, Camera camera);
+    public void onPause() {
+        resumed = false;
     }
 
-    public interface OnFrameAvailable2Listener {
-        void onFrameAvailable(Frame frame);
-    }
-
-    public interface OnFpsUpdateListener {
-        void OnFpsUpdate(float fps, float processorFps);
-    }
-
-    public interface OnFrameReleasedListener {
-        void onFrameReleased(byte[] data);
-    }
-
-    public interface OnRecordingStartListener {
-        void onRecordingStart(float fps, Size detectorSize);
-    }
-
-    public interface OnRecordingStopListener {
-        void onRecordingStop(File file, boolean isVideoConfirmed);
-    }
-
-    public interface NetworkRequestStartListener {
-        void onNetworkRequestStart(NetworkRequest request);
-    }
-
-    public interface NetworkRequestDoneListener {
-        void onNetworkRequestDone(NetworkRequest request, Object responce);
-    }
-
-    public interface NetworkRequestErrorListener {
-        void onNetworkRequestError(NetworkRequest request, Exception e);
-    }
-
-    public interface OnDetectionStateCahngedListener {
-        void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState);
-    }
-
-    public interface OnSwypeCodeSetListener {
-        void onSwypeCodeSet(String swypeCode, String actualSwypeCode);
-    }
-
-    public interface OnDetectorPauseChangedListener {
-        void onDetectorPauseChanged(boolean isPaused);
-    }
-
-    public interface SwypeCodeConfirmedListener {
-        void onSwypeCodeConfirmed();
-    }
-
-
-    private class NetworkDelegate implements NetworkRequest.NetworkRequestListener {
-        @Override
-        public void onNetworkRequestStart(NetworkRequest request) {
-            onNetworkRequestStart.postNotifyEvent(request);
-        }
-
-        @Override
-        public void onNetworkRequestDone(NetworkRequest request, Object responce) {
-            onNetworkRequestDone.postNotifyEvent(request, responce);
-        }
-
-        @Override
-        public void onNetworkRequestError(NetworkRequest request, Exception e) {
-            onNetworkRequestError.postNotifyEvent(request, e);
-        }
-    }
 }

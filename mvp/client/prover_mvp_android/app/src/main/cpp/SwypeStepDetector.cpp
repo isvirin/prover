@@ -31,11 +31,9 @@ void SwypeStepDetector::Reset() {
     _isDiagonal = false;
 }
 
-void SwypeStepDetector::Configure(int width, int height, double speedMult, double maxDeviation,
-                                  double attraction) {
-    int size = width < height ? width : height;
-    _speedMultX = 2.0 / size * speedMult;
-    _speedMultY = 2.0 / size * speedMult;
+void SwypeStepDetector::Configure(double speedMult, double maxDeviation, double attraction) {
+    _speedMultX = speedMult;
+    _speedMultY = speedMult;
     _maxDeviation = maxDeviation;
     _attraction = attraction;
 }

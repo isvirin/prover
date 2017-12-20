@@ -4,12 +4,11 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import io.prover.provermvp.controller.CameraController;
@@ -20,18 +19,16 @@ import io.prover.provermvp.viewholder.CameraControlsHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder2;
 import io.prover.provermvp.viewholder.ICameraViewHolder;
+import io.prover.provermvp.viewholder.ScreenLogger;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
-import io.prover.provermvp.viewholder.SwypeViewHolder;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
-    CameraController cameraController = new CameraController();
+    private CameraController cameraController;
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
-    private BalanceStatusHolder balanceStatusHolder;
-    private SwypeViewHolder swypeViewHolder;
     private boolean resumed;
     private boolean started;
 
@@ -39,9 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cameraController = new CameraController(this);
         setContentView(R.layout.activity_main);
         FrameLayout cameraContainer = findViewById(R.id.cameraContainer);
-        ViewGroup contentRoot = findViewById(R.id.contentRoot);
+        ConstraintLayout contentRoot = findViewById(R.id.contentRoot);
 
         if (Settings.USE_CAMERA_2)
             cameraHolder = new CameraViewHolder2(contentRoot, this, cameraController);
@@ -50,13 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         cameraControlsHolder = new CameraControlsHolder(this, contentRoot, cameraHolder, cameraController);
         swypeStateHelperHolder = new SwypeStateHelperHolder(contentRoot, cameraController);
-        balanceStatusHolder = new BalanceStatusHolder(contentRoot, cameraController);
-        swypeViewHolder = new SwypeViewHolder(findViewById(R.id.swypeView), cameraController);
+        new BalanceStatusHolder(contentRoot, cameraController);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().hide();
-        findViewById(R.id.infoButton).setOnClickListener(this);
+
+        View infoButton = findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(this);
+        infoButton.setOnLongClickListener(this);
     }
 
     @Override
@@ -85,16 +82,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
+        cameraController.onPause();
         cameraHolder.onPause(this);
-        cameraControlsHolder.onPause();
         resumed = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        cameraController.onResume();
         cameraHolder.onResume(this);
-        cameraControlsHolder.onResume();
         resumed = true;
     }
 
@@ -126,5 +123,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new InfoDialog(this).show();
                 break;
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.infoButton:
+                if (cameraController != null) {
+                    if (cameraController.enableScreenLog) {
+                        cameraController.setScreenLogger(null);
+                    } else {
+                        ConstraintLayout contentRoot = findViewById(R.id.contentRoot);
+                        ScreenLogger logger = new ScreenLogger(contentRoot);
+                        cameraController.setScreenLogger(logger);
+                    }
+                }
+                return true;
+        }
+        return false;
     }
 }

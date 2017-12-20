@@ -105,7 +105,9 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     public void onPause(Activity activity) {
         resumed = false;
         //surfacesHolder.onPause();
-        cancelRecording();
+        if (cameraController.isRecording()) {
+            finishRecording();
+        }
         myCamera.closeCamera();
         stopBackgroundThread();
     }
@@ -181,10 +183,12 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     @Override
     public void finishRecording() {
         Runnable r = () -> {
+            cameraController.beforeRecordingStop();
             myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
-            myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
+            if (resumed)
+                myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
             videoFile = null;
         };
@@ -194,7 +198,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     }
 
     @Override
-    public boolean startRecording(Activity activity, float averageFps) {
+    public boolean startRecording(Activity activity) {
         if (!surfacesHolder.textureView.isAvailable() || null == myCamera.getVideoSize() || mBackgroundThread == null || !mBackgroundThread.isAlive()) {
             return false;
         }
@@ -202,7 +206,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             try {
                 prepareMediaRecorder();
                 SurfaceTexture texture = surfacesHolder.textureView.getSurfaceTexture();
-                myCamera.startVideoRecordingSession(texture, mMediaRecorder, averageFps, mBackgroundHandler, activity);
+                myCamera.startVideoRecordingSession(texture, mMediaRecorder, mBackgroundHandler, activity);
                 foregroundHandler.post(() -> {
                     mRoot.setKeepScreenOn(true);
                     screenOrientationLock.lockScreenOrientation(activity);
@@ -232,6 +236,8 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     @Override
     public void cancelRecording() {
         if (mMediaRecorder != null && cameraController.isRecording()) {
+            cameraController.beforeRecordingStop();
+            myCamera.stopVideoSession();
             stopRecording();
             cameraController.onRecordingStop(videoFile);
             videoFile.delete();
@@ -260,7 +266,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
+    public void onRecordingStart() {
         mMediaRecorder.start();
     }
 

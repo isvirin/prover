@@ -1,10 +1,7 @@
 package io.prover.provermvp.viewholder;
 
-import android.hardware.Camera;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +13,13 @@ import java.util.Locale;
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.R;
 import io.prover.provermvp.Settings;
-import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.transport.RequestSwypeCode1;
 import io.prover.provermvp.transport.responce.LowFundsException;
-import io.prover.provermvp.util.Frame;
 
 import static io.prover.provermvp.detector.DetectionState.State.Confirmed;
-import static io.prover.provermvp.detector.DetectionState.State.GotProverNoCode;
 import static io.prover.provermvp.detector.DetectionState.State.Waiting;
 
 /**
@@ -34,13 +27,11 @@ import static io.prover.provermvp.detector.DetectionState.State.Waiting;
  */
 
 public class SwypeStateHelperHolder implements
-        CameraController.OnFrameAvailableListener,
-        CameraController.OnFrameAvailable2Listener,
         CameraController.NetworkRequestErrorListener,
         CameraController.OnRecordingStartListener,
         CameraController.OnRecordingStopListener,
         CameraController.NetworkRequestStartListener,
-        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener, CameraController.SwypeCodeConfirmedListener {
+        CameraController.OnDetectionStateCahngedListener, CameraController.OnSwypeCodeSetListener {
     private final ViewGroup root;
     private final TextView statsText;
     private final CameraController cameraController;
@@ -48,7 +39,6 @@ public class SwypeStateHelperHolder implements
     private String swype;
     private String actualSwype;
     private String swypeStatus;
-    private SwypeDetectorHandler detectorHandler;
 
     public SwypeStateHelperHolder(ViewGroup root, CameraController cameraController) {
         this.root = root;
@@ -56,15 +46,13 @@ public class SwypeStateHelperHolder implements
         this.cameraController = cameraController;
         statsText.bringToFront();
         cameraController.setSwypeStateHelperHolder(this);
-        cameraController.frameAvailable.add(this);
-        cameraController.frameAvailable2.add(this);
+
         cameraController.onNetworkRequestStart.add(this);
         cameraController.onNetworkRequestError.add(this);
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
         cameraController.detectionState.add(this);
         cameraController.swypeCodeSet.add(this);
-        cameraController.swypeCodeConfirmed.add(this);
         statsText.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
     }
 
@@ -73,9 +61,6 @@ public class SwypeStateHelperHolder implements
         String stateStr = String.format(Locale.getDefault(), "%d, %d, %d, %d, %d", state.state.ordinal(), state.index, state.x, state.y, state.d);
         setStatusText(stateStr);
         latestState = state.state;
-        if (state.state == GotProverNoCode && swype != null && detectorHandler != null) {
-            detectorHandler.sendSetSwype(swype);
-        }
     }
 
     private void setStatusText(String stateText) {
@@ -125,43 +110,13 @@ public class SwypeStateHelperHolder implements
     }
 
     @Override
-    public void onRecordingStart(float fps, Size detectorSize) {
-        detectorHandler = SwypeDetectorHandler.newHandler((int) fps, swype, cameraController);
+    public void onRecordingStart() {
         setSwypeStatus("not requesting");
     }
 
     @Override
     public void onRecordingStop(File file, boolean isVideoConfirmed) {
         setSwype(null, null);
-        if (detectorHandler != null) {
-            detectorHandler.sendQuit();
-            detectorHandler = null;
-        }
-    }
-
-    @Override
-    public void onFrameAvailable(byte[] data, Camera camera) {
-        if (detectorHandler != null) {
-            Camera.Parameters params = camera.getParameters();
-            Camera.Size size = params.getPreviewSize();
-            if (!detectorHandler.sendProcesstFrame(data, size.width, size.height)) {
-                cameraController.frameReleased.postNotifyEvent(data);
-            }
-        } else {
-            cameraController.frameReleased.postNotifyEvent(data);
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onFrameAvailable(Frame frame) {
-        if (detectorHandler != null) {
-            if (!detectorHandler.sendProcesstFrame(frame)) {
-                frame.recycle();
-            }
-        } else {
-            frame.recycle();
-        }
     }
 
     @Override
@@ -188,15 +143,5 @@ public class SwypeStateHelperHolder implements
     @Override
     public void onSwypeCodeSet(String swypeCode, String actualSwypeCode) {
         setSwype(swypeCode, actualSwypeCode);
-    }
-
-    @Override
-    public void onSwypeCodeConfirmed() {
-        cameraController.handler.postDelayed(() -> {
-            if (detectorHandler != null) {
-                detectorHandler.sendQuit();
-                detectorHandler = null;
-            }
-        }, 1000);
     }
 }

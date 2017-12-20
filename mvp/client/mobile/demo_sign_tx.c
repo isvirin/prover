@@ -64,13 +64,42 @@ int main(int argc, char *argv[])
             free(result);
         }
     }
+    else if(argc==7 && strcmp(argv[1], "submitMessage")==0)
+    {
+        uint8_t nonce[32];
+        uint8_t gasPrice[32];
+        uint8_t contract[20];
+        uint8_t privkey[32];
+        char *message;
+        uint8_t *result;
+        ssize_t size;
+
+        hex2bin_bigendian(argv[2], nonce, 32);
+        hex2bin_bigendian(argv[3], gasPrice, 32);
+        hex2bin(argv[4], contract, 20);
+        hex2bin(argv[5], privkey, 32);
+        message=argv[6];
+
+        size=build_submitMessage_tx(nonce, gasPrice, contract, message, privkey, &result);
+        if(size!=-1)
+        {
+            ssize_t i;
+            printf("0x");
+            for(i=0; i<size; ++i)
+                printf("%02x", result[i]);
+            printf("\n");
+            free(result);
+        }
+    }
     else
     {
         fprintf(
             stderr,
             "Usage:\n"
             "  %s requestSwypeCode NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY\n"
-            "  %s submitMediaHash NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MEDIA-HASH SWYPE-CODE-TX-HASH\n",
+            "  %s submitMediaHash NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MEDIA-HASH SWYPE-CODE-TX-HASH\n"
+            "  %s submitMessage NONCE GASPRICE CONTRACT-ADDRESS PRIVATE-KEY MESSAGE\n",
+            argv[0],
             argv[0],
             argv[0]);
         return 1;

@@ -53,9 +53,10 @@ public class RequestSwypeCode1 extends NetworkRequest<SwypeResponce1> {
 
     @Override
     protected Transaction createTransaction() {
-        byte[] gasLimit = BigInteger.valueOf(GAS_LIMIT).toByteArray();
-        byte[] data = BigInteger.valueOf(GENERATE_SWYPECODE_DATA).toByteArray();
-        Transaction transaction = new Transaction(session.getNonce().toByteArray(), session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
+        byte[] gasLimit = toUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
+        byte[] data = toUnsignedByteArray(BigInteger.valueOf(GENERATE_SWYPECODE_DATA));
+        byte[] nonce = toUnsignedByteArray(session.getNonce());
+        Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;
     }

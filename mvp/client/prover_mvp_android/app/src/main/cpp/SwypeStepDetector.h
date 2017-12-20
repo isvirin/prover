@@ -33,7 +33,7 @@ public:
      * @param height
      * @param speedMult
      */
-    void Configure(int width, int height, double speedMult, double maxDeviation, double attraction);
+    void Configure(double speedMult, double maxDeviation, double attraction);
 
     /**
      * configures for movement between adjacent swype points currentPoint to nextPoint

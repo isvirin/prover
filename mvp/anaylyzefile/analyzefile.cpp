@@ -124,8 +124,6 @@ int main(int argc, char *argv[])
         targetWidth,
         targetHeight);
 
-    //(int)floor(-reader.getOrientationAngle()));
-
     AVCodec *codec=avcodec_find_decoder(reader.getCodecParameters()->codec_id);
     if(!codec)
     {
@@ -151,14 +149,17 @@ int main(int argc, char *argv[])
         return 2;
     }
 
-    int fps=30;//formatctx->streams[videoStreamIndex]->avg_frame_rate.num/formatctx->streams[videoStreamIndex]->avg_frame_rate.den;
-
     std::string swype=argv[2];
     fprintf(stderr, "Specified swype-code: %s\n", swype.c_str());
     swype=rotateSwypeCode(swype, (int)floor(reader.getOrientationAngle()));
     fprintf(stderr, "Transformed swype-code: %s\n", swype.c_str());
+
     SwypeDetect detector;
-    detector.init(fps, swype);
+    detector.init(
+        (double)sourceWidth/(double)sourceHeight,
+        targetWidth,
+        targetHeight);
+    detector.setSwype(swype);
 
     int64_t swypeBeginTimestamp=-1;
     int64_t swypeEndTimestamp=-1;
@@ -183,15 +184,7 @@ int main(int argc, char *argv[])
             int state=-1, index=-1, x=-1, y=-1;
             int debug=-1;
 
-            unsigned char *pidorbuf=new unsigned char[3*frame->width*frame->height];
-            memset(pidorbuf, 0, 3*frame->width*frame->height);
-            memcpy(pidorbuf+frame->width*frame->height, frame->data[0], frame->width*frame->height);
-
-//            detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
-            detector.processFrame_new(pidorbuf+frame->width*frame->height, frame->width, frame->height, timestamp, state, index, x, y, debug);
-
-
-            delete [] pidorbuf;
+            detector.processFrame_new(frame->data[0], frame->width, frame->height, timestamp, state, index, x, y, debug);
 
             if(state==3 && swypeBeginTimestamp==-1)
                 swypeBeginTimestamp=timestamp;

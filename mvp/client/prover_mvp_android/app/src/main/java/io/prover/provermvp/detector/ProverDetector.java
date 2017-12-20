@@ -1,13 +1,15 @@
 package io.prover.provermvp.detector;
 
-import android.graphics.ImageFormat;
 import android.media.Image;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.nio.ByteBuffer;
+import java.util.Locale;
 
+import io.prover.provermvp.BuildConfig;
+import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
@@ -21,42 +23,32 @@ import static io.prover.provermvp.detector.DetectionState.State.Waiting;
  * Created by babay on 11.11.2017.
  */
 
-public class ProverDetector implements CameraController.OnDetectorPauseChangedListener {
+public class ProverDetector {
     static {
         System.loadLibrary("native-lib");
         System.loadLibrary("opencv_java3");
     }
 
     private final int[] detectionResult = new int[5];
-    private final long[] detectionResult2 = new long[5];
     private final CameraController cameraController;
     private final FrameRateCounter fpsCounter = new FrameRateCounter(60, 3);
     private final DetectorTimesCounter timesCounter = new DetectorTimesCounter(120);
-    DetectionState detectionState;
-    int initialFps;
-    int orientationHint;
-    boolean swypeCodeConfirmed = false;
+    long detectionTimeSum = 0;
+    int detectionCalls = 0;
+    private DetectionState detectionState;
+    private int orientationHint;
+    private boolean swypeCodeConfirmed = false;
     private long nativeHandler;
     private String swypeCode;
 
-
     public ProverDetector(CameraController cameraController) {
         this.cameraController = cameraController;
-        cameraController.swypeDetectionPause.add(this);
     }
 
-    public void init(int fps, int orientation, String swype) {
+    public void init(Size videoSize, Size detectorSize, int orientation) {
         this.orientationHint = orientation;
-        /*if (orientationHint == 180)
-            orientationHint = 0;
-        else if (orientation == 0) {
-            orientationHint = 180;
-        }*/
-        initialFps = fps;
-        if (swype != null)
-            swype = SwypeOrientationHelper.rotateSwypeCode(swype, orientationHint);
         if (nativeHandler == 0) {
-            nativeHandler = initSwype(fps, swype);
+            nativeHandler = initSwype(videoSize.ratio, detectorSize.width, detectorSize.height);
         }
     }
 
@@ -72,11 +64,7 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             return;
         }
 
-        float avgFrameTime = timesCounter.getAverageTime();
-        int fps = avgFrameTime == 0 ? initialFps : (int) (1000 / avgFrameTime);
-        fps = Math.min(initialFps, fps);
-        Log.d(TAG + "Detector", String.format("initialFps: %d, avgtime: %f, fps: %d", initialFps, avgFrameTime, fps));
-        setSwype(nativeHandler, swypeCode, fps);
+        setSwype(nativeHandler, swypeCode);
         if (sendNotification)
             cameraController.notifyActualSwypeCodeSet(swypeCode);
     }
@@ -86,45 +74,40 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
             releaseNativeHandler(nativeHandler);
         }
         nativeHandler = 0;
-        cameraController.swypeDetectionPause.remove(this);
-    }
-
-    public void detectFrame(byte[] frameData, int width, int height) {
-        if (nativeHandler != 0) {
-            long time = System.currentTimeMillis();
-            detectFrameNV21(nativeHandler, frameData, width, height, detectionResult);
-            timesCounter.add(System.currentTimeMillis() - time);
-            Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
-        }
-        cameraController.frameReleased.postNotifyEvent(frameData);
-        detectionDone();
+        Log.d(TAG, String.format("detect3 average detect time: %f", detectionTimeSum / (double) detectionCalls));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void detectFrame(Frame frame) {
-        Image image = frame.image;
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int format = image.getFormat();
-        boolean isD2 = false;
+        int width = frame.width;
+        int height = frame.height;
 
         if (nativeHandler != 0) {
             long time = System.currentTimeMillis();
-            Image.Plane[] planes = image.getPlanes();
-
-            if (format == ImageFormat.YV12) {
-                detectFrameNV21Buf(nativeHandler, planes[0].getBuffer(), width, height, detectionResult);
-            } else if (format == ImageFormat.YUV_420_888) {
-                isD2 = true;
-                detectFrameY_8Buf(nativeHandler, planes[0].getBuffer(), width, height, frame.timeStamp, detectionResult2);
+            if (frame.image != null) {
+                Image.Plane plane = frame.image.getPlanes()[0];
+                detectFrameY_8BufStrided(nativeHandler, plane.getBuffer(), plane.getRowStride(), plane.getPixelStride(), width, height, frame.timeStamp, detectionResult);
+            } else if (frame.data != null) {
+                detectFrameNV21(nativeHandler, frame.data, width, height, frame.timeStamp, detectionResult);
             }
+
             timesCounter.add(System.currentTimeMillis() - time);
-            Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
+            detectionTimeSum += (System.currentTimeMillis() - time);
+            detectionCalls++;
+            if (BuildConfig.DEBUG)
+                Log.d(TAG, "detection took: " + (System.currentTimeMillis() - time));
+            if (cameraController.enableScreenLog) {
+                int rowStride = frame.image == null ? width : frame.image.getPlanes()[0].getRowStride();
+                int pixelStride = frame.image == null ? width : frame.image.getPlanes()[0].getPixelStride();
+                int bufSize = frame.image == null ? frame.data.length : frame.image.getPlanes()[0].getBuffer().limit();
+                String text = String.format(Locale.getDefault(), "Detector: %dx%d=%d, f%d(%d,%d) %d,%d,%d,%d,%d, %d ms",
+                        width, height, bufSize, frame.format, rowStride, pixelStride,
+                        detectionResult[0], detectionResult[1], detectionResult[2], detectionResult[3], detectionResult[4],
+                        System.currentTimeMillis() - time);
+                cameraController.addToScreenLog(text);
+            }
         }
-        if (isD2)
-            detectionDone2();
-        else
-            detectionDone();
+        detectionDone();
     }
 
     private void detectionDone() {
@@ -147,43 +130,22 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
         }
     }
 
-    private void detectionDone2() {
-        if (detectionState == null || !detectionState.isEqualsArray(detectionResult2)) {
-            final DetectionState oldState = detectionState;
-            final DetectionState newState = new DetectionState(detectionResult2);
-            detectionState = newState;
-            cameraController.notifyDetectionStateChanged(oldState, newState);
-            if (oldState != null && oldState.state == InputCode && newState.state == Waiting) {
-                updateSwype(true);
-            }
-            if (detectionState != null && detectionState.state == Confirmed && !swypeCodeConfirmed) {
-                cameraController.onSwypeCodeConfirmed();
-                swypeCodeConfirmed = true;
-            }
-        }
-        float fps = fpsCounter.addFrame();
-        if (fps >= 0) {
-            cameraController.onDetectorFpsUpdate(fps);
-        }
-    }
-
     /**
      * initialize swype with specific fps and swype code
      *
-     * @param fps
-     * @param swype
-     * @return
+     * @param videoAspectRatio
+     * @param detectorWidth
+     * @param detectorHeight
      */
-    private native long initSwype(int fps, String swype);
+    private native long initSwype(float videoAspectRatio, int detectorWidth, int detectorHeight);
 
     /**
      * set swype code
      *
      * @param nativeHandler
      * @param swype
-     * @param fps
      */
-    private native void setSwype(long nativeHandler, String swype, int fps);
+    private native void setSwype(long nativeHandler, String swype);
 
 
     /**
@@ -194,17 +156,9 @@ public class ProverDetector implements CameraController.OnDetectorPauseChangedLi
      * @param height
      * @param result    -- an array with 4 items: State, Index, X, Y
      */
-    private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int[] result);
+    private native void detectFrameNV21(long nativeHandler, byte[] frameData, int width, int height, int timestamp, int[] result);
 
-    private native long detectFrameY_8Buf(long nativeHandler, ByteBuffer planeY, int width, int height, int timestamp, long[] result);
-
-    private native void detectFrameNV21Buf(long nativeHandler, ByteBuffer data, int width, int height, int[] result);
+    private native void detectFrameY_8BufStrided(long nativeHandler, ByteBuffer planeY, int rowStride, int pixelStride, int width, int height, int timestamp, int[] result);
 
     private native void releaseNativeHandler(long nativeHandler);
-
-    @Override
-    public void onDetectorPauseChanged(boolean isPaused) {
-        //this.isDetectionPaused = isPaused;
-        detectionState = null;
-    }
 }
