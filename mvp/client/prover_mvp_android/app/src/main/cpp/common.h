@@ -12,8 +12,8 @@
 #define LOGE_NATIVE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, APPNAME, __VA_ARGS__))
 
 #else
-#define LOGI_NATIVE(...) ((void)fprintf(stderr, __VA_ARGS__))
-#define LOGE_NATIVE(...) ((void)fprintf(stderr, __VA_ARGS__))
+#define LOGI_NATIVE(fmt, ...) ((void)fprintf(stderr, fmt "\n", __VA_ARGS__))
+#define LOGE_NATIVE(fmt, ...) ((void)fprintf(stderr, fmt "\n", __VA_ARGS__))
 
 #endif
 
