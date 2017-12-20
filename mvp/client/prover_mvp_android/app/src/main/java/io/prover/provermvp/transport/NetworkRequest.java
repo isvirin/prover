@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -162,6 +163,19 @@ public abstract class NetworkRequest<T> implements Runnable {
         }
 
         listener.onNetworkRequestError(this, ex);
+    }
+
+    protected byte[] toUnsignedByteArray(BigInteger value) {
+        byte[] arr = value.toByteArray();
+        int start = 0;
+        while (start < arr.length && arr[start] == 0) {
+            start++;
+        }
+        if (start == 0)
+            return arr;
+        byte[] result = new byte[arr.length - start];
+        System.arraycopy(arr, start, result, 0, result.length);
+        return result;
     }
 
     protected abstract T parse(String source) throws IOException, JSONException;
