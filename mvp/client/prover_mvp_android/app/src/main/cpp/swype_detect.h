@@ -130,7 +130,7 @@
 
 #pragma once
 
-#define MIN_SHIFT_RADIUS 0.016
+#define MIN_SHIFT_RADIUS 0.03
 #define PAUSE_TO_STATE_3_MS 1500
 #define TIME_PER_EACH_SWIPE_STEP 2000
 

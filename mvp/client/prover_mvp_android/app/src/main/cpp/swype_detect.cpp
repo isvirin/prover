@@ -85,8 +85,8 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained scaledShift;
     scaledShift.SetMul(shift, _xMult, _yMult);
     scaledShift._timestamp = timestamp;
-    if (logLevel > 0) {
-        LOGI_NATIVE("detect2 t%d shift (%f, %f), scaled (f, %f)", timestamp, shift.x, shift.y,
+    if (logLevel > 0 && scaledShift._mod >= MIN_SHIFT_RADIUS) {
+        LOGI_NATIVE("detect2 t%d shift (%f, %f), scaled (%f, %f)", timestamp, shift.x, shift.y,
                     scaledShift._x, scaledShift._y);
     }
 
