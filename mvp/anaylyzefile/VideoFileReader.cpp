@@ -50,7 +50,7 @@ VideoFileReader::VideoFileReader(const char *filename, bool h264toannexb) :
         formatctx->streams[videoStreamIndex],
         AV_PKT_DATA_DISPLAYMATRIX,
         NULL);
-    double orientationAngle=av_display_rotation_get(displaymatrix);
+    double orientationAngle=displaymatrix?av_display_rotation_get(displaymatrix):0.0;
 
     if(h264toannexb)
     {
