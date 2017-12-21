@@ -3,6 +3,8 @@
 using namespace cv;
 using namespace std;
 
+int logLevel = 0;
+
 SwypeDetect::SwypeDetect() // initialization
 {
     ocl::setUseOpenCL(true);

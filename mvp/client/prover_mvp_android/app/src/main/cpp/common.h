@@ -1,4 +1,3 @@
-
 #ifndef COMMON_C_
 #define COMMON_C_
 
@@ -16,6 +15,8 @@
 #define LOGE_NATIVE(fmt, ...) ((void)fprintf(stderr, fmt "\n", __VA_ARGS__))
 
 #endif
+
+extern int logLevel;
 
 #define JNI_COMMIT_AND_RELEASE 0
 

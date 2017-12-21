@@ -6,13 +6,13 @@ android {
         applicationId "io.prover.provermvp"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 21
-        versionName "1.0.5"
+        versionCode 27
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++14 -frtti -fexceptions"
+                cppFlags "-std=c++11 -frtti -fexceptions"
             }
         }
     }
@@ -91,7 +91,7 @@ android {
             }
         }//*/
 
-        armeabi_v7a {
+/*        armeabi_v7a {
             versionCode = android.defaultConfig.versionCode + 1
             dimension "main"
             ndk {

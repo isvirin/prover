@@ -19,6 +19,7 @@ void SwypeStepDetector::Add(VectorExplained shift) {
     }
 
     _current.Add(shift);
+    _current._timestamp = shift._timestamp;
     _count++;
 }
 
@@ -53,10 +54,21 @@ void SwypeStepDetector::FinishStep() {
     _count = 0;
     _current -= _target;
     _currentSwypePoint = _nextSwypePoint;
+
+    if (logLevel > 0) {
+        LOGI_NATIVE("detect2 FinishStep (%f %f) ", _current._x, _current._y);
+    }
 }
 
 int SwypeStepDetector::CheckState() {
     bool reachedBounds = _current._mod > (_isDiagonal ? _sqrt2 : 1.0);
+    double distance = _current.DistanceTo(_target);
+
+    if (logLevel > 0) {
+        LOGI_NATIVE("detect2 %d (%f %f) target (%f %f) distance %f max %f mod %f",
+                    _current._timestamp, _current._x, _current._y, _target._x, _target._y, distance,
+                    (_isDiagonal ? _sqrt2 : 1.0), _current._mod);
+    }
 
 #ifdef REQUIRE_REACH_BOUNDS
     if (reachedBounds) {
@@ -65,18 +77,22 @@ int SwypeStepDetector::CheckState() {
         return distance <= _targetRadius ? 1 : -1;
     }
 #else
-    double distance = _current.DistanceTo(_target);
-    if (distance <= _targetRadius)
+    if (distance <= _targetRadius) {
+        LOGI_NATIVE("detect2 reached ");
         return 1;
+    }
     if (reachedBounds) {
-        LOGI_NATIVE("detect2 failing (%f %f) target (%f %f) distance %f max %f mod %f", _current._x,
-                    _current._y,
-                    _target._x, _target._y, distance, (_isDiagonal ? _sqrt2 : 1.0), _current._mod);
+        LOGI_NATIVE("detect2 failing ");
         return -1;
     }
 #endif
 
     bool boundsCheckResult = _BoundsChecker.CheckBounds(_current);
+
+    if (!boundsCheckResult) {
+        LOGI_NATIVE("detect2 boundsCheck failing ");
+    }
+
     return boundsCheckResult ? 0 : -1;
 }
 
@@ -94,7 +110,8 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
 
     _isDiagonal = dx != 0 && dy != 0;
     _target.Set(dx, dy);
-    _targetRadius = _isDiagonal ? _maxDeviation * _sqrt2 : _maxDeviation;
+    //_targetRadius = _isDiagonal ? _maxDeviation * _sqrt2 : _maxDeviation;
+    _targetRadius = _maxDeviation;
     _nextSwypePoint = nextPoint + 1;
 
     _BoundsChecker.SetDirection(_target._direction);
