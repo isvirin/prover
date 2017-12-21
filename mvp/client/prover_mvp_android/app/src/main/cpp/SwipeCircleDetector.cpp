@@ -7,7 +7,7 @@
 
 void SwipeCircleDetector::AddShift(VectorExplained shift) {
     shifts_[pos_] = shift;
-    pos_ = ++pos_ % SHIFTS;
+    pos_ = (pos_ + 1) % SHIFTS;
     ++total_;
     if (total_ > SHIFTS)
         total_ = SHIFTS;
