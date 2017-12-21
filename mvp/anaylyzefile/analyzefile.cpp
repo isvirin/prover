@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     bool savePng=false;
     ::logLevel=0;
 
-    while((opt=getopt_long(argc, argv, "w:h:", long_options, &option_index))!=-1)
+    while((opt=getopt_long(argc, argv, "w:h:v", long_options, &option_index))!=-1)
     {
         switch(opt)
         {
