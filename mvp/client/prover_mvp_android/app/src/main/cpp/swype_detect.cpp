@@ -1,4 +1,5 @@
 #include "swype_detect.h"
+#include "common.h"
 
 using namespace cv;
 using namespace std;
@@ -30,6 +31,11 @@ void SwypeDetect::SetDetectorSize(int detectorWidth, int detectorHeight) {
     } else {
         _xMult = -2.0 / detectorWidth;
         _yMult = -2.0 / detectorHeight * _videoAspect;
+    }
+
+    if (logLevel > 0) {
+        LOGI_NATIVE("detect2 SetDetectorSize (%d, %d) sourceAspect %f, -> (%f, %f)", detectorWidth,
+                    detectorHeight, _videoAspect, _xMult, _yMult);
     }
 }
 
@@ -79,6 +85,10 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained scaledShift;
     scaledShift.SetMul(shift, _xMult, _yMult);
     scaledShift._timestamp = timestamp;
+    if (logLevel > 0) {
+        LOGI_NATIVE("detect2 t%d shift (%f, %f), scaled (f, %f)", timestamp, shift.x, shift.y,
+                    scaledShift._x, scaledShift._y);
+    }
 
     if (S == 0) {
         if (scaledShift._mod > MIN_SHIFT_RADIUS) {
