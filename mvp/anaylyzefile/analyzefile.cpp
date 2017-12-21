@@ -173,6 +173,7 @@ int main(int argc, char *argv[])
         {"swype",     required_argument, 0,  0 }, // #2
         {"txhash",    required_argument, 0,  0 }, // #3
         {"blockhash", required_argument, 0,  0 }, // #4
+        {"png",       no_argument,       0,  0 }, // #5
         {0,           0,                 0,  0 }
     };
 
@@ -185,6 +186,7 @@ int main(int argc, char *argv[])
     std::string swypecode;
     std::string txhash;
     std::string blockhash;
+    bool savePng=false;
 
     while((opt=getopt_long(argc, argv, "w:h:", long_options, &option_index))!=-1)
     {
@@ -207,6 +209,9 @@ int main(int argc, char *argv[])
                 break;
             case 4:
                 blockhash=optarg;
+                break;
+            case 5:
+                savePng=true;
                 break;
             }
             break;
@@ -304,11 +309,14 @@ int main(int argc, char *argv[])
             int64_t timestamp=frame->pts*1000*reader.getTimeBase()->num/reader.getTimeBase()->den;
 
             processor.processImage(frame);
-#if 0
-            char filename[20];
-            snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
-            debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
-#endif
+
+            if(savePng)
+            {
+                char filename[20];
+                snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
+                debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
+            }
+
             int state=-1, index=-1, x=-1, y=-1;
             int debug=-1;
 
