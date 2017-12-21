@@ -13,6 +13,7 @@ extern "C"
 #include "ImageProcessor.h"
 #include "swype_detect.h"
 #include "sha256.h"
+#include "common.h"
 
 
 bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsigned int height, const std::string &filename)
@@ -174,6 +175,7 @@ int main(int argc, char *argv[])
         {"txhash",    required_argument, 0,  0 }, // #3
         {"blockhash", required_argument, 0,  0 }, // #4
         {"png",       no_argument,       0,  0 }, // #5
+        {"verbose",   no_argument,       0, 'v'},
         {0,           0,                 0,  0 }
     };
 
@@ -187,6 +189,7 @@ int main(int argc, char *argv[])
     std::string txhash;
     std::string blockhash;
     bool savePng=false;
+    ::logLevel=0;
 
     while((opt=getopt_long(argc, argv, "w:h:", long_options, &option_index))!=-1)
     {
@@ -197,6 +200,9 @@ int main(int argc, char *argv[])
             break;
         case 'h':
             scaleHeight=atoi(optarg);
+            break;
+        case 'v':
+            ++::logLevel;
             break;
         case 0:
             switch(option_index)
