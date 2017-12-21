@@ -79,7 +79,7 @@ elif "txhash" in query_args:
 
     replyJson=json.loads(reply.read().decode("latin1"))
 
-    if "result" in replyJson and replyJson["result"] is not None and replyJson["result"]["blockHash"] is not None:
+    if "result" in replyJson and replyJson["result"] is not None and replyJson["result"]["blockHash"] not in [None, "0x"+64*"0"]:
         res={"result": replyJson["result"]["blockHash"]}
     else:
         res={"result": None}
