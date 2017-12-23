@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="proverLarge">M-8,-7 l9,0 a6,5.5 0,1,1 0,11 l-5.5,0 0,3 -3.5,0 0,-3 -3,0 0,-3.5 12,0 a2,2 0,1,0 0,-4 l-5.5,0 0,4 -3.5,0 z</string>
+    <string name="proverLargeDot">M9,5 m-2.5,0 a2.5,2.5 0,1 1,5 0 a2.5,2.5 0,1 1,-5 0</string>
+
+</resources>

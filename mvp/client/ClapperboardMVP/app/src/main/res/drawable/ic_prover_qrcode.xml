@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportHeight="30"
+    android:viewportWidth="30">
+
+    <path
+        android:fillColor="#484848"
+        android:pathData="M0,0 l30,0 0,30 -30,0z" />
+
+
+    <group
+        android:name="prover"
+        android:translateX="15"
+        android:translateY="16">
+
+        <path
+            android:fillColor="#e31e24"
+            android:pathData="@string/proverLargeDot" />
+
+        <path
+            android:pathData="M-6.23,7 l0,-13.7 7,0 a4.7,4.5 0,0,1 0,9 l-11.8,0"
+            android:strokeColor="#000"
+            android:strokeWidth="3.5" />
+
+    </group>
+
+</vector>

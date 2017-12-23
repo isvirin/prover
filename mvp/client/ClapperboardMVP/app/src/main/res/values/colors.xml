@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">@color/bgColorOpaque</color>
+    <color name="colorAccent">#e31e24</color>
+    <color name="colorAccent_50p">#80e31e24</color>
+    <color name="colorAccent_20p">#33e31e24</color>
+    <color name="bgWhite">#ffffff</color>
+    <color name="mainColor_minus400">@color/indigo_200</color>
+    <color name="mainColor_lightmost">@color/indigo_50</color>
+
+
+    <color name="indigo_200">#9FA8DA</color>
+    <color name="indigo_50">#E8EAF6</color>
+
+    <color name="controlsBgColor">#99111527</color>
+    <color name="bgColorOpaque">#111527</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="button_material_dark">#ff5a595b</color>
+    <color name="blackText">#DE000000</color>
+    <color name="disabledBlackText">#42000000</color>
+</resources>

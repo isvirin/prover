@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Clapperboard MVP</string>
+    <string name="action_settings">Settings</string>
+    <string name="cantFindApp">Cant find app to open file</string>
+    <string name="offline">Offline</string>
+    <string name="textHint">Type text</string>
+    <string name="get_qr_code">Get QR-code</string>
+
+    <string name="info">Info</string>
+    <string name="addressCopied">Address copied to clipboard</string>
+    <string name="accountInfoMessage">IMPORTANT: DO NOT SEND TOKENS TO THIS ADDRESS!\n\nSend only Ropsten Testnet ether to this deposit address. Sending tokens or any other currency, including Mainnet ether, to this address will result in the permanent loss of your deposit.</string>
+    <string name="walletAddress">Wallet address</string>
+</resources>

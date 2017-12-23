@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="50dp"
+    android:height="50dp"
+    android:viewportHeight="50"
+    android:viewportWidth="50">
+
+    <path
+        android:fillColor="#111527"
+        android:pathData="M25,25 m-25,0 a25,25 0,1 1,50 0 a25,25 0,1 1,-50 0" />
+
+    <group
+        android:name="progressBarContainer"
+        android:translateX="25"
+        android:translateY="25">
+        <path
+            android:name="progressBar"
+            android:pathData="M0,0 m-23,0 a23,23 0,1 1,46 0 a23,23 0,1 1,-46 0"
+            android:strokeColor="#e31e24"
+            android:strokeWidth="4" />
+    </group>
+
+    <group
+        android:name="prover"
+        android:translateX="25"
+        android:translateY="25">
+
+        <path
+            android:fillColor="#e31e24"
+            android:pathData="@string/proverLargeDot" />
+
+        <path
+            android:fillColor="#ffffff"
+            android:pathData="@string/proverLarge" />
+
+    </group>
+
+</vector>
