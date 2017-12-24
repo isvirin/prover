@@ -7,7 +7,7 @@
 
     <group
         android:name="prover"
-        android:translateX="15"
+        android:translateX="16"
         android:translateY="16">
 
         <path

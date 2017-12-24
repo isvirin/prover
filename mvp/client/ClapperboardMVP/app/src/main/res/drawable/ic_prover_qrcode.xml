@@ -9,10 +9,9 @@
         android:fillColor="#484848"
         android:pathData="M0,0 l30,0 0,30 -30,0z" />
 
-
     <group
         android:name="prover"
-        android:translateX="15"
+        android:translateX="16"
         android:translateY="16">
 
         <path

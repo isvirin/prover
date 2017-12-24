@@ -29,6 +29,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -181,6 +182,11 @@ public final class QrCode {
         Objects.requireNonNull(ecl);
         QrSegment seg = QrSegment.makeBytes(data);
         return encodeSegments(Arrays.asList(seg), ecl);
+    }
+
+    public static QrCode encodeNumeric(@NonNull String digits, @NonNull Ecc ecl) {
+        QrSegment segment = QrSegment.makeNumeric(digits);
+        return encodeSegments(Arrays.asList(segment), ecl);
     }
 
     /**

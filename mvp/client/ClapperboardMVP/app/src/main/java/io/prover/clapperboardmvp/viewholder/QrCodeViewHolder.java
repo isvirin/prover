@@ -9,14 +9,20 @@ import android.support.transition.ChangeBounds;
 import android.support.transition.Transition;
 import android.support.transition.TransitionManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.spongycastle.util.BigIntegers;
+
 import io.nayuki.qrcodegen.QrCode;
+import io.prover.clapperboardmvp.BuildConfig;
 import io.prover.clapperboardmvp.R;
 import io.prover.clapperboardmvp.transport.responce.HashResponce2;
+
+import static io.prover.clapperboardmvp.Const.TAG;
 
 /**
  * Created by babay on 23.12.2017.
@@ -44,7 +50,9 @@ public class QrCodeViewHolder {
         System.arraycopy(responce2.hashResponce1.hashBytes, 0, values, 0, 32);
         System.arraycopy(responce2.hashBytes, 0, values, 32, values.length - 32);
 
-        QrCode code = QrCode.encodeBinary(values, QrCode.Ecc.QUARTILE);
+        String digits = BigIntegers.fromUnsignedByteArray(values).toString(10);
+        QrCode code = QrCode.encodeNumeric(digits, QrCode.Ecc.QUARTILE);
+
         DisplayMetrics dm = root.getResources().getDisplayMetrics();
         int scrSize = Math.min(dm.widthPixels, dm.heightPixels);
         int pad = (int) (dm.density * 16);
@@ -57,6 +65,10 @@ public class QrCodeViewHolder {
         dr2.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
         Bitmap bitmap = code.toImage(scale, border, Bitmap.Config.ARGB_8888, dr, dr2);
         qrCodeImage.setImageBitmap(bitmap);
+
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format("set qr-code transaction: %s, block: %s", responce2.hashResponce1.hashString, responce2.hashString));
+        }
     }
 
     public void show() {

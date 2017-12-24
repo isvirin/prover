@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.UnknownHostException;
 import java.util.Locale;
 
 import io.prover.clapperboardmvp.R;
@@ -115,8 +116,13 @@ public class BalanceStatusHolder implements Controller.NetworkRequestDoneListene
 
         if (!(e instanceof TemporaryDenyException)) {
             Toast.makeText(root.getContext(), "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            if (controller.networkHolder.getTotalRequestsCounter() == 0)
-                setStatusIconOffline();
+            if (controller.networkHolder.getTotalRequestsCounter() == 0) {
+                if (e instanceof UnknownHostException) {
+                    setStatusIconOffline();
+                } else {
+                    setStatusIconOk();
+                }
+            }
             return;
         }
 
