@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string>
 #include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <algorithm>
 #include <map>
@@ -100,6 +101,7 @@ int main(int argc, char *argv[])
         {"width",     required_argument, 0,        'w'},
         {"height",    required_argument, 0,        'h'},
         {"png",       no_argument,       &savePng,  1 },
+        {"verbose",   no_argument,       0,        'v'},
         {0,           0,                 0,         0 }
     };
 
@@ -108,8 +110,9 @@ int main(int argc, char *argv[])
 
     int scaleWidth=320;
     int scaleHeight=240;
+    int verbosity=0;
 
-    while((opt=getopt_long(argc, argv, "w:h:", long_options, &option_index))!=-1)
+    while((opt=getopt_long(argc, argv, "w:h:v", long_options, &option_index))!=-1)
     {
         switch(opt)
         {
@@ -118,6 +121,9 @@ int main(int argc, char *argv[])
             break;
         case 'h':
             scaleHeight=atoi(optarg);
+            break;
+        case 'v':
+            ++verbosity;
             break;
         case '?':
             break;
@@ -189,6 +195,7 @@ int main(int argc, char *argv[])
     AVFrame *frame=av_frame_alloc();
 
     AVPacket *packet=av_packet_alloc();
+    unsigned long frameno=0;
     while(reader.readPacket(packet))
     {
         avcodec_send_packet(codecctx, packet);
@@ -199,14 +206,22 @@ int main(int argc, char *argv[])
 
             processor.processImage(frame);
 
+            if(frame->width!=frame->linesize[0])
+            {
+                for(int y=1; y<frame->height; ++y)
+                {
+                    std::memmove(frame->data[0]+y*frame->width, frame->data[0]+y*frame->linesize[0], frame->width);
+                }
+            }
+
             if(savePng)
             {
                 char filename[20];
-                snprintf(filename, 20, "%04d.%03d.png", timestamp/1000, timestamp%1000);
+                snprintf(filename, 20, "%04d.%03d.png", (int)(timestamp/1000), (int)(timestamp%1000));
                 debug_save_image_to_png(frame->data[0], frame->width, frame->height, filename);
             }
 
-            zbar::Image zimg(frame->width, frame->height, "GREY", frame->data[0], frame->linesize[0]*frame->height);
+            zbar::Image zimg(frame->width, frame->height, "GREY", frame->data[0], frame->width*frame->height);
 
             int res=imgscanner.scan(zimg);
 
@@ -215,11 +230,17 @@ int main(int argc, char *argv[])
             {
                 if(it->get_type()==zbar::ZBAR_QRCODE)
                 {
+                    if(verbosity>0)
+                    {
+                        fprintf(stderr, "Code detected at frame %lu (%04d.%03d): %s\n", frameno, (int)(timestamp/1000), (int)(timestamp%1000), it->get_data().c_str());
+                    }
                     std::vector<uint8_t> data=decodeNumber(it->get_data());
                     if(data.size()==46)
                         codes[data]++;
                 }
             }
+
+            ++frameno;
         }
         if(rc==AVERROR_EOF)
             break;
