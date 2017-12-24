@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdio>
 #include <iostream>
+#include <algorithm>
 #include <map>
 #include <vector>
 #include <zbar.h>
@@ -63,6 +64,32 @@ bool debug_save_image_to_png(const unsigned char *data, unsigned int width, unsi
     fclose(f);
 
     return true;
+}
+
+std::vector<uint8_t> decodeNumber(const std::string &s)
+{
+    std::vector<uint8_t> res;
+    res.reserve(46);
+    for(auto c: s)
+    {
+        if(c<'0' || c>'9')
+            return {};
+
+        unsigned int carry=c-'0';
+        for(uint8_t &byte: res)
+        {
+            unsigned int tmp=byte*10+carry;
+            byte=tmp%256;
+            carry=tmp/256;
+        }
+        if(carry)
+            res.push_back(carry);
+    }
+    res.resize(46, 0);
+
+    std::reverse(res.begin(), res.end());
+
+    return res;
 }
 
 int main(int argc, char *argv[])
@@ -157,7 +184,7 @@ int main(int argc, char *argv[])
     imgscanner.set_config(zbar::ZBAR_QRCODE, zbar::ZBAR_CFG_ENABLE, 1);
     imgscanner.set_config(zbar::ZBAR_QRCODE, zbar::ZBAR_CFG_MIN_LEN, 1);
 
-    std::map<std::string, unsigned int> codes;
+    std::map<std::vector<uint8_t>, unsigned int> codes;
 
     AVFrame *frame=av_frame_alloc();
 
@@ -186,9 +213,11 @@ int main(int argc, char *argv[])
             zbar::SymbolSet ss=imgscanner.get_results();
             for(zbar::SymbolIterator it=ss.symbol_begin(); it!=ss.symbol_end(); ++it)
             {
-                if(it->get_type()==zbar::ZBAR_QRCODE && it->get_data_length()==44)
+                if(it->get_type()==zbar::ZBAR_QRCODE)
                 {
-                    codes[it->get_data()]++;
+                    std::vector<uint8_t> data=decodeNumber(it->get_data());
+                    if(data.size()==46)
+                        codes[data]++;
                 }
             }
         }
@@ -201,7 +230,7 @@ int main(int argc, char *argv[])
 
     unsigned int mostFrequentCount=0;
     unsigned int totalCount=0;
-    std::string mostFrequentCode;
+    std::vector<uint8_t> mostFrequentCode;
 
     for(auto it=codes.begin(); it!=codes.end(); ++it)
     {
@@ -215,13 +244,13 @@ int main(int argc, char *argv[])
 
     if(totalCount>0)
     {
-        assert(mostFrequentCode.size()==44);
+        assert(mostFrequentCode.size()==46);
 
         std::printf("{\"txhash\":\"0x");
         for(unsigned int i=0; i<32; ++i)
             std::printf("%02x", (unsigned int)(uint8_t)mostFrequentCode[i]);
         std::printf("\", \"blockhash\":\"0x");
-        for(unsigned int i=0; i<12; ++i)
+        for(unsigned int i=0; i<14; ++i)
             std::printf("%02x", (unsigned int)(uint8_t)mostFrequentCode[32+i]);
         std::printf("\", \"weight\":%.3f}\n", (double)mostFrequentCount/(double)totalCount);
     }
