@@ -27,14 +27,14 @@ bool SwipeCircleDetector::IsCircle() {
         }
 
         sum.Add(shifts_[pos]);
-        if (sum._mod < MAX_DEVIATION && i > 5) {
+        if (sum._mod < _maxDeviation && i > 5) {
             double perimeter;
             double area = fabs(Area(i, perimeter));
             double areaByP2 = area / perimeter / perimeter;
             double areaByP2ToCircle = areaByP2 / Circle_S_by_P2;
             LOGI_NATIVE("detect2: %d vertices: %d, diff: %f, area: %f, areaByP2 to target: %f",
                         timestamp, i + 1, sum._mod, area, areaByP2 / Circle_S_by_P2);
-            if (fabs(area) >= MIN_CIRCLE_AREA && areaByP2ToCircle >= MIN_AREA_BY_P2_TO_CIRCLE)
+            if (fabs(area) >= _minCircleArea && areaByP2ToCircle >= _minAreaByP2toCircle)
                 return true;
         }
     }
@@ -56,4 +56,16 @@ double SwipeCircleDetector::Area(int amount, double &perimeter) {
         sumPrev = sum;
     }
     return area;
+}
+
+void SwipeCircleDetector::setRelaxed(bool relaxed) {
+    if (relaxed) {
+        _minCircleArea = MIN_CIRCLE_AREA_RELAXED;
+        _maxDeviation = MAX_DEVIATION_RELAXED;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_RELAXED;
+    } else {
+        _minCircleArea = MIN_CIRCLE_AREA_STRICT;
+        _maxDeviation = MAX_DEVIATION_STRICT;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_STRICT;
+    }
 }

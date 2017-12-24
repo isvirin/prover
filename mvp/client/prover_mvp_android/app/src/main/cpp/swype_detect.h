@@ -130,19 +130,14 @@
 
 #pragma once
 
-#define MIN_SHIFT_RADIUS 0.03
+#define VECTOR_WINDOW_START 0.025
+#define VECTOR_WINDOW_END 0.035
 #define PAUSE_TO_STATE_3_MS 1500
+#define PAUSE_TO_STATE_3_MS_PER_STEP 300
 #define TIME_PER_EACH_SWIPE_STEP 2000
 
-#ifdef __ANDROID_API__
-#define MAX_DETECTOR_DEVIATION 0.25
-
-#else
-
-#define MAX_DETECTOR_DEVIATION 0.27
-
-#endif
-
+#define MAX_DETECTOR_DEVIATION_RELAXED 0.28
+#define MAX_DETECTOR_DEVIATION_STRICT 0.25
 
 #include <opencv2/opencv.hpp>
 #include <vector>
@@ -192,6 +187,8 @@ public:
     void processFrame_new(const unsigned char *frame_i, int width_i, int height_i,
                           uint timestamp, int &state, int &index, int &x, int &y,
                           int &debug);
+
+    void setRelaxed(bool relaxed);
     // frame - pointer to a buffer with a frame
     // state - state S
     // index - if state==3, the index  of the last entered swype number
@@ -225,4 +222,5 @@ private:
     int _detecttorHeight = 0;
     double _xMult = 0.0;
     double _yMult = 0.0;
+    double _maxDetectorDeviation = MAX_DETECTOR_DEVIATION_RELAXED;
 };

@@ -20,6 +20,7 @@ SwypeDetect::~SwypeDetect() {
 void SwypeDetect::init(double sourceAspectRatio, int detectorWidth, int detectorHeight) {
     _videoAspect = sourceAspectRatio > 1 ? sourceAspectRatio : 1.0 / sourceAspectRatio;
     SetDetectorSize(detectorWidth, detectorHeight);
+    setRelaxed(true);
 }
 
 void SwypeDetect::SetDetectorSize(int detectorWidth, int detectorHeight) {
@@ -84,29 +85,39 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
 
     VectorExplained scaledShift;
     scaledShift.SetMul(shift, _xMult, _yMult);
-    scaledShift._timestamp = timestamp;
-    if (logLevel > 0 && scaledShift._mod >= MIN_SHIFT_RADIUS) {
-        LOGI_NATIVE("detect2 t%d shift (%f, %f), scaled (%f, %f)", timestamp, shift.x, shift.y,
-                    scaledShift._x, scaledShift._y);
+    VectorExplained windowedShift = scaledShift;
+    windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
+    windowedShift._timestamp = timestamp;
+    if (logLevel > 0 && windowedShift._mod >= 0) {
+        LOGI_NATIVE(
+                "detect2 t%d shift (%+6.2f,%+6.2f), scaled |%+.4f,%+.4f|=%.4f windowed |%+.4f,%+.4f|=%.4f",
+                timestamp, shift.x, shift.y,
+                scaledShift._x, scaledShift._y, scaledShift._mod,
+                windowedShift._x, windowedShift._y, windowedShift._mod);
     }
 
     if (S == 0) {
-        if (scaledShift._mod > MIN_SHIFT_RADIUS) {
-            _circleDetector.AddShift(scaledShift);
+        if (windowedShift._mod > 0) {
+            _circleDetector.AddShift(windowedShift);
             if (_circleDetector.IsCircle()) {
                 _circleDetector.Reset();
                 if (swype_Numbers.empty()) {
                     MoveToState(1, timestamp, 0);
                 } else {
-                    MoveToState(2, timestamp, PAUSE_TO_STATE_3_MS);
+                    MoveToState(2, timestamp,
+                                (uint) (PAUSE_TO_STATE_3_MS_PER_STEP * swype_Numbers.size()));
                 }
             }
         }
-        x = (int) (scaledShift._x * 1024);
-        y = (int) (scaledShift._y * 1024);
+        x = (int) (windowedShift._x * 1024);
+        y = (int) (windowedShift._y * 1024);
+    } else if (S == 1) {
+        if (!swype_Numbers.empty()) {
+            MoveToState(2, timestamp, (uint) (PAUSE_TO_STATE_3_MS_PER_STEP * swype_Numbers.size()));
+        }
     } else if (S == 2) {
         if (timestamp >= _maxStateEndTime) {
-            _swipeStepDetector.Configure(1.5, MAX_DETECTOR_DEVIATION, 4);
+            _swipeStepDetector.Configure(1.5, _maxDetectorDeviation, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
             count_num = 0;
             MoveToState(3, timestamp, TIME_PER_EACH_SWIPE_STEP * (uint) (swype_Numbers.size()));
@@ -114,8 +125,8 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     } else if (S == 3) {
         if (timestamp > _maxStateEndTime) {
             MoveToState(0, timestamp, 0);
-        } else if (scaledShift._mod > MIN_SHIFT_RADIUS) {
-            _swipeStepDetector.Add(scaledShift);
+        } else if (windowedShift._mod > 0) {
+            _swipeStepDetector.Add(windowedShift);
             int status = _swipeStepDetector.CheckState();
             if (status == 0) {}
             else if (status == 1) {
@@ -134,7 +145,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         x = (int) (_swipeStepDetector._current._x * 1024);
         y = (int) (_swipeStepDetector._current._y * 1024);
     } else if (S == 4) {
-        _swipeStepDetector.Add(scaledShift);
+        _swipeStepDetector.Add(windowedShift);
         x = (int) (_swipeStepDetector._current._x * 1024);
         y = (int) (_swipeStepDetector._current._y * 1024);
     }
@@ -145,4 +156,11 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
 void SwypeDetect::MoveToState(int state, uint currentTimestamp, uint maxStateDuration) {
     S = state;
     _maxStateEndTime = maxStateDuration == 0 ? (uint) -1 : currentTimestamp + maxStateDuration;
+}
+
+void SwypeDetect::setRelaxed(bool relaxed) {
+    _maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION_RELAXED
+                                    : MAX_DETECTOR_DEVIATION_STRICT;
+    _circleDetector.setRelaxed(relaxed);
+    _swipeStepDetector.setRelaxed(relaxed);
 }

@@ -26,6 +26,8 @@ public:
 
     void SetMul(cv::Point2d other, double mulX, double mulY);
 
+    void ApplyWindow(double windowStart, double windowEnd);
+
     virtual void Add(VectorExplained other);
 
     inline void Reset();
@@ -72,5 +74,6 @@ inline void VectorExplained::Reset() {
     _angle = 0;
     _direction = 0;
 }
+
 
 #endif //PROVER_MVP_ANDROID_VECTOREXPLAINED_H

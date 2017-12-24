@@ -12,16 +12,11 @@
 // FIT_FACTOR_H is for horizontal and vertical movement;
 // FIT_FACTOR_H is for diagonal
 
-#ifdef __ANDROID_API__
-#define FIT_FACTOR_H 0.6f
-#define FIT_FACTOR_D 0.53f
+#define FIT_FACTOR_H_STRICT 0.55f
+#define FIT_FACTOR_D_STRICT 0.53f
 
-#else
-
-#define FIT_FACTOR_H 0.61f
-#define FIT_FACTOR_D 0.54f
-
-#endif
+#define FIT_FACTOR_H_RELAXED 0.65f
+#define FIT_FACTOR_D_RELAXED 0.63f
 
 /**
  * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points
@@ -36,6 +31,8 @@ public:
 
     bool CheckBounds(Vector current);
 
+    void setRelaxed(bool relaxed);
+
 private:
 
     void SetTurnMatForDirectionDiff(int directionDiff);
@@ -44,6 +41,9 @@ private:
 
     bool _isDiagonal;
     double _turnMat[2][2];
+
+    double _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
+    double _fitFactorDiag = FIT_FACTOR_D_RELAXED;
 };
 
 

@@ -10,21 +10,16 @@
 
 #define SHIFTS 64
 
-#ifdef __ANDROID_API__
-
-#define MIN_CIRCLE_AREA 0.14
-#define MAX_DEVIATION 0.09
 #define MAX_CIRCLE_DURATION_MS 2500
-#define MIN_AREA_BY_P2_TO_CIRCLE 0.67
 
-#else
+#define MIN_CIRCLE_AREA_STRICT 0.14
+#define MAX_DEVIATION_STRICT 0.09
+#define MIN_AREA_BY_P2_TO_CIRCLE_STRICT 0.67
 
-#define MIN_CIRCLE_AREA 0.128
-#define MAX_DEVIATION 0.11
-#define MAX_CIRCLE_DURATION_MS 2600
-#define MIN_AREA_BY_P2_TO_CIRCLE 0.6
+#define MIN_CIRCLE_AREA_RELAXED 0.128
+#define MAX_DEVIATION_RELAXED 0.11
+#define MIN_AREA_BY_P2_TO_CIRCLE_RELAXED 0.6
 
-#endif
 
 class SwipeCircleDetector {
 public:
@@ -39,12 +34,18 @@ public:
 
     const double Circle_S_by_P2 = 0.25 / CV_PI;
 
+    void setRelaxed(bool relaxed);
+
 private:
     double Area(int amount, double &perimeter);
 
     VectorExplained shifts_[SHIFTS];
     int pos_ = 0;
     int total_ = 0;
+
+    double _minCircleArea = MIN_CIRCLE_AREA_RELAXED;
+    double _maxDeviation = MAX_DEVIATION_RELAXED;
+    double _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_RELAXED;
 };
 
 

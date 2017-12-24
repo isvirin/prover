@@ -121,3 +121,7 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
     return true;
 }
 
+void SwypeStepDetector::setRelaxed(bool relaxed) {
+    _BoundsChecker.setRelaxed(relaxed);
+}
+

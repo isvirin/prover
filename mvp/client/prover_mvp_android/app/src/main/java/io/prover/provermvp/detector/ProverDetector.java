@@ -100,9 +100,11 @@ public class ProverDetector {
                 int rowStride = frame.image == null ? width : frame.image.getPlanes()[0].getRowStride();
                 int pixelStride = frame.image == null ? width : frame.image.getPlanes()[0].getPixelStride();
                 int bufSize = frame.image == null ? frame.data.length : frame.image.getPlanes()[0].getBuffer().limit();
-                String text = String.format(Locale.getDefault(), "Detector: %dx%d=%d, f%d(%d,%d) %d,%d,%d,%d,%d, %d ms",
+                float dx = detectionResult[2] / 1024f;
+                float dy = detectionResult[3] / 1024f;
+                String text = String.format(Locale.getDefault(), "Detector: %dx%d=%d, f%d(%d,%d) %d,%d,%+.3f,%+.3f,%d, %d ms",
                         width, height, bufSize, frame.format, rowStride, pixelStride,
-                        detectionResult[0], detectionResult[1], detectionResult[2], detectionResult[3], detectionResult[4],
+                        detectionResult[0], detectionResult[1], dx, dy, detectionResult[4],
                         System.currentTimeMillis() - time);
                 cameraController.addToScreenLog(text);
             }

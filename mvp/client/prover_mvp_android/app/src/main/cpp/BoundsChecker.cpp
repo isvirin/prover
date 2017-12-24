@@ -3,6 +3,7 @@
 //
 
 #include "BoundsChecker.h"
+#include "common.h"
 
 void BoundsChecker::SetDirection(int targetDirection) {
     _isDiagonal = targetDirection % 2 == 0;
@@ -47,11 +48,19 @@ bool BoundsChecker::CheckBounds(Vector current) {
     double y = current._y;
 
     if (_isDiagonal) {
-        if (x < -FIT_FACTOR_H || y < -FIT_FACTOR_H)
+        if (x < -_fitFactorHoriz || y < -_fitFactorHoriz) {
+            if (logLevel > 0) {
+                LOGI_NATIVE("detect2 Bounds_f1 %.4f, %.4f", x, y);
+            }
             return false;
+        }
 
-        if (x + y <= 0)
+        if (x + y <= 0) {
+            if (logLevel > 0) {
+                LOGI_NATIVE("detect2 Bounds_f2 %.4f, %.4f", x, y);
+            }
             return true;
+        }
 
         if (y > x) {
             x = current._y;
@@ -62,9 +71,28 @@ bool BoundsChecker::CheckBounds(Vector current) {
         double d1 = (x - y) / _sqrt2;
         // distance to remaining non-target swipe point
         double r2 = current.DistanceTo(1, 0);
-
-        return d1 / FIT_FACTOR_D < r2 / (1 - FIT_FACTOR_D);
+        if (logLevel == 0)
+            return d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag);
+        else {
+            if (d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag))
+                return true;
+            if (logLevel > 0) {
+                LOGI_NATIVE("detect2 Bounds_f3 %.4f, %.4f, %f, %f", x, y, d1 / _fitFactorDiag,
+                            r2 / (1 - _fitFactorDiag));
+            }
+            return false;
+        }
     } else {
-        return x >= -FIT_FACTOR_H && fabs(y) <= FIT_FACTOR_H;
+        return x >= -_fitFactorHoriz && fabs(y) <= _fitFactorHoriz;
+    }
+}
+
+void BoundsChecker::setRelaxed(bool relaxed) {
+    if (relaxed) {
+        _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
+        _fitFactorDiag = FIT_FACTOR_D_RELAXED;
+    } else {
+        _fitFactorHoriz = FIT_FACTOR_H_STRICT;
+        _fitFactorDiag = FIT_FACTOR_D_STRICT;
     }
 }
