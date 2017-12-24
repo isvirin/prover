@@ -20,9 +20,8 @@
             android:pathData="@string/proverLargeDot" />
 
         <path
-            android:pathData="M-6.23,7 l0,-13.7 7,0 a4.7,4.5 0,0,1 0,9 l-11.8,0"
-            android:strokeColor="#000"
-            android:strokeWidth="3.5" />
+            android:fillColor="#ff000000"
+            android:pathData="@string/proverLarge2" />
 
     </group>
 

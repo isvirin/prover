@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:drawable="@drawable/ic_wallet_cross">
+
+    <target android:name="p1">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="trimPathStart"
+                    android:valueFrom="0.25"
+                    android:valueTo="0"
+                    android:valueType="floatType" />
+
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="1"
+                    android:valueTo="0.18305"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="p2">
+        <aapt:attr name="android:animation">
+            <set xmlns:android="http://schemas.android.com/apk/res/android">
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="trimPathStart"
+                    android:valueFrom="0"
+                    android:valueTo="0.72537"
+                    android:valueType="floatType" />
+
+                <objectAnimator
+                    android:duration="400"
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="0.637"
+                    android:valueTo="1"
+                    android:valueType="floatType" />
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target
+        android:name="p3"
+        android:animation="@animator/stroke_disappear_400" />
+
+</animated-vector>

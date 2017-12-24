@@ -16,6 +16,7 @@ import io.prover.clapperboardmvp.dialog.InfoDialog;
 import io.prover.clapperboardmvp.transport.NetworkRequest;
 import io.prover.clapperboardmvp.transport.RequestQrCodeFromText2;
 import io.prover.clapperboardmvp.transport.responce.HashResponce2;
+import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
 import io.prover.clapperboardmvp.util.ScreenOrientationLock;
 
 /**
@@ -28,11 +29,13 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
     final TextInputLayout textInputLayout;
     final Button getQrCodeButton;
     final TextView largeMessageView;
-    final FloatingActionButton fab;
+    final FabHolder fabHolder;
     private final BalanceStatusHolder balanceHolder;
     private final Activity activity;
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
     private final QrCodeViewHolder qrHolder;
+
+    private Mode mode = Mode.Initial;
 
     public ControlsViewHolder(Activity activity, Controller controller) {
         this.controller = controller;
@@ -49,8 +52,9 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
         controller.onNetworkRequestDone.add(this);
         controller.onNetworkRequestError.add(this);
 
-        fab = activity.findViewById(R.id.fab);
+        FloatingActionButton fab = activity.findViewById(R.id.fab);
         fab.setOnClickListener(this);
+        fabHolder = new FabHolder(fab);
     }
 
     @Override
@@ -58,13 +62,7 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
         switch (v.getId()) {
             case R.id.getQrCodeButton:
                 controller.networkHolder.submitMessageForQrCode(textInputLayout.getEditText().getText().toString());
-                largeMessageView.setText("Requesting code");
-                TransitionManager.beginDelayedTransition(contentRoot);
-                textInputLayout.setEnabled(false);
-                getQrCodeButton.setEnabled(false);
-                largeMessageView.setVisibility(View.VISIBLE);
-                fab.setImageResource(R.drawable.ic_close_black_24dp);
-                screenOrientationLock.lockScreenOrientation(activity);
+                setMode(Mode.ExpectingQrCode);
                 break;
 
             case R.id.fab:
@@ -73,17 +71,38 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
                 } else {
                     controller.networkHolder.cancelAllRequests();
                     controller.networkHolder.doHello();
-                    //TransitionManager.beginDelayedTransition(contentRoot);
-                    textInputLayout.setEnabled(true);
-                    getQrCodeButton.setEnabled(true);
-                    largeMessageView.setVisibility(View.GONE);
-                    textInputLayout.setVisibility(View.VISIBLE);
-                    getQrCodeButton.setVisibility(View.VISIBLE);
-                    fab.setImageResource(R.drawable.ic_wallet);
-
-                    qrHolder.hide();
-                    screenOrientationLock.unlockScreen(activity);
+                    setMode(Mode.Initial);
                 }
+                break;
+        }
+    }
+
+    private void setMode(Mode mode) {
+        this.mode = mode;
+        switch (mode) {
+            case Initial:
+                textInputLayout.setEnabled(true);
+                getQrCodeButton.setEnabled(true);
+                largeMessageView.setVisibility(View.GONE);
+                textInputLayout.setVisibility(View.VISIBLE);
+                getQrCodeButton.setVisibility(View.VISIBLE);
+                fabHolder.animCloseToWallet();
+                qrHolder.hide();
+                screenOrientationLock.unlockScreen(activity);
+                break;
+
+            case ExpectingQrCode:
+                largeMessageView.setText(R.string.requestingQrCode);
+                TransitionManager.beginDelayedTransition(contentRoot);
+                textInputLayout.setEnabled(false);
+                getQrCodeButton.setEnabled(false);
+                largeMessageView.setVisibility(View.VISIBLE);
+                fabHolder.animWalletToClose();
+                screenOrientationLock.lockScreenOrientation(activity);
+                break;
+
+            case ShowingQrCode:
+                qrHolder.show();
                 break;
         }
     }
@@ -92,12 +111,17 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
         if (request instanceof RequestQrCodeFromText2) {
             qrHolder.setCode((HashResponce2) responce, textInputLayout.getEditText().getText().toString());
-            qrHolder.show();
+            setMode(Mode.ShowingQrCode);
+            textInputLayout.getEditText().setText("");
         }
     }
 
     @Override
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
-
+        if (!(e instanceof TemporaryDenyException) && mode == Mode.ExpectingQrCode) {
+            controller.handler.postDelayed(() -> setMode(Mode.Initial), 400);
+        }
     }
+
+    private enum Mode {Initial, ExpectingQrCode, ShowingQrCode}
 }

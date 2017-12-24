@@ -12,6 +12,7 @@ import io.prover.clapperboardmvp.controller.Controller;
 import io.prover.clapperboardmvp.transport.responce.HashResponce;
 import io.prover.clapperboardmvp.transport.responce.HelloResponce;
 import io.prover.clapperboardmvp.transport.responce.SwypeResponce1;
+import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
 
 import static io.prover.clapperboardmvp.transport.NetworkRequest.TAG;
 
@@ -55,11 +56,22 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
     }
 
     public void submitMessageForQrCode(String message) {
-        new RequestQrCodeFromText1(networkSession, message, controller.networkDelegate).execute();
+
+        if (networkSession == null) {
+            doHello();
+            controller.handler.postDelayed(() -> {
+                if (networkSession != null)
+                    execNetworkRequest(new RequestQrCodeFromText1(networkSession, message, controller.networkDelegate));
+            }, 1000);
+        } else {
+            execNetworkRequest(new RequestQrCodeFromText1(networkSession, message, controller.networkDelegate));
+        }
     }
 
     @Override
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
+        if (request.cancelled)
+            return;
         onNetworkRequestFinished(request);
         if (request instanceof HelloRequest) {
             networkSession = new NetworkSession((HelloResponce) responce, key, networkSession);
@@ -80,7 +92,7 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
         if (request.cancelled)
             return;
-        if (request instanceof RequestSwypeCode2 || request instanceof RequestQrCodeFromText2) {
+        if (e instanceof TemporaryDenyException) {
             handler.postDelayed(request::execute, REPEAT_CHECK_TRANSACTION_TIMEOUT);
             Log.d(TAG, "postponed wait for transaction result");
         } else {

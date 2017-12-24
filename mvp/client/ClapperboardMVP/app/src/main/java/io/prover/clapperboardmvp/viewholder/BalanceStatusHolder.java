@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
@@ -19,6 +20,7 @@ import io.prover.clapperboardmvp.transport.NetworkRequest;
 import io.prover.clapperboardmvp.transport.RequestSwypeCode1;
 import io.prover.clapperboardmvp.transport.RequestSwypeCode2;
 import io.prover.clapperboardmvp.transport.responce.HelloResponce;
+import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
 
 
 /**
@@ -111,10 +113,19 @@ public class BalanceStatusHolder implements Controller.NetworkRequestDoneListene
         if (request instanceof RequestSwypeCode2)
             return;
 
+        if (!(e instanceof TemporaryDenyException)) {
+            Toast.makeText(root.getContext(), "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (controller.networkHolder.getTotalRequestsCounter() == 0)
+                setStatusIconOffline();
+            return;
+        }
+
         controller.handler.post(() -> {
             if (controller.networkHolder.getTotalRequestsCounter() == 0)
                 setStatusIconOk();
         });
+
+
     }
 
     @Override
