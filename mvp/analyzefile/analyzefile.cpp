@@ -316,6 +316,14 @@ int main(int argc, char *argv[])
 
             processor.processImage(frame);
 
+            if(frame->width!=frame->linesize[0])
+            {
+                for(int y=1; y<frame->height; ++y)
+                {
+                    std::memmove(frame->data[0]+y*frame->width, frame->data[0]+y*frame->linesize[0], frame->width);
+                }
+            }
+
             if(savePng)
             {
                 char filename[20];
