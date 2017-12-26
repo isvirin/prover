@@ -15,9 +15,6 @@
 #define FIT_FACTOR_H 0.55f
 #define FIT_FACTOR_D 0.53f
 
-#define FIT_FACTOR_H_RELAXED 0.65f
-#define FIT_FACTOR_D_RELAXED 0.63f
-
 /**
  * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points
  * based on a simple Voronoi diagram
@@ -42,8 +39,8 @@ private:
     bool _isDiagonal;
     double _turnMat[2][2];
 
-    double _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
-    double _fitFactorDiag = FIT_FACTOR_D_RELAXED;
+    double _fitFactorHoriz = FIT_FACTOR_H;
+    double _fitFactorDiag = FIT_FACTOR_D;
     double _fitFactorSum = -0.15;
 };
 

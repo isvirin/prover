@@ -136,10 +136,9 @@
 #define PAUSE_TO_ST3_MS_PER_STEP 300
 #define MS_PER_SWIPE_STEP 2000
 
-#define MAX_DETECTOR_DEVIATION_RELAXED 0.28
-#define MAX_DETECTOR_DEVIATION_STRICT 0.25
+#define MAX_DETECTOR_DEVIATION 0.25
 
-#define SERVER_TOLERANCE 0.2
+#define SERVER_TOLERANCE 0.4
 
 #include <opencv2/opencv.hpp>
 #include <vector>
@@ -224,5 +223,5 @@ private:
     int _detecttorHeight = 0;
     double _xMult = 0.0;
     double _yMult = 0.0;
-    double _maxDetectorDeviation = MAX_DETECTOR_DEVIATION_RELAXED;
+    double _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
 };

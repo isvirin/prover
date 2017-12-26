@@ -16,11 +16,6 @@
 #define MAX_DEVIATION 0.09
 #define MIN_AREA_BY_P2_TO_CIRCLE 0.67
 
-#define MIN_CIRCLE_AREA_RELAXED 0.128
-#define MAX_DEVIATION_RELAXED 0.11
-#define MIN_AREA_BY_P2_TO_CIRCLE_RELAXED 0.6
-
-
 class SwipeCircleDetector {
 public:
     void AddShift(VectorExplained shift);
@@ -43,9 +38,9 @@ private:
     int pos_ = 0;
     int total_ = 0;
 
-    double _minCircleArea = MIN_CIRCLE_AREA_RELAXED;
-    double _maxDeviation = MAX_DEVIATION_RELAXED;
-    double _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_RELAXED;
+    double _minCircleArea = MIN_CIRCLE_AREA;
+    double _maxDeviation = MAX_DEVIATION;
+    double _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE;
 };
 
 
