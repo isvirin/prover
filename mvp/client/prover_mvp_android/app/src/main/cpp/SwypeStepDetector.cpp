@@ -9,14 +9,14 @@ void SwypeStepDetector::Add(VectorExplained shift) {
     shift._x *= _speedMultX;
     shift._y *= _speedMultY;
 
-    double angle = fabs(shift.AngleTo(_target));
+    /*double angle = fabs(shift.AngleTo(_target));
     if (angle < MAX_ATTRACT_ANGLE) {
         shift._mod = shift.Length();
         //float attraction = angle/MAX_ATTRACT_ANGLE * CV_PI / 2
         double attraction = (MAX_ATTRACT_ANGLE - angle) / MAX_ATTRACT_ANGLE;
         attraction *= attraction * _attraction;
         shift.AttractTo(_target, attraction);
-    }
+    }*/
 
     _current.Add(shift);
     _current._timestamp = shift._timestamp;
