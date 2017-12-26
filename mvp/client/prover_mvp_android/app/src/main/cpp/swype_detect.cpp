@@ -167,7 +167,7 @@ void SwypeDetect::MoveToState(int state, uint timestamp) {
 }
 
 void SwypeDetect::setRelaxed(bool relaxed) {
-    _maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * (1 + SERVER_TOLERANCE)
+    _maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * 2
                                     : MAX_DETECTOR_DEVIATION;
     _circleDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
     _swipeStepDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
