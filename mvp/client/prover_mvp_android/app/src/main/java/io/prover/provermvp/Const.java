@@ -15,5 +15,5 @@ public interface Const {
     String SERVER_URL = "http://mvp.prover.io/cgi-bin/";
 
     //String[] FAKE_SWYPES = {"51236", "515953", "525478", "57896", "56541", "52587", "58521", "535153"};
-    String[] FAKE_SWYPES = {"58478458", "57851241", "59653657"};
+    String[] FAKE_SWYPES = {"57851241", "59653657", "5254569", "59848696"};
 }

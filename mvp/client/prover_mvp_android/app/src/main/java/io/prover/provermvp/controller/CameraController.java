@@ -50,7 +50,7 @@ public class CameraController extends CameraControllerBase {
         recording = true;
         this.orientationHint = orientationHint;
         onRecordingStart.postNotifyEvent();
-        videoStartTime = System.currentTimeMillis();
+        videoStartTime = -1; //System.currentTimeMillis();
         swypeDetectorHandler = SwypeDetectorHandler.newHandler(videoSize, detectorSize, this);
     }
 
@@ -112,6 +112,8 @@ public class CameraController extends CameraControllerBase {
         if (sdh == null) {
             frame.recycle();
         } else if (sdh.isAlive()) {
+            if (videoStartTime < 0)
+                videoStartTime = System.currentTimeMillis();
             frame.setTimeStamp((int) (System.currentTimeMillis() - videoStartTime));
             sdh.onFrameAvailable(frame);
         } else {

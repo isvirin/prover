@@ -80,6 +80,7 @@ private:
     const double _sqrt2 = sqrtf(2.0);
 
     BoundsChecker _BoundsChecker;
+    VectorExplained _total;
 };
 
 

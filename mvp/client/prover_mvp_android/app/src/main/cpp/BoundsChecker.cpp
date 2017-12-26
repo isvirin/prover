@@ -56,9 +56,6 @@ bool BoundsChecker::CheckBounds(Vector current) {
         }
 
         if (x + y <= _fitFactorSum) {
-            if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f2 %.4f, %.4f", x, y);
-            }
             return true;
         }
 
@@ -91,7 +88,7 @@ void BoundsChecker::setRelaxed(bool relaxed) {
     if (relaxed) {
         _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
         _fitFactorDiag = FIT_FACTOR_D_RELAXED;
-        _fitFactorSum = -0.15;
+        _fitFactorSum = 0.15;
     } else {
         _fitFactorHoriz = FIT_FACTOR_H_STRICT;
         _fitFactorDiag = FIT_FACTOR_D_STRICT;

@@ -20,12 +20,14 @@ void SwypeStepDetector::Add(VectorExplained shift) {
 
     _current.Add(shift);
     _current._timestamp = shift._timestamp;
+    _total.Add(shift);
     _count++;
 }
 
 void SwypeStepDetector::Reset() {
     _current.Reset();
     _target.Reset();
+    _total.Reset();
     _count = 0;
     _currentSwypePoint = 0;
     _nextSwypePoint = 0;
@@ -65,9 +67,9 @@ int SwypeStepDetector::CheckState() {
     double distance = _current.DistanceTo(_target);
 
     if (logLevel > 0) {
-        LOGI_NATIVE("CheckState %d (%f %f) target (%f %f) distance %f max %f mod %f",
-                    _current._timestamp, _current._x, _current._y, _target._x, _target._y, distance,
-                    (_isDiagonal ? _sqrt2 : 1.0), _current._mod);
+        LOGI_NATIVE("CheckState |(%+.4f %+.4f) - (%+.4f %+.4f)|= %.4f, total: (%+.4f %+.4f)",
+                    _current._x, _current._y, _target._x, _target._y, distance, _total._x,
+                    _total._y);
     }
 
 #ifdef REQUIRE_REACH_BOUNDS
@@ -81,10 +83,10 @@ int SwypeStepDetector::CheckState() {
         LOGI_NATIVE("CheckState reached ");
         return 1;
     }
-    if (reachedBounds) {
+    /*if (reachedBounds) {
         LOGI_NATIVE("CheckState failing ");
         return -1;
-    }
+    }*/
 #endif
 
     bool boundsCheckResult = _BoundsChecker.CheckBounds(_current);
@@ -116,9 +118,8 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
 
     _BoundsChecker.SetDirection(_target._direction);
 
-    LOGI_NATIVE("SetNextSwipePoint select src: %d, dst: %d, dx %d, dy %d, dir %d", currentPoint,
-                nextPoint,
-                dx, dy, _target._direction);
+    LOGI_NATIVE("SetNextSwipePoint select %d => %d, (%d,%d) dir %d",
+                currentPoint + 1, nextPoint + 1, dx, dy, _target._direction);
     return true;
 }
 
