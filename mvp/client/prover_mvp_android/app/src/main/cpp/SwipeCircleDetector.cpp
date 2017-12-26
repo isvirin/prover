@@ -32,7 +32,7 @@ bool SwipeCircleDetector::IsCircle() {
             double area = fabs(Area(i, perimeter));
             double areaByP2 = area / perimeter / perimeter;
             double areaByP2ToCircle = areaByP2 / Circle_S_by_P2;
-            LOGI_NATIVE("detect2: %d vertices: %d, diff: %f, area: %f, areaByP2 to target: %f",
+            LOGI_NATIVE("IsCircle %d vertices: %d, diff: %f, area: %f, areaByP2 to target: %f",
                         timestamp, i + 1, sum._mod, area, areaByP2 / Circle_S_by_P2);
             if (fabs(area) >= _minCircleArea && areaByP2ToCircle >= _minAreaByP2toCircle)
                 return true;

@@ -56,7 +56,7 @@ void SwypeStepDetector::FinishStep() {
     _currentSwypePoint = _nextSwypePoint;
 
     if (logLevel > 0) {
-        LOGI_NATIVE("detect2 FinishStep (%f %f) ", _current._x, _current._y);
+        LOGI_NATIVE("FinishStep (%f %f) ", _current._x, _current._y);
     }
 }
 
@@ -65,7 +65,7 @@ int SwypeStepDetector::CheckState() {
     double distance = _current.DistanceTo(_target);
 
     if (logLevel > 0) {
-        LOGI_NATIVE("detect2 %d (%f %f) target (%f %f) distance %f max %f mod %f",
+        LOGI_NATIVE("CheckState %d (%f %f) target (%f %f) distance %f max %f mod %f",
                     _current._timestamp, _current._x, _current._y, _target._x, _target._y, distance,
                     (_isDiagonal ? _sqrt2 : 1.0), _current._mod);
     }
@@ -78,11 +78,11 @@ int SwypeStepDetector::CheckState() {
     }
 #else
     if (distance <= _targetRadius) {
-        LOGI_NATIVE("detect2 reached ");
+        LOGI_NATIVE("CheckState reached ");
         return 1;
     }
     if (reachedBounds) {
-        LOGI_NATIVE("detect2 failing ");
+        LOGI_NATIVE("CheckState failing ");
         return -1;
     }
 #endif
@@ -90,7 +90,7 @@ int SwypeStepDetector::CheckState() {
     bool boundsCheckResult = _BoundsChecker.CheckBounds(_current);
 
     if (!boundsCheckResult) {
-        LOGI_NATIVE("detect2 boundsCheck failing ");
+        LOGI_NATIVE("CheckState boundsCheck failing ");
     }
 
     return boundsCheckResult ? 0 : -1;
@@ -116,7 +116,8 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
 
     _BoundsChecker.SetDirection(_target._direction);
 
-    LOGI_NATIVE("detect2 select src: %d, dst: %d, dx %d, dy %d, dir %d", currentPoint, nextPoint,
+    LOGI_NATIVE("SetNextSwipePoint select src: %d, dst: %d, dx %d, dy %d, dir %d", currentPoint,
+                nextPoint,
                 dx, dy, _target._direction);
     return true;
 }

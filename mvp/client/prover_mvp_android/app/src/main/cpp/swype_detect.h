@@ -131,10 +131,10 @@
 #pragma once
 
 #define VECTOR_WINDOW_START 0.025
-#define VECTOR_WINDOW_END 0.035
+#define VECTOR_WINDOW_END 0.04
 #define PAUSE_TO_STATE_3_MS 1500
-#define PAUSE_TO_STATE_3_MS_PER_STEP 300
-#define TIME_PER_EACH_SWIPE_STEP 2000
+#define PAUSE_TO_ST3_MS_PER_STEP 300
+#define MS_PER_SWIPE_STEP 2000
 
 #define MAX_DETECTOR_DEVIATION_RELAXED 0.28
 #define MAX_DETECTOR_DEVIATION_STRICT 0.25
@@ -197,7 +197,7 @@ public:
 private:
     void SetDetectorSize(int detectorWidth, int detectorHeight);
 
-    void MoveToState(int state, uint currentTimestamp, uint maxStateDuration);
+    void MoveToState(int state, uint timestamp);
 
     cv::Point2d Frame_processor(cv::Mat &frame_i);
 

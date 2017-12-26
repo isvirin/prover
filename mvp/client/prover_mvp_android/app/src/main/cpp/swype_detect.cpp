@@ -35,7 +35,7 @@ void SwypeDetect::SetDetectorSize(int detectorWidth, int detectorHeight) {
     }
 
     if (logLevel > 0) {
-        LOGI_NATIVE("detect2 SetDetectorSize (%d, %d) sourceAspect %f, -> (%f, %f)", detectorWidth,
+        LOGI_NATIVE("SetDetectorSize (%d, %d) sourceAspect %f, -> (%f, %f)", detectorWidth,
                     detectorHeight, _videoAspect, _xMult, _yMult);
     }
 }
@@ -88,12 +88,13 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained windowedShift = scaledShift;
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
     windowedShift._timestamp = timestamp;
-    if (logLevel > 0 && windowedShift._mod >= 0) {
+    if (logLevel > 0) {
         LOGI_NATIVE(
-                "detect2 t%d shift (%+6.2f,%+6.2f), scaled |%+.4f,%+.4f|=%.4f windowed |%+.4f,%+.4f|=%.4f",
+                "t%d shift (%+6.2f,%+6.2f), scaled |%+.4f,%+.4f|=%.4f windowed |%+.4f,%+.4f|=%.4f_%3.0f_%d",
                 timestamp, shift.x, shift.y,
                 scaledShift._x, scaledShift._y, scaledShift._mod,
-                windowedShift._x, windowedShift._y, windowedShift._mod);
+                windowedShift._x, windowedShift._y, windowedShift._mod, windowedShift._angle,
+                windowedShift._direction);
     }
 
     if (S == 0) {
@@ -102,10 +103,9 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             if (_circleDetector.IsCircle()) {
                 _circleDetector.Reset();
                 if (swype_Numbers.empty()) {
-                    MoveToState(1, timestamp, 0);
+                    MoveToState(1, timestamp);
                 } else {
-                    MoveToState(2, timestamp,
-                                (uint) (PAUSE_TO_STATE_3_MS_PER_STEP * swype_Numbers.size()));
+                    MoveToState(2, timestamp);
                 }
             }
         }
@@ -113,18 +113,18 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         y = (int) (windowedShift._y * 1024);
     } else if (S == 1) {
         if (!swype_Numbers.empty()) {
-            MoveToState(2, timestamp, (uint) (PAUSE_TO_STATE_3_MS_PER_STEP * swype_Numbers.size()));
+            MoveToState(2, timestamp);
         }
     } else if (S == 2) {
         if (timestamp >= _maxStateEndTime) {
             _swipeStepDetector.Configure(1.5, _maxDetectorDeviation, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
             count_num = 0;
-            MoveToState(3, timestamp, TIME_PER_EACH_SWIPE_STEP * (uint) (swype_Numbers.size()));
+            MoveToState(3, timestamp);
         }
     } else if (S == 3) {
         if (timestamp > _maxStateEndTime) {
-            MoveToState(0, timestamp, 0);
+            MoveToState(0, timestamp);
         } else if (windowedShift._mod > 0) {
             _swipeStepDetector.Add(windowedShift);
             int status = _swipeStepDetector.CheckState();
@@ -132,13 +132,13 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             else if (status == 1) {
                 ++count_num;
                 if (swype_Numbers.size() == (count_num + 1)) {
-                    MoveToState(4, timestamp, 0);
+                    MoveToState(4, timestamp);
                     _swipeStepDetector.FinishStep();
                 } else {
                     _swipeStepDetector.AdvanceSwipeStep(swype_Numbers[count_num + 1]);
                 }
             } else if (status == -1) {
-                MoveToState(0, timestamp, 0);
+                MoveToState(0, timestamp);
                 count_num = 0;
             }
         }
@@ -153,9 +153,17 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     index = count_num + 1;
 }
 
-void SwypeDetect::MoveToState(int state, uint currentTimestamp, uint maxStateDuration) {
+void SwypeDetect::MoveToState(int state, uint timestamp) {
     S = state;
-    _maxStateEndTime = maxStateDuration == 0 ? (uint) -1 : currentTimestamp + maxStateDuration;
+    if (state == 2) {
+        _maxStateEndTime =
+                timestamp + (uint) (PAUSE_TO_ST3_MS_PER_STEP * (swype_Numbers.size() - 2));
+    } else if (state == 3) {
+        _maxStateEndTime = timestamp + MS_PER_SWIPE_STEP * (uint) (swype_Numbers.size());
+    } else {
+        _maxStateEndTime = (uint) -1;
+    }
+    LOGI_NATIVE("MoveToState %d, end: %d", S, _maxStateEndTime);
 }
 
 void SwypeDetect::setRelaxed(bool relaxed) {

@@ -1,7 +1,7 @@
 #ifndef COMMON_C_
 #define COMMON_C_
 
-#define APPNAME "ProverMVP"
+#define APPNAME "ProverMVPDetector"
 
 #ifdef __ANDROID_API__
 

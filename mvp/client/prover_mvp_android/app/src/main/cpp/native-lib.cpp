@@ -12,7 +12,7 @@ void parseRowPaddedPlane(const unsigned char *frameData, unsigned int width, uns
         i = 1;
     }
     for (; i < height; i++) {
-        memcpy(dest, frameData, width);
+        memmove(dest, frameData, width);
         frameData += rowStride;
         dest += width;
     }

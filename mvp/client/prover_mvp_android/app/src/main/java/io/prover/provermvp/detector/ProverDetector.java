@@ -57,6 +57,7 @@ public class ProverDetector {
         this.swypeCode = swype == null ? null : SwypeOrientationHelper.rotateSwypeCode(swype, orientationHint);
 
         updateSwype(swypeCode != null && !swypeCode.equals(oldSwype));
+        Log.d("ProverMVPDetector", String.format("Set swype code %s/%s", swype, swypeCode));
     }
 
     private void updateSwype(boolean sendNotification) {

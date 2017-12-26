@@ -44,6 +44,7 @@ private:
 
     double _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
     double _fitFactorDiag = FIT_FACTOR_D_RELAXED;
+    double _fitFactorSum = -0.15;
 };
 
 

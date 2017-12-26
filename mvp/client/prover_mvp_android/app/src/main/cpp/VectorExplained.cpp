@@ -85,16 +85,15 @@ void VectorExplained::AttractTo(Vector other, double force) {
 }
 
 void VectorExplained::Log() {
-    LOGI_NATIVE("Detect2 vector (%f,%f) angle %f, mod %f ", _x, _y, _angle, _mod);
+    LOGI_NATIVE("VectorExplained (%f,%f) angle %f, mod %f ", _x, _y, _angle, _mod);
 }
 
 void VectorExplained::ApplyWindow(double windowStart, double windowEnd) {
     if (_mod <= windowStart) {
         Reset();
     } else if (_mod < windowEnd) {
-        double arg = (_mod - windowStart) / (windowEnd - windowStart) * 0.5 * CV_PI;
-        double window = 0.5 - 0.5 * cos(arg);
-        *this *= window;
+        double arg = (_mod - windowStart) / (windowEnd - windowStart);
+        *this *= arg;
     }
 }
 
