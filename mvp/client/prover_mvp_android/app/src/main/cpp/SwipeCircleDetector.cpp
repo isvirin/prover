@@ -58,14 +58,9 @@ double SwipeCircleDetector::Area(int amount, double &perimeter) {
     return area;
 }
 
-void SwipeCircleDetector::setRelaxed(bool relaxed) {
-    if (relaxed) {
-        _minCircleArea = MIN_CIRCLE_AREA_RELAXED;
-        _maxDeviation = MAX_DEVIATION_RELAXED;
-        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_RELAXED;
-    } else {
-        _minCircleArea = MIN_CIRCLE_AREA_STRICT;
-        _maxDeviation = MAX_DEVIATION_STRICT;
-        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE_STRICT;
-    }
+void SwipeCircleDetector::setTolerance(double tolerance) {
+    tolerance = 1 + tolerance;
+    _minCircleArea = MIN_CIRCLE_AREA / tolerance;
+    _maxDeviation = MAX_DEVIATION * tolerance;
+    _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE / tolerance;
 }

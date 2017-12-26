@@ -12,9 +12,9 @@
 
 #define MAX_CIRCLE_DURATION_MS 2500
 
-#define MIN_CIRCLE_AREA_STRICT 0.14
-#define MAX_DEVIATION_STRICT 0.09
-#define MIN_AREA_BY_P2_TO_CIRCLE_STRICT 0.67
+#define MIN_CIRCLE_AREA 0.14
+#define MAX_DEVIATION 0.09
+#define MIN_AREA_BY_P2_TO_CIRCLE 0.67
 
 #define MIN_CIRCLE_AREA_RELAXED 0.128
 #define MAX_DEVIATION_RELAXED 0.11
@@ -34,7 +34,7 @@ public:
 
     const double Circle_S_by_P2 = 0.25 / CV_PI;
 
-    void setRelaxed(bool relaxed);
+    void setTolerance(double tolerance);
 
 private:
     double Area(int amount, double &perimeter);

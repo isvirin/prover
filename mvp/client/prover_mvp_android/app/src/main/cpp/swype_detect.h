@@ -139,6 +139,8 @@
 #define MAX_DETECTOR_DEVIATION_RELAXED 0.28
 #define MAX_DETECTOR_DEVIATION_STRICT 0.25
 
+#define SERVER_TOLERANCE 0.2
+
 #include <opencv2/opencv.hpp>
 #include <vector>
 #include <cmath>

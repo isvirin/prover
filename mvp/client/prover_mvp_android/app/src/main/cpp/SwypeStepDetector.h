@@ -56,7 +56,7 @@ public:
      */
     int CheckState();
 
-    void setRelaxed(bool relaxed);
+    void setTolerance(double tolerance);
 
     VectorExplained _target;
     VectorExplained _current;

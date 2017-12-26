@@ -12,8 +12,8 @@
 // FIT_FACTOR_H is for horizontal and vertical movement;
 // FIT_FACTOR_H is for diagonal
 
-#define FIT_FACTOR_H_STRICT 0.55f
-#define FIT_FACTOR_D_STRICT 0.53f
+#define FIT_FACTOR_H 0.55f
+#define FIT_FACTOR_D 0.53f
 
 #define FIT_FACTOR_H_RELAXED 0.65f
 #define FIT_FACTOR_D_RELAXED 0.63f
@@ -31,7 +31,7 @@ public:
 
     bool CheckBounds(Vector current);
 
-    void setRelaxed(bool relaxed);
+    void setTolerance(double tolerance);
 
 private:
 

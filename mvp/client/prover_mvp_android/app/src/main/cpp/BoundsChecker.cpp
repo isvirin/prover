@@ -84,14 +84,8 @@ bool BoundsChecker::CheckBounds(Vector current) {
     }
 }
 
-void BoundsChecker::setRelaxed(bool relaxed) {
-    if (relaxed) {
-        _fitFactorHoriz = FIT_FACTOR_H_RELAXED;
-        _fitFactorDiag = FIT_FACTOR_D_RELAXED;
-        _fitFactorSum = 0.15;
-    } else {
-        _fitFactorHoriz = FIT_FACTOR_H_STRICT;
-        _fitFactorDiag = FIT_FACTOR_D_STRICT;
-        _fitFactorSum = 0;
-    }
+void BoundsChecker::setTolerance(double tolerance) {
+    _fitFactorHoriz = FIT_FACTOR_H * (1 + tolerance);
+    _fitFactorDiag = FIT_FACTOR_D * (1 + tolerance);
+    _fitFactorSum = tolerance;
 }
