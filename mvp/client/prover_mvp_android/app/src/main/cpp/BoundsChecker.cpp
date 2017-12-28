@@ -4,6 +4,7 @@
 
 #include "BoundsChecker.h"
 #include "common.h"
+#include "VectorExplained.h"
 
 void BoundsChecker::SetDirection(int targetDirection) {
     _isDiagonal = targetDirection % 2 == 0;
@@ -35,6 +36,11 @@ void BoundsChecker::SetTurnMatForDirectionDiff(int directionDiff) {
     }
 }
 
+void BoundsChecker::setTolerance(double tolerance) {
+    _fitFactorHoriz = FIT_FACTOR_H;
+    _fitFactorDiag = FIT_FACTOR_D;
+}
+
 /**
  *
  * @param current -- current position vector
@@ -55,7 +61,7 @@ bool BoundsChecker::CheckBounds(Vector current) {
             return false;
         }
 
-        if (x + y <= _fitFactorSum) {
+        if (x + y <= 0) {
             return true;
         }
 
@@ -84,8 +90,68 @@ bool BoundsChecker::CheckBounds(Vector current) {
     }
 }
 
-void BoundsChecker::setTolerance(double tolerance) {
-    _fitFactorHoriz = FIT_FACTOR_H * (1 + tolerance);
-    _fitFactorDiag = FIT_FACTOR_D * (1 + tolerance);
-    _fitFactorSum = tolerance;
+
+bool BoundsChecker::CheckBoundsWithDefect(VectorExplained current) {
+    current.Mul(_turnMat);
+    double x = current._x;
+    double y = current._y;
+    double defectX, defectY;
+    if (_flippedXY) {
+        defectX = current._defectY;
+        defectY = current._defectX;
+    } else {
+        defectX = current._defectX;
+        defectY = current._defectY;
+    }
+
+    if (_isDiagonal) {
+        if (x < -_fitFactorHoriz - defectX || y < -_fitFactorHoriz - defectY) {
+            if (logLevel > 0) {
+                LOGI_NATIVE("Bounds_f1 %.4f, %.4f", x, y);
+            }
+            return false;
+        }
+
+        if (x + y <= defectX + defectY) {
+            return true;
+        }
+
+        if (x >= y) {
+            double x1 = x - defectX;
+            double y1 = y + defectY;
+            if (x1 <=
+                y1) { //a point on the diagonal within defect area, so we are definitely not failed
+                return true;
+            }
+            x = x1;
+            y = y1;
+        } else {
+            double x1 = x + defectX;
+            double y1 = y - defectY;
+            if (x1 >=
+                y1) { //a point on the diagonal within defect area, so we are definitely not failed
+                return true;
+            }
+            x = y1;
+            y = x1;
+        }
+
+        //distance to line x = y -- it is the line that goes to target point
+        double d1 = (x - y) / _sqrt2;
+        // distance to remaining non-target swipe point
+        double r2 = current.DistanceTo(1, 0);
+        if (logLevel == 0)
+            return d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag);
+        else {
+            if (d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag))
+                return true;
+            if (logLevel > 0) {
+                LOGI_NATIVE("Bounds_f3 %.4f, %.4f, %f, %f", x, y, d1 / _fitFactorDiag,
+                            r2 / (1 - _fitFactorDiag));
+            }
+            return false;
+        }
+    } else {
+        return x >= -_fitFactorHoriz - defectX && fabs(y) < _fitFactorHoriz + defectY;
+    }
 }

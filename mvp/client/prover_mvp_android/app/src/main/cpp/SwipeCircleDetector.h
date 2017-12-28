@@ -34,7 +34,7 @@ public:
 private:
     double Area(int amount, double &perimeter);
 
-    VectorExplained shifts_[SHIFTS];
+    Vector shifts_[SHIFTS];
     int pos_ = 0;
     int total_ = 0;
 

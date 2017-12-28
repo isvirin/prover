@@ -54,7 +54,7 @@ public:
      *         -1 if we've failed to reach point
      *         0 if we're still in progress reaching target point
      */
-    int CheckState();
+    int CheckState(bool withDefect);
 
     void setTolerance(double tolerance);
 

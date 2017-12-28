@@ -21,11 +21,15 @@ void VectorExplained::Add(VectorExplained other) {
     if (other._mod > 0) {
         (*this) += other;
         CalculateExplained();
+        _defectX2sum += other._defectX * other._defectX;
+        _defectY2sum += other._defectY * other._defectY;
+        _defectX = sqrt(_defectX2sum);
+        _defectY = sqrt(_defectY2sum);
     }
 }
 
 void VectorExplained::CalculateExplained() {
-    _mod = Length();
+    CalculateMod();
     if (_mod <= 0) {
         _angle = 0;
         return;

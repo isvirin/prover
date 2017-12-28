@@ -224,4 +224,5 @@ private:
     double _xMult = 0.0;
     double _yMult = 0.0;
     double _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
+    bool _relaxed;
 };

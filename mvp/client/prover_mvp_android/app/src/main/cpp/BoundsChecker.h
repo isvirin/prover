@@ -7,6 +7,7 @@
 
 
 #include "Vector.h"
+#include "VectorExplained.h"
 
 // fit-factor for SimplestBoundsCheck, in (0, 1)
 // FIT_FACTOR_H is for horizontal and vertical movement;
@@ -28,6 +29,8 @@ public:
 
     bool CheckBounds(Vector current);
 
+    bool CheckBoundsWithDefect(VectorExplained current);
+
     void setTolerance(double tolerance);
 
 private:
@@ -41,7 +44,10 @@ private:
 
     double _fitFactorHoriz = FIT_FACTOR_H;
     double _fitFactorDiag = FIT_FACTOR_D;
-    double _fitFactorSum = -0.15;
+    /**
+     * true if rotating for +-90 degrees
+     */
+    bool _flippedXY;
 };
 
 

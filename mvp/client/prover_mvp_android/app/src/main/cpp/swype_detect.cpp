@@ -86,8 +86,11 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained scaledShift;
     scaledShift.SetMul(shift, _xMult, _yMult);
     VectorExplained windowedShift = scaledShift;
+    //if (_relaxed)
+    windowedShift.setRelativeDefect(0.3);
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
     windowedShift._timestamp = timestamp;
+
     if (logLevel > 0) {
         LOGI_NATIVE(
                 "t%d shift (%+6.2f,%+6.2f), scaled |%+.4f,%+.4f|=%.4f windowed |%+.4f,%+.4f|=%.4f_%3.0f_%d",
@@ -127,7 +130,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
             MoveToState(0, timestamp);
         } else if (windowedShift._mod > 0) {
             _swipeStepDetector.Add(windowedShift);
-            int status = _swipeStepDetector.CheckState();
+            int status = _swipeStepDetector.CheckState(_relaxed);
             if (status == 0) {}
             else if (status == 1) {
                 ++count_num;
@@ -144,6 +147,10 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         }
         x = (int) (_swipeStepDetector._current._x * 1024);
         y = (int) (_swipeStepDetector._current._y * 1024);
+
+        debug = (int) (_swipeStepDetector._current._defectX * 1024);
+        debug = debug << 16;
+        debug += _swipeStepDetector._current._defectY * 1024;
     } else if (S == 4) {
         _swipeStepDetector.Add(windowedShift);
         x = (int) (_swipeStepDetector._current._x * 1024);
@@ -167,8 +174,9 @@ void SwypeDetect::MoveToState(int state, uint timestamp) {
 }
 
 void SwypeDetect::setRelaxed(bool relaxed) {
-    _maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * 2
-                                    : MAX_DETECTOR_DEVIATION;
+    _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
+    //_maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * 2 : MAX_DETECTOR_DEVIATION;
     _circleDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
     _swipeStepDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
+    _relaxed = relaxed;
 }
