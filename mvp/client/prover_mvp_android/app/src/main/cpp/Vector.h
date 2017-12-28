@@ -55,8 +55,15 @@ public:
         _x = x;
     }
 
+    inline void CalculateMod() {
+        _mod = Length();
+    }
+
     double _x = 0;
     double _y = 0;
+    double _mod = 0;
+
+    unsigned int _timestamp = 0;
 
 protected:
     inline void Add(double x, double y) {

@@ -62,34 +62,26 @@ void SwypeStepDetector::FinishStep() {
     }
 }
 
-int SwypeStepDetector::CheckState() {
-    bool reachedBounds = _current._mod > (_isDiagonal ? _sqrt2 : 1.0);
-    double distance = _current.DistanceTo(_target);
+int SwypeStepDetector::CheckState(bool withDefect) {
+
+    double distance = withDefect ? _current.MinDistanceToWithDefect(_target) :
+                      _current.DistanceTo(_target);
 
     if (logLevel > 0) {
-        LOGI_NATIVE("CheckState |(%+.4f %+.4f) - (%+.4f %+.4f)|= %.4f, total: (%+.4f %+.4f)",
-                    _current._x, _current._y, _target._x, _target._y, distance, _total._x,
-                    _total._y);
+        LOGI_NATIVE(
+                "CheckState |(%+.4f %+.4f) - (%+.4f %+.4f)|= %.4f, total: |%+.4f+-%.4f %+.4f+-%.4f| = %.4f+-%.4f defSum |%.4f,%.4f|= %.4f",
+                _current._x, _current._y, _target._x, _target._y, distance,
+                _total._x, _total._defectX, _total._y, _total._defectY, _total._mod,
+                _total.ModDefect(), _current._defectX, _current._defectY, _current.ModDefect());
     }
 
-#ifdef REQUIRE_REACH_BOUNDS
-    if (reachedBounds) {
-        float distance = pointDistance(_x, _y, _targetX, _targetY);
-        //LOGI_NATIVE("detect2 reached bounds, target: (%f %f), current: (%f %f), distance: %f", _targetX, _targetY, _x, _y, distance);
-        return distance <= _targetRadius ? 1 : -1;
-    }
-#else
     if (distance <= _targetRadius) {
         LOGI_NATIVE("CheckState reached ");
         return 1;
     }
-    /*if (reachedBounds) {
-        LOGI_NATIVE("CheckState failing ");
-        return -1;
-    }*/
-#endif
 
-    bool boundsCheckResult = _BoundsChecker.CheckBounds(_current);
+    bool boundsCheckResult = withDefect ? _BoundsChecker.CheckBoundsWithDefect(_current)
+                                        : _BoundsChecker.CheckBounds(_current);
 
     if (!boundsCheckResult) {
         LOGI_NATIVE("CheckState boundsCheck failing ");
@@ -126,4 +118,5 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
 void SwypeStepDetector::setTolerance(double tolerance) {
     _BoundsChecker.setTolerance(tolerance);
 }
+
 

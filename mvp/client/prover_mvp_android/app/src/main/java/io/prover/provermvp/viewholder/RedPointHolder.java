@@ -54,4 +54,12 @@ public class RedPointHolder extends ImageViewHolder {
         pointMatrix.postTranslate(-dx, -dy);
         pointMatrix.postTranslate((v.getLeft() + v.getRight()) / 2, (v.getTop() + v.getBottom()) / 2);
     }
+
+    public int centerX() {
+        return (int) (view.getX() + view.getWidth() / 2);
+    }
+
+    public int centerY() {
+        return (int) (view.getY() + view.getHeight() / 2);
+    }
 }

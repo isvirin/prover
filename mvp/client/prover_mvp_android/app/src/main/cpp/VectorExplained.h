@@ -7,6 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 #include "Vector.h"
+#include "common.h"
 
 class VectorExplained : public Vector {
 public:
@@ -53,7 +54,25 @@ public:
         return fmod(other._angle - _angle + 540.0, 360.0) - 180.0;
     }
 
-    double _mod = 0;
+    void setRelativeDefect(double relativeDefect) {
+        _defectX = fabs(_x * relativeDefect);
+        _defectY = fabs(_y * relativeDefect);
+    }
+
+    double ModDefect() {
+        if (_mod == 0)
+            return 0;
+
+        return sqrt(_x * _x * _defectX2sum + _y * _y * _defectY2sum) / _mod;
+    }
+
+    double MinDistanceToWithDefect(Vector other) {
+        double dx = fabs(other._x - _x);
+        double dy = fabs(other._y - _y);
+        dx = dx < _defectX ? 0.0 : dx - _defectX;
+        dy = dy < _defectY ? 0.0 : dy - _defectY;
+        return sqrt(dx * dx + dy * dy);
+    }
 
     double _angle = 0;
     /**
@@ -61,7 +80,10 @@ public:
      */
     int _direction = 0;
 
-    uint _timestamp = 0;
+    double _defectX = 0;
+    double _defectY = 0;
+    double _defectX2sum = 0;
+    double _defectY2sum = 0;
 
 private:
     void CalculateExplained();
@@ -73,6 +95,10 @@ inline void VectorExplained::Reset() {
     _mod = 0;
     _angle = 0;
     _direction = 0;
+    _defectX = 0;
+    _defectY = 0;
+    _defectX2sum = 0;
+    _defectY2sum = 0;
 }
 
 

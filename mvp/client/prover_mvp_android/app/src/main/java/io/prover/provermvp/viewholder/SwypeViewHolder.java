@@ -19,8 +19,10 @@ import java.util.Arrays;
 
 import io.prover.provermvp.Const;
 import io.prover.provermvp.R;
+import io.prover.provermvp.Settings;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
+import io.prover.provermvp.view.DefectView;
 
 import static io.prover.provermvp.detector.DetectionState.State.InputCode;
 
@@ -41,6 +43,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     //private final float[] point = new float[2];
     private final Resources res;
     float xMult, yMult;
+    DefectView defectView;
     private String swype;
     private SwipePointImageViewHolder[] swypeSequence;
     private int[] sequenceIndices;
@@ -72,6 +75,16 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         cameraController.onRecordingStart.add(this);
         cameraController.onRecordingStop.add(this);
         root.setVisibility(View.GONE);
+
+        if (Settings.SHOW_DEFECT) {
+            defectView = new DefectView(root.getContext());
+            ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(0, 0);
+            lp.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+            lp.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+            lp.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
+            lp.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+            root.addView(defectView, lp);
+        }
     }
 
     @Override
@@ -99,6 +112,12 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 redPoint.setVisible(true);
             }
             redPoint.setTranslation(newState.x, newState.y);
+
+            if (Settings.SHOW_DEFECT) {
+                float dx = (newState.d >> 16) * xMult;
+                float dy = (newState.d & 0xFFFF) * yMult;
+                defectView.set(redPoint.centerX(), redPoint.centerY(), dx, dy);
+            }
         }
     }
 

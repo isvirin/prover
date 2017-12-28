@@ -15,7 +15,7 @@ void SwipeCircleDetector::AddShift(VectorExplained shift) {
 
 bool SwipeCircleDetector::IsCircle() {
     int pos = (pos_ - 1 + SHIFTS) % SHIFTS;
-    VectorExplained sum = shifts_[pos];
+    Vector sum = shifts_[pos];
 
     uint noFramesBefore = shifts_[pos]._timestamp - MAX_CIRCLE_DURATION_MS;
     int timestamp = shifts_[pos]._timestamp;
@@ -26,7 +26,8 @@ bool SwipeCircleDetector::IsCircle() {
             return false;
         }
 
-        sum.Add(shifts_[pos]);
+        sum += shifts_[pos];
+        sum.CalculateMod();
         if (sum._mod < _maxDeviation && i > 5) {
             double perimeter;
             double area = fabs(Area(i, perimeter));
