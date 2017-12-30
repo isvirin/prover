@@ -24,14 +24,12 @@ void SwypeStepDetector::Reset() {
     _count = 0;
     _currentSwypePoint = 0;
     _nextSwypePoint = 0;
-    _isDiagonal = false;
 }
 
-void SwypeStepDetector::Configure(double speedMult, double maxDeviation, double attraction) {
+void SwypeStepDetector::Configure(double speedMult, float maxDeviation) {
     _speedMultX = speedMult;
     _speedMultY = speedMult;
-    _maxDeviation = maxDeviation;
-    _attraction = attraction;
+    _targetRadius = maxDeviation;
 }
 
 bool SwypeStepDetector::SetSwipeStep(int currentPoint, int nextPoint) {
@@ -56,7 +54,6 @@ void SwypeStepDetector::FinishStep() {
 }
 
 int SwypeStepDetector::CheckState(bool withDefect) {
-
     double distance = withDefect ? _current.MinDistanceToWithDefect(_target) :
                       _current.DistanceTo(_target);
 
@@ -95,9 +92,7 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
     if (abs(dx) > 1 || abs(dy) > 1)
         return false;
 
-    _isDiagonal = dx != 0 && dy != 0;
     _target.Set(dx, dy);
-    _targetRadius = (float) _maxDeviation;
     _nextSwypePoint = nextPoint + 1;
 
     _BoundsChecker.SetDirection(_target._direction);

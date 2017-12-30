@@ -81,7 +81,7 @@ public class CameraViewHolder implements ICameraViewHolder {
         } catch (Exception e) {
         }
         releaseMediaRecorder(); // release the MediaRecorder object
-        cameraController.onRecordingStop(stoppedOk ? videoFile : null);
+        cameraController.onRecordingStop(mRoot.getContext(), stoppedOk ? videoFile : null);
 
         if (stoppedOk) {
             MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
@@ -105,7 +105,7 @@ public class CameraViewHolder implements ICameraViewHolder {
         releaseMediaRecorder(); // release the MediaRecorder object
         videoFile.delete();
         videoFile = null;
-        cameraController.onRecordingStop(null);
+        cameraController.onRecordingStop(null, null);
         previewHolder.lockCamera();           // lock camera for later use
     }
 

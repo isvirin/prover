@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraDevice;
 import android.media.MediaRecorder;
-import android.media.MediaScannerConnection;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -186,11 +185,9 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             cameraController.beforeRecordingStop();
             myCamera.stopVideoSession();
             stopRecording();
-            cameraController.onRecordingStop(videoFile);
+            cameraController.onRecordingStop(mRoot.getContext(), videoFile);
             if (resumed)
                 myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
-            if (videoFile != null)
-                MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
             videoFile = null;
         };
         if (mBackgroundHandler != null)
@@ -240,7 +237,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             cameraController.beforeRecordingStop();
             myCamera.stopVideoSession();
             stopRecording();
-            cameraController.onRecordingStop(videoFile);
+            cameraController.onRecordingStop(mRoot.getContext(), videoFile);
             videoFile.delete();
             videoFile = null;
         }

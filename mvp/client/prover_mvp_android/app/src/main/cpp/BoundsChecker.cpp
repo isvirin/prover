@@ -46,25 +46,22 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
     // fail if we've got too close to another swipe-point
     p.MulWithDefect(_turnMat);
     float tr1 = 1 + _targetRadius;
-    double x = p._x;
-    double y = p._y;
 
     if (_isDiagonal) {
-        if (x < -FIT_FACTOR_H || y < -FIT_FACTOR_H || x > tr1 || y > tr1) {
+        if (p._x < -FIT_FACTOR_H || p._y < -FIT_FACTOR_H || p._x > tr1 || p._y > tr1) {
             if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f1 %.4f, %.4f, tr: %.4f", x, y, _targetRadius);
+                LOGI_NATIVE("Bounds_f1 %.4f, %.4f, tr: %.4f", p._x, p._y, _targetRadius);
             }
             return false;
         }
 
-        if (x + y <= 0) {
+        if (p._x + p._y <= 0) {
             return true;
         }
 
-        if (y > x) {
+        if (p._y > p._x) {
             p.FlipXY();
         }
-
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
         // defect is double 'cause server can will have different result
@@ -93,7 +90,7 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
             return false;
         }
     } else {
-        return x >= -FIT_FACTOR_H && x <= tr1 && fabs(y) <= FIT_FACTOR_H;
+        return p._x >= -FIT_FACTOR_H && p._x <= tr1 && fabs(p._y) <= FIT_FACTOR_H;
     }
 }
 
@@ -114,14 +111,9 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
             return true;
         }
 
-        if (logLevel > 0) {
-            LOGI_NATIVE("Bounds (%.4f+-%.4f %.4f+-%.4f)", p._x, p._defectX, p._y, p._defectY);
-        }
-
         if (p._x < p._y) {
             p.FlipXY();
         }
-
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
         Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 1);
@@ -140,9 +132,6 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
         //a point on the diagonal within defect area, so we are definitely not failed
         if (p._x <= p._y) {
             return true;
-        }
-        if (logLevel > 0) {
-            LOGI_NATIVE("Bounds (%.4f %.4f)", shiftedToLine._x, shiftedToLine._y);
         }
 
         //distance to line x = y -- it is the line that goes to target point

@@ -14,4 +14,5 @@ public interface Settings {
     boolean SHOW_RENDERER_PREVIEW = false;
 
     boolean SHOW_DEFECT = true;
+    boolean ADD_SWYPE_CODE_TO_FILE_NAME = true;
 }

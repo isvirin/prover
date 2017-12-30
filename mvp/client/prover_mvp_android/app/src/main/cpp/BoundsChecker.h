@@ -14,7 +14,6 @@
 // FIT_FACTOR_H is for diagonal
 
 #define FIT_FACTOR_H 0.55f
-#define FIT_FACTOR_D 0.5f
 
 /**
  * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points
@@ -37,16 +36,11 @@ private:
 
     void SetTurnMatForDirectionDiff(int directionDiff);
 
-
-    const double _sqrt2 = sqrtf(2.0f);
+    const double _sqrt2 = sqrt(2.0f);
 
     bool _isDiagonal;
     double _turnMat[2][2];
 
-    /**
-     * true if rotating for +-90 degrees
-     */
-    bool _flippedXY;
     float _targetRadius;
 };
 

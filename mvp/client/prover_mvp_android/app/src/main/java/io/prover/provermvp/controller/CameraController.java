@@ -1,6 +1,7 @@
 package io.prover.provermvp.controller;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -9,6 +10,7 @@ import org.ethereum.crypto.ECKey;
 import java.io.File;
 import java.util.List;
 
+import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
@@ -16,6 +18,7 @@ import io.prover.provermvp.transport.NetworkHolder;
 import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
+import io.prover.provermvp.util.UtilFile;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 /**
@@ -62,9 +65,19 @@ public class CameraController extends CameraControllerBase {
         }
     }
 
-    public void onRecordingStop(File file) {
+    public void onRecordingStop(Context context, File file) {
         recording = false;
         boolean isVideoConfirmed = swypeStateHelperHolder.isVideoConfirmed();
+
+        if (file != null) {
+            if (Settings.ADD_SWYPE_CODE_TO_FILE_NAME && isVideoConfirmed && swypeCode != null) {
+                File file2 = UtilFile.addFileNameSuffix(file, "_S" + swypeCode);
+                if (file.renameTo(file2)) {
+                    file = file2;
+                }
+            }
+            MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, null);
+        }
         actualSwypeCode = swypeCode = null;
         onRecordingStop.postNotifyEvent(file, isVideoConfirmed);
     }

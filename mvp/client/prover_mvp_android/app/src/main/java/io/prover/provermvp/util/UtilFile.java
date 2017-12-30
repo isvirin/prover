@@ -28,6 +28,19 @@ public class UtilFile {
         this.file = file;
     }
 
+    public static File addFileNameSuffix(File file, String suffix) {
+        String name = file.getName();
+        int ptIndex = name.lastIndexOf('.');
+        if (ptIndex >= 0) {
+            String ext = name.substring(ptIndex);
+            name = name.substring(0, ptIndex);
+            name = name + suffix + ext;
+        } else {
+            name = name + suffix;
+        }
+        return new File(file.getParent(), name);
+    }
+
     public void externalOpenFile(Context context, String mime) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

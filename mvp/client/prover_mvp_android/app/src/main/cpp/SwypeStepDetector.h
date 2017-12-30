@@ -8,8 +8,6 @@
 #include "VectorExplained.h"
 #include "BoundsChecker.h"
 
-//#define REQUIRE_REACH_BOUNDS
-
 /**
  * coordinate convention:
  * (0,0) is at current swipe-point; 1 is a distance between two swipe-points (non diagonal).
@@ -17,8 +15,6 @@
  * Y axis directed from top to bottom
  *
  */
-
-#define MAX_ATTRACT_ANGLE 45
 
 class SwypeStepDetector {
 public:
@@ -33,7 +29,7 @@ public:
      * @param height
      * @param speedMult
      */
-    void Configure(double speedMult, double maxDeviation, double attraction);
+    void Configure(double speedMult, float maxDeviation);
 
     /**
      * configures for movement between adjacent swype points currentPoint to nextPoint
@@ -66,16 +62,10 @@ private:
 
     double _speedMultX = 0;
     double _speedMultY = 0;
-    double _maxDeviation = 0;
     float _targetRadius = 0;
-
-    double _attraction = 0;
 
     int _currentSwypePoint = 0;
     int _nextSwypePoint = 0;
-    bool _isDiagonal;
-
-    const double _sqrt2 = sqrtf(2.0);
 
     BoundsChecker _BoundsChecker;
     VectorExplained _total;
