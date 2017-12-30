@@ -13,5 +13,5 @@ public interface Settings {
 
     boolean SHOW_RENDERER_PREVIEW = false;
 
-    boolean SHOW_DEFECT = false;
+    boolean SHOW_DEFECT = true;
 }

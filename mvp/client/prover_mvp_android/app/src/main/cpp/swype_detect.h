@@ -138,7 +138,7 @@
 
 #define MAX_DETECTOR_DEVIATION 0.22
 
-#define SERVER_TOLERANCE 0.4
+#define SERVER_TOLERANCE 0.5
 
 #include <opencv2/opencv.hpp>
 #include <vector>

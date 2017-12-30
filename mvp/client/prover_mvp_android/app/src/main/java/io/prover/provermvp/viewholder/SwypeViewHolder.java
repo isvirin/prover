@@ -164,10 +164,6 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         yMult = size / 1024.0f;
     }
 
-    private int estimatePointCoord(int line) {
-        return (int) (line * 96 * res.getDisplayMetrics().density);
-    }
-
     private void loadDrawables() {
         if (emptyPointDrawable == null) {
             emptyPointDrawable = VectorDrawableCompat.create(res, R.drawable.ic_swype_empty, null);
