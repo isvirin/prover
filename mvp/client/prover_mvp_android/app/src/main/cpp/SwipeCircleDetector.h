@@ -31,6 +31,8 @@ public:
 
     void setTolerance(double tolerance);
 
+    void SetRelaxed(bool relaxed);
+
 private:
     double Area(int amount, double &perimeter);
 

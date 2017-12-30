@@ -65,3 +65,16 @@ void SwipeCircleDetector::setTolerance(double tolerance) {
     _maxDeviation = MAX_DEVIATION * tolerance;
     _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE / tolerance;
 }
+
+void SwipeCircleDetector::SetRelaxed(bool relaxed) {
+    if (relaxed) {
+        _minCircleArea = MIN_CIRCLE_AREA / 1.5;
+        _maxDeviation = MAX_DEVIATION * 3;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE / 1.5;
+    } else {
+        _minCircleArea = MIN_CIRCLE_AREA;
+        _maxDeviation = MAX_DEVIATION;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE;
+    }
+
+}

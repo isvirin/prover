@@ -176,6 +176,6 @@ void SwypeDetect::MoveToState(int state, uint timestamp) {
 void SwypeDetect::setRelaxed(bool relaxed) {
     _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
     //_maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * 2 : MAX_DETECTOR_DEVIATION;
-    _circleDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
+    _circleDetector.SetRelaxed(relaxed);
     _relaxed = relaxed;
 }
