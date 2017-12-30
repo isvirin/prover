@@ -88,7 +88,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained windowedShift = scaledShift;
     //if (_relaxed)
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
-    windowedShift.setRelativeDefect(0.2);
+    windowedShift.setRelativeDefect(DEFECT);
     windowedShift._timestamp = timestamp;
 
     if (logLevel > 0) {

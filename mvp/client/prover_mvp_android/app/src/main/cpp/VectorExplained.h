@@ -50,8 +50,8 @@ public:
         _y = mat[1][0] * _x + mat[1][1] * _y;
         _x = t;
         t = mat[0][0] * _defectX + mat[0][1] * _defectY;
-        _defectY = (float) (mat[1][0] * _defectX + mat[1][1] * _defectY);
-        _defectX = (float) t;
+        _defectY = fabsf((float) (mat[1][0] * _defectX + mat[1][1] * _defectY));
+        _defectX = fabsf((float) t);
     }
 
     inline void FlipXY() {
@@ -103,8 +103,11 @@ public:
     }
 
     double MinDistanceToWithDefect(Vector other) {
-        //Vector shifted = EllipticalShiftMagnet(_defectX, _defectY, other._x, other._y);
+#ifdef RECT_DEFECT
         Vector shifted = ShiftDefectRectToPointMagnet((float) other._x, (float) other._y, 1);
+#else
+        Vector shifted = EllipticalShiftMagnet(_defectX, _defectY, other._x, other._y);
+#endif
         LOGI_NATIVE(
                 "DistanceWithDefect (%.4f %.4f) shifted (%.4f, %.4f) to (%.4f, %.4f) distance = %.4f",
                 _x, _y, shifted._x, shifted._y, other._x, other._y, shifted.DistanceTo(other)

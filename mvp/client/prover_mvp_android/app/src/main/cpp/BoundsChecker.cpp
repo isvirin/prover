@@ -107,7 +107,11 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
         // defect is double 'cause server can will have different result
+#ifdef RECT_DEFECT
         Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 2);
+#else
+        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 2);
+#endif
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
         if (distanceToWrongPoint <= _targetRadius) {
             if (logLevel > 0) {
@@ -158,7 +162,11 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
         }
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
+#ifdef RECT_DEFECT
         Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 1);
+#else
+        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 1);
+#endif
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
         if (distanceToWrongPoint <= _targetRadius) {
             if (logLevel > 0) {
@@ -167,8 +175,11 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
             }
             return false;
         }
-
+#ifdef RECT_DEFECT
         Vector shiftedToLine = p.ShiftDefectRectToTouchLineMagnet();
+#else
+        Vector shiftedToLine = p.ShiftDefectEllipseToTouchLineMagnet();
+#endif
         if (shiftedToLine._x == shiftedToLine._y)
             return true;
         //a point on the diagonal within defect area, so we are definitely not failed
