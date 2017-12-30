@@ -82,6 +82,8 @@ public:
      */
     Vector EllipticalShiftMagnet(float rx, float ry, float targetX, float targetY);
 
+    Vector RectShiftMagnet(float rx, float ry, float targetX, float targetY);
+
     /**
      * Assume we have an ellipse with center at this point and (a, b) semi axises
      * assume x >= 0 and y <= x
@@ -91,6 +93,8 @@ public:
      * @return
      */
     Vector ShiftEllipseToTouchLineMagnet(float a, float b);
+
+    Vector ShiftRectToTouchLineMagnet(float rx, float ry);
 
     double _x = 0;
     double _y = 0;

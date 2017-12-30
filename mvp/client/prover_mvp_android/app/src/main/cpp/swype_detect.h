@@ -206,7 +206,7 @@ private:
     std::vector<int> swype_Numbers;//we have swype code or we will wait swype code
 
     int S; //state S
-    int count_num; //Number of the correctly entered swype-numbers
+    unsigned int count_num; //Number of the correctly entered swype-numbers
 
     cv::UMat buf1ft;
     cv::UMat buf2ft;

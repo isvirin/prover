@@ -98,8 +98,10 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
     _BoundsChecker.SetDirection(_target._direction);
     _BoundsChecker.SetTargetRadius(_targetRadius);
 
-    LOGI_NATIVE("SetNextSwipePoint select %d => %d, (%d,%d) dir %d",
-                currentPoint + 1, nextPoint + 1, dx, dy, _target._direction);
+    if (logLevel > 0) {
+        LOGI_NATIVE("SetNextSwipePoint select %d => %d, (%d,%d) dir %d",
+                    currentPoint + 1, nextPoint + 1, dx, dy, _target._direction);
+    }
     return true;
 }
 

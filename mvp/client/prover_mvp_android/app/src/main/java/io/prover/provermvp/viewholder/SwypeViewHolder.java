@@ -111,14 +111,14 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                     swypeSequence[index + 1].setState(SwipePointImageViewHolder.State.Unvisited);
                 }
                 redPoint.setVisible(true);
-                if (Settings.SHOW_DEFECT && index + 1 < swypeSequence.length) {
+                if (defectView != null && index + 1 < swypeSequence.length) {
                     defectView.configureBorder(swypeSequence[index].num, swypeSequence[index + 1].num);
                     defectView.setVisibility(View.VISIBLE);
                 }
             }
             redPoint.setTranslation(newState.x, newState.y);
 
-            if (Settings.SHOW_DEFECT) {
+            if (defectView != null) {
                 float dx = (newState.d >> 16) * xMult;
                 float dy = (newState.d & 0xFFFF) * yMult;
                 if (flipxy) {

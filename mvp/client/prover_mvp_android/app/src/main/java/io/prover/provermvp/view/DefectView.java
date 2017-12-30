@@ -153,8 +153,10 @@ public class DefectView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawOval(defectRect, p);
-        canvas.drawOval(defectRect2, p);
+        //canvas.drawOval(defectRect, p);
+        //canvas.drawOval(defectRect2, p);
+        canvas.drawRect(defectRect, p);
+        canvas.drawRect(defectRect2, p);
         canvas.drawRect(targetRect, borderPaint);
 
         canvas.drawCircle(targetCenter.x, targetCenter.y, targetRadius, targetPaint);

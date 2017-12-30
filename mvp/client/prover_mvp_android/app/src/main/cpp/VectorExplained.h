@@ -83,9 +83,16 @@ public:
         return ShiftEllipseToTouchLineMagnet(_defectX, _defectY);
     }
 
-    inline Vector
-    ShiftDefectEllipseToPointMagnet(float targetX, float targetY, float mul) {
+    inline Vector ShiftDefectRectToTouchLineMagnet() {
+        return ShiftRectToTouchLineMagnet(_defectX, _defectY);
+    }
+
+    inline Vector ShiftDefectEllipseToPointMagnet(float targetX, float targetY, float mul) {
         return EllipticalShiftMagnet(_defectX * mul, _defectY * mul, targetX, targetY);
+    }
+
+    inline Vector ShiftDefectRectToPointMagnet(float targetX, float targetY, float mul) {
+        return RectShiftMagnet(_defectX * mul, _defectY * mul, targetX, targetY);
     }
 
     double ModDefect() {
@@ -96,7 +103,8 @@ public:
     }
 
     double MinDistanceToWithDefect(Vector other) {
-        Vector shifted = EllipticalShiftMagnet(_defectX, _defectY, other._x, other._y);
+        //Vector shifted = EllipticalShiftMagnet(_defectX, _defectY, other._x, other._y);
+        Vector shifted = ShiftDefectRectToPointMagnet((float) other._x, (float) other._y, 1);
         LOGI_NATIVE(
                 "DistanceWithDefect (%.4f %.4f) shifted (%.4f, %.4f) to (%.4f, %.4f) distance = %.4f",
                 _x, _y, shifted._x, shifted._y, other._x, other._y, shifted.DistanceTo(other)

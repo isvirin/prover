@@ -46,7 +46,7 @@ void SwypeDetect::setSwype(string swype) {
     swype_Numbers.clear();
     swype_Numbers.resize(0);
     if (swype != "") {
-        for (int i = 0; i < swype.length(); i++) {
+        for (uint i = 0; i < swype.length(); i++) {
             t = swype.at(i);
             j = t - '0';
             swype_Numbers.push_back(j);

@@ -87,3 +87,30 @@ Vector Vector::ShiftEllipseToTouchLineMagnet(float a, float b) {
 
     return Vector(x, y);
 }
+
+Vector Vector::RectShiftMagnet(float rx, float ry, float targetX, float targetY) {
+    float x = (float) _x;
+    float x1 = x + rx;
+    if (targetX < x1) {
+        x1 = x - rx;
+        if (targetX > x1)
+            x1 = targetX;
+    }
+    float y = (float) _y;
+    float y1 = y + ry;
+    if (targetY < y1) {
+        y1 = y - ry;
+        if (targetY > y1)
+            y1 = targetX;
+    }
+    return Vector(x1, y1);
+}
+
+Vector Vector::ShiftRectToTouchLineMagnet(float rx, float ry) {
+    double x = _x - rx;
+    double y = _y + ry;
+    if (x < y) {
+        return Vector(0, 0);
+    }
+    return Vector(x, y);
+}

@@ -36,6 +36,8 @@ private:
 
     void SetTurnMatForDirectionDiff(int directionDiff);
 
+    void SetMatForDirection(int direction);
+
     const double _sqrt2 = sqrt(2.0f);
 
     bool _isDiagonal;

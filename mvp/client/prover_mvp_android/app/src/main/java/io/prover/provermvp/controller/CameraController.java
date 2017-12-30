@@ -71,12 +71,13 @@ public class CameraController extends CameraControllerBase {
 
         if (file != null) {
             if (Settings.ADD_SWYPE_CODE_TO_FILE_NAME && isVideoConfirmed && swypeCode != null) {
-                File file2 = UtilFile.addFileNameSuffix(file, "_S" + swypeCode);
+                File file2 = UtilFile.addFileNameSuffix(file, "_" + swypeCode);
                 if (file.renameTo(file2)) {
                     file = file2;
                 }
             }
-            MediaScannerConnection.scanFile(context, new String[]{file.getAbsolutePath()}, null, null);
+            final File f = file;
+            handler.postDelayed(() -> MediaScannerConnection.scanFile(context, new String[]{f.getAbsolutePath()}, null, null), 10_000);
         }
         actualSwypeCode = swypeCode = null;
         onRecordingStop.postNotifyEvent(file, isVideoConfirmed);

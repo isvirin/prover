@@ -8,9 +8,13 @@
 
 void BoundsChecker::SetDirection(int targetDirection) {
     _isDiagonal = targetDirection % 2 == 0;
-    int turnToDirection = _isDiagonal ? 8 : 7;
-    int directionDiff = (turnToDirection - targetDirection + 12) % 8 - 4;
-    SetTurnMatForDirectionDiff(directionDiff);
+    SetMatForDirection(targetDirection);
+    /*if (_isDiagonal) {
+
+    } else {
+        int directionDiff = (7 - targetDirection + 12) % 8 - 4;
+        SetTurnMatForDirectionDiff(directionDiff);
+    }*/
 }
 
 void BoundsChecker::SetTurnMatForDirectionDiff(int directionDiff) {
@@ -32,6 +36,44 @@ void BoundsChecker::SetTurnMatForDirectionDiff(int directionDiff) {
             _turnMat[0][0] = _turnMat[1][1] = 0;
             _turnMat[1][0] = -1;
             _turnMat[0][1] = 1;
+            break;
+    }
+}
+
+
+void BoundsChecker::SetMatForDirection(int direction) {
+    _turnMat[1][0] = _turnMat[0][1] = 0;
+    switch (direction) {
+        case 8:
+        case 7:
+            _turnMat[0][0] = _turnMat[1][1] = 1;
+            _turnMat[1][0] = _turnMat[0][1] = 0;
+            break;
+        case 2:
+        case 3:
+            _turnMat[0][0] = -1;
+            _turnMat[1][1] = 1;
+            _turnMat[1][0] = _turnMat[0][1] = 0;
+            break;
+        case 4:
+            _turnMat[0][0] = -1;
+            _turnMat[1][1] = -1;
+            _turnMat[1][0] = _turnMat[0][1] = 0;
+            break;
+        case 6:
+            _turnMat[0][0] = 1;
+            _turnMat[1][1] = -1;
+            _turnMat[1][0] = _turnMat[0][1] = 0;
+            break;
+        case 1:
+            _turnMat[0][0] = _turnMat[1][1] = 0;
+            _turnMat[1][0] = 1;
+            _turnMat[0][1] = 1;
+            break;
+        case 5:
+            _turnMat[0][0] = _turnMat[1][1] = 0;
+            _turnMat[1][0] = 1;
+            _turnMat[0][1] = -1;
             break;
     }
 }
@@ -65,7 +107,7 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
         // defect is double 'cause server can will have different result
-        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 2);
+        Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 2);
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
         if (distanceToWrongPoint <= _targetRadius) {
             if (logLevel > 0) {
@@ -116,7 +158,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
         }
 
         // ensure that we can't get into wrong swipe-point (1,0) accounting defect
-        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 1);
+        Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 1);
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
         if (distanceToWrongPoint <= _targetRadius) {
             if (logLevel > 0) {
@@ -126,7 +168,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
             return false;
         }
 
-        Vector shiftedToLine = p.ShiftDefectEllipseToTouchLineMagnet();
+        Vector shiftedToLine = p.ShiftDefectRectToTouchLineMagnet();
         if (shiftedToLine._x == shiftedToLine._y)
             return true;
         //a point on the diagonal within defect area, so we are definitely not failed
@@ -157,3 +199,4 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
 void BoundsChecker::SetTargetRadius(float _targetRadius) {
     BoundsChecker::_targetRadius = _targetRadius;
 }
+
