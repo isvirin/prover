@@ -51,21 +51,22 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
     private int detectProgressPos;
     private VectorDrawableCompat emptyPointDrawable;
     private SwypeHolderState state = SwypeHolderState.Hidden;
+    private boolean flipxy;
 
     public SwypeViewHolder(ConstraintLayout root, CameraController cameraController) {
         this.res = root.getResources();
         this.root = root;
         this.cameraController = cameraController;
 
-        swypePoints[0] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint1));
-        swypePoints[1] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint2));
-        swypePoints[2] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint3));
-        swypePoints[3] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint4));
-        swypePoints[4] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint5));
-        swypePoints[5] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint6));
-        swypePoints[6] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint7));
-        swypePoints[7] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint8));
-        swypePoints[8] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint9));
+        swypePoints[0] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint1), 1);
+        swypePoints[1] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint2), 2);
+        swypePoints[2] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint3), 3);
+        swypePoints[3] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint4), 4);
+        swypePoints[4] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint5), 5);
+        swypePoints[5] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint6), 6);
+        swypePoints[6] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint7), 7);
+        swypePoints[7] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint8), 8);
+        swypePoints[8] = new SwipePointImageViewHolder(root.findViewById(R.id.swypePoint9), 9);
 
         redPoint = new RedPointHolder(root.findViewById(R.id.swypeCurrentPosition));
         swypeArrowHolder = new SwypeArrowHolder(root, swypePoints);
@@ -110,12 +111,21 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                     swypeSequence[index + 1].setState(SwipePointImageViewHolder.State.Unvisited);
                 }
                 redPoint.setVisible(true);
+                if (Settings.SHOW_DEFECT && index + 1 < swypeSequence.length) {
+                    defectView.configureBorder(swypeSequence[index].num, swypeSequence[index + 1].num);
+                    defectView.setVisibility(View.VISIBLE);
+                }
             }
             redPoint.setTranslation(newState.x, newState.y);
 
             if (Settings.SHOW_DEFECT) {
                 float dx = (newState.d >> 16) * xMult;
                 float dy = (newState.d & 0xFFFF) * yMult;
+                if (flipxy) {
+                    float tmp = dy;
+                    dy = dx;
+                    dx = tmp;
+                }
                 defectView.set(redPoint.centerX(), redPoint.centerY(), dx, dy);
             }
         }
@@ -144,6 +154,7 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
         rotateScaleMatrix.postScale(1, 1);
         rotateScaleMatrix.postRotate(orientation, 0, 0);
         rotateScaleMatrix.postScale(xMult, yMult);
+        flipxy = orientation % 180 == 90;
     }
 
     @Override
@@ -195,6 +206,8 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 swypeSequence[0].setState(SwipePointImageViewHolder.State.Visited);
             }
         }, animationDuration * (swypeSequence.length + 1));
+        if (defectView != null)
+            defectView.setVisibility(View.GONE);
     }
 
     private void applyAnimatedVectorDrawable(ImageView view, int id) {
@@ -280,8 +293,10 @@ public class SwypeViewHolder implements CameraController.OnDetectionStateCahnged
                 return true;
 
             case Failed:
-                if (oldState != this.state)
+                if (oldState != this.state) {
                     showFailed();
+                    return true;
+                }
                 return false;
 
         }

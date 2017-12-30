@@ -7,16 +7,9 @@
 
 void SwypeStepDetector::Add(VectorExplained shift) {
     shift._x *= _speedMultX;
+    shift._defectX *= _speedMultX;
     shift._y *= _speedMultY;
-
-    /*double angle = fabs(shift.AngleTo(_target));
-    if (angle < MAX_ATTRACT_ANGLE) {
-        shift._mod = shift.Length();
-        //float attraction = angle/MAX_ATTRACT_ANGLE * CV_PI / 2
-        double attraction = (MAX_ATTRACT_ANGLE - angle) / MAX_ATTRACT_ANGLE;
-        attraction *= attraction * _attraction;
-        shift.AttractTo(_target, attraction);
-    }*/
+    shift._defectY *= _speedMultY;
 
     _current.Add(shift);
     _current._timestamp = shift._timestamp;
@@ -104,19 +97,14 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
 
     _isDiagonal = dx != 0 && dy != 0;
     _target.Set(dx, dy);
-    //_targetRadius = _isDiagonal ? _maxDeviation * _sqrt2 : _maxDeviation;
-    _targetRadius = _maxDeviation;
+    _targetRadius = (float) _maxDeviation;
     _nextSwypePoint = nextPoint + 1;
 
     _BoundsChecker.SetDirection(_target._direction);
+    _BoundsChecker.SetTargetRadius(_targetRadius);
 
     LOGI_NATIVE("SetNextSwipePoint select %d => %d, (%d,%d) dir %d",
                 currentPoint + 1, nextPoint + 1, dx, dy, _target._direction);
     return true;
 }
-
-void SwypeStepDetector::setTolerance(double tolerance) {
-    _BoundsChecker.setTolerance(tolerance);
-}
-
 

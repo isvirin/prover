@@ -36,27 +36,23 @@ void BoundsChecker::SetTurnMatForDirectionDiff(int directionDiff) {
     }
 }
 
-void BoundsChecker::setTolerance(double tolerance) {
-    _fitFactorHoriz = FIT_FACTOR_H;
-    _fitFactorDiag = FIT_FACTOR_D;
-}
-
 /**
  *
  * @param current -- current position vector
  * @return true if we're still OK
  */
-bool BoundsChecker::CheckBounds(Vector current) {
+bool BoundsChecker::CheckBounds(VectorExplained p) {
     // turn _current so we should move to +x (of +x, +y for Diagonal)
     // fail if we've got too close to another swipe-point
-    current.Mul(_turnMat);
-    double x = current._x;
-    double y = current._y;
+    p.MulWithDefect(_turnMat);
+    float tr1 = 1 + _targetRadius;
+    double x = p._x;
+    double y = p._y;
 
     if (_isDiagonal) {
-        if (x < -_fitFactorHoriz || y < -_fitFactorHoriz) {
+        if (x < -FIT_FACTOR_H || y < -FIT_FACTOR_H || x > tr1 || y > tr1) {
             if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f1 %.4f, %.4f", x, y);
+                LOGI_NATIVE("Bounds_f1 %.4f, %.4f, tr: %.4f", x, y, _targetRadius);
             }
             return false;
         }
@@ -66,92 +62,109 @@ bool BoundsChecker::CheckBounds(Vector current) {
         }
 
         if (y > x) {
-            x = current._y;
-            y = current._y = current._x;
-            current._x = x;
+            p.FlipXY();
         }
+
+
+        // ensure that we can't get into wrong swipe-point (1,0) accounting defect
+        // defect is double 'cause server can will have different result
+        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 2);
+        float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
+        if (distanceToWrongPoint <= _targetRadius) {
+            if (logLevel > 0) {
+                LOGI_NATIVE("Bounds 2shifted (%.4f %.4f) dist = %.4f", shifted._x, shifted._y,
+                            distanceToWrongPoint);
+            }
+            return false;
+        }
+
         //distance to line x = y -- it is the line that goes to target point
-        double d1 = (x - y) / _sqrt2;
+        double d1 = (p._x - p._y) / _sqrt2;
         // distance to remaining non-target swipe point
-        double r2 = current.DistanceTo(1, 0);
+        double r2 = p.DistanceTo(1, 0);
         if (logLevel == 0)
-            return d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag);
+            return d1 < r2;
         else {
-            if (d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag))
+            if (d1 < r2)
                 return true;
             if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f3 %.4f, %.4f, %f, %f", x, y, d1 / _fitFactorDiag,
-                            r2 / (1 - _fitFactorDiag));
+                LOGI_NATIVE("Bounds_f3 %.4f, %.4f, %f, %f", p._x, p._y, d1, r2);
             }
             return false;
         }
     } else {
-        return x >= -_fitFactorHoriz && fabs(y) <= _fitFactorHoriz;
+        return x >= -FIT_FACTOR_H && x <= tr1 && fabs(y) <= FIT_FACTOR_H;
     }
 }
 
 
-bool BoundsChecker::CheckBoundsWithDefect(VectorExplained current) {
-    current.Mul(_turnMat);
-    double x = current._x;
-    double y = current._y;
-    double defectX, defectY;
-    if (_flippedXY) {
-        defectX = current._defectY;
-        defectY = current._defectX;
-    } else {
-        defectX = current._defectX;
-        defectY = current._defectY;
-    }
+bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
+    p.MulWithDefect(_turnMat);
+    float tr1 = 1 + _targetRadius;
 
     if (_isDiagonal) {
-        if (x < -_fitFactorHoriz - defectX || y < -_fitFactorHoriz - defectY) {
+        if (!p.CheckWithinRectWithDefect(-FIT_FACTOR_H, -FIT_FACTOR_H, tr1, tr1)) {
             if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f1 %.4f, %.4f", x, y);
+                LOGI_NATIVE("Bounds_f1 %.4f, %.4f", p._x, p._y);
             }
             return false;
         }
 
-        if (x + y <= defectX + defectY) {
+        if (p._x + p._y <= 0) {
             return true;
         }
 
-        if (x >= y) {
-            double x1 = x - defectX;
-            double y1 = y + defectY;
-            if (x1 <=
-                y1) { //a point on the diagonal within defect area, so we are definitely not failed
-                return true;
+        if (logLevel > 0) {
+            LOGI_NATIVE("Bounds (%.4f+-%.4f %.4f+-%.4f)", p._x, p._defectX, p._y, p._defectY);
+        }
+
+        if (p._x < p._y) {
+            p.FlipXY();
+        }
+
+
+        // ensure that we can't get into wrong swipe-point (1,0) accounting defect
+        Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 1);
+        float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
+        if (distanceToWrongPoint <= _targetRadius) {
+            if (logLevel > 0) {
+                LOGI_NATIVE("Bounds 2shifted (%.4f %.4f) dist = %.4f", shifted._x, shifted._y,
+                            distanceToWrongPoint);
             }
-            x = x1;
-            y = y1;
-        } else {
-            double x1 = x + defectX;
-            double y1 = y - defectY;
-            if (x1 >=
-                y1) { //a point on the diagonal within defect area, so we are definitely not failed
-                return true;
-            }
-            x = y1;
-            y = x1;
+            return false;
+        }
+
+        Vector shiftedToLine = p.ShiftDefectEllipseToTouchLineMagnet();
+        if (shiftedToLine._x == shiftedToLine._y)
+            return true;
+        //a point on the diagonal within defect area, so we are definitely not failed
+        if (p._x <= p._y) {
+            return true;
+        }
+        if (logLevel > 0) {
+            LOGI_NATIVE("Bounds (%.4f %.4f)", shiftedToLine._x, shiftedToLine._y);
         }
 
         //distance to line x = y -- it is the line that goes to target point
-        double d1 = (x - y) / _sqrt2;
+        double d1 = (shiftedToLine._x - shiftedToLine._y) / _sqrt2;
         // distance to remaining non-target swipe point
-        double r2 = current.DistanceTo(1, 0);
+        double r2 = shiftedToLine.DistanceTo(1, 0);
         if (logLevel == 0)
-            return d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag);
+            return d1 < r2;
         else {
-            if (d1 / _fitFactorDiag < r2 / (1 - _fitFactorDiag))
+            if (d1 < r2)
                 return true;
             if (logLevel > 0) {
-                LOGI_NATIVE("Bounds_f3 %.4f, %.4f, %f, %f", x, y, d1 / _fitFactorDiag,
-                            r2 / (1 - _fitFactorDiag));
+                LOGI_NATIVE("Bounds_f3 %.4f, %.4f, %f, %f", shiftedToLine._x, shiftedToLine._y, d1,
+                            r2);
             }
             return false;
         }
     } else {
-        return x >= -_fitFactorHoriz - defectX && fabs(y) < _fitFactorHoriz + defectY;
+        return p.CheckWithinRectWithDefect(-FIT_FACTOR_H, -FIT_FACTOR_H, tr1, FIT_FACTOR_H);
     }
+}
+
+void BoundsChecker::SetTargetRadius(float _targetRadius) {
+    BoundsChecker::_targetRadius = _targetRadius;
 }

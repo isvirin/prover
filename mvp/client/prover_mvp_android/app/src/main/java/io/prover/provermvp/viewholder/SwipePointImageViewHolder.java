@@ -11,11 +11,13 @@ import io.prover.provermvp.R;
  */
 
 public class SwipePointImageViewHolder extends ImageViewHolder {
+    public final int num;
     @NonNull
     State state = State.None;
 
-    public SwipePointImageViewHolder(ImageView view) {
+    public SwipePointImageViewHolder(ImageView view, int num) {
         super(view);
+        this.num = num;
     }
 
     public void setState(@NonNull State state) {

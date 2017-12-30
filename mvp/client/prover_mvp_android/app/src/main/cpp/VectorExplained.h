@@ -37,10 +37,30 @@ public:
 
     void operator*=(double mul);
 
+    bool CheckWithinRectWithDefect(float left, float top, float right, float bottom);
+
     void AttractTo(Vector other, double force);
 
     inline int DirectionDiff(VectorExplained other) {
         return (_direction - other._direction + 12) % 8 - 4;
+    }
+
+    inline void MulWithDefect(double mat[2][2]) {
+        double t = mat[0][0] * _x + mat[0][1] * _y;
+        _y = mat[1][0] * _x + mat[1][1] * _y;
+        _x = t;
+        t = mat[0][0] * _defectX + mat[0][1] * _defectY;
+        _defectY = (float) (mat[1][0] * _defectX + mat[1][1] * _defectY);
+        _defectX = (float) t;
+    }
+
+    inline void FlipXY() {
+        double t = _x;
+        _x = _y;
+        _y = t;
+        float t2 = _defectX;
+        _defectX = _defectY;
+        _defectY = t2;
     }
 
     void Log();
@@ -55,8 +75,17 @@ public:
     }
 
     void setRelativeDefect(double relativeDefect) {
-        _defectX = fabs(_x * relativeDefect);
-        _defectY = fabs(_y * relativeDefect);
+        _defectX = fabsf((float) (_x * relativeDefect));
+        _defectY = fabsf((float) (_y * relativeDefect));
+    }
+
+    inline Vector ShiftDefectEllipseToTouchLineMagnet() {
+        return ShiftEllipseToTouchLineMagnet(_defectX, _defectY);
+    }
+
+    inline Vector
+    ShiftDefectEllipseToPointMagnet(float targetX, float targetY, float mul) {
+        return EllipticalShiftMagnet(_defectX * mul, _defectY * mul, targetX, targetY);
     }
 
     double ModDefect() {
@@ -67,11 +96,17 @@ public:
     }
 
     double MinDistanceToWithDefect(Vector other) {
-        double dx = fabs(other._x - _x);
+        Vector shifted = EllipticalShiftMagnet(_defectX, _defectY, other._x, other._y);
+        LOGI_NATIVE(
+                "DistanceWithDefect (%.4f %.4f) shifted (%.4f, %.4f) to (%.4f, %.4f) distance = %.4f",
+                _x, _y, shifted._x, shifted._y, other._x, other._y, shifted.DistanceTo(other)
+        );
+        return shifted.DistanceTo(other);
+/*        double dx = fabs(other._x - _x);
         double dy = fabs(other._y - _y);
         dx = dx < _defectX ? 0.0 : dx - _defectX;
         dy = dy < _defectY ? 0.0 : dy - _defectY;
-        return sqrt(dx * dx + dy * dy);
+        return sqrt(dx * dx + dy * dy);*/
     }
 
     double _angle = 0;
@@ -80,8 +115,8 @@ public:
      */
     int _direction = 0;
 
-    double _defectX = 0;
-    double _defectY = 0;
+    float _defectX = 0;
+    float _defectY = 0;
     double _defectX2sum = 0;
     double _defectY2sum = 0;
 

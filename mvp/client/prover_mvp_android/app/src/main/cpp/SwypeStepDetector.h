@@ -56,8 +56,6 @@ public:
      */
     int CheckState(bool withDefect);
 
-    void setTolerance(double tolerance);
-
     VectorExplained _target;
     VectorExplained _current;
 
@@ -69,7 +67,7 @@ private:
     double _speedMultX = 0;
     double _speedMultY = 0;
     double _maxDeviation = 0;
-    double _targetRadius = 0;
+    float _targetRadius = 0;
 
     double _attraction = 0;
 

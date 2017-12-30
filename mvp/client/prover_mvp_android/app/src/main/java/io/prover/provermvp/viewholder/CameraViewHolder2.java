@@ -189,7 +189,8 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
             cameraController.onRecordingStop(videoFile);
             if (resumed)
                 myCamera.startPreview(mBackgroundHandler, surfacesHolder.textureView.getSurfaceTexture(), surfacesHolder.getRendererInputTexture());
-            MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
+            if (videoFile != null)
+                MediaScannerConnection.scanFile(mRoot.getContext(), new String[]{videoFile.getAbsolutePath()}, null, null);
             videoFile = null;
         };
         if (mBackgroundHandler != null)

@@ -23,8 +23,8 @@ void VectorExplained::Add(VectorExplained other) {
         CalculateExplained();
         _defectX2sum += other._defectX * other._defectX;
         _defectY2sum += other._defectY * other._defectY;
-        _defectX = sqrt(_defectX2sum);
-        _defectY = sqrt(_defectY2sum);
+        _defectX = sqrtf((float) _defectX2sum);
+        _defectY = sqrtf((float) _defectY2sum);
     }
 }
 
@@ -99,5 +99,24 @@ void VectorExplained::ApplyWindow(double windowStart, double windowEnd) {
         double arg = (_mod - windowStart) / (windowEnd - windowStart);
         *this *= arg;
     }
+}
+
+bool VectorExplained::CheckWithinRectWithDefect(float left, float top, float right, float bottom) {
+    if (_x >= left && _x <= right) {
+        return top - _defectY <= _y && _y <= bottom + _defectY;
+    } else if (_y >= top && _y <= bottom)
+        return left - _defectX <= _x && _x <= right + _defectX;
+
+    float cx = (left + right) / 2;
+    float cy = (top + bottom) / 2;
+
+    // coordinate center to rect's center; reflect to positive
+    Vector v = Vector(fabs(_x - cx), fabs(_y - cy));
+    // coordinate center to rect's right-bottom corner
+    v._x -= (right - cx);
+    v._y -= (bottom - cy);
+    Vector shifted = v.EllipticalShiftMagnet(_defectX, _defectY, 0, 0);
+    // if (0,0) within defect area then vector becomes shifted to 0,0
+    return shifted._x == 0 && shifted._y == 0;
 }
 

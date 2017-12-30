@@ -87,8 +87,8 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     scaledShift.SetMul(shift, _xMult, _yMult);
     VectorExplained windowedShift = scaledShift;
     //if (_relaxed)
-    windowedShift.setRelativeDefect(0.3);
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
+    windowedShift.setRelativeDefect(0.2);
     windowedShift._timestamp = timestamp;
 
     if (logLevel > 0) {
@@ -120,7 +120,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         }
     } else if (S == 2) {
         if (timestamp >= _maxStateEndTime) {
-            _swipeStepDetector.Configure(1.5, _maxDetectorDeviation, 4);
+            _swipeStepDetector.Configure(1, _maxDetectorDeviation, 4);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
             count_num = 0;
             MoveToState(3, timestamp);
@@ -177,6 +177,5 @@ void SwypeDetect::setRelaxed(bool relaxed) {
     _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
     //_maxDetectorDeviation = relaxed ? MAX_DETECTOR_DEVIATION * 2 : MAX_DETECTOR_DEVIATION;
     _circleDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
-    _swipeStepDetector.setTolerance(relaxed ? SERVER_TOLERANCE : 0);
     _relaxed = relaxed;
 }

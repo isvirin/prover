@@ -14,7 +14,7 @@
 // FIT_FACTOR_H is for diagonal
 
 #define FIT_FACTOR_H 0.55f
-#define FIT_FACTOR_D 0.53f
+#define FIT_FACTOR_D 0.5f
 
 /**
  * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points
@@ -27,27 +27,27 @@ class BoundsChecker {
 public:
     void SetDirection(int targetDirection);
 
-    bool CheckBounds(Vector current);
+    bool CheckBounds(VectorExplained p);
 
-    bool CheckBoundsWithDefect(VectorExplained current);
+    bool CheckBoundsWithDefect(VectorExplained p);
 
-    void setTolerance(double tolerance);
+    void SetTargetRadius(float _targetRadius);
 
 private:
 
     void SetTurnMatForDirectionDiff(int directionDiff);
+
 
     const double _sqrt2 = sqrtf(2.0f);
 
     bool _isDiagonal;
     double _turnMat[2][2];
 
-    double _fitFactorHoriz = FIT_FACTOR_H;
-    double _fitFactorDiag = FIT_FACTOR_D;
     /**
      * true if rotating for +-90 degrees
      */
     bool _flippedXY;
+    float _targetRadius;
 };
 
 

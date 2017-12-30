@@ -13,7 +13,7 @@ public:
 
     Vector() {}
 
-    Vector(double _x, double _y) : _x(_x), _y(_y) {}
+    Vector(double _x, double _y) : _x(_x), _y(_y), _mod(0) {}
 
     inline void operator+=(Vector other) {
         _x += other._x;
@@ -58,6 +58,39 @@ public:
     inline void CalculateMod() {
         _mod = Length();
     }
+
+    /**
+     * Assume we have an ellipse with center at this point and (rx, ry) semi axises
+     * find a intersection point of the ellipse and line between (this) and (targetX, targetY)
+     * @param dx
+     * @param dy
+     * @param targetX
+     * @param targetY
+     * @return intersection point
+     */
+    Vector EllipticalShift(double rx, double ry, double targetX, double targetY);
+
+    /**
+     * Assume we have an ellipse with center at this point and (rx, ry) semi axises
+     * find a intersection point of the ellipse and line between (this) and (targetX, targetY)
+     * @param rx
+     * @param ry
+     * @param targetX
+     * @param targetY
+     * @param multiplicator
+     * @return target point if it is inside ellipse and intersection point otherwise
+     */
+    Vector EllipticalShiftMagnet(float rx, float ry, float targetX, float targetY);
+
+    /**
+     * Assume we have an ellipse with center at this point and (a, b) semi axises
+     * assume x >= 0 and y <= x
+     * assume we have a line y = x
+     * find a point of ellipse closemost to the line -- it's a point where line parallel to y=x touches the ellipse
+     * return point on a line y=x if y=x intersects ellipse (or (0,0)
+     * @return
+     */
+    Vector ShiftEllipseToTouchLineMagnet(float a, float b);
 
     double _x = 0;
     double _y = 0;
