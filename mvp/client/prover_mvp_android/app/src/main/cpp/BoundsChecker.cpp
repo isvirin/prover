@@ -113,7 +113,7 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
         Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 2);
 #endif
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
-        if (distanceToWrongPoint <= _targetRadius) {
+        if (distanceToWrongPoint <= _targetRadiusOther) {
             if (logLevel > 0) {
                 LOGI_NATIVE("Bounds 2shifted (%.4f %.4f) dist = %.4f", shifted._x, shifted._y,
                             distanceToWrongPoint);
@@ -168,7 +168,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
         Vector shifted = p.ShiftDefectEllipseToPointMagnet(1, 0, 1);
 #endif
         float distanceToWrongPoint = (float) shifted.DistanceTo(1, 0);
-        if (distanceToWrongPoint <= _targetRadius) {
+        if (distanceToWrongPoint <= _targetRadiusOther) {
             if (logLevel > 0) {
                 LOGI_NATIVE("Bounds 2shifted (%.4f %.4f) dist = %.4f", shifted._x, shifted._y,
                             distanceToWrongPoint);
@@ -207,7 +207,8 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
     }
 }
 
-void BoundsChecker::SetTargetRadius(float _targetRadius) {
-    BoundsChecker::_targetRadius = _targetRadius;
+void BoundsChecker::SetTargetRadius(float targetRadius, float targetRadiusOther) {
+    _targetRadius = targetRadius;
+    _targetRadiusOther = targetRadiusOther;
 }
 

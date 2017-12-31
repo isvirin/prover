@@ -30,7 +30,7 @@ public:
 
     bool CheckBoundsWithDefect(VectorExplained p);
 
-    void SetTargetRadius(float _targetRadius);
+    void SetTargetRadius(float _targetRadius, float targetRadiusOther);
 
 private:
 
@@ -44,6 +44,8 @@ private:
     double _turnMat[2][2];
 
     float _targetRadius;
+    // target radius for non-target points
+    float _targetRadiusOther;
 };
 
 

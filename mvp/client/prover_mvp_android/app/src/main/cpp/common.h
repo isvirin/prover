@@ -4,7 +4,7 @@
 #define APPNAME "ProverMVPDetector"
 
 //#define RECT_DEFECT
-#define DEFECT 0.2
+#define DEFECT 0.3
 
 #ifdef __ANDROID_API__
 

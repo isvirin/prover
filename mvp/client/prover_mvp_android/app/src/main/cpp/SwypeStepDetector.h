@@ -52,6 +52,8 @@ public:
      */
     int CheckState(bool withDefect);
 
+    void SetRelaxed(bool _relaxed);
+
     VectorExplained _target;
     VectorExplained _current;
 
@@ -62,6 +64,7 @@ private:
 
     double _speedMultX = 0;
     double _speedMultY = 0;
+    float _defaultTargetRadius = 0;
     float _targetRadius = 0;
 
     int _currentSwypePoint = 0;
@@ -69,6 +72,7 @@ private:
 
     BoundsChecker _BoundsChecker;
     VectorExplained _total;
+    bool _relaxed;
 };
 
 
