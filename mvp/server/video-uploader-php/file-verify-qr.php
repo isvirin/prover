@@ -6,10 +6,16 @@ if (!$loadConfig_result[0]) {
     exit(1);
 }
 
-DEFINE('CONTRACT', '0x8a45bbbbd8ea55350a62aa5c69826227a18151cd');
 DEFINE('SUBMIT_HASH', '0x708b34fe');
 
 $videoFile = @$argv[1];
+
+$mvpHelloInfo = json_decode(httpPost(MVP_CGI_BIN_URL . '/hello'), true);
+if (!$mvpHelloInfo['contractAddress']) {
+    echo 'Sorry, contract not available now';
+    exit;
+}
+$contract = $mvpHelloInfo['contractAddress'];
 
 $result = exec("searchqrcode $videoFile 2> /dev/null", $output, $return_code);
 
@@ -35,7 +41,7 @@ if ($gethClient->call('eth_getTransactionByHash', $params)) {
         echo 'wrong block hash';
         exit;
     }
-    if ($gethClient->result->to != CONTRACT) {
+    if ($gethClient->result->to != $contract) {
         echo 'wrong contract';
         exit;
     }
