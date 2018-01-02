@@ -26,14 +26,21 @@ function uploadResult($isSuccess, $transactions, $error, $debug = false)
 // для вывода результата строго в JSON делаем фокус
 error_reporting(0); //show all errors
 
-function callAnalyticProgramm($blockHash, $hash)
+function callAnalyticProgramm($file, $blockHash, $txHash)
 {
     $validated = false;
     $swype = 0;
     $beginSwypeTime = 0;
     $endSwypeTime = 0;
-    //exec(program) and get variables
-    // TODO: для окончательного подтверждения мы должны еще прогнать видео через утилитку
+    $resultJson = exec("analyzefile $file --txhash $txHash --blockhash $blockHash 2> /dev/null", $output, $return_code);
+    if ($return_code !== 0) {
+        $result = @json_decode($resultJson, true)['result'];
+        if ($result) {
+            $swype = @$result['swype'];
+            $beginSwypeTime = @$result['time-begin'];
+            $endSwypeTime = @$result['time-end'];
+        }
+    }
     return [
         'validated' => $validated,
         'swype' => $swype,
@@ -172,7 +179,7 @@ function worker($file)
                         if ($transactionDetails->input === TRANSACTIONBYHASH_CORRECT_INPUT) {
                             if ($transactionDetails->blockHash) {
                                 $transaction2_details = json_decode(json_encode($transactionDetails));
-                                $analyticResult = callAnalyticProgramm($transactionDetails->blockHash, $transactionDetails->hash);
+                                $analyticResult = callAnalyticProgramm($file, $transactionDetails->blockHash, $transactionDetails->hash);
                                 $validated = $analyticResult['validated'];
                                 $swype = $analyticResult['swype'];
                                 $beginSwypeTime = $analyticResult['beginSwypeTime'];
