@@ -81,7 +81,11 @@ function getBlockByHash(&$gethClient, $hash)
     return $block;
 }
 
-function worker()
+/**
+ * @param string $file
+ * @return array
+ */
+function worker($file)
 {
     $isSuccess = false;
     $error = '';
@@ -91,8 +95,8 @@ function worker()
     if (!$mvpHelloInfo['contractAddress']) {
         error_log('no contractAddress');
         $error = 'Sorry, contract not available now';
-    } else if (!empty($_FILES['file'])) {
-        $hash = hash_file('sha256', $_FILES['file']['tmp_name']);
+    } else if (is_file($file)) {
+        $hash = hash_file('sha256', $file);
         $gethClient = new JsonRpc\Client(GETH_NODE_URL);
         $params = [[
             "fromBlock" => "0x1",
@@ -203,5 +207,12 @@ function worker()
     ];
 }
 
-$workerResult = worker();
+$file = '';
+if (!empty($_FILES['file'])) {
+    $_FILES['file']['tmp_name'];
+} else if (isset($argv[1])) {
+    $file = $argv[1];
+}
+
+$workerResult = worker($file);
 die(uploadResult($workerResult['isSuccess'], $workerResult['transactions'], $workerResult['error']));
