@@ -95,7 +95,7 @@ saveClientInfo('index');
                 </div>
             </section>
             <section id="upload-file" class="upload-file">
-                <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
+                <form method="post" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
                       onclick="document.getElementById('file').click()">
                     <div class="box__input">
     <!--                    <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>-->
@@ -249,7 +249,7 @@ saveClientInfo('index');
                     </div>
                 </section>
                 <section id="clapperboard-upload-file" class="upload-file">
-                    <form method="post" action="upload.php" enctype="multipart/form-data" novalidate class="box"
+                    <form method="post" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
                           onclick="document.getElementById('file').click()">
                         <div class="box__input">
                             <!--                    <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>-->
