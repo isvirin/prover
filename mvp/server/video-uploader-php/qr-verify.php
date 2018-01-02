@@ -43,7 +43,10 @@ if ($gethClient->call('eth_getTransactionByHash', $params)) {
         echo 'wrong submit hash input';
         exit;
     }
-    echo 'success!';
+    $inputStrLength = hexdec(substr($gethClient->result->input, 2 + (4 + 32) * 2, 64));
+    $inputStrHex = substr($gethClient->result->input, 2 + (4 + 32 + 32) * 2, $inputStrLength * 2);
+    $inputStr = hexToStr($inputStrHex);
+    echo 'success! ' . $inputStr;
 } else {
     echo 'Error:';
     var_dump($gethClient->error);
