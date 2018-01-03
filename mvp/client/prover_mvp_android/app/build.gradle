@@ -7,7 +7,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 27
-        versionName "1.1"
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
@@ -91,7 +91,7 @@ android {
             }
         }//*/
 
-/*        armeabi_v7a {
+        armeabi_v7a {
             versionCode = android.defaultConfig.versionCode + 1
             dimension "main"
             ndk {
