@@ -13,7 +13,7 @@
 // FIT_FACTOR_H is for horizontal and vertical movement;
 // FIT_FACTOR_H is for diagonal
 
-#define FIT_FACTOR_H 0.55f
+#define FIT_FACTOR_H 0.45f
 
 /**
  * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points

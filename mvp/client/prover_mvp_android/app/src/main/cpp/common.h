@@ -5,6 +5,7 @@
 
 //#define RECT_DEFECT
 #define DEFECT 0.3
+#define DEFECT_CLIENT 0.22
 
 #ifdef __ANDROID_API__
 

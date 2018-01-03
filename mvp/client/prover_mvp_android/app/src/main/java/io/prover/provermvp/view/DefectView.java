@@ -17,7 +17,7 @@ import android.view.View;
 
 public class DefectView extends View {
     private static final float TARGET_RADIUS = 0.22f;
-    private static final float FIT_FACTOR_H = 0.55f;
+    private static final float FIT_FACTOR_H = 0.45f;
     private static final float PARABOLA_START = -0.03f;
     private static final float PARABOLA_END = 1.21f;
     private static final float PARABOLA_STEP = 0.123f;
@@ -153,15 +153,16 @@ public class DefectView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //canvas.drawOval(defectRect, p);
-        //canvas.drawOval(defectRect2, p);
-        canvas.drawRect(defectRect, p);
-        canvas.drawRect(defectRect2, p);
+        canvas.drawOval(defectRect, p);
+        canvas.drawOval(defectRect2, p);
+        //canvas.drawRect(defectRect, p);
+        //canvas.drawRect(defectRect2, p);
         canvas.drawRect(targetRect, borderPaint);
 
-        canvas.drawCircle(targetCenter.x, targetCenter.y, targetRadius, targetPaint);
 
         if (isDiagonal) {
+            canvas.drawCircle(targetCenter.x, targetCenter.y, targetRadius * 1.65f, targetPaint);
+
             canvas.save();
             canvas.translate(fromXpx, fromYpx);
             canvas.rotate(parabolaRotationAngle);
@@ -170,6 +171,8 @@ public class DefectView extends View {
             canvas.restore();
             canvas.drawCircle(sidePoint1.x, sidePoint1.y, targetRadius, borderPaint);
             canvas.drawCircle(sidePoint2.x, sidePoint2.y, targetRadius, borderPaint);
+        } else {
+            canvas.drawCircle(targetCenter.x, targetCenter.y, targetRadius, targetPaint);
         }
     }
 

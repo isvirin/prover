@@ -88,7 +88,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained windowedShift = scaledShift;
     //if (_relaxed)
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
-    windowedShift.setRelativeDefect(DEFECT);
+    windowedShift.setRelativeDefect(_relaxed ? DEFECT : DEFECT_CLIENT);
     windowedShift._timestamp = timestamp;
 
     if (logLevel > 0) {
@@ -120,7 +120,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         }
     } else if (S == 2) {
         if (timestamp >= _maxStateEndTime) {
-            _swipeStepDetector.Configure(1, _maxDetectorDeviation);
+            _swipeStepDetector.Configure(1, (float) _maxDetectorDeviation);
             _swipeStepDetector.SetSwipeStep(swype_Numbers[0], swype_Numbers[1]);
             count_num = 0;
             MoveToState(3, timestamp);

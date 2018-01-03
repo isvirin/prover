@@ -96,7 +96,7 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
     _nextSwypePoint = nextPoint + 1;
     _targetRadius = _defaultTargetRadius;
     if (_relaxed && _target._direction % 2 == 0) {// for diagonal target at server
-        _targetRadius *= 1.5;
+        _targetRadius *= 1.65;
     }
 
     _BoundsChecker.SetDirection(_target._direction);
