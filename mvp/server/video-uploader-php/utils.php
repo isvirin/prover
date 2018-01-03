@@ -17,6 +17,19 @@ function httpPost($url, $data = [])
 }
 
 /**
+ * @param string $hex
+ * @return string
+ */
+function hexToStr($hex)
+{
+    $string = '';
+    for ($i = 0; $i < strlen($hex) - 1; $i += 2) {
+        $string .= chr(hexdec($hex[$i] . $hex[$i + 1]));
+    }
+    return $string;
+}
+
+/**
  * @return array [isSuccess, $errorText]
  */
 function loadConfig()
@@ -75,17 +88,17 @@ function loadConfig()
 function get_client_ip_server()
 {
     $ipaddress = '';
-    if ($_SERVER['HTTP_CLIENT_IP'])
+    if (@$_SERVER['HTTP_CLIENT_IP'])
         $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    else if ($_SERVER['HTTP_X_FORWARDED_FOR'])
+    else if (@$_SERVER['HTTP_X_FORWARDED_FOR'])
         $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    else if ($_SERVER['HTTP_X_FORWARDED'])
+    else if (@$_SERVER['HTTP_X_FORWARDED'])
         $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    else if ($_SERVER['HTTP_FORWARDED_FOR'])
+    else if (@$_SERVER['HTTP_FORWARDED_FOR'])
         $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    else if ($_SERVER['HTTP_FORWARDED'])
+    else if (@$_SERVER['HTTP_FORWARDED'])
         $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    else if ($_SERVER['REMOTE_ADDR'])
+    else if (@$_SERVER['REMOTE_ADDR'])
         $ipaddress = $_SERVER['REMOTE_ADDR'];
     else
         $ipaddress = 'UNKNOWN';
