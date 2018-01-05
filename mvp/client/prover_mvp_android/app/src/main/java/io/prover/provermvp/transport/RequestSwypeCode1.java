@@ -1,5 +1,7 @@
 package io.prover.provermvp.transport;
 
+import android.util.Log;
+
 import org.ethereum.core.Transaction;
 import org.json.JSONException;
 import org.spongycastle.util.encoders.DecoderException;
@@ -53,10 +55,11 @@ public class RequestSwypeCode1 extends NetworkRequest<SwypeResponce1> {
 
     @Override
     protected Transaction createTransaction() {
+        Log.d(TAG, "RequestSwypeCode1 nonce: " + session.getNonce().toString());
         byte[] gasLimit = toUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
         byte[] data = toUnsignedByteArray(BigInteger.valueOf(GENERATE_SWYPECODE_DATA));
         byte[] nonce = toUnsignedByteArray(session.getNonce());
-        Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
+        Transaction transaction = new Transaction(nonce, session.getGasPrice(), gasLimit, session.getContractAddress(), new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;
     }

@@ -157,7 +157,7 @@ public class CameraViewHolder2 implements MyCamera2.CameraStateListener, ICamera
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mMediaRecorder.setOutputFile(videoFile.getPath());
-        mMediaRecorder.setVideoEncodingBitRate(10000000);
+        mMediaRecorder.setVideoEncodingBitRate(videoSize.getHighQualityBitRate());
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(videoSize.width, videoSize.height);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);

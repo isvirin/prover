@@ -1,5 +1,7 @@
 package io.prover.provermvp.transport;
 
+import android.util.Log;
+
 import org.ethereum.core.Transaction;
 import org.json.JSONException;
 import org.spongycastle.util.Arrays;
@@ -74,11 +76,12 @@ public class SubmitVideoHashRequest extends NetworkRequest<SubmitVideoHashRespon
 
     @Override
     protected Transaction createTransaction() {
+        Log.d(TAG, "SubmitVideoHashRequest nonce: " + session.getNonce().toString());
         byte[] gasLimit = toUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
         byte[] operation = toUnsignedByteArray(BigInteger.valueOf(SUDMIT_VIDEO_FILE_DATA));
         byte[] data = Arrays.concatenate(operation, videoFileHash, responce1.hashBytes);
         byte[] nonce = toUnsignedByteArray(session.getNonce());
-        Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
+        Transaction transaction = new Transaction(nonce, session.getGasPrice(), gasLimit, session.getContractAddress(), new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;
     }

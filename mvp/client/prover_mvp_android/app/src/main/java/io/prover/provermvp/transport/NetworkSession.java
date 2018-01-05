@@ -15,32 +15,46 @@ import static io.prover.provermvp.transport.NetworkRequest.TAG;
  */
 
 public class NetworkSession {
-    public final byte[] contractAddress;
-    public final byte[] gasPrice;
     public final ECKey key;
-    public volatile BigInteger ethBalance;
-    private volatile BigInteger acualNonce;
+    private volatile BigInteger actualNonce;
+    private volatile HelloResponce hello;
 
-    public NetworkSession(HelloResponce responce, ECKey key, NetworkSession oldNetworkSession) {
-        contractAddress = responce.contractAddress;
-        gasPrice = responce.gasPrice;
-        ethBalance = responce.ethBalance;
+    public NetworkSession(HelloResponce hello, ECKey key) {
+        this.hello = hello;
         this.key = key;
-        acualNonce = responce.bigIntegerNonce();
-        if (oldNetworkSession != null && oldNetworkSession.acualNonce.compareTo(acualNonce) > 0) {
-            acualNonce = oldNetworkSession.acualNonce;
-        }
+        actualNonce = hello.bigIntegerNonce();
 
-        Log.d(TAG, String.format("new netSession; old nonce: %s, new nonce: %s, selectedNonce : %s",
-                oldNetworkSession == null ? null : oldNetworkSession.acualNonce.toString(),
-                acualNonce.toString(), responce.bigIntegerNonce().toString()));
+        Log.d(TAG, String.format("new netSession; nonce: %s, this: %s", actualNonce.toString(), this));
+    }
+
+    public void onNewHelloResponce(HelloResponce hello) {
+        this.hello = hello;
+        BigInteger oldNonce = actualNonce;
+        synchronized (this) {
+            BigInteger newNonce = hello.bigIntegerNonce();
+            if (newNonce.compareTo(actualNonce) > 0)
+                actualNonce = newNonce;
+        }
+        Log.d(TAG, String.format("update session hello, oldNonce: %s, newNonce: %s, selected: %s, this: %s",
+                oldNonce.toString(), hello.bigIntegerNonce().toString(), actualNonce.toString(), this));
     }
 
     public BigInteger getNonce() {
-        return acualNonce;
+        return actualNonce;
+    }
+
+    public byte[] getContractAddress() {
+        return hello.contractAddress;
+    }
+
+    public byte[] getGasPrice() {
+        return hello.gasPrice;
     }
 
     public void increaseNonce() {
-        acualNonce = acualNonce.add(BigInteger.ONE);
+        synchronized (this) {
+            actualNonce = actualNonce.add(BigInteger.ONE);
+        }
+        Log.d(TAG, String.format("new nonce: %s, this: %s", actualNonce.toString(), this));
     }
 }
