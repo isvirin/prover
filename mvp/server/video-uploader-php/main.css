@@ -305,12 +305,12 @@ input[type='search']::-webkit-search-results-decoration {
     width: 200px;
     height: 200px;
     margin: 0 auto;
-    padding: 30px;
+    padding: 50px;
     box-sizing: border-box;
 }
 .how-it-works .info-block .img-background img {
-    max-width: 135px;
-    height: 135px;
+    max-width: 100px;
+    height: 100px;
 }
 .how-it-works .info-block .info {
     font-size: 18px;

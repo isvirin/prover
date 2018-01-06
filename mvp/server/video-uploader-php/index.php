@@ -144,13 +144,13 @@ saveClientInfo('index');
                 <div class="row">
                     <div class="info-block">
                         <div class="img-background">
-                            <img class="" src="images/1.svg">
+                            <img class="" src="images/1_pr.svg">
                         </div>
                         <div class="info"><p>Upload a video, recorded with Prover technology.</p></div>
                     </div>
                     <div class="info-block">
                         <div class="img-background">
-                            <img class="" src="images/2.svg">
+                            <img class="" src="images/2_pr.svg">
                         </div>
                         <div class="info "><p>Our service will check the hash of a file previously stored in the blockchain and the presence of inputted swype code.</p></div>
                     </div>
@@ -158,13 +158,13 @@ saveClientInfo('index');
                 <div class="row">
                     <div class="info-block">
                         <div class="img-background">
-                            <img class="" src="images/3.svg">
+                            <img class="" src="images/3_pr.svg">
                         </div>
                         <div class="info"><p>In the case of matching hashes, and a swype-code the video file will be considered as authentic.</p></div>
                     </div>
                     <div class="info-block">
                         <div class="img-background">
-                            <img class="" src="images/4.svg">
+                            <img class="" src="images/4_pr.svg">
                         </div>
                         <div class="info "><p>You will get the report, with the link of hash of the file and swipe code to be able to verify independently.</p></div>
                     </div>
@@ -173,16 +173,25 @@ saveClientInfo('index');
             <section id="use-cases" class="use-cases">
                 <h3>Use cases</h3>
                 <div class="use-case__block">
-                    <p><span class="red-line"></span>Permanently fixed video cameras (Security, video surveillance, surgery e.t.c);</p>
+                    <p><span class="red-line"></span>Both parties involved in a traffic accident can rely on a video recording to prove authenticity of time, date and record of the accident</p>
                 </div>
                 <div class="use-case__block">
-                    <p><span class="red-line"></span>Drones with cameras for video filming and remote inspections;</p>
+                    <p><span class="red-line"></span>Both users and platforms can prove the authenticity and exclusivity of user-generated video content and share monetization proceeds</p>
                 </div>
                 <div class="use-case__block">
-                    <p><span class="red-line"></span>Professional digital cameras (for journalism, bloggers, video clips, movies and other professional filming);</p>
+                    <p><span class="red-line"></span>Doctors and insurance companies can be sure that patients are taking the prescribed drugs properly without keeping them in hospitals</p>
                 </div>
                 <div class="use-case__block">
-                    <p><span class="red-line"></span>Cases, when period of recording is too short and does not fit for using SWYPE ID technology (KYC).</p>
+                    <p><span class="red-line"></span>Users can be sure that they are chatting with a real person on video dating websites and services</p>
+                </div>
+                <div class="use-case__block">
+                    <p><span class="red-line"></span>Employers and contractors can exchange authentic and time stamped work reports</p>
+                </div>
+                <div class="use-case__block">
+                    <p><span class="red-line"></span>Parties can maintain a Blockchain video database of trusted "hand shake" agreements</p>
+                </div>
+                <div class="use-case__block">
+                    <p><span class="red-line"></span>Public and crowdsourced news platforms can validate the authenticity, exclusivity and timing of video news submitted by individual contributors</p>
                 </div>
             </section>
             <section id="faq" class="faq">
@@ -241,7 +250,7 @@ saveClientInfo('index');
                             <li class="menu-list__item"><a href="#clapperboard-how-it-works">How it works</a></li>
                             <li class="menu-list__item"><a href="#clapperboard-use-cases">Use cases</a></li>
                             <li class="menu-list__item">
-                                <a target="_blank" href="https://play.google.com/store/apps/details?id=io.prover.provermvp">
+                                <a target="_blank" href="https://play.google.com/store/apps/details?id=io.prover.clapperboardmvp">
                                     <img class="google__play" src="images/play_market.png">
                                 </a>
                             </li>
@@ -259,6 +268,7 @@ saveClientInfo('index');
                             <input type="file" name="file" id="file" class="box__file">
                             <label class="box__labelFile_default" for="">
                                 <strong>Choose a file</strong>
+                                <span class="box__dragndrop"> or drag it here.</span>
                             </label>
                             <label class="box__labelFile_file" for=""></label>
                             <button type="submit" class="box__button">Upload</button>
@@ -297,11 +307,13 @@ saveClientInfo('index');
                     <div class="row">
                         <div class="info-block">
                             <div class="img-background">
+                                <img class="" src="images/1_cb.svg">
                             </div>
                             <div class="info"><p>User launches the app and inputs the text information which he wants to be saved in blockchain.</p></div>
                         </div>
                         <div class="info-block">
                             <div class="img-background">
+                                <img class="" src="images/2_cb.svg">
                             </div>
                             <div class="info "><p>Then user requests the QR code contains the hash of the transaction and the block at that time, and text information which was previously entered by the user.</p></div>
                         </div>
@@ -309,11 +321,13 @@ saveClientInfo('index');
                     <div class="row">
                         <div class="info-block">
                             <div class="img-background">
+                                <img class="" src="images/3_cb.svg">
                             </div>
                             <div class="info"><p>QR code appears on the screen of an app and user can capture it while filming the video by any kind of digital cameras.</p></div>
                         </div>
                         <div class="info-block">
                             <div class="img-background">
+                                <img class="" src="images/4_cb.svg">
                             </div>
                             <div class="info ">
                                 <p>
@@ -328,16 +342,16 @@ saveClientInfo('index');
                 <section id="clapperboard-use-cases" class="use-cases">
                     <h3>Use cases</h3>
                     <div class="use-case__block">
-                        <p><span class="red-line"></span>Permanently fixed video cameras (Security, video surveillance, surgery e.t.c);</p>
+                        <p><span class="red-line"></span>Permanently fixed video cameras (Security, video surveillance, surgery e.t.c)</p>
                     </div>
                     <div class="use-case__block">
-                        <p><span class="red-line"></span>Drones with cameras for video filming and remote inspections;</p>
+                        <p><span class="red-line"></span>Drones with cameras for video filming and remote inspections</p>
                     </div>
                     <div class="use-case__block">
-                        <p><span class="red-line"></span>Professional digital cameras (for journalism, bloggers, video clips, movies and other professional filming);</p>
+                        <p><span class="red-line"></span>Professional digital cameras (for journalism, bloggers, video clips, movies and other professional filming)</p>
                     </div>
                     <div class="use-case__block">
-                        <p><span class="red-line"></span>Cases, when period of recording is too short and does not fit for using SWYPE ID technology (KYC).</p>
+                        <p><span class="red-line"></span>Cases, when period of recording is too short and does not fit for using SWYPE ID technology (KYC)</p>
                     </div>
                 </section>
             </div>
@@ -349,7 +363,7 @@ saveClientInfo('index');
                 <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
                 <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
             </div>
-            <div class="link copyright">Prover © 2017</div>
+            <div class="link copyright">Prover © 2018</div>
         </footer>
     </div>
 
