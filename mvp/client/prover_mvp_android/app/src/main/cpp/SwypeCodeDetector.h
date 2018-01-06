@@ -1,0 +1,14 @@
+//
+// Created by babay on 06.01.2018.
+//
+
+#ifndef PROVER_MVP_ANDROID_SWYPECODEDETECTOR_H
+#define PROVER_MVP_ANDROID_SWYPECODEDETECTOR_H
+
+
+class SwypeCodeDetector {
+
+};
+
+
+#endif //PROVER_MVP_ANDROID_SWYPECODEDETECTOR_H

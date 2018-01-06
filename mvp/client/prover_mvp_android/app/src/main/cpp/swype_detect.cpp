@@ -91,7 +91,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     windowedShift.setRelativeDefect(_relaxed ? DEFECT : DEFECT_CLIENT);
     windowedShift._timestamp = timestamp;
 
-    if (logLevel > 0) {
+    if (logLevel > 0 && windowedShift._mod > 0) {
         LOGI_NATIVE(
                 "t%d shift (%+6.2f,%+6.2f), scaled |%+.4f,%+.4f|=%.4f windowed |%+.4f,%+.4f|=%.4f_%3.0f_%d",
                 timestamp, shift.x, shift.y,

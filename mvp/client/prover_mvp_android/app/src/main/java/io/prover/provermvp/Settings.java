@@ -5,7 +5,7 @@ package io.prover.provermvp;
  */
 
 public interface Settings {
-    boolean REQUEST_SWYPE = true || !BuildConfig.DEBUG;
+    boolean REQUEST_SWYPE = false || !BuildConfig.DEBUG;
     boolean REUSE_PREVIEW_BUFFERS = true;
     boolean USE_CAMERA_2 = true;
 

@@ -74,6 +74,18 @@ public:
         return fmod(other._angle - _angle + 540.0, 360.0) - 180.0;
     }
 
+    inline VectorExplained operator-(VectorExplained other) {
+        VectorExplained result;
+        result._x = _x - other._x;
+        result._y = _y - other._y;
+        result._defectX2sum = other._defectX * other._defectX + _defectX * _defectX;
+        result._defectY2sum = other._defectY * other._defectY + _defectY * _defectY;
+        result._defectX = sqrtf((float) _defectX2sum);
+        result._defectY = sqrtf((float) _defectY2sum);
+
+        return result;
+    }
+
     void setRelativeDefect(double relativeDefect) {
         _defectX = fabsf((float) (_x * relativeDefect));
         _defectY = fabsf((float) (_y * relativeDefect));
@@ -95,11 +107,16 @@ public:
         return RectShiftMagnet(_defectX * mul, _defectY * mul, targetX, targetY);
     }
 
-    double ModDefect() {
+    float ModDefect() {
         if (_mod == 0)
             return 0;
 
-        return sqrt(_x * _x * _defectX2sum + _y * _y * _defectY2sum) / _mod;
+        if (_defectX2sum == 0 && _defectY2sum == 0) {
+            float t1 = _defectX * (float) _x;
+            float t2 = _defectY * (float) _y;
+            return sqrtf(t1 * t1 + t2 * t2);
+        } else
+            return (float) (sqrt(_x * _x * _defectX2sum + _y * _y * _defectY2sum) / _mod);
     }
 
     double MinDistanceToWithDefect(Vector other) {

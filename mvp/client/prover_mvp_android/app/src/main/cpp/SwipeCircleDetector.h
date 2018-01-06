@@ -7,14 +7,15 @@
 
 
 #include "VectorExplained.h"
+#include "ValueWithDefect.h"
 
 #define SHIFTS 64
 
-#define MAX_CIRCLE_DURATION_MS 2500
+#define MAX_CIRCLE_DURATION_MS 1500
 
 #define MIN_CIRCLE_AREA 0.14
 #define MAX_DEVIATION 0.09
-#define MIN_AREA_BY_P2_TO_CIRCLE 0.67
+#define MIN_AREA_BY_P2_TO_CIRCLE 0.75
 
 class SwipeCircleDetector {
 public:
@@ -29,20 +30,19 @@ public:
 
     const double Circle_S_by_P2 = 0.25 / CV_PI;
 
-    void setTolerance(double tolerance);
-
     void SetRelaxed(bool relaxed);
 
 private:
-    double Area(int amount, double &perimeter);
+    ValueWithDefect CalculateArea(int amount, ValueWithDefect &perResult);
 
-    Vector shifts_[SHIFTS];
+    VectorExplained shifts_[SHIFTS];
     int pos_ = 0;
     int total_ = 0;
 
     double _minCircleArea = MIN_CIRCLE_AREA;
     double _maxDeviation = MAX_DEVIATION;
     double _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE;
+    bool _relaxed = true;
 };
 
 
