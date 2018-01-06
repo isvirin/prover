@@ -107,6 +107,19 @@ public:
         return RectShiftMagnet(_defectX * mul, _defectY * mul, targetX, targetY);
     }
 
+    /**
+     * set 1-sized vector for specified direction
+     * @param direction
+     */
+    void SetDirection(int direction);
+
+    /**
+     * set 1-sized vector for specified swipe-points movement
+     * @param from
+     * @param to
+     */
+    void SetSwipePoints(int from, int to);
+
     float ModDefect() {
         if (_mod == 0)
             return 0;

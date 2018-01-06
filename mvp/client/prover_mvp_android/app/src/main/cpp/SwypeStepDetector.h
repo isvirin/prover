@@ -29,17 +29,21 @@ public:
      * @param height
      * @param speedMult
      */
-    void Configure(double speedMult, float maxDeviation);
+    void Configure(double speedMult, float maxDeviation, bool relaxed);
 
     /**
-     * configures for movement between adjacent swype points currentPoint to nextPoint
-     * @param currentPoint -- current point number, 1-based
-     * @param nextPoint -- next point number; 1-based
-     * @return true if configured OK; fails if points are not adjacent
+     * configures to start movement in specified direction
+     * @param dir
      */
-    bool SetSwipeStep(int currentPoint, int nextPoint);
+    void SetDirection(int dir);
 
-    bool AdvanceSwipeStep(int nextPoint);
+    /**
+     * set new direction, taking in account current position and previous targer shift vector
+     * @param dir
+     */
+    void AdvanceDirection(int dir);
+
+    void SetTarget(VectorExplained target);
 
     void FinishStep();
 
@@ -52,14 +56,9 @@ public:
      */
     int CheckState(bool withDefect);
 
-    void SetRelaxed(bool _relaxed);
-
-    VectorExplained _target;
     VectorExplained _current;
 
 private:
-    bool SetNextSwipePoint(int nextPoint);
-
     int _count = 0;
 
     double _speedMultX = 0;
@@ -67,11 +66,9 @@ private:
     float _defaultTargetRadius = 0;
     float _targetRadius = 0;
 
-    int _currentSwypePoint = 0;
-    int _nextSwypePoint = 0;
-
     BoundsChecker _BoundsChecker;
     VectorExplained _total;
+    VectorExplained _target;
     bool _relaxed;
 };
 

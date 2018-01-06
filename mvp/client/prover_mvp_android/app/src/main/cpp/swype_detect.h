@@ -134,14 +134,10 @@
 #define VECTOR_WINDOW_END 0.04
 #define PAUSE_TO_STATE_3_MS 1500
 #define PAUSE_TO_ST3_MS_PER_STEP 300
-#define MS_PER_SWIPE_STEP 2000
 
 #define MAX_DETECTOR_DEVIATION 0.22
 
-#define SERVER_TOLERANCE 0.5
-
 #include <opencv2/opencv.hpp>
-#include <vector>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
@@ -150,6 +146,7 @@
 #include "VectorExplained.h"
 #include "SwypeStepDetector.h"
 #include "SwipeCircleDetector.h"
+#include "SwypeCodeDetector.h"
 
 
 class SwypeDetect {
@@ -202,17 +199,15 @@ private:
 
     cv::Point2d Frame_processor(cv::Mat &frame_i);
 
-    //External data
-    std::vector<int> swype_Numbers;//we have swype code or we will wait swype code
+    SwipeCode swipeCode;//we have swype code or we will wait swype code
 
     int S; //state S
-    unsigned int count_num; //Number of the correctly entered swype-numbers
 
     cv::UMat buf1ft;
     cv::UMat buf2ft;
     cv::UMat hann;
 
-    SwypeStepDetector _swipeStepDetector;
+    SwypeCodeDetector _codeDetector;
     SwipeCircleDetector _circleDetector;
     uint _maxStateEndTime = 0;
 
@@ -223,6 +218,5 @@ private:
     int _detecttorHeight = 0;
     double _xMult = 0.0;
     double _yMult = 0.0;
-    double _maxDetectorDeviation = MAX_DETECTOR_DEVIATION;
     bool _relaxed;
 };
