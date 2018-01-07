@@ -132,8 +132,6 @@
 
 #define VECTOR_WINDOW_START 0.025
 #define VECTOR_WINDOW_END 0.04
-#define PAUSE_TO_STATE_3_MS 1500
-#define PAUSE_TO_ST3_MS_PER_STEP 300
 
 #define MAX_DETECTOR_DEVIATION 0.22
 
@@ -209,7 +207,6 @@ private:
 
     SwypeCodeDetector _codeDetector;
     SwipeCircleDetector _circleDetector;
-    uint _maxStateEndTime = 0;
 
     bool _tickTock = false;
 

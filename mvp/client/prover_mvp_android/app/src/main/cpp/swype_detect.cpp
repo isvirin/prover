@@ -98,6 +98,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
                     MoveToState(1, timestamp);
                 } else {
                     MoveToState(2, timestamp);
+                    _codeDetector.Init(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
                 }
             }
         }
@@ -106,19 +107,20 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     } else if (S == 1) {
         if (!swipeCode.empty()) {
             MoveToState(2, timestamp);
+            _codeDetector.Init(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
         }
     } else if (S == 2) {
-        if (timestamp >= _maxStateEndTime) {
-            _codeDetector.Init(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
+        _codeDetector.Add(windowedShift);
+        if (_codeDetector._status < 2) {
             MoveToState(3, timestamp);
         }
     } else if (S == 3) {
-        int status = _codeDetector.Add(windowedShift);
+        _codeDetector.Add(windowedShift);
         _codeDetector.FillResult(index, x, y, debug);
-        if (status == 0);
-        else if (status < 0) {
+        if (_codeDetector._status == 0);
+        else if (_codeDetector._status < 0) {
             MoveToState(0, timestamp);
-        } else if (status == 1) {
+        } else if (_codeDetector._status == 1) {
             MoveToState(4, timestamp);
         }
     } else if (S == 4) {
@@ -130,13 +132,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
 
 void SwypeDetect::MoveToState(int state, uint timestamp) {
     S = state;
-    if (state == 2) {
-        _maxStateEndTime =
-                timestamp + (uint) (PAUSE_TO_ST3_MS_PER_STEP * (swipeCode._length - 2));
-    } else {
-        _maxStateEndTime = (uint) -1;
-    }
-    LOGI_NATIVE("MoveToState %d, end: %d", S, _maxStateEndTime);
+    LOGI_NATIVE("MoveToState %d", S);
 }
 
 void SwypeDetect::setRelaxed(bool relaxed) {

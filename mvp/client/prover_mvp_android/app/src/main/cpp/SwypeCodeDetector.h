@@ -21,14 +21,19 @@ public:
 
     /**
      * @param shift
-     * @return  1 -- swipe code completed
-     *         -1 -- swipe code failed
-     *         -2 -- swipe input timeout
-     *          0 -- processing swipe code
      */
-    int Add(VectorExplained &shift);
+    void Add(VectorExplained &shift);
 
     void FillResult(int &index, int &x, int &y, int &debug);
+
+    /*
+     *    1 -- swipe code completed
+     *    0 -- processing swipe code
+     *    2 -- waiting to start swipe code processing
+     *   -1 -- swipe code failed
+     *   -2 -- swipe input timeout
+     */
+    int _status = 0;
 
 private:
     SwipeCode _code;
@@ -39,6 +44,8 @@ private:
     unsigned int _currentStep = 0;
 
     bool _relaxed = true;
+
+    unsigned int _startTimestamp = 0;
 };
 
 

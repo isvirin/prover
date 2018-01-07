@@ -20,25 +20,30 @@ void SwypeCodeDetector::Init(SwipeCode &code, double speedMult, float maxDeviati
     _stepDetector.SetDirection(_code._directions[0]);
     _relaxed = relaxed;
     _currentStep = 0;
-    _maxTimestamp = timestamp + MS_PER_SWIPE_STEP * (_code._length + 1);
+    _status = 2;
+    _startTimestamp = timestamp + PAUSE_TO_ST3_MS_PER_STEP * (_code._length - 1);
+    _maxTimestamp = _startTimestamp + MS_PER_SWIPE_STEP * _code._length;
 }
 
-int SwypeCodeDetector::Add(VectorExplained &shift) {
-    if (shift._timestamp > _maxTimestamp)
-        return -2;
-    if (shift._mod <= 0)
-        return 0;
-    _stepDetector.Add(shift);
-    int res = _stepDetector.CheckState(_relaxed);
-    if (res == 1) {
-        if (++_currentStep >= _code._length) {
-            _stepDetector.FinishStep();
-            return 1;
+void SwypeCodeDetector::Add(VectorExplained &shift) {
+    if (shift._timestamp >= _startTimestamp) {
+        if (shift._timestamp > _maxTimestamp) {
+            _status = -2;
+        } else if (shift._mod <= 0) {
+            _status = 0;
+        } else {
+            _stepDetector.Add(shift);
+            _status = _stepDetector.CheckState(_relaxed);
+            if (_status == 1) {
+                if (++_currentStep >= _code._length) {
+                    _stepDetector.FinishStep();
+                } else {
+                    _stepDetector.AdvanceDirection(_code._directions[_currentStep]);
+                    _status = 0;
+                }
+            }
         }
-        _stepDetector.AdvanceDirection(_code._directions[_currentStep]);
-        return 0;
     }
-    return res;
 }
 
 void SwypeCodeDetector::FillResult(int &index, int &x, int &y, int &debug) {
