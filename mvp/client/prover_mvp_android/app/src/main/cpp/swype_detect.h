@@ -135,6 +135,8 @@
 
 #define MAX_DETECTOR_DEVIATION 0.22
 
+#define MIN_TIME_BETWEEN_DETECTORS 1000
+
 #include <opencv2/opencv.hpp>
 #include <cmath>
 #include <ctime>
@@ -197,6 +199,8 @@ private:
 
     cv::Point2d Frame_processor(cv::Mat &frame_i);
 
+    void AddDetector(unsigned int timestamp);
+
     SwipeCode swipeCode;//we have swype code or we will wait swype code
 
     int S; //state S
@@ -216,4 +220,11 @@ private:
     double _xMult = 0.0;
     double _yMult = 0.0;
     bool _relaxed;
+
+    std::list<SwypeCodeDetector> _detectors;
+
+    unsigned int _maxDetectors = 1;
+
+    unsigned int _lastDetectorAdded = 0;
+
 };

@@ -41,6 +41,9 @@ void SwypeDetect::SetDetectorSize(int detectorWidth, int detectorHeight) {
 
 void SwypeDetect::setSwype(string swype) {
     swipeCode.Init(swype);
+    if (S == 1) {
+        AddDetector(0);
+    }
 }
 
 Point2d SwypeDetect::Frame_processor(cv::Mat &frame_i) {
@@ -74,7 +77,6 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     VectorExplained scaledShift;
     scaledShift.SetMul(shift, _xMult, _yMult);
     VectorExplained windowedShift = scaledShift;
-    //if (_relaxed)
     windowedShift.ApplyWindow(VECTOR_WINDOW_START, VECTOR_WINDOW_END);
     windowedShift.setRelativeDefect(_relaxed ? DEFECT : DEFECT_CLIENT);
     windowedShift._timestamp = timestamp;
@@ -89,45 +91,50 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     }
 
     index = 1;
-    if (S == 0) {
-        if (windowedShift._mod > 0) {
-            _circleDetector.AddShift(windowedShift);
-            if (_circleDetector.IsCircle()) {
-                _circleDetector.Reset();
-                if (swipeCode.empty()) {
-                    MoveToState(1, timestamp);
-                } else {
-                    MoveToState(2, timestamp);
-                    _codeDetector.Init(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
-                }
+
+    if (windowedShift._mod > 0) {
+        _circleDetector.AddShift(windowedShift);
+        if (_circleDetector.IsCircle()) {
+            if (swipeCode.empty()) {
+                MoveToState(1, timestamp);
+            } else {
+                AddDetector(timestamp);
             }
         }
+    }
+
+    if (_detectors.size() > 0) {
+        for (auto it = _detectors.begin(); it != _detectors.end();) {
+            it->Add(windowedShift);
+            if (it->_status < 0) {
+                if (_maxDetectors == 1) {
+                    it->FillResult(state, index, x, y, debug);
+                }
+                it = _detectors.erase(it);
+            } else {
+                if (it->_status == 1) {
+                    S = 4;
+                }
+                ++it;
+            }
+        }
+    } else {
+        //x = (int) (windowedShift._x * 1024);
+        //y = (int) (windowedShift._y * 1024);
+        state = S;
+    }
+
+    if (S == 4) {
+        if (_detectors.size() > 0)
+            _detectors.front().FillResult(state, index, x, y, debug);
+        state = S;
+    } else if (_detectors.size() == 0) {
         x = (int) (windowedShift._x * 1024);
         y = (int) (windowedShift._y * 1024);
-    } else if (S == 1) {
-        if (!swipeCode.empty()) {
-            MoveToState(2, timestamp);
-            _codeDetector.Init(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
-        }
-    } else if (S == 2) {
-        _codeDetector.Add(windowedShift);
-        if (_codeDetector._status < 2) {
-            MoveToState(3, timestamp);
-        }
-    } else if (S == 3) {
-        _codeDetector.Add(windowedShift);
-        _codeDetector.FillResult(index, x, y, debug);
-        if (_codeDetector._status == 0);
-        else if (_codeDetector._status < 0) {
-            MoveToState(0, timestamp);
-        } else if (_codeDetector._status == 1) {
-            MoveToState(4, timestamp);
-        }
-    } else if (S == 4) {
-        _codeDetector.Add(windowedShift);
-        _codeDetector.FillResult(index, x, y, debug);
+        state = S;
+    } else {
+        _detectors.front().FillResult(state, index, x, y, debug);
     }
-    state = S;
 }
 
 void SwypeDetect::MoveToState(int state, uint timestamp) {
@@ -138,4 +145,15 @@ void SwypeDetect::MoveToState(int state, uint timestamp) {
 void SwypeDetect::setRelaxed(bool relaxed) {
     _circleDetector.SetRelaxed(relaxed);
     _relaxed = relaxed;
+    _maxDetectors = relaxed ? 32 : 1;
+}
+
+void SwypeDetect::AddDetector(unsigned int timestamp) {
+    if (_detectors.size() < _maxDetectors) {
+        if (timestamp == 0 || timestamp > _lastDetectorAdded + MIN_TIME_BETWEEN_DETECTORS) {
+            _detectors.emplace_back(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
+            _lastDetectorAdded = timestamp;
+        }
+    }
+    LOGI_NATIVE("Detectors: %d", (int) _detectors.size());
 }
