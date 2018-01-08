@@ -30,7 +30,7 @@ public:
         }
         if (logLevel > 0) {
             char tmp[17];
-            for (int i = 0; i < _length; i++) {
+            for (unsigned int i = 0; i < _length; i++) {
                 tmp[i] = _directions[i] + '0';
             }
             tmp[_length] = 0;

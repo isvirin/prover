@@ -149,11 +149,13 @@ void SwypeDetect::setRelaxed(bool relaxed) {
 }
 
 void SwypeDetect::AddDetector(unsigned int timestamp) {
+    char added = 0;
     if (_detectors.size() < _maxDetectors) {
-        if (timestamp == 0 || timestamp > _lastDetectorAdded + MIN_TIME_BETWEEN_DETECTORS) {
+        if (timestamp == 0 || timestamp >= _lastDetectorAdded + MIN_TIME_BETWEEN_DETECTORS) {
             _detectors.emplace_back(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
             _lastDetectorAdded = timestamp;
+            added = 1;
         }
     }
-    LOGI_NATIVE("Detectors: %d", (int) _detectors.size());
+    LOGI_NATIVE("Detectors: %d, added: %d, t %d", (int) _detectors.size(), added, timestamp);
 }

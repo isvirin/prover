@@ -135,7 +135,7 @@
 
 #define MAX_DETECTOR_DEVIATION 0.22
 
-#define MIN_TIME_BETWEEN_DETECTORS 1000
+#define MIN_TIME_BETWEEN_DETECTORS 100
 
 #include <opencv2/opencv.hpp>
 #include <cmath>
