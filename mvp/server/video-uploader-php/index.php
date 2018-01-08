@@ -205,7 +205,7 @@ saveClientInfo('index');
             </section>
         </div>
         </div>
-        <div id="clapperboard" style="display:none">
+        <div id="clapperboard" style="display:none; opacity:0">
             <div class="container">
                 <div class="logo">
                     <a href="https://prover.io"><img class="logo__img" src="images/logo.png"></a>

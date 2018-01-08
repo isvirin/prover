@@ -16,14 +16,21 @@ $(document).ready(function() {
     var switchBtn = $('.switch input[type=checkbox]');
     switchBtn.change(function() {
         if(this.checked) {
-            $('#clapperboard').css('display','block');
-            $('#prover').css('display','none');
+            $('#prover').animate({ opacity: 0 }, 350);
             $('body').addClass('clapperboard');
-            console.log('checked');
+            setTimeout(function () {
+                $('#prover').css('display','none');
+                $('#clapperboard').css('display','block');
+                $('#clapperboard').animate({ opacity: 1 }, 350);
+            }, 350);
         } else {
-            $('#clapperboard').css('display','none');
-            $('#prover').css('display','block');
+            $('#clapperboard').animate({ opacity: 0 }, 350);
             $('body').removeClass('clapperboard');
+            setTimeout(function () {
+                $('#clapperboard').css('display','none');
+                $('#prover').css('display','block');
+                $('#prover').animate({ opacity: 1 }, 350);
+            }, 350);
         }
     });
 });
