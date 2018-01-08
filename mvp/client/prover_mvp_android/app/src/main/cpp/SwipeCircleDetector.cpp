@@ -86,7 +86,13 @@ ValueWithDefect SwipeCircleDetector::CalculateArea(int amount, ValueWithDefect &
 
 void SwipeCircleDetector::SetRelaxed(bool relaxed) {
     _relaxed = relaxed;
-    _minCircleArea = MIN_CIRCLE_AREA;
-    _maxDeviation = MAX_DEVIATION;
-    _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE;
+    if (relaxed) {
+        _minCircleArea = MIN_CIRCLE_AREA / 1.2;
+        _maxDeviation = MAX_DEVIATION;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE / 1.2;
+    } else {
+        _minCircleArea = MIN_CIRCLE_AREA;
+        _maxDeviation = MAX_DEVIATION;
+        _minAreaByP2toCircle = MIN_AREA_BY_P2_TO_CIRCLE;
+    }
 }
