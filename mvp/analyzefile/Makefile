@@ -11,6 +11,7 @@ OBJECTS := \
     .obj/ImageProcessor.cpp.o \
     .obj/swype_detect.cpp.o \
     .obj/SwipeCircleDetector.cpp.o \
+	.obj/SwypeCodeDetector.cpp.o \
     .obj/SwypeStepDetector.cpp.o \
     .obj/Vector.cpp.o \
     .obj/VectorExplained.cpp.o \
