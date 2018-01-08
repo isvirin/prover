@@ -22,31 +22,18 @@ void SwypeStepDetector::Reset() {
     _target.Reset();
     _total.Reset();
     _count = 0;
-    _currentSwypePoint = 0;
-    _nextSwypePoint = 0;
 }
 
-void SwypeStepDetector::Configure(double speedMult, float maxDeviation) {
+void SwypeStepDetector::Configure(double speedMult, float maxDeviation, bool relaxed) {
     _speedMultX = speedMult;
     _speedMultY = speedMult;
     _defaultTargetRadius = maxDeviation;
-}
-
-bool SwypeStepDetector::SetSwipeStep(int currentPoint, int nextPoint) {
-    Reset();
-    _currentSwypePoint = currentPoint;
-    return SetNextSwipePoint(nextPoint);
-}
-
-bool SwypeStepDetector::AdvanceSwipeStep(int nextPoint) {
-    FinishStep();
-    return SetNextSwipePoint(nextPoint);
+    _relaxed = relaxed;
 }
 
 void SwypeStepDetector::FinishStep() {
     _count = 0;
     _current -= _target;
-    _currentSwypePoint = _nextSwypePoint;
 
     if (logLevel > 0) {
         LOGI_NATIVE("FinishStep (%f %f) ", _current._x, _current._y);
@@ -80,20 +67,22 @@ int SwypeStepDetector::CheckState(bool withDefect) {
     return boundsCheckResult ? 0 : -1;
 }
 
-bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
-    int currentPoint = _currentSwypePoint - 1;
-    --nextPoint;
-    int sourceX = currentPoint % 3;
-    int sourceY = currentPoint / 3;
-    int targetX = nextPoint % 3;
-    int targetY = nextPoint / 3;
-    int dx = targetX - sourceX;
-    int dy = targetY - sourceY;
-    if (abs(dx) > 1 || abs(dy) > 1)
-        return false;
+void SwypeStepDetector::SetDirection(int dir) {
+    Reset();
+    _target.SetDirection(dir);
+    SetTarget(_target);
+}
 
-    _target.Set(dx, dy);
-    _nextSwypePoint = nextPoint + 1;
+
+void SwypeStepDetector::AdvanceDirection(int dir) {
+    FinishStep();
+    _target.SetDirection(dir);
+    SetTarget(_target);
+}
+
+void SwypeStepDetector::SetTarget(VectorExplained target) {
+    _target = target;
+
     _targetRadius = _defaultTargetRadius;
     if (_relaxed && _target._direction % 2 == 0) {// for diagonal target at server
         _targetRadius *= 1.65;
@@ -103,13 +92,9 @@ bool SwypeStepDetector::SetNextSwipePoint(int nextPoint) {
     _BoundsChecker.SetTargetRadius(_targetRadius, _defaultTargetRadius);
 
     if (logLevel > 0) {
-        LOGI_NATIVE("SetNextSwipePoint select %d => %d, (%d,%d) dir %d",
-                    currentPoint + 1, nextPoint + 1, dx, dy, _target._direction);
+        LOGI_NATIVE("SetTarget (%.1f %.1f) d %d", target._x, target._y, target._direction);
     }
-    return true;
 }
 
-void SwypeStepDetector::SetRelaxed(bool _relaxed) {
-    SwypeStepDetector::_relaxed = _relaxed;
-}
+
 

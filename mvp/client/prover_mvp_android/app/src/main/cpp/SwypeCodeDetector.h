@@ -6,8 +6,46 @@
 #define PROVER_MVP_ANDROID_SWYPECODEDETECTOR_H
 
 
-class SwypeCodeDetector {
+#include "SwypeStepDetector.h"
+#include "SwipeCode.h"
 
+class SwypeCodeDetector {
+public:
+    SwypeCodeDetector() {};
+
+    SwypeCodeDetector(SwipeCode code, double speedMult, float maxDeviation,
+                      bool relaxed, unsigned int timestamp);
+
+    void Init(SwipeCode &code, double speedMult, float maxDeviation, bool relaxed,
+              unsigned int timestamp);
+
+    /**
+     * @param shift
+     */
+    void Add(VectorExplained &shift);
+
+    void FillResult(int &index, int &x, int &y, int &debug);
+
+    /*
+     *    1 -- swipe code completed
+     *    0 -- processing swipe code
+     *    2 -- waiting to start swipe code processing
+     *   -1 -- swipe code failed
+     *   -2 -- swipe input timeout
+     */
+    int _status = 0;
+
+private:
+    SwipeCode _code;
+    SwypeStepDetector _stepDetector;
+
+    unsigned int _maxTimestamp = 0;
+
+    unsigned int _currentStep = 0;
+
+    bool _relaxed = true;
+
+    unsigned int _startTimestamp = 0;
 };
 
 

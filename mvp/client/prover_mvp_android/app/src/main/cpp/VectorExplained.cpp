@@ -120,3 +120,30 @@ bool VectorExplained::CheckWithinRectWithDefect(float left, float top, float rig
     return shifted._x == 0 && shifted._y == 0;
 }
 
+void VectorExplained::SetDirection(int direction) {
+    _direction = direction;
+    --direction;
+    if (direction % 4 == 0)
+        _x = 0;
+    else
+        _x = direction / 4 == 0 ? -1 : 1;
+
+    direction = (direction + 6) % 8;
+    if (direction % 4 == 0)
+        _y = 0;
+    else
+        _y = direction / 4 == 0 ? -1 : 1;
+}
+
+void VectorExplained::SetSwipePoints(int from, int to) {
+    --from;
+    --to;
+    int sourceX = from % 3;
+    int sourceY = from / 3;
+    int targetX = to % 3;
+    int targetY = to / 3;
+    _x = targetX - sourceX;
+    _y = targetY - sourceY;
+    CalculateExplained();
+}
+
