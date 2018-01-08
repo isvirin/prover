@@ -7,7 +7,9 @@
 
 SwypeCodeDetector::SwypeCodeDetector(SwipeCode &code, double speedMult, float maxDeviation,
                                      bool relaxed, unsigned int timestamp) : _code(code),
-                                                                             _relaxed(relaxed) {
+                                                                             _relaxed(relaxed),
+                                                                             _id(++counter),
+                                                                             _stepDetector(_id) {
     _stepDetector.Configure(speedMult, maxDeviation, _relaxed);
     _stepDetector.SetDirection(_code._directions[0]);
     _startTimestamp = timestamp + PAUSE_TO_ST3_MS_PER_STEP * (_code._length - 1);

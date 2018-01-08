@@ -36,7 +36,7 @@ void SwypeStepDetector::FinishStep() {
     _current -= _target;
 
     if (logLevel > 0) {
-        LOGI_NATIVE("FinishStep (%f %f) ", _current._x, _current._y);
+        LOGI_NATIVE("FinishStep %d (%f %f) ", _id, _current._x, _current._y);
     }
 }
 
@@ -46,14 +46,17 @@ int SwypeStepDetector::CheckState(bool withDefect) {
 
     if (logLevel > 0) {
         LOGI_NATIVE(
-                "CheckState |(%+.4f %+.4f) - (%+.4f %+.4f)|= %.4f, total: |%+.4f+-%.4f %+.4f+-%.4f| = %.4f+-%.4f defSum |%.4f,%.4f|= %.4f",
+                "CheckState %d |(%+.4f %+.4f) - (%+.4f %+.4f)|= %.4f, total: |%+.4f+-%.4f %+.4f+-%.4f| = %.4f+-%.4f defSum |%.4f,%.4f|= %.4f",
+                _id,
                 _current._x, _current._y, _target._x, _target._y, distance,
                 _total._x, _total._defectX, _total._y, _total._defectY, _total._mod,
                 _total.ModDefect(), _current._defectX, _current._defectY, _current.ModDefect());
     }
 
     if (distance <= _targetRadius) {
-        LOGI_NATIVE("CheckState reached ");
+        if (logLevel > 0) {
+            LOGI_NATIVE("CheckState %d reached ", _id);
+        }
         return 1;
     }
 
@@ -61,7 +64,9 @@ int SwypeStepDetector::CheckState(bool withDefect) {
                                         : _BoundsChecker.CheckBounds(_current);
 
     if (!boundsCheckResult) {
-        LOGI_NATIVE("CheckState boundsCheck failing ");
+        if (logLevel > 0) {
+            LOGI_NATIVE("CheckState %d boundsCheck failing ", _id);
+        }
     }
 
     return boundsCheckResult ? 0 : -1;
@@ -92,9 +97,6 @@ void SwypeStepDetector::SetTarget(VectorExplained target) {
     _BoundsChecker.SetTargetRadius(_targetRadius, _defaultTargetRadius);
 
     if (logLevel > 0) {
-        LOGI_NATIVE("SetTarget (%.1f %.1f) d %d", target._x, target._y, target._direction);
+        LOGI_NATIVE("SetTarget %d (%.1f %.1f) d %d", _id, target._x, target._y, target._direction);
     }
 }
-
-
-

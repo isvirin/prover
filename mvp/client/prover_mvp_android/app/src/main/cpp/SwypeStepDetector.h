@@ -19,6 +19,7 @@
 class SwypeStepDetector {
 public:
 
+
     virtual void Add(VectorExplained);
 
     void Reset();
@@ -70,6 +71,7 @@ private:
     VectorExplained _total;
     VectorExplained _target;
     bool _relaxed;
+    unsigned int _id;
 };
 
 

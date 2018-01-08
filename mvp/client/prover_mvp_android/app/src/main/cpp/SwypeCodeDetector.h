@@ -11,7 +11,7 @@
 
 class SwypeCodeDetector {
 public:
-    SwypeCodeDetector() {};
+    SwypeCodeDetector() : _id(++counter), _stepDetector(_id) {};
 
     SwypeCodeDetector(SwipeCode &code, double speedMult, float maxDeviation,
                       bool relaxed, unsigned int timestamp);
@@ -35,6 +35,8 @@ public:
      */
     int _status = 2;
 
+    unsigned int _id;
+
 private:
     SwipeCode _code;
     SwypeStepDetector _stepDetector;
@@ -46,6 +48,8 @@ private:
     bool _relaxed = true;
 
     unsigned int _startTimestamp = 0;
+
+    static unsigned int counter = 0;
 };
 
 
