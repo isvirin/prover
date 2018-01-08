@@ -209,7 +209,6 @@ private:
     cv::UMat buf2ft;
     cv::UMat hann;
 
-    SwypeCodeDetector _codeDetector;
     SwipeCircleDetector _circleDetector;
 
     bool _tickTock = false;

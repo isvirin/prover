@@ -24,12 +24,14 @@ bool SwipeCircleDetector::IsCircle() {
     int timestamp = shifts_[pos]._timestamp;
     double minDeviation = 10;
     double minDeviationDefect = 0;
+    double minDeviationDist = 0;
 
     for (int i = 2; i <= total_; i++) {
         pos = (pos_ - i + SHIFTS) % SHIFTS;
         if (shifts_[pos]._timestamp < noFramesBefore) {
             if (logLevel >= 1 && minDeviation < 0.5) {
-                LOGI_NATIVE("IsCircle minDeviation: %.4f+-%.4f", minDeviation, minDeviationDefect);
+                LOGI_NATIVE("IsCircle minDeviation: %.4f-%.4f = %.4f", minDeviation,
+                            minDeviationDefect, minDeviationDist);
             }
             return false;
         }
@@ -56,6 +58,7 @@ bool SwipeCircleDetector::IsCircle() {
             if (sum._mod < minDeviation) {
                 minDeviation = sum._mod;
                 minDeviationDefect = sum.ModDefect();
+                minDeviationDist = dist;
             }
         }
     }
