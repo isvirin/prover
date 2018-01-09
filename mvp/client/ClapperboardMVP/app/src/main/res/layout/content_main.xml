@@ -102,6 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
+            android:maxLength="200"
             android:text="asdf"
             android:textAppearance="?android:attr/textAppearanceMediumInverse"
             app:layout_constraintLeft_toLeftOf="parent"

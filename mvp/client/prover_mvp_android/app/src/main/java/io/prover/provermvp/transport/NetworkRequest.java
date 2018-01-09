@@ -3,10 +3,7 @@ package io.prover.provermvp.transport;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.ethereum.core.Transaction;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.spongycastle.util.encoders.Hex;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,15 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.Const;
-import io.prover.provermvp.transport.responce.KnownTransactionException;
-import io.prover.provermvp.transport.responce.LowFundsException;
-import io.prover.provermvp.transport.responce.NonceTooLowException;
 
 /**
  * Created by babay on 14.11.2017.
@@ -115,47 +108,11 @@ public abstract class NetworkRequest<T> implements Runnable {
             if (!cancelled) {
                 listener.onNetworkRequestDone(this, responce);
             }
-        } catch (IOException | JSONException ex) {
+        } catch (Exception ex) {
             handleException(ex);
         }
     }
 
-    protected T postTransaction(String method, String prefix, Transaction transaction) throws IOException, JSONException {
-        if (transaction == null)
-            transaction = createTransaction();
-        byte[] bytes = transaction.getEncoded();
-        byte[] encodedBytes = Hex.encode(bytes);
-        String requestBody = prefix + new String(encodedBytes);
-        String responceStr = postEnclosingRequest(method, RequestType.Post, requestBody);
-
-        try {
-            T responce = parse(responceStr);
-            return responce;
-        } catch (Exception e) {
-            throw tryParseResponseException(responceStr, e);
-        }
-    }
-
-    private IOException tryParseResponseException(String responce, Exception e) {
-        String message;
-        try {
-            JSONObject jso = new JSONObject(responce);
-            JSONObject error = jso.getJSONObject("error");
-            message = error.getString("message");
-        } catch (Exception e1) {
-            message = responce;
-        }
-        if (responce.contains("known transaction:")) {
-            return new KnownTransactionException(message);
-        }
-        if (responce.contains("nonce too low")) {
-            return new NonceTooLowException(message);
-        }
-        if (responce.contains("insufficient funds")) {
-            return new LowFundsException(message);
-        }
-        return new IOException(e);
-    }
 
     protected void handleException(Exception ex) {
         if (debugData != null) {
@@ -165,24 +122,7 @@ public abstract class NetworkRequest<T> implements Runnable {
         listener.onNetworkRequestError(this, ex);
     }
 
-    protected byte[] toUnsignedByteArray(BigInteger value) {
-        byte[] arr = value.toByteArray();
-        int start = 0;
-        while (start < arr.length && arr[start] == 0) {
-            start++;
-        }
-        if (start == 0)
-            return arr;
-        byte[] result = new byte[arr.length - start];
-        System.arraycopy(arr, start, result, 0, result.length);
-        return result;
-    }
-
     protected abstract T parse(String source) throws IOException, JSONException;
-
-    protected Transaction createTransaction() {
-        return null;
-    }
 
     public void cancel() {
         cancelled = true;

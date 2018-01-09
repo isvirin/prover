@@ -4,7 +4,7 @@ package io.prover.provermvp.transport.responce;
  * Created by babay on 15.11.2017.
  */
 
-public class NonceTooLowException extends FixableEtheriumExcetion {
+public class NonceTooLowException extends FixableEtheriumException {
     public NonceTooLowException(String message) {
         super(message);
     }

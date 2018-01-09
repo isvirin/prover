@@ -74,7 +74,11 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
             return;
         onNetworkRequestFinished(request);
         if (request instanceof HelloRequest) {
-            networkSession = new NetworkSession((HelloResponce) responce, key, networkSession);
+            if (networkSession != null && networkSession.key.equals(key)) {
+                networkSession.onNewHelloResponce((HelloResponce) responce);
+            } else {
+                networkSession = new NetworkSession((HelloResponce) responce, key);
+            }
         } else if (request instanceof RequestSwypeCode1) {
             swypeRequestHash = (SwypeResponce1) responce;
             handler.postDelayed(() -> {

@@ -6,12 +6,12 @@ import java.io.IOException;
  * Created by babay on 15.11.2017.
  */
 
-public class FixableEtheriumExcetion extends IOException {
-    public FixableEtheriumExcetion(String message) {
+public class FixableEtheriumException extends IOException {
+    public FixableEtheriumException(String message) {
         super(message);
     }
 
-    public FixableEtheriumExcetion(String message, Throwable cause) {
+    public FixableEtheriumException(String message, Throwable cause) {
         super(message, cause);
     }
 

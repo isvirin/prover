@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import org.spongycastle.util.encoders.DecoderException;
 import org.spongycastle.util.encoders.Hex;
 
-import java.math.BigInteger;
-
 /**
  * Created by babay on 15.11.2017.
  */
@@ -14,12 +12,16 @@ import java.math.BigInteger;
 public class SwypeResponce1 {
     public final String hashString;
     public final byte[] hashBytes;
-    public final BigInteger requestNonce;
 
-    public SwypeResponce1(String responce, BigInteger requestNonce) throws DecoderException, JSONException {
+    public SwypeResponce1(String responce) throws DecoderException, JSONException {
         JSONObject responceJson = new JSONObject(responce);
         this.hashString = responceJson.getString("result");
-        hashBytes = Hex.decode(hashString.substring(2));
-        this.requestNonce = requestNonce;
+        byte[] hashBytes = Hex.decode(hashString.substring(2));
+        if (hashBytes.length == 32)
+            this.hashBytes = hashBytes;
+        else {
+            this.hashBytes = new byte[32];
+            System.arraycopy(hashBytes, 0, this.hashBytes, 32 - hashBytes.length, hashBytes.length);
+        }
     }
 }

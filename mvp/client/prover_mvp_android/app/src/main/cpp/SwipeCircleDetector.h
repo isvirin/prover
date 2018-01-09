@@ -11,11 +11,11 @@
 
 #define SHIFTS 64
 
-#define MAX_CIRCLE_DURATION_MS 1500
+#define MAX_CIRCLE_DURATION_MS 2000
 
 #define MIN_CIRCLE_AREA 0.14
 #define MAX_DEVIATION 0.09
-#define MIN_AREA_BY_P2_TO_CIRCLE 0.75
+#define MIN_AREA_BY_P2_TO_CIRCLE 0.67
 
 class SwipeCircleDetector {
 public:

@@ -22,9 +22,9 @@ import io.prover.clapperboardmvp.transport.responce.SwypeResponce1;
 
 public class SubmitVideoHashRequest extends TransactionNetworkRequest<SubmitVideoHashResponce> {
 
+    protected static final int GAS_LIMIT = 80_000;
     private static final int SUDMIT_VIDEO_FILE_DATA = 0xa0ee3ecf;
     private static final String METHOD = "submit-media-hash";
-
     private final SwypeResponce1 responce1;
     private final File videoFile;
 
@@ -55,23 +55,19 @@ public class SubmitVideoHashRequest extends TransactionNetworkRequest<SubmitVide
         byte[] operation = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(SUDMIT_VIDEO_FILE_DATA));
         byte[] data = Arrays.concatenate(operation, videoFileHash, responce1.hashBytes);
         byte[] nonce = BigIntegers.asUnsignedByteArray(session.getNonce());
-        Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
+        Transaction transaction = new Transaction(nonce, session.getGasPrice(), gasLimit, session.getContractAddress(), new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;
     }
 
     private byte[] calculateFileHash() throws NoSuchProviderException, NoSuchAlgorithmException, IOException {
         MessageDigest digest = MessageDigest.getInstance("sha256", "SC");
-
         byte[] buf = new byte[4096];
-
         FileInputStream stream = new FileInputStream(videoFile);
         while (stream.available() > 0) {
             int amount = stream.read(buf);
             digest.update(buf, 0, amount);
         }
-
         return digest.digest();
     }
-
 }

@@ -44,7 +44,6 @@ public class RequestQrCodeFromText1 extends TransactionNetworkRequest<HashRespon
         int param1ValueLength = (len / 32 + (len % 32 == 0 ? 0 : 1)) * 32;
 
         byte[] nonce = BigIntegers.asUnsignedByteArray(session.getNonce());
-        byte[] gasLimit = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
         byte[] method = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(GENERATE_QRCODE_METHOD));
         byte[] param1Head = BigIntegers.asUnsignedByteArray(32, BigInteger.valueOf(32));
         byte[] param1StrLength = BigIntegers.asUnsignedByteArray(32, BigInteger.valueOf(stringBytes.length));
@@ -53,8 +52,17 @@ public class RequestQrCodeFromText1 extends TransactionNetworkRequest<HashRespon
             System.arraycopy(stringBytes, 0, param1Value, 0, stringBytes.length);
         byte[] data = Arrays.concatenate(method, param1Head, param1StrLength, param1Value);
 
+        BigInteger price = session.getGasPriceBigInt().multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(2));
+        byte[] gasPrice = BigIntegers.asUnsignedByteArray(price);
 
-        Transaction transaction = new Transaction(nonce, session.gasPrice, gasLimit, session.contractAddress, new byte[]{0}, data);
+        BigInteger availGas = session.getMaxGasLimit(price);
+        int estimateGas = (data.length - 68) * 80 + 23715;
+        BigInteger maxGas = BigInteger.valueOf(estimateGas * 3 / 2);
+        if (availGas.compareTo(maxGas) < 0)
+            maxGas = availGas;
+        byte[] gasLimit = BigIntegers.asUnsignedByteArray(maxGas);
+
+        Transaction transaction = new Transaction(nonce, gasPrice, gasLimit, session.getContractAddress(), new byte[]{0}, data);
         transaction.sign(session.key);
         return transaction;
     }

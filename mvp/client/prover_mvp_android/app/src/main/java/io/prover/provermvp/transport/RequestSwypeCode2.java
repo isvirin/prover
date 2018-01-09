@@ -7,8 +7,6 @@ import java.io.IOException;
 import io.prover.provermvp.transport.responce.SwypeResponce1;
 import io.prover.provermvp.transport.responce.SwypeResponce2;
 
-import static io.prover.provermvp.transport.RequestSwypeCode1.METHOD;
-
 /**
  * Created by babay on 15.11.2017.
  */
@@ -26,7 +24,7 @@ public class RequestSwypeCode2 extends NetworkRequest<SwypeResponce2> {
     public void run() {
         listener.onNetworkRequestStart(this);
         String requestBody = "txhash=" + responce1.hashString;
-        execSimpleRequest(METHOD, RequestType.Post, requestBody);
+        execSimpleRequest(RequestSwypeCode1.METHOD, RequestType.Post, requestBody);
     }
 
     @Override

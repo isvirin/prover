@@ -3,6 +3,7 @@ package io.prover.provermvp.transport;
 import android.util.Log;
 
 import org.ethereum.crypto.ECKey;
+import org.spongycastle.util.BigIntegers;
 
 import java.math.BigInteger;
 
@@ -49,6 +50,14 @@ public class NetworkSession {
 
     public byte[] getGasPrice() {
         return hello.gasPrice;
+    }
+
+    public BigInteger getGasPriceBigInt(){
+        return BigIntegers.fromUnsignedByteArray(hello.gasPrice);
+    }
+
+    public BigInteger getMaxGasLimit(BigInteger gasPrice){
+        return hello.ethBalance.divide(getGasPriceBigInt());
     }
 
     public void increaseNonce() {
