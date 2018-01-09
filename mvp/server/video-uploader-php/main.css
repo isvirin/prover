@@ -336,6 +336,15 @@ input[type='search']::-webkit-search-results-decoration {
 .use-cases .use-case__block p {
     font-size: 18px;
 }
+#clapperboard-upload-file .red-line,
+#upload-file .red-line {
+    height: 5px;
+    width: 80px;
+    left: 50%;
+    margin-left: -40px;
+    background: #ff0000;
+    position: absolute;
+}
 .use-cases .use-case__block p span.red-line,
 .faq h4 span.red-line {
     height: 1px;
