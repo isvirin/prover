@@ -5,6 +5,8 @@
 #include "SwypeCodeDetector.h"
 #include "VectorExplained.h"
 
+unsigned int SwypeCodeDetector::counter = 0;
+
 SwypeCodeDetector::SwypeCodeDetector(SwipeCode &code, double speedMult, float maxDeviation,
                                      bool relaxed, unsigned int timestamp) : _code(code),
                                                                              _relaxed(relaxed),

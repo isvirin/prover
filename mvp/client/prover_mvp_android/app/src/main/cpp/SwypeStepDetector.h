@@ -18,7 +18,7 @@
 
 class SwypeStepDetector {
 public:
-
+    SwypeStepDetector(unsigned int _id) : _id(_id) {}
 
     virtual void Add(VectorExplained);
 

@@ -49,8 +49,7 @@ private:
 
     unsigned int _startTimestamp = 0;
 
-    static unsigned int counter = 0;
+    static unsigned int counter;
 };
-
 
 #endif //PROVER_MVP_ANDROID_SWYPECODEDETECTOR_H
