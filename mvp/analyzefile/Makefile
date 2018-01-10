@@ -10,7 +10,7 @@ OBJECTS := \
     .obj/VideoFileReader.cpp.o \
     .obj/ImageProcessor.cpp.o \
     .obj/swype_detect.cpp.o \
-    .obj/SwipeCircleDetector.cpp.o \
+    .obj/CircleDetector.cpp.o \
 	.obj/SwypeCodeDetector.cpp.o \
     .obj/SwypeStepDetector.cpp.o \
     .obj/Vector.cpp.o \

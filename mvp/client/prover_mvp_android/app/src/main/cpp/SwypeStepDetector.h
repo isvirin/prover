@@ -10,7 +10,7 @@
 
 /**
  * coordinate convention:
- * (0,0) is at current swipe-point; 1 is a distance between two swipe-points (non diagonal).
+ * (0,0) is at current swype-point; 1 is a distance between two swipe-points (non diagonal).
  * X axis directed from left to right
  * Y axis directed from top to bottom
  *

@@ -27,11 +27,11 @@ public:
     void FillResult(int &status, int &index, int &x, int &y, int &debug);
 
     /*
-     *    1 -- swipe code completed
-     *    0 -- processing swipe code
-     *    2 -- waiting to start swipe code processing
-     *   -1 -- swipe code failed
-     *   -2 -- swipe input timeout
+     *    1 -- swype code completed
+     *    0 -- processing swype code
+     *    2 -- waiting to start swype code processing
+     *   -1 -- swype code failed
+     *   -2 -- swype input timeout
      */
     int _status = 2;
 

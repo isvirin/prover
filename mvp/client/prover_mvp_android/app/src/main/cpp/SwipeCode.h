@@ -34,7 +34,7 @@ public:
                 tmp[i] = _directions[i] + '0';
             }
             tmp[_length] = 0;
-            LOGI_NATIVE("Set swipe code: %s, directions: %s", swype.c_str(), tmp);
+            LOGI_NATIVE("Set swype code: %s, directions: %s", swype.c_str(), tmp);
         }
     }
 

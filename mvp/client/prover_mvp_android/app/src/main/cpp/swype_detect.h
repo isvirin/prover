@@ -145,7 +145,7 @@
 #include "opencv2/core/ocl.hpp"
 #include "VectorExplained.h"
 #include "SwypeStepDetector.h"
-#include "SwipeCircleDetector.h"
+#include "CircleDetector.h"
 #include "SwypeCodeDetector.h"
 
 
@@ -201,7 +201,7 @@ private:
 
     void AddDetector(unsigned int timestamp);
 
-    SwipeCode swipeCode;//we have swype code or we will wait swype code
+    SwipeCode swypeCode;//we have swype code or we will wait swype code
 
     int S; //state S
 
@@ -209,7 +209,7 @@ private:
     cv::UMat buf2ft;
     cv::UMat hann;
 
-    SwipeCircleDetector _circleDetector;
+    CircleDetector _circleDetector;
 
     bool _tickTock = false;
 

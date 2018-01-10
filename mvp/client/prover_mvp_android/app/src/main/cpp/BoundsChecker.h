@@ -16,7 +16,7 @@
 #define FIT_FACTOR_H 0.45f
 
 /**
- * Checks that we are closer to source or target swipe points (and a line between them) then to other swipe points
+ * Checks that we are closer to source or target swype points (and a line between them) then to other swipe points
  * based on a simple Voronoi diagram
  *
  * rotates original vector to direction 7 or 8 to simplify calculations

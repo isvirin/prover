@@ -2,13 +2,13 @@
 // Created by babay on 08.12.2017.
 //
 
-#include "SwipeCircleDetector.h"
+#include "CircleDetector.h"
 #include "common.h"
 #include "Perimeter.h"
 #include "Area.h"
 #include "ValueWithDefect.h"
 
-void SwipeCircleDetector::AddShift(VectorExplained shift) {
+void CircleDetector::AddShift(VectorExplained shift) {
     shifts_[pos_] = shift;
     pos_ = (pos_ + 1) % SHIFTS;
     ++total_;
@@ -16,7 +16,7 @@ void SwipeCircleDetector::AddShift(VectorExplained shift) {
         total_ = SHIFTS;
 }
 
-bool SwipeCircleDetector::IsCircle() {
+bool CircleDetector::IsCircle() {
     int pos = (pos_ - 1 + SHIFTS) % SHIFTS;
     VectorExplained sum = shifts_[pos];
 
@@ -65,7 +65,7 @@ bool SwipeCircleDetector::IsCircle() {
     return false;
 }
 
-ValueWithDefect SwipeCircleDetector::CalculateArea(int amount, ValueWithDefect &perResult) {
+ValueWithDefect CircleDetector::CalculateArea(int amount, ValueWithDefect &perResult) {
     Perimeter perimeter;
     Area area(shifts_[pos_]);
 
@@ -84,7 +84,7 @@ ValueWithDefect SwipeCircleDetector::CalculateArea(int amount, ValueWithDefect &
     return ValueWithDefect(fabs(area._area), (float) area.GetDefect());
 }
 
-void SwipeCircleDetector::SetRelaxed(bool relaxed) {
+void CircleDetector::SetRelaxed(bool relaxed) {
     _relaxed = relaxed;
     if (relaxed) {
         _minCircleArea = MIN_CIRCLE_AREA / 1.2;

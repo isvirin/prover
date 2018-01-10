@@ -114,7 +114,7 @@ public:
     void SetDirection(int direction);
 
     /**
-     * set 1-sized vector for specified swipe-points movement
+     * set 1-sized vector for specified swype-points movement
      * @param from
      * @param to
      */

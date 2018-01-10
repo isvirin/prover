@@ -17,7 +17,7 @@
 #define MAX_DEVIATION 0.09
 #define MIN_AREA_BY_P2_TO_CIRCLE 0.67
 
-class SwipeCircleDetector {
+class CircleDetector {
 public:
     void AddShift(VectorExplained shift);
 

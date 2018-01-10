@@ -12,7 +12,7 @@
     <string name="address_">Wallet address:</string>
     <string name="offline">Offline</string>
     <string name="makeProver">Do not interrupt video recording, make a circular motion with the phone</string>
-    <string name="swipeCodeFailedTryAgain">Something went wrong. Please, try again.</string>
+    <string name="swypeCodeFailedTryAgain">Something went wrong. Please, try again.</string>
     <string name="accountInfoMessage">IMPORTANT: DO NOT SEND TOKENS TO THIS ADDRESS!\n\nSend only Ropsten Testnet ether to this deposit address. Sending tokens or any other currency, including Mainnet ether, to this address will result in the permanent loss of your deposit.</string>
     <string name="walletAddress">Wallet address</string>
     <string name="swypeCodeOk">Swype code entered succesfully.</string>

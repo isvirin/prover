@@ -40,7 +40,7 @@ void SwypeDetect::SetDetectorSize(int detectorWidth, int detectorHeight) {
 }
 
 void SwypeDetect::setSwype(string swype) {
-    swipeCode.Init(swype);
+    swypeCode.Init(swype);
     if (S == 1) {
         AddDetector(0);
     }
@@ -95,7 +95,7 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
     if (windowedShift._mod > 0) {
         _circleDetector.AddShift(windowedShift);
         if (_circleDetector.IsCircle()) {
-            if (swipeCode.empty()) {
+            if (swypeCode.empty()) {
                 MoveToState(1, timestamp);
             } else {
                 AddDetector(timestamp);
@@ -151,7 +151,7 @@ void SwypeDetect::setRelaxed(bool relaxed) {
 void SwypeDetect::AddDetector(unsigned int timestamp) {
     if (_detectors.size() < _maxDetectors) {
         if (timestamp == 0 || timestamp >= _lastDetectorAdded + MIN_TIME_BETWEEN_DETECTORS) {
-            _detectors.emplace_back(swipeCode, SWYPE_SPEED, MAX_DETECTOR_DEVIATION, _relaxed,
+            _detectors.emplace_back(swypeCode, SWYPE_SPEED, MAX_DETECTOR_DEVIATION, _relaxed,
                                     timestamp);
             _lastDetectorAdded = timestamp;
             LOGI_NATIVE("Detector added %d, t %d", _detectors.back()._id, timestamp);

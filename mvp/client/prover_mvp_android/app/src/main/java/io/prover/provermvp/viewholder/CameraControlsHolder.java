@@ -244,7 +244,7 @@ public class CameraControlsHolder implements View.OnClickListener,
     @Override
     public void onDetectionStateChanged(@Nullable DetectionState oldState, @NonNull DetectionState newState) {
         if (oldState != null && oldState.state == DetectionState.State.InputCode && newState.state == DetectionState.State.Waiting) {
-            showHint(R.string.swipeCodeFailedTryAgain, 3500, 0, false, true);
+            showHint(R.string.swypeCodeFailedTryAgain, 3500, 0, false, true);
         } else if (newState.state == DetectionState.State.Confirmed) {
             allDoneHolder.setVectorDrawable();
             TransitionManager.beginDelayedTransition(root);

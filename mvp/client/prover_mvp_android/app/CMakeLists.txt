@@ -23,7 +23,7 @@ add_library( native-lib SHARED
              src/main/cpp/Vector.cpp
              src/main/cpp/VectorExplained.cpp
              src/main/cpp/SwypeStepDetector.cpp
-             src/main/cpp/SwipeCircleDetector.cpp
+             src/main/cpp/CircleDetector.cpp
              src/main/cpp/BoundsChecker.cpp
              src/main/cpp/SwypeCodeDetector.cpp
 

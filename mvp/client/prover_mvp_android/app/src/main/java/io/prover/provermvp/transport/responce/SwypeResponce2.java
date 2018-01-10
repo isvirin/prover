@@ -21,10 +21,10 @@ public class SwypeResponce2 {
         }
         JSONObject resultJso = obj.getJSONObject("result");
         swypeId = resultJso.getInt("swype-id");
-        JSONArray swipeSequence = resultJso.getJSONArray("swype-sequence");
+        JSONArray swypeSequence = resultJso.getJSONArray("swype-sequence");
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < swipeSequence.length(); i++) {
-            builder.append(swipeSequence.getInt(i));
+        for (int i = 0; i < swypeSequence.length(); i++) {
+            builder.append(swypeSequence.getInt(i));
         }
         swypeCode = builder.toString();
     }

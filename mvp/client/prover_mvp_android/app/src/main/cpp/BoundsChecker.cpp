@@ -85,7 +85,7 @@ void BoundsChecker::SetMatForDirection(int direction) {
  */
 bool BoundsChecker::CheckBounds(VectorExplained p) {
     // turn _current so we should move to +x (of +x, +y for Diagonal)
-    // fail if we've got too close to another swipe-point
+    // fail if we've got too close to another swype-point
     p.MulWithDefect(_turnMat);
     float tr1 = 1 + _targetRadius;
 
@@ -105,7 +105,7 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
             p.FlipXY();
         }
 
-        // ensure that we can't get into wrong swipe-point (1,0) accounting defect
+        // ensure that we can't get into wrong swype-point (1,0) accounting defect
         // defect is double 'cause server can will have different result
 #ifdef RECT_DEFECT
         Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 2);
@@ -123,7 +123,7 @@ bool BoundsChecker::CheckBounds(VectorExplained p) {
 
         //distance to line x = y -- it is the line that goes to target point
         double d1 = (p._x - p._y) / _sqrt2;
-        // distance to remaining non-target swipe point
+        // distance to remaining non-target swype point
         double r2 = p.DistanceTo(1, 0);
         if (logLevel == 0)
             return d1 < r2;
@@ -161,7 +161,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
             p.FlipXY();
         }
 
-        // ensure that we can't get into wrong swipe-point (1,0) accounting defect
+        // ensure that we can't get into wrong swype-point (1,0) accounting defect
 #ifdef RECT_DEFECT
         Vector shifted = p.ShiftDefectRectToPointMagnet(1, 0, 1);
 #else
@@ -189,7 +189,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
 
         //distance to line x = y -- it is the line that goes to target point
         double d1 = (shiftedToLine._x - shiftedToLine._y) / _sqrt2;
-        // distance to remaining non-target swipe point
+        // distance to remaining non-target swype point
         double r2 = shiftedToLine.DistanceTo(1, 0);
         if (logLevel == 0)
             return d1 < r2;
