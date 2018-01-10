@@ -151,7 +151,8 @@ void SwypeDetect::setRelaxed(bool relaxed) {
 void SwypeDetect::AddDetector(unsigned int timestamp) {
     if (_detectors.size() < _maxDetectors) {
         if (timestamp == 0 || timestamp >= _lastDetectorAdded + MIN_TIME_BETWEEN_DETECTORS) {
-            _detectors.emplace_back(swipeCode, 1, MAX_DETECTOR_DEVIATION, _relaxed, timestamp);
+            _detectors.emplace_back(swipeCode, SWYPE_SPEED, MAX_DETECTOR_DEVIATION, _relaxed,
+                                    timestamp);
             _lastDetectorAdded = timestamp;
             LOGI_NATIVE("Detector added %d, t %d", _detectors.back()._id, timestamp);
         }

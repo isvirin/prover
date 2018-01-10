@@ -8,6 +8,7 @@
 #define DEFECT_CLIENT 0.27
 #define MS_PER_SWIPE_STEP 2000
 #define PAUSE_TO_ST3_MS_PER_STEP 300
+#define SWYPE_SPEED 1.25
 
 #ifdef __ANDROID_API__
 
