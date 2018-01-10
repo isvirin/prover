@@ -14,6 +14,7 @@
 // FIT_FACTOR_H is for diagonal
 
 #define FIT_FACTOR_H 0.45f
+#define FIT_FACTOR_H_RELAXED 0.6f
 
 /**
  * Checks that we are closer to source or target swype points (and a line between them) then to other swipe points

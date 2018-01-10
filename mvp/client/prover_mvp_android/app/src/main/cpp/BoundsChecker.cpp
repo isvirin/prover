@@ -146,7 +146,7 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
     float tr1 = 1 + _targetRadius;
 
     if (_isDiagonal) {
-        if (!p.CheckWithinRectWithDefect(-FIT_FACTOR_H, -FIT_FACTOR_H, tr1, tr1)) {
+        if (!p.CheckWithinRectWithDefect(-FIT_FACTOR_H_RELAXED, -FIT_FACTOR_H_RELAXED, tr1, tr1)) {
             if (logLevel > 0) {
                 LOGI_NATIVE("Bounds_f1 %.4f, %.4f", p._x, p._y);
             }
@@ -203,7 +203,8 @@ bool BoundsChecker::CheckBoundsWithDefect(VectorExplained p) {
             return false;
         }
     } else {
-        return p.CheckWithinRectWithDefect(-FIT_FACTOR_H, -FIT_FACTOR_H, tr1, FIT_FACTOR_H);
+        return p.CheckWithinRectWithDefect(-FIT_FACTOR_H_RELAXED, -FIT_FACTOR_H_RELAXED, tr1,
+                                           FIT_FACTOR_H_RELAXED);
     }
 }
 
