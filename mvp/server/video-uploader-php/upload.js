@@ -1,3 +1,30 @@
+(function(){
+    var inputElem = document.querySelector('#file'),
+        progress = document.querySelector('.progress'),
+        uploadBackground = document.querySelector('.upload-background');
+    inputElem.addEventListener('change',function(e) {
+        document.querySelector('.name-file').innerHTML = this.files[0].name;
+        document.querySelector('.size-file').innerHTML = Number(this.files[0].size/1048576).toFixed(1) + " Mb";
+    });
+    document.querySelector('#uploadForm').addEventListener('submit',function(e){
+        e.preventDefault();
+        uploadForm();
+    }, false);
+    function uploadForm(){
+        if (inputElem.value) {
+            var xhr = new XMLHttpRequest(),
+                remind;
+            xhr.upload.addEventListener('progress', function(e) {
+                console.log("---");
+                uploadBackground.style.width = e.loaded/e.total*100 + '%';
+                uploadBackground.style.max = e.total + '%';
+                remind =  e.loaded/e.total*100;
+                progress.innerHTML = Math.round(remind) + ' %';
+            });
+        }
+    }
+})();
+
 // feature detection for drag&drop upload
 var isAdvancedUpload = function () {
     var div = document.createElement('div');
