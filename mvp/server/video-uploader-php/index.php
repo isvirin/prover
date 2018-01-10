@@ -270,16 +270,16 @@ saveClientInfo('index');
                     </div>
                 </section>
                 <section id="clapperboard-upload-file" class="upload-file">
-                    <form method="post" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
-                          onclick="document.getElementById('file').click()">
-                        <div class="red-line"></div>
+                    <form method="post" id="clapperboard-uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
+                          onclick="document.getElementById('clapperboard-file').click()">
                         <div class="box__input">
+                            <div class="red-line"></div>
                             <h3 class="box__verification">File verification</h3>
                             <!--                    <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>-->
                             <!--                        <path d="M760.499 493.901c-9.995-9.997-26.206-9.997-36.203 0l-212.296 212.294v-578.195c0-14.138-11.462-25.6-25.6-25.6s-25.6 11.462-25.6 25.6v578.195l-212.298-212.294c-9.998-9.997-26.206-9.997-36.205 0-9.997 9.995-9.997 26.206 0 36.203l256 256c5 4.997 11.55 7.496 18.102 7.496s13.102-2.499 18.102-7.501l256-256c9.997-9.995 9.997-26.203-0.003-36.198z"></path>-->
                             <!--                        <path d="M896 972.8h-819.2c-42.347 0-76.8-34.451-76.8-76.8v-102.4c0-14.139 11.462-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 14.115 11.485 25.6 25.6 25.6h819.2c14.115 0 25.6-11.485 25.6-25.6v-102.4c0-14.139 11.461-25.6 25.6-25.6s25.6 11.461 25.6 25.6v102.4c0 42.349-34.451 76.8-76.8 76.8z"></path>-->
                             <!--                    </svg>-->
-                            <input type="file" name="file" id="file" class="box__file">
+                            <input type="file" name="file" id="clapperboard-file" class="box__file">
                             <label class="box__labelFile_default" for="">
                                 <strong>Choose a file</strong>
                                 <span class="box__dragndrop"> or drag it here.</span>
@@ -288,20 +288,30 @@ saveClientInfo('index');
                             <button type="submit" class="box__button">Upload</button>
                         </div>
 
-                        <div class="box__uploading">Uploading&hellip;</div>
+                        <div class="box__uploading">
+                            <div class="upload-background"></div>
+                            <div class="upload">
+                                <div class="red-line"></div>
+                                <p class="progress">0%</p>
+                                <h3 class="box__verification">Uploading&hellip;</h3>
+                                <img src="images/gear_clapperboard.png">
+                                <p class="clapperboard-name-file"></p>
+                                <p class="clapperboard-size-file"></p>
+                            </div>
+                        </div>
                         <div class="box__success">
-                            Done!
-                            <br>
+                            <div class="green-line"></div>
+                            <p>file hash matched</p>
+                            <h3 class="box__verification">Done!</h3>
                             <span class="box__success_msg"></span>
-                            <br>
-                            <span class="box__restart">Try another file</span>
+                            <a href="#">Download .pdf certificate</a>
+                            <strong>Try another file</strong>
                         </div>
                         <div class="box__error">
-                            Error!
-                            <br>
-                            <span></span>
-                            <br>
-                            <span class="box__restart">Try another file</span>
+                            <div class="red-line"></div>
+                            <p>nothing found</p>
+                            <h3 class="box__verification">Failed to verify</h3>
+                            <strong>Try another file</strong>
                         </div>
                     </form>
                     <p>

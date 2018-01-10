@@ -440,6 +440,8 @@ input[type='search']::-webkit-search-results-decoration {
     font-size: 14px;
 }
 .box.has-advanced-upload .box__uploading .name-file,
+.box.has-advanced-upload .box__uploading .clapperboard-name-file,
+.box.has-advanced-upload .box__uploading .clapperboard-size-file,
 .box.has-advanced-upload .box__uploading .size-file {
     margin: 2px 0;
 }
@@ -452,6 +454,9 @@ input[type='search']::-webkit-search-results-decoration {
     width: 0%;
     height: 100%;
     background: rgba(255,255,255,0.3);
+}
+#clapperboard .box.has-advanced-upload .box__uploading .upload-background {
+    background: rgba(45, 54, 61, 0.5);
 }
 .box.has-advanced-upload .box__uploading .upload {
     display: inline-block;
