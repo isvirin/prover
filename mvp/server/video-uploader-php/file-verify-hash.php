@@ -13,11 +13,12 @@ define('USER_ADDRESS_FILTER', null);
 define('EXAMPLE_FILE_HASH', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 define('TRANSACTIONBYHASH_CORRECT_INPUT', '0x74305b38');
 
-function uploadResult($isSuccess, $transactions, $error, $debug = false)
+function uploadResult($isSuccess, $transactions, $hash, $error, $debug = false)
 {
     return json_encode([
         'success' => $isSuccess,
         'transactions' => $transactions,
+        'hash' => $hash,
         'error' => $error,
         'debug' => $debug
     ], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -210,16 +211,17 @@ function worker($file)
     return [
         'isSuccess' => $isSuccess,
         'transactions' => $transactions,
+        'hash' => '0x' . $hash,
         'error' => $error
     ];
 }
 
 $file = '';
 if (!empty($_FILES['file'])) {
-    $_FILES['file']['tmp_name'];
+    $file = $_FILES['file']['tmp_name'];
 } else if (isset($argv[1])) {
     $file = $argv[1];
 }
 
 $workerResult = worker($file);
-die(uploadResult($workerResult['isSuccess'], $workerResult['transactions'], $workerResult['error']));
+die(uploadResult($workerResult['isSuccess'], $workerResult['transactions'], $workerResult['hash'], $workerResult['error']));

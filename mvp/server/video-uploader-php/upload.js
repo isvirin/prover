@@ -78,8 +78,10 @@ Array.prototype.forEach.call(forms, function (form) {
     var input = form.querySelector('input[type="file"]'),
         labelFile = form.querySelector('label.box__labelFile_file'),
         labelDefault = form.querySelector('label.box__labelFile_default'),
-        successSwypeCode = form.querySelector('.swype-code span'),
+        successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
+        successSwypeCode = form.querySelector('.swype-code span'),
+        successTimeHash = form.querySelector('.time_hash span'),
         errorMsg = form.querySelector('.box__error span'),
         restart = form.querySelectorAll('.box__restart'),
         droppedFiles = false,
@@ -157,11 +159,17 @@ Array.prototype.forEach.call(forms, function (form) {
                     ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
                     '>' + transaction.senderAddress + '</span>';
             });
-            var msgSwypeCode = 'Nothing found',
-                msgHash = 'Nothing found';
+            var msgTimeSwypeCode = 'Nothing found',
+                msgTimeHash = 'Nothing found',
+                msgHash = 'Nothing found',
+                msgSwypeCode = 'Nothing found';
+            if (response.hash)
+                msgHash = response.hash;
+            if (response.transactions[0].swype)
+                msgSwypeCode = response.transactions[0].swype;
             if (response.transactions.length) {
-                msgSwypeCode = '';
-                msgHash = '';
+                msgTimeSwypeCode = '';
+                msgTimeHash = '';
                 if (response.debug) {
                     msg = 'Transactions count: ' + response.transactions.length + '.' +
                         (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
@@ -170,19 +178,21 @@ Array.prototype.forEach.call(forms, function (form) {
                     if (submitMediaHash_ts) {
                         var requestSwypeCode_ts = response.transactions[0].requestSwypeCode_block.timestamp;
                         if (requestSwypeCode_ts) {
-                            msgSwypeCode += hexTsToDate(requestSwypeCode_ts);
+                            msgTimeSwypeCode += hexTsToDate(requestSwypeCode_ts);
                         } else {
-                            msgSwypeCode += 'not found 😢';
+                            msgTimeSwypeCode += 'not found 😢';
                         }
-                        msgHash += hexTsToDate(submitMediaHash_ts);
+                        msgTimeHash += hexTsToDate(submitMediaHash_ts);
                         if (requestSwypeCode_ts) {
                             // msg += '<br>Swype code and relative time later with analytic program';
                         }
                     } else {
-                        msgHash += 'can not found submit media hash 😨';
+                        msgTimeHash += 'can not found submit media hash 😨';
                     }
                 }
             }
+            successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
+            successTimeHash.innerHTML = msgTimeHash;
             successSwypeCode.innerHTML = msgSwypeCode;
             successHash.innerHTML = msgHash;
         }
