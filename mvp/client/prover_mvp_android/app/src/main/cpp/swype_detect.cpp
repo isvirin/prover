@@ -103,12 +103,15 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         }
     }
 
+    bool filledResponce = false;
+
     if (_detectors.size() > 0) {
         for (auto it = _detectors.begin(); it != _detectors.end();) {
             it->Add(windowedShift);
             if (it->_status < 0) {
                 if (_maxDetectors == 1) {
                     it->FillResult(state, index, x, y, debug);
+                    filledResponce = true;
                 }
                 it = _detectors.erase(it);
             } else {
@@ -124,16 +127,18 @@ void SwypeDetect::processFrame_new(const unsigned char *frame_i, int width_i, in
         state = S;
     }
 
-    if (S == 4) {
-        if (_detectors.size() > 0)
+    if (!filledResponce) {
+        if (S == 4) {
+            if (_detectors.size() > 0)
+                _detectors.front().FillResult(state, index, x, y, debug);
+            state = S;
+        } else if (_detectors.size() == 0) {
+            x = (int) (windowedShift._x * 1024);
+            y = (int) (windowedShift._y * 1024);
+            state = S;
+        } else {
             _detectors.front().FillResult(state, index, x, y, debug);
-        state = S;
-    } else if (_detectors.size() == 0) {
-        x = (int) (windowedShift._x * 1024);
-        y = (int) (windowedShift._y * 1024);
-        state = S;
-    } else {
-        _detectors.front().FillResult(state, index, x, y, debug);
+        }
     }
 }
 
