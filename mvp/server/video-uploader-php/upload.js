@@ -1,10 +1,8 @@
 (function(){
     var inputElem = document.querySelector('#file'),
         clapperboardInputElem = document.querySelector('#clapperboard-file'),
-        progress = document.querySelector('.progress'),
         formProver = document.querySelector('#uploadForm'),
-        formClapperboard = document.querySelector('#clapperboard-uploadForm'),
-        uploadBackground = document.querySelector('.upload-background');
+        formClapperboard = document.querySelector('#clapperboard-uploadForm');
     inputElem.addEventListener('change',function(e) {
         document.querySelector('.name-file').innerHTML = this.files[0].name;
         document.querySelector('.size-file').innerHTML = Number(this.files[0].size/1048576).toFixed(1) + " Mb";
@@ -15,16 +13,19 @@
     });
     formProver.addEventListener('submit',function(e){
         e.preventDefault();
-        uploadForm();
+        uploadForm(this);
     }, false);
     formClapperboard.addEventListener('submit',function(e){
         e.preventDefault();
-        uploadForm();
+        uploadForm(this);
     }, false);
-    function uploadForm(){
-        if (inputElem.value) {
+    function uploadForm(form){
+        var input = form.querySelector('input[type=file]');
+        if (input.value) {
             var xhr = new XMLHttpRequest(),
-                remind;
+                remind,
+                progress = form.querySelector('.progress'),
+                uploadBackground = form.querySelector('.upload-background');
             xhr.open('POST', 'index.php', false);
             xhr.upload.addEventListener('progress', function(e) {
                 uploadBackground.style.width = e.loaded/e.total*100 + '%';
@@ -33,7 +34,7 @@
                 progress.innerHTML = Math.round(remind) + ' %';
             });
             var form = new FormData();
-            form.append('file', inputElem.files[0]);
+            form.append('file', input.files[0]);
             xhr.send(form);
         }
     }
