@@ -26,16 +26,16 @@
                 remind,
                 progress = form.querySelector('.progress'),
                 uploadBackground = form.querySelector('.upload-background');
-            xhr.open('POST', 'index.php', false);
+            xhr.open('POST', 'index.php');
             xhr.upload.addEventListener('progress', function(e) {
                 uploadBackground.style.width = e.loaded/e.total*100 + '%';
                 uploadBackground.style.max = e.total + '%';
                 remind =  e.loaded/e.total*100;
                 progress.innerHTML = Math.round(remind) + ' %';
             });
-            var form = new FormData();
-            form.append('file', input.files[0]);
-            xhr.send(form);
+            var formData = new FormData();
+            formData.append('file', input.files[0]);
+            xhr.send(formData);
         }
     }
 })();
