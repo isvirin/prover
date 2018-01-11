@@ -130,7 +130,7 @@ saveClientInfo('index');
                         <h3 class="box__verification">Done!</h3>
                         <div class="success_information">
                             <p class="hash">File hash: <span></span></p>
-                            <p class="swype-code">Swype-code: <span></span></p>
+<!--                            <p class="swype-code">Swype-code: <span></span></p>-->
                             <p class="time_swype-code">Request swype-code on <span></span></p>
                             <p class="time_hash">Submit media hash on <span></span></p>
 <!--                            <a href="#">Download .pdf certificate</a>-->
@@ -155,6 +155,7 @@ saveClientInfo('index');
                 <span id="get_eth_block">
                     <input type="search" placeholder="Enter your wallet address" id="send_eth_addr"><a href="manual.html" class="btn btn-send" id="send_eth_btn">send 0.05 Eth</a>
                 </span>
+                <p id="get_eth_result"></p>
             </section>
             <section id="how-it-works" class="how-it-works">
                 <h3>How it works</h3>
@@ -309,8 +310,10 @@ saveClientInfo('index');
                             <p>file hash matched</p>
                             <h3 class="box__verification">Done!</h3>
                             <div class="success_information">
-                                <p class="swype-code">Request swype-code on <span></span></p>
-                                <p class="hash">Submit media hash on <span></span></p>
+                                <p class="hash">File hash: <span></span></p>
+<!--                                <p class="swype-code">Swype-code: <span></span></p>-->
+                                <p class="time_swype-code">Request swype-code on <span></span></p>
+                                <p class="time_hash">Submit media hash on <span></span></p>
 <!--                                <a href="#">Download .pdf certificate</a>-->
                                 <strong>Try another file</strong>
                             </div>
@@ -331,8 +334,9 @@ saveClientInfo('index');
                 <section id="clapperboard-get-ether" class="get-ether">
                     <h3>Get ropsten testnet ether</h3>
                     <span id="get_eth_block">
-                    <input type="search" placeholder="Enter your wallet address" id="send_eth_addr"><a href="manual.html" class="btn btn-send" id="send_eth_btn">send 0.05 Eth</a>
-                </span>
+                        <input type="search" placeholder="Enter your wallet address" id="send_eth_addr"><a href="manual.html" class="btn btn-send" id="send_eth_btn">send 0.05 Eth</a>
+                    </span>
+                    <p id="get_eth_result"></p>
                 </section>
                 <section id="clapperboard-how-it-works" class="how-it-works">
                     <h3>How it works</h3>

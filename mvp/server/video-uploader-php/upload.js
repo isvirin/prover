@@ -80,7 +80,7 @@ Array.prototype.forEach.call(forms, function (form) {
         labelDefault = form.querySelector('label.box__labelFile_default'),
         successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
-        successSwypeCode = form.querySelector('.swype-code span'),
+        // successSwypeCode = form.querySelector('.swype-code span'),
         successTimeHash = form.querySelector('.time_hash span'),
         errorMsg = form.querySelector('.box__error span'),
         restart = form.querySelectorAll('.box__restart'),
@@ -193,7 +193,7 @@ Array.prototype.forEach.call(forms, function (form) {
             }
             successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
             successTimeHash.innerHTML = msgTimeHash;
-            successSwypeCode.innerHTML = msgSwypeCode;
+            // successSwypeCode.innerHTML = msgSwypeCode;
             successHash.innerHTML = msgHash;
         }
     }

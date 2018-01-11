@@ -92,6 +92,9 @@ input:checked + .slider:before {
     background: transparent;
     right: 5px;
 }
+#get_eth_result {
+    display: none;
+}
 body.clapperboard .switch p.switch-clapperboard {
     color: rgba(255, 255, 255, 1);
 }
@@ -494,7 +497,7 @@ input[type='search']::-webkit-search-results-decoration {
     margin-bottom: 40px;
 }
 .box.has-advanced-upload .box__success .success_information {
-    width: 95%;
+    width: 65%;
     margin: 0 auto;
 }
 .box.has-advanced-upload .box__error .box__verification {
@@ -1168,6 +1171,9 @@ footer a {
     }
     .use-cases .use-case__block:nth-child(even) {
         float: left;
+    }
+    .box.has-advanced-upload .box__success .success_information {
+        width: 95%;
     }
     #get_eth_block {
         padding-left: 20px;
