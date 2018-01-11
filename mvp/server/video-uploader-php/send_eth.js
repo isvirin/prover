@@ -13,7 +13,7 @@ Array.prototype.forEach.call(getEthSections, function (getEthSection) {
         xhr.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var result = JSON.parse(this.responseText);
-                var resultBlock = getEthSection.getElementById('get_eth_result');
+                var resultBlock = getEthSection.querySelector('#get_eth_result');
                 if (!result.success) {
                     resultBlock.classList.add('error');
                     resultBlock.innerHTML = result.message;
@@ -23,13 +23,11 @@ Array.prototype.forEach.call(getEthSections, function (getEthSection) {
                         '<a href="https://ropsten.etherscan.io/tx/' + result.message + '" target="_blank">' +
                         result.message +
                         '</a>';
+                    sendEthBlock.style.display = 'none';
                 }
-                sendEthBlock.style.display = 'none';
                 resultBlock.style.display = 'inline';
             }
         };
-        // document.getElementById('get_eth_block').style.display = 'none';
-        // document.getElementById('get_eth_result').style.display = 'none';
         xhr.send(params);
         return false;
     });

@@ -105,6 +105,9 @@ input:checked + .slider:before {
     color: #ffffff;
     text-decoration: none;
 }
+#clapperboard-get-ether #get_eth_result a {
+    color: #000000;
+}
 body.clapperboard .switch p.switch-clapperboard {
     color: rgba(255, 255, 255, 1);
 }
