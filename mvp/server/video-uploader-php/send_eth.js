@@ -1,12 +1,10 @@
 document.getElementById('get_eth_result').style.display = 'none';
 var getEthSections = document.querySelectorAll('.get-ether');
-console.log(getEthSections);
 Array.prototype.forEach.call(getEthSections, function (getEthSection) {
     var sendEthBtn = getEthSection.querySelector('#send_eth_btn'),
+        sendEthBlock = getEthSection.querySelector('#get_eth_block'),
         sendEthAddr = getEthSection.querySelector('#send_eth_addr');
-    console.log(sendEthBtn);
     sendEthBtn.addEventListener('click', function (e) {
-        console.log(sendEthAddr);
         e.preventDefault();
         var xhr = new XMLHttpRequest();
         var params = 'ethAddress=' + sendEthAddr.value;
@@ -15,18 +13,18 @@ Array.prototype.forEach.call(getEthSections, function (getEthSection) {
         xhr.onreadystatechange = function () {
             if (this.readyState === 4 && this.status === 200) {
                 var result = JSON.parse(this.responseText);
-                var resultBlock = document.getElementById('get_eth_result');
+                var resultBlock = getEthSection.getElementById('get_eth_result');
                 if (!result.success) {
                     resultBlock.classList.add('error');
                     resultBlock.innerHTML = result.message;
                 } else {
                     resultBlock.classList.remove('error');
-                    document.getElementById('get_eth_result').innerHTML = 'Success<br>' +
+                    resultBlock.innerHTML = 'Success<br>' +
                         '<a href="https://ropsten.etherscan.io/tx/' + result.message + '" target="_blank">' +
                         result.message +
                         '</a>';
                 }
-                document.getElementById('get_eth_block').style.display = 'none';
+                sendEthBlock.style.display = 'none';
                 resultBlock.style.display = 'inline';
             }
         };
