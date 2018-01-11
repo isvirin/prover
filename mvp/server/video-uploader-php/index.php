@@ -97,7 +97,7 @@ saveClientInfo('index');
             <section id="upload-file" class="upload-file">
                 <form method="post" id="uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
                       onclick="document.getElementById('file').click()">
-                    <div class="box__input" style="">
+                    <div class="box__input">
                         <div class="red-line"></div>
                         <h3 class="box__verification">File verification</h3>
     <!--                    <svg class="box__icon" viewBox="0 0 1024 1024" width="100"><title>download</title>-->
@@ -113,7 +113,7 @@ saveClientInfo('index');
                         <button type="submit" class="box__button">Upload</button>
                     </div>
 
-                    <div class="box__uploading" style="">
+                    <div class="box__uploading">
                         <div class="upload-background"></div>
                         <div class="upload">
                             <div class="red-line"></div>
@@ -128,9 +128,12 @@ saveClientInfo('index');
                         <div class="green-line"></div>
                         <p>file hash matched</p>
                         <h3 class="box__verification">Done!</h3>
-                        <span class="box__success_msg"></span>
-                        <a href="#">Download .pdf certificate</a>
-                        <strong>Try another file</strong>
+                        <div class="success_information">
+                            <p class="swype-code">Request swype-code on <span></span></p>
+                            <p class="hash">Submit media hash on <span></span></p>
+                            <a href="#">Download .pdf certificate</a>
+                            <strong>Try another file</strong>
+                        </div>
                     </div>
                     <div class="box__error">
                         <div class="red-line"></div>
@@ -303,9 +306,12 @@ saveClientInfo('index');
                             <div class="green-line"></div>
                             <p>file hash matched</p>
                             <h3 class="box__verification">Done!</h3>
-                            <span class="box__success_msg"></span>
-                            <a href="#">Download .pdf certificate</a>
-                            <strong>Try another file</strong>
+                            <div class="success_information">
+                                <p class="swype-code">Request swype-code on <span></span></p>
+                                <p class="hash">Submit media hash on <span></span></p>
+                                <a href="#">Download .pdf certificate</a>
+                                <strong>Try another file</strong>
+                            </div>
                         </div>
                         <div class="box__error">
                             <div class="red-line"></div>
