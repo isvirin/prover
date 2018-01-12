@@ -233,12 +233,10 @@ Array.prototype.forEach.call(forms, function (form) {
             ajax.onload = function () {
                 if (ajax.status >= 200 && ajax.status < 400) {
                     try {
-                        console.log('ajax - try');
                         var response = JSON.parse(ajax.responseText);
                         form.classList.add(response.success ? 'is-success' : 'is-error');
                         updateOnResponse(response);
                     } catch (exception) {
-                        console.log('ajax - catch');
                         updateOnResponse({
                             success: false,
                             error: 'upload exception 😱: ' + ajax.responseText
