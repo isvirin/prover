@@ -80,9 +80,8 @@ Array.prototype.forEach.call(forms, function (form) {
         labelDefault = form.querySelector('label.box__labelFile_default'),
         successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
-        // successSwypeCode = form.querySelector('.swype-code span'),
+        successSwypeCode = form.querySelector('.swype-code span'),
         successTimeHash = form.querySelector('.time_hash span'),
-        errorMsg = form.querySelector('.box__error span'),
         restart = form.querySelectorAll('.box__restart'),
         droppedFiles = false,
         showFiles = function (files) {
@@ -141,60 +140,68 @@ Array.prototype.forEach.call(forms, function (form) {
 
     function updateOnResponse(response) {
         //todo: remove console.log
-        console.log(response);
         form.classList.remove('is-error');
         form.classList.remove('is-success');
         form.classList.remove('is-uploading');
         if (!response.success) {
             form.classList.add('is-error');
-            errorMsg.textContent = response.error;
         } else {
-            form.classList.add('is-success');
-            var senderAddressesSpans = '';
-            response.transactions.forEach(function (transaction) {
-                senderAddressesSpans +=
-                    '<br>' +
-                    '<span' +
-                    ' class="box__sender_address"' +
-                    ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
-                    '>' + transaction.senderAddress + '</span>';
-            });
             var msgTimeSwypeCode = 'Nothing found',
                 msgTimeHash = 'Nothing found',
                 msgHash = 'Nothing found',
+                msgTypeText = 'Nothing found',
                 msgSwypeCode = 'Nothing found';
-            if (response.hash)
-                msgHash = response.hash;
-            if (response.transactions[0].swype)
-                msgSwypeCode = response.transactions[0].swype;
-            if (response.transactions.length) {
-                msgTimeSwypeCode = '';
-                msgTimeHash = '';
-                if (response.debug) {
-                    msg = 'Transactions count: ' + response.transactions.length + '.' +
-                        (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
-                } else {
-                    var submitMediaHash_ts = response.transactions[0].submitMediaHash_block.timestamp;
-                    if (submitMediaHash_ts) {
-                        var requestSwypeCode_ts = response.transactions[0].requestSwypeCode_block.timestamp;
-                        if (requestSwypeCode_ts) {
-                            msgTimeSwypeCode += hexTsToDate(requestSwypeCode_ts);
-                        } else {
-                            msgTimeSwypeCode += 'not found 😢';
-                        }
-                        msgTimeHash += hexTsToDate(submitMediaHash_ts);
-                        if (requestSwypeCode_ts) {
-                            // msg += '<br>Swype code and relative time later with analytic program';
-                        }
+            form.classList.add('is-success');
+            var senderAddressesSpans = '';
+            if (response.transactions !== undefined) {
+                response.transactions.forEach(function (transaction) {
+                    senderAddressesSpans +=
+                        '<br>' +
+                        '<span' +
+                        ' class="box__sender_address"' +
+                        ' onclick="getSenderInfo(\'' + transaction.senderAddress + '\')"' +
+                        '>' + transaction.senderAddress + '</span>';
+                });
+                if (response.transactions.length) {
+                    if (response.transactions[0].swype)
+                        msgSwypeCode = response.transactions[0].swype;
+                    msgTimeSwypeCode = '';
+                    msgTimeHash = '';
+                    if (response.debug) {
+                        msg = 'Transactions count: ' + response.transactions.length + '.' +
+                            (senderAddressesSpans ? ' Sender addresses:' : '') + senderAddressesSpans;
                     } else {
-                        msgTimeHash += 'can not found submit media hash 😨';
+                        var submitMediaHash_ts = response.transactions[0].submitMediaHash_block.timestamp;
+                        if (submitMediaHash_ts) {
+                            var requestSwypeCode_ts = response.transactions[0].requestSwypeCode_block.timestamp;
+                            if (requestSwypeCode_ts) {
+                                msgTimeSwypeCode += hexTsToDate(requestSwypeCode_ts);
+                            } else {
+                                msgTimeSwypeCode += 'not found 😢';
+                            }
+                            msgTimeHash += hexTsToDate(submitMediaHash_ts);
+                            if (requestSwypeCode_ts) {
+                                // msg += '<br>Swype code and relative time later with analytic program';
+                            }
+                        } else {
+                            msgTimeHash += 'can not found submit media hash 😨';
+                        }
                     }
+
+                    successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
+                    successTimeHash.innerHTML = msgTimeHash;
+                    // successSwypeCode.innerHTML = msgSwypeCode;
                 }
             }
-            successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
-            successTimeHash.innerHTML = msgTimeHash;
-            // successSwypeCode.innerHTML = msgSwypeCode;
+            if (response.hash)
+                msgHash = response.hash;
             successHash.innerHTML = msgHash;
+
+            if (response.typeText) {
+                msgTypeText = response.typeText;
+                successSwypeCode.innerHTML = msgTypeText;
+            }
+
         }
     }
 
@@ -226,10 +233,12 @@ Array.prototype.forEach.call(forms, function (form) {
             ajax.onload = function () {
                 if (ajax.status >= 200 && ajax.status < 400) {
                     try {
+                        console.log('ajax - try');
                         var response = JSON.parse(ajax.responseText);
                         form.classList.add(response.success ? 'is-success' : 'is-error');
                         updateOnResponse(response);
                     } catch (exception) {
+                        console.log('ajax - catch');
                         updateOnResponse({
                             success: false,
                             error: 'upload exception 😱: ' + ajax.responseText

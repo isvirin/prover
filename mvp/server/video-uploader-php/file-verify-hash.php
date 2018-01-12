@@ -34,7 +34,7 @@ function callAnalyticProgramm($file, $blockHash, $txHash)
     $beginSwypeTime = 0;
     $endSwypeTime = 0;
     $resultJson = exec("analyzefile $file --txhash $txHash --blockhash $blockHash 2> /dev/null", $output, $return_code);
-    if ($return_code !== 0) {
+    if ($return_code === 0) {
         $result = @json_decode($resultJson, true)['result'];
         if ($result) {
             $swype = @$result['swype'];
@@ -118,7 +118,6 @@ function worker($file)
         ]];
 
         if ($gethClient->call('eth_getLogs', $params)) {
-            $isSuccess = true;
             $eth_getLogs_result = $gethClient->result;
             foreach ($eth_getLogs_result as $transaction) {
                 /* EXAMPLE transaction
@@ -185,6 +184,8 @@ function worker($file)
                                 $swype = $analyticResult['swype'];
                                 $beginSwypeTime = $analyticResult['beginSwypeTime'];
                                 $endSwypeTime = $analyticResult['endSwypeTime'];
+                                if ($beginSwypeTime && $endSwypeTime)
+                                    $isSuccess = true;
                             }
                         }
                     }
