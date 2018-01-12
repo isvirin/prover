@@ -35,11 +35,11 @@ function callAnalyticProgramm($file, $blockHash, $txHash)
     $endSwypeTime = 0;
     $resultJson = exec("analyzefile $file --txhash $txHash --blockhash $blockHash 2> /dev/null", $output, $return_code);
     if ($return_code === 0) {
-        $result = @json_decode($resultJson, true)['result'];
-        if ($result) {
-            $swype = @$result['swype'];
-            $beginSwypeTime = @$result['time-begin'];
-            $endSwypeTime = @$result['time-end'];
+        $result = @json_decode($resultJson, true);
+        if ($result && isset($result['result'])) {
+            $swype = @$result['swype-code'];
+            $beginSwypeTime = @$result['result']['time-begin'];
+            $endSwypeTime = @$result['result']['time-end'];
         }
     }
     return [
@@ -96,8 +96,9 @@ function getBlockByHash(&$gethClient, $hash)
 function worker($file)
 {
     $isSuccess = false;
-    $error = '';
     $transactions = [];
+    $hash = '';
+    $error = '';
 
     $mvpHelloInfo = json_decode(httpPost(MVP_CGI_BIN_URL . '/hello'), true);
     if (!$mvpHelloInfo['contractAddress']) {
@@ -140,7 +141,7 @@ function worker($file)
                 $data = $transaction->data;
                 $senderAddress = $transaction->topics[1];
                 $validated = false;
-                $swype = 0;
+                $swype = '';
                 $beginSwypeTime = 0;
                 $endSwypeTime = 0;
                 $transaction1_details = json_decode(json_encode($transaction));
@@ -149,6 +150,7 @@ function worker($file)
                 $submitMediaHash_block = getBlockByHash($gethClient, $transaction->blockHash);
                 $requestSwypeCode_block = [];
 
+                $call = '';
                 if ($gethClient->call('eth_getTransactionByHash', [
                     $data
                 ])) {
@@ -180,6 +182,7 @@ function worker($file)
                             if ($transactionDetails->blockHash) {
                                 $transaction2_details = json_decode(json_encode($transactionDetails));
                                 $analyticResult = callAnalyticProgramm($file, $transactionDetails->blockHash, $transactionDetails->hash);
+                                $call = "analyzefile $file --txhash {$transactionDetails->hash} --blockhash {$transactionDetails->blockHash} 2> /dev/null";
                                 $validated = $analyticResult['validated'];
                                 $swype = $analyticResult['swype'];
                                 $beginSwypeTime = $analyticResult['beginSwypeTime'];
@@ -196,6 +199,7 @@ function worker($file)
                     'transaction2_details' => $transaction2_details,
                     'senderAddress' => $senderAddress,
                     'validated' => $validated,
+                    'call' => $call,
                     'submitMediaHash_block' => $submitMediaHash_block,
                     'requestSwypeCode_block' => $requestSwypeCode_block,
                     'swype' => $swype,

@@ -1,25 +1,26 @@
-(function(){
+(function () {
     var inputElem = document.querySelector('#file'),
         clapperboardInputElem = document.querySelector('#clapperboard-file'),
         formProver = document.querySelector('#uploadForm'),
         formClapperboard = document.querySelector('#clapperboard-uploadForm');
-    inputElem.addEventListener('change',function(e) {
+    inputElem.addEventListener('change', function (e) {
         document.querySelector('.name-file').innerHTML = this.files[0].name;
-        document.querySelector('.size-file').innerHTML = Number(this.files[0].size/1048576).toFixed(1) + " Mb";
+        document.querySelector('.size-file').innerHTML = Number(this.files[0].size / 1048576).toFixed(1) + " Mb";
     });
-    clapperboardInputElem.addEventListener('change',function(e) {
+    clapperboardInputElem.addEventListener('change', function (e) {
         document.querySelector('.clapperboard-name-file').innerHTML = this.files[0].name;
-        document.querySelector('.clapperboard-size-file').innerHTML = Number(this.files[0].size/1048576).toFixed(1) + " Mb";
+        document.querySelector('.clapperboard-size-file').innerHTML = Number(this.files[0].size / 1048576).toFixed(1) + " Mb";
     });
-    formProver.addEventListener('submit',function(e){
+    formProver.addEventListener('submit', function (e) {
         e.preventDefault();
         uploadForm(this);
     }, false);
-    formClapperboard.addEventListener('submit',function(e){
+    formClapperboard.addEventListener('submit', function (e) {
         e.preventDefault();
         uploadForm(this);
     }, false);
-    function uploadForm(form){
+
+    function uploadForm(form) {
         var input = form.querySelector('input[type=file]');
         if (input.value) {
             var xhr = new XMLHttpRequest(),
@@ -27,10 +28,11 @@
                 progress = form.querySelector('.progress'),
                 uploadBackground = form.querySelector('.upload-background');
             xhr.open('POST', 'index.php');
-            xhr.upload.addEventListener('progress', function(e) {
-                uploadBackground.style.width = e.loaded/e.total*100 + '%';
+            xhr.upload.addEventListener('progress', function (e) {
+                console.log('p1', e);
+                uploadBackground.style.width = e.loaded / e.total * 100 + '%';
                 uploadBackground.style.max = e.total + '%';
-                remind =  e.loaded/e.total*100;
+                remind = e.loaded / e.total * 100;
                 progress.innerHTML = Math.round(remind) + ' %';
             });
             var formData = new FormData();
@@ -81,6 +83,7 @@ Array.prototype.forEach.call(forms, function (form) {
         successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
         successSwypeCode = form.querySelector('.swype-code span'),
+        successSwypeBeginEnd = form.querySelector('.swype-begin-end span'),
         successTimeHash = form.querySelector('.time_hash span'),
         restart = form.querySelectorAll('.box__restart'),
         droppedFiles = false,
@@ -150,7 +153,8 @@ Array.prototype.forEach.call(forms, function (form) {
                 msgTimeHash = 'Nothing found',
                 msgHash = 'Nothing found',
                 msgTypeText = 'Nothing found',
-                msgSwypeCode = 'Nothing found';
+                msgSwypeCode = 'Nothing found',
+                msgSwypeBeginEnd = 'Nothing found';
             form.classList.add('is-success');
             var senderAddressesSpans = '';
             if (response.transactions !== undefined) {
@@ -163,8 +167,14 @@ Array.prototype.forEach.call(forms, function (form) {
                         '>' + transaction.senderAddress + '</span>';
                 });
                 if (response.transactions.length) {
-                    if (response.transactions[0].swype)
+                    console.log(response);
+                    if (response.transactions[0].swype) {
                         msgSwypeCode = response.transactions[0].swype;
+                        msgSwypeBeginEnd =
+                            response.transactions[0].beginSwypeTime
+                            + '/' +
+                            response.transactions[0].endSwypeTime;
+                    }
                     msgTimeSwypeCode = '';
                     msgTimeHash = '';
                     if (response.debug) {
@@ -190,7 +200,8 @@ Array.prototype.forEach.call(forms, function (form) {
 
                     successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
                     successTimeHash.innerHTML = msgTimeHash;
-                    // successSwypeCode.innerHTML = msgSwypeCode;
+                    successSwypeCode.innerHTML = msgSwypeCode;
+                    successSwypeBeginEnd.innerHTML = msgSwypeBeginEnd;
                 }
             }
             if (response.hash)

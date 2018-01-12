@@ -126,10 +126,11 @@ saveClientInfo('index');
                         <h3 class="box__verification">Done!</h3>
                         <div class="success_information">
                             <p class="hash">File hash: <span></span></p>
-<!--                            <p class="swype-code">Swype-code: <span></span></p>-->
                             <p class="time_swype-code">Request swype-code on <span></span></p>
                             <p class="time_hash">Submit media hash on <span></span></p>
-<!--                            <a href="#">Download .pdf certificate</a>-->
+                            <p class="swype-code">Swype-code: <span></span></p>
+                            <p class="swype-begin-end">Swype begin/end: <span></span></p>
+                            <!--                            <a href="#">Download .pdf certificate</a>-->
                             <strong>Try another file</strong>
                         </div>
                     </div>
