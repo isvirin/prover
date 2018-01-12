@@ -290,6 +290,7 @@ int main(int argc, char *argv[])
     }
 
     fprintf(stderr, "Specified swype-code: %s\n", swypecode.c_str());
+    std::string originalSwypecode=swypecode;
     swypecode=rotateSwypeCode(swypecode, (int)floor(reader.getOrientationAngle()));
     fprintf(stderr, "Transformed swype-code: %s\n", swypecode.c_str());
 
@@ -357,11 +358,11 @@ int main(int argc, char *argv[])
 
     if(swypeBeginTimestamp!=-1 && swypeEndTimestamp!=-1)
     {
-        printf("{\"result\":{\"time-begin\":%.3f, \"time-end\":%.3f}}\n", swypeBeginTimestamp/1000.0, swypeEndTimestamp/1000.0);
+        printf("{\"result\":{\"time-begin\":%.3f, \"time-end\":%.3f}, \"swype-code\":\"%s\"}\n", swypeBeginTimestamp/1000.0, swypeEndTimestamp/1000.0, originalSwypecode.c_str());
     }
     else
     {
-        printf("{\"result\":null}\n");
+        printf("{\"result\":null, \"swype-code\":\"%s\"}\n", originalSwypecode.c_str());
     }
 
     return 0;
