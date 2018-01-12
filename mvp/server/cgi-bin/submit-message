@@ -69,7 +69,7 @@ if "hex" in query_args:
 elif "txhash" in query_args:
     txhash=query_args["txhash"][0]
 
-    rpcrequest={"jsonrpc":"2.0", "method":"eth_getTransactionByHash", "params":[txhash], "id":0}
+    rpcrequest=[{"jsonrpc":"2.0", "method":"eth_blockNumber", "id":1}, {"jsonrpc":"2.0", "method":"eth_getTransactionByHash", "params":[txhash], "id":2}]
 
     request=Request("http://"+config["node"], data=json.dumps(rpcrequest).encode("latin1"), headers={"Content-Type": "application/json"})
     reply=urlopen(request)
@@ -79,8 +79,10 @@ elif "txhash" in query_args:
 
     replyJson=json.loads(reply.read().decode("latin1"))
 
-    if "result" in replyJson and replyJson["result"] is not None and replyJson["result"]["blockHash"] not in [None, "0x"+64*"0"]:
-        res={"result": replyJson["result"]["blockHash"]}
+    topBlock=int(replyJson[0]["result"], 16)
+
+    if "result" in replyJson[1] and replyJson[1]["result"] is not None and replyJson[1]["result"]["blockNumber"] is not None and topBlock-int(replyJson[1]["result"]["blockNumber"], 16)>1:
+        res={"result": replyJson[1]["result"]["blockHash"]}
     else:
         res={"result": None}
 
