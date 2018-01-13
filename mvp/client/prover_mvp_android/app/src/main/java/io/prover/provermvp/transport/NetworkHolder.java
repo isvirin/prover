@@ -1,5 +1,6 @@
 package io.prover.provermvp.transport;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -14,6 +15,7 @@ import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.transport.responce.HelloResponce;
 import io.prover.provermvp.transport.responce.SwypeResponce1;
 import io.prover.provermvp.transport.responce.SwypeResponce2;
+import io.prover.provermvp.util.Etherium;
 
 import static io.prover.provermvp.Settings.FAKE_SWYPE_CODE;
 import static io.prover.provermvp.Settings.REQUEST_SWYPE;
@@ -30,13 +32,13 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final CameraController cameraController;
     private final ArrayList<NetworkRequest> requests = new ArrayList<>();
-    public ECKey key;
+    private final Etherium etherium;
     private NetworkSession networkSession;
     private SwypeResponce1 swypeRequestHash;
     private SwypeResponce2 swypeResponce2;
 
-    public NetworkHolder(ECKey key, CameraController cameraController) {
-        this.key = key;
+    public NetworkHolder(Context context, CameraController cameraController) {
+        etherium = Etherium.getInstance(context);
         this.cameraController = cameraController;
         cameraController.onRecordingStop.add(this);
         cameraController.onRecordingStart.add(this);
@@ -44,7 +46,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
         cameraController.onNetworkRequestError.add(this);
     }
 
-    public void setKey(ECKey key) {
+/*    public void setKey(ECKey key) {
         if (key != null && !key.equals(this.key)) {
             this.key = key;
             synchronized (requests) {
@@ -54,9 +56,10 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
                 requests.clear();
             }
         }
-    }
+    }*/
 
     public void doHello() {
+        ECKey key = etherium.getKey();
         if (key != null) {
             execNetworkRequest(new HelloRequest(key, cameraController.networkDelegate));
         }
@@ -66,6 +69,7 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
         onNetworkRequestFinished(request);
         if (request instanceof HelloRequest) {
+            ECKey key = etherium.getKey();
             if (networkSession != null && networkSession.key.equals(key)) {
                 networkSession.onNewHelloResponce((HelloResponce) responce);
             } else {

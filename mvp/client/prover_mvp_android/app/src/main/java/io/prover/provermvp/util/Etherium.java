@@ -6,11 +6,16 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.ethereum.crypto.ECKey;
+import org.json.JSONException;
 import org.spongycastle.jcajce.provider.asymmetric.ec.EtherKeccakOutputStream;
 import org.spongycastle.jcajce.provider.asymmetric.ec.EtherKeccakSigner;
 import org.spongycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.util.BigIntegers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -19,6 +24,11 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.SignatureException;
+
+import io.prover.provermvp.util.wallet.CipherException;
+import io.prover.provermvp.util.wallet.ECKeyPair;
+import io.prover.provermvp.util.wallet.Wallet;
+import io.prover.provermvp.util.wallet.WalletFile;
 
 import static io.prover.provermvp.Const.TAG;
 
@@ -115,5 +125,16 @@ public class Etherium {
 
     public ECKey getKey() {
         return keyPair;
+    }
+
+    public void exportWallet(File file, String password) throws CipherException, FileNotFoundException, UnsupportedEncodingException, JSONException {
+        ECKeyPair ecKeyPair = new ECKeyPair(keyPair.getPrivKey(), BigIntegers.fromUnsignedByteArray(keyPair.getPubKey()));
+        WalletFile walletFile = Wallet.createLight(password, ecKeyPair);
+        walletFile.writeToFile(file);
+    }
+
+    public void setKey(ECKey keyPair, Context context) {
+        this.keyPair = keyPair;
+        saveKey(context);
     }
 }

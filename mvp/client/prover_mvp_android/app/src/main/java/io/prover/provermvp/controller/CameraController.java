@@ -42,7 +42,7 @@ public class CameraController extends CameraControllerBase {
     public CameraController(Context context) {
         Etherium etherium = Etherium.getInstance(context);
         ECKey key = etherium.getKey();
-        networkHolder = new NetworkHolder(key, this);
+        networkHolder = new NetworkHolder(context, this);
     }
 
     public boolean isRecording() {

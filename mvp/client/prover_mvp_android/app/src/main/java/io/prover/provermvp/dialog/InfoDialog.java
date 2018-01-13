@@ -26,10 +26,12 @@ import io.prover.provermvp.util.Etherium;
 public class InfoDialog extends Dialog implements View.OnClickListener {
 
     private final TextView addressView;
+    private final DialogActionsListener actionsListener;
     private String address;
 
-    public InfoDialog(@NonNull Context context) {
+    public InfoDialog(@NonNull Context context, DialogActionsListener actionsListener) {
         super(context);
+        this.actionsListener = actionsListener;
         setCancelable(true);
         setCanceledOnTouchOutside(true);
 
@@ -39,6 +41,8 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
         updateAddress();
         addressView.setOnClickListener(this);
         findViewById(R.id.buttonOk).setOnClickListener(this);
+        findViewById(R.id.buttonExport).setOnClickListener(this);
+        findViewById(R.id.buttonImport).setOnClickListener(this);
         setTitle(R.string.info);
 
         Window window = getWindow();
@@ -56,21 +60,6 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
             byte[] addressBytes = key.getAddress();
             byte[] addDigitBytes = Hex.encode(addressBytes);
             address = "0x" + new String(addDigitBytes);
-
-            /*SpannableStringBuilder builder = new SpannableStringBuilder();
-            builder.append(getContext().getString(R.string.address_)).append("\n");
-            int start = builder.length();
-            builder.append(address);
-            int end = builder.length();
-            //Object span = new RelativeSizeSpan(1.2f);
-            //builder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Resources res = getContext().getResources();
-            TypedValue val = new TypedValue();
-            getContext().getTheme().resolveAttribute(android.R.attr.textColorPrimary, val, true);
-            int color = res.getColor(val.resourceId);
-
-            Object span = new ForegroundColorSpan(color);
-            builder.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);*/
             addressView.setText(address);
         }
     }
@@ -92,6 +81,22 @@ public class InfoDialog extends Dialog implements View.OnClickListener {
             case R.id.buttonOk:
                 dismiss();
                 break;
+
+            case R.id.buttonImport:
+                dismiss();
+                actionsListener.showImportDialog();
+                break;
+
+            case R.id.buttonExport:
+                dismiss();
+                actionsListener.showExportDialog();
+                break;
         }
+    }
+
+    public interface DialogActionsListener {
+        void showExportDialog();
+
+        void showImportDialog();
     }
 }

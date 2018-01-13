@@ -11,7 +11,11 @@ import android.support.v4.content.FileProvider;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import io.prover.provermvp.R;
@@ -39,6 +43,33 @@ public class UtilFile {
             name = name + suffix;
         }
         return new File(file.getParent(), name);
+    }
+
+    public static String readFully(File file) {
+        String result = null;
+        try {
+            InputStream stream = new FileInputStream(file);
+            result = readFully(stream);
+            stream.close();
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static String readFully(InputStream inputStream) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = inputStream.read(buffer)) != -1) {
+                baos.write(buffer, 0, length);
+            }
+            return new String(baos.toByteArray());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void externalOpenFile(Context context, String mime) {
@@ -78,6 +109,21 @@ public class UtilFile {
             Toast.makeText(context, R.string.cantFindApp, Toast.LENGTH_SHORT).show();
         } else {
             context.startActivity(intent);
+        }
+    }
+
+    public void sendShareIntent(Context context, String subject, String text) {
+        Intent intentShareFile = new Intent(Intent.ACTION_SEND);
+
+        if (file.exists()) {
+            intentShareFile.setType("application/pdf");
+            Uri uri = Uri.fromFile(file);
+            intentShareFile.putExtra(Intent.EXTRA_STREAM, uri);
+
+            intentShareFile.putExtra(Intent.EXTRA_SUBJECT, subject);
+            intentShareFile.putExtra(Intent.EXTRA_TEXT, text);
+
+            context.startActivity(Intent.createChooser(intentShareFile, "Share File"));
         }
     }
 }

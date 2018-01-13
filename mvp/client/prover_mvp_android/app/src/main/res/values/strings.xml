@@ -21,4 +21,13 @@
     <string name="videoHashPostFailed">Error sending video hash to blockchain.</string>
     <string name="notEnoughMoney">Not enough funds on your account.</string>
     <string name="videoNotConfirmed">Your video has not been verified yet!</string>
+
+    <string name="import_">Import</string>
+    <string name="export">Export</string>
+    <string name="password">Password</string>
+    <string name="exportWallet">Export wallet</string>
+    <string name="importWallet">Import wallet</string>
+    <string name="fileNotExist">File does not exist</string>
+    <string name="keystore_json_file">Keystore / JSON File</string>
+    <string name="open">Open</string>
 </resources>

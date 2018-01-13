@@ -1,6 +1,8 @@
 package io.prover.provermvp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,7 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import java.lang.ref.WeakReference;
+
 import io.prover.provermvp.controller.CameraController;
+import io.prover.provermvp.dialog.ExportDialog;
+import io.prover.provermvp.dialog.ImportDialog;
 import io.prover.provermvp.dialog.InfoDialog;
 import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.viewholder.BalanceStatusHolder;
@@ -22,10 +28,14 @@ import io.prover.provermvp.viewholder.ICameraViewHolder;
 import io.prover.provermvp.viewholder.ScreenLogger;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener {
+import static android.content.Intent.EXTRA_LOCAL_ONLY;
+import static io.prover.provermvp.Const.REQUEST_CODE_FOR_IMPORT_WALLET;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, InfoDialog.DialogActionsListener, ImportDialog.ImportFileListener {
 
     private final Handler handler = new Handler();
     SwypeStateHelperHolder swypeStateHelperHolder;
+    WeakReference<ImportDialog> importDialogRef;
     private CameraController cameraController;
     private ICameraViewHolder cameraHolder;
     private CameraControlsHolder cameraControlsHolder;
@@ -120,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.infoButton:
-                new InfoDialog(this).show();
+                new InfoDialog(this, this).show();
                 break;
         }
     }
@@ -141,5 +151,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public void showExportDialog() {
+        new ExportDialog(this, findViewById(R.id.contentRoot)).show();
+    }
+
+    @Override
+    public void showImportDialog() {
+        ImportDialog importDialog = new ImportDialog(this, cameraController, this);
+        importDialog.show();
+        importDialogRef = new WeakReference<>(importDialog);
+    }
+
+    @Override
+    public void onRequestImportFile(String currentPath) {
+        Intent intent = new Intent()
+                .setType("file/*")
+                .setAction(Intent.ACTION_GET_CONTENT)
+                .putExtra(EXTRA_LOCAL_ONLY, true);
+
+        startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CODE_FOR_IMPORT_WALLET);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_FOR_IMPORT_WALLET:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedfile = data.getData();
+                    if (selectedfile == null || selectedfile.getPath() == null)
+                        return;
+                    ImportDialog importDialog = importDialogRef.get();
+                    if (importDialog != null) {
+                        importDialog.setFilePath(selectedfile.getPath());
+                    } else {
+                        showImportDialog();
+                        importDialog = importDialogRef.get();
+                        importDialog.setFilePath(selectedfile.getPath());
+                    }
+                }
+                return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
