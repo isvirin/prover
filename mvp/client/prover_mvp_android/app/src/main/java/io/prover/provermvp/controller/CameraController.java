@@ -10,15 +10,15 @@ import org.ethereum.crypto.ECKey;
 import java.io.File;
 import java.util.List;
 
+import io.prover.common.util.Etherium;
+import io.prover.common.util.UtilFile;
 import io.prover.provermvp.Settings;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
 import io.prover.provermvp.detector.SwypeDetectorHandler;
 import io.prover.provermvp.transport.NetworkHolder;
-import io.prover.provermvp.util.Etherium;
 import io.prover.provermvp.util.Frame;
 import io.prover.provermvp.util.FrameRateCounter;
-import io.prover.provermvp.util.UtilFile;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 /**

@@ -10,14 +10,14 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.Locale;
 
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.RequestSwypeCode1;
+import io.prover.common.transport.responce.LowFundsException;
 import io.prover.provermvp.BuildConfig;
 import io.prover.provermvp.R;
 import io.prover.provermvp.Settings;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.transport.NetworkRequest;
-import io.prover.provermvp.transport.RequestSwypeCode1;
-import io.prover.provermvp.transport.responce.LowFundsException;
 
 import static io.prover.provermvp.detector.DetectionState.State.Confirmed;
 import static io.prover.provermvp.detector.DetectionState.State.Waiting;

@@ -10,16 +10,22 @@ import org.ethereum.crypto.ECKey;
 import java.io.File;
 import java.util.ArrayList;
 
+import io.prover.common.transport.HelloRequest;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.NetworkSession;
+import io.prover.common.transport.RequestSwypeCode1;
+import io.prover.common.transport.RequestSwypeCode2;
+import io.prover.common.transport.SubmitVideoHashRequest;
+import io.prover.common.transport.responce.HelloResponce;
+import io.prover.common.transport.responce.SwypeResponce1;
+import io.prover.common.transport.responce.SwypeResponce2;
+import io.prover.common.util.Etherium;
 import io.prover.provermvp.Const;
 import io.prover.provermvp.controller.CameraController;
-import io.prover.provermvp.transport.responce.HelloResponce;
-import io.prover.provermvp.transport.responce.SwypeResponce1;
-import io.prover.provermvp.transport.responce.SwypeResponce2;
-import io.prover.provermvp.util.Etherium;
 
+import static io.prover.common.transport.NetworkRequest.TAG;
 import static io.prover.provermvp.Settings.FAKE_SWYPE_CODE;
 import static io.prover.provermvp.Settings.REQUEST_SWYPE;
-import static io.prover.provermvp.transport.NetworkRequest.TAG;
 
 /**
  * Created by babay on 14.11.2017.
@@ -45,18 +51,6 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
         cameraController.onNetworkRequestDone.add(this);
         cameraController.onNetworkRequestError.add(this);
     }
-
-/*    public void setKey(ECKey key) {
-        if (key != null && !key.equals(this.key)) {
-            this.key = key;
-            synchronized (requests) {
-                for (NetworkRequest request : requests) {
-                    request.cancel();
-                }
-                requests.clear();
-            }
-        }
-    }*/
 
     public void doHello() {
         ECKey key = etherium.getKey();

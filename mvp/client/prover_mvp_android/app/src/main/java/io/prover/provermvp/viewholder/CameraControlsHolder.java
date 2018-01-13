@@ -28,16 +28,16 @@ import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
+import io.prover.common.permissions.PermissionManager;
+import io.prover.common.transport.HelloRequest;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.SubmitVideoHashRequest;
+import io.prover.common.transport.responce.HelloResponce;
+import io.prover.common.util.UtilFile;
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.permissions.PermissionManager;
-import io.prover.provermvp.transport.HelloRequest;
-import io.prover.provermvp.transport.NetworkRequest;
-import io.prover.provermvp.transport.SubmitVideoHashRequest;
-import io.prover.provermvp.transport.responce.HelloResponce;
-import io.prover.provermvp.util.UtilFile;
 
 import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_X;
 import static io.prover.provermvp.Const.KEY_SELECTED_RESOLUTION_Y;

@@ -11,13 +11,13 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
+import io.prover.common.transport.HelloRequest;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.RequestSwypeCode1;
+import io.prover.common.transport.RequestSwypeCode2;
+import io.prover.common.transport.responce.HelloResponce;
 import io.prover.provermvp.R;
 import io.prover.provermvp.controller.CameraController;
-import io.prover.provermvp.transport.HelloRequest;
-import io.prover.provermvp.transport.NetworkRequest;
-import io.prover.provermvp.transport.RequestSwypeCode1;
-import io.prover.provermvp.transport.RequestSwypeCode2;
-import io.prover.provermvp.transport.responce.HelloResponce;
 
 /**
  * Created by babay on 22.11.2017.

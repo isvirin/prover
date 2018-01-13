@@ -8,9 +8,9 @@ import android.support.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
+import io.prover.common.transport.NetworkRequest;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.detector.DetectionState;
-import io.prover.provermvp.transport.NetworkRequest;
 import io.prover.provermvp.viewholder.ScreenLogger;
 
 /**

@@ -9,12 +9,12 @@ import android.widget.FrameLayout;
 
 import java.io.File;
 
+import io.prover.common.permissions.PermissionManager;
 import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.MyCamera;
 import io.prover.provermvp.camera.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
-import io.prover.provermvp.permissions.PermissionManager;
 
 import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
 

@@ -15,11 +15,11 @@ import android.widget.FrameLayout;
 
 import java.lang.ref.WeakReference;
 
+import io.prover.common.dialog.ExportDialog;
+import io.prover.common.dialog.ImportDialog;
+import io.prover.common.dialog.InfoDialog;
+import io.prover.common.permissions.PermissionManager;
 import io.prover.provermvp.controller.CameraController;
-import io.prover.provermvp.dialog.ExportDialog;
-import io.prover.provermvp.dialog.ImportDialog;
-import io.prover.provermvp.dialog.InfoDialog;
-import io.prover.provermvp.permissions.PermissionManager;
 import io.prover.provermvp.viewholder.BalanceStatusHolder;
 import io.prover.provermvp.viewholder.CameraControlsHolder;
 import io.prover.provermvp.viewholder.CameraViewHolder;

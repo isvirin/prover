@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 
+import io.prover.common.permissions.PermissionManager;
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.ScreenOrientationLock;
@@ -26,7 +27,6 @@ import io.prover.provermvp.camera2.AutoFitTextureView;
 import io.prover.provermvp.camera2.MyCamera2;
 import io.prover.provermvp.camera2.OrientationHelper;
 import io.prover.provermvp.controller.CameraController;
-import io.prover.provermvp.permissions.PermissionManager;
 
 import static io.prover.provermvp.camera.CameraUtil.MEDIA_TYPE_VIDEO;
 
