@@ -2,10 +2,7 @@ package io.prover.clapperboardmvp.controller;
 
 import android.content.Context;
 
-import org.ethereum.crypto.ECKey;
-
 import io.prover.clapperboardmvp.transport.NetworkHolder;
-import io.prover.clapperboardmvp.util.Etherium;
 
 
 /**
@@ -18,9 +15,7 @@ public class Controller extends ControllerBase {
     boolean resumed;
 
     public Controller(Context context) {
-        Etherium etherium = Etherium.getInstance(context);
-        ECKey key = etherium.getKey();
-        networkHolder = new NetworkHolder(key, this);
+        networkHolder = new NetworkHolder(context, this);
     }
 
     public void onResume() {

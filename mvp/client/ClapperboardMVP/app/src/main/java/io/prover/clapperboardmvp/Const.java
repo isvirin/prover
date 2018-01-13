@@ -8,5 +8,4 @@ public interface Const {
     String TAG = "Clapperboard";
 
     String SERVER_URL = "http://mvp.prover.io/cgi-bin/";
-
 }

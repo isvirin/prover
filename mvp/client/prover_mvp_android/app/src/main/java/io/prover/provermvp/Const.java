@@ -7,9 +7,6 @@ package io.prover.provermvp;
 public interface Const {
     String TAG = "proverMvp";
 
-    int REQUEST_CODE_FOR_REQUEST_PERMISSIONS = 1010;
-    int REQUEST_CODE_FOR_IMPORT_WALLET = 1001;
-
     String KEY_SELECTED_RESOLUTION_X = "resX";
     String KEY_SELECTED_RESOLUTION_Y = "resY";
 

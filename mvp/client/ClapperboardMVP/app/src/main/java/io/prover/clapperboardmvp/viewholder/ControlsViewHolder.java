@@ -1,6 +1,5 @@
 package io.prover.clapperboardmvp.viewholder;
 
-import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.transition.TransitionManager;
@@ -9,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import io.prover.clapperboardmvp.MainActivity;
 import io.prover.clapperboardmvp.R;
 import io.prover.clapperboardmvp.controller.Controller;
 import io.prover.clapperboardmvp.controller.ControllerBase;
-import io.prover.clapperboardmvp.dialog.InfoDialog;
-import io.prover.clapperboardmvp.transport.NetworkRequest;
-import io.prover.clapperboardmvp.transport.RequestQrCodeFromText2;
-import io.prover.clapperboardmvp.transport.responce.HashResponce2;
-import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
-import io.prover.clapperboardmvp.util.ScreenOrientationLock;
+import io.prover.common.dialog.InfoDialog;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.RequestQrCodeFromText2;
+import io.prover.common.transport.responce.HashResponce2;
+import io.prover.common.transport.responce.TemporaryDenyException;
+import io.prover.common.util.ScreenOrientationLock;
 
 /**
  * Created by babay on 21.12.2017.
@@ -31,13 +31,13 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
     final TextView largeMessageView;
     final FabHolder fabHolder;
     private final BalanceStatusHolder balanceHolder;
-    private final Activity activity;
+    private final MainActivity activity;
     private final ScreenOrientationLock screenOrientationLock = new ScreenOrientationLock();
     private final QrCodeViewHolder qrHolder;
 
     private Mode mode = Mode.Initial;
 
-    public ControlsViewHolder(Activity activity, Controller controller) {
+    public ControlsViewHolder(MainActivity activity, Controller controller) {
         this.controller = controller;
         this.activity = activity;
         balanceHolder = new BalanceStatusHolder(activity, controller);
@@ -67,7 +67,7 @@ public class ControlsViewHolder implements View.OnClickListener, ControllerBase.
 
             case R.id.fab:
                 if (getQrCodeButton.isEnabled()) {
-                    new InfoDialog(contentRoot.getContext()).show();
+                    new InfoDialog(activity, activity).show();
                 } else {
                     controller.networkHolder.cancelAllRequests();
                     controller.networkHolder.doHello();

@@ -29,7 +29,7 @@ import io.prover.provermvp.viewholder.ScreenLogger;
 import io.prover.provermvp.viewholder.SwypeStateHelperHolder;
 
 import static android.content.Intent.EXTRA_LOCAL_ONLY;
-import static io.prover.provermvp.Const.REQUEST_CODE_FOR_IMPORT_WALLET;
+import static io.prover.common.Const.REQUEST_CODE_FOR_IMPORT_WALLET;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnLongClickListener, InfoDialog.DialogActionsListener, ImportDialog.ImportFileListener {
 

@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.prover.provermvp.Const;
 import io.prover.provermvp.R;
 
 import static android.Manifest.permission.CAMERA;
@@ -56,7 +55,7 @@ public class PermissionManager {
         for (int i = 0; i < expectedPermissions.size(); i++) {
             PermissionRequestSet set = expectedPermissions.get(i);
             if (set.getRequestCode() == requestCode) {
-                set.onPermissionRequestDone(activity, Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
+                set.onPermissionRequestDone(activity, io.prover.common.Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
                 expectedPermissions.remove(i--);
             }
         }

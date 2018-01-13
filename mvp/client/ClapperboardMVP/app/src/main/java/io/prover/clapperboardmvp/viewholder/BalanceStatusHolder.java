@@ -16,12 +16,12 @@ import java.util.Locale;
 
 import io.prover.clapperboardmvp.R;
 import io.prover.clapperboardmvp.controller.Controller;
-import io.prover.clapperboardmvp.transport.HelloRequest;
-import io.prover.clapperboardmvp.transport.NetworkRequest;
-import io.prover.clapperboardmvp.transport.RequestSwypeCode1;
-import io.prover.clapperboardmvp.transport.RequestSwypeCode2;
-import io.prover.clapperboardmvp.transport.responce.HelloResponce;
-import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
+import io.prover.common.transport.HelloRequest;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.RequestSwypeCode1;
+import io.prover.common.transport.RequestSwypeCode2;
+import io.prover.common.transport.responce.HelloResponce;
+import io.prover.common.transport.responce.TemporaryDenyException;
 
 
 /**

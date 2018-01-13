@@ -20,7 +20,7 @@ import org.spongycastle.util.BigIntegers;
 import io.nayuki.qrcodegen.QrCode;
 import io.prover.clapperboardmvp.BuildConfig;
 import io.prover.clapperboardmvp.R;
-import io.prover.clapperboardmvp.transport.responce.HashResponce2;
+import io.prover.common.transport.responce.HashResponce2;
 
 import static io.prover.clapperboardmvp.Const.TAG;
 

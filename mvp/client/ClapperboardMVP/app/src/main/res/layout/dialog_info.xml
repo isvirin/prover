@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="8dp"
-    android:paddingLeft="32dp">
+    android:paddingBottom="8dp">
 
     <TextView
-        android:id="@+id/walletAddress"
+        android:id="@+id/titleView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="24dp"
         android:text="@string/walletAddress"
         android:textAppearance="?android:attr/textAppearanceLarge"
@@ -21,18 +21,20 @@
         android:id="@+id/messageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/accountInfoMessage"
         android:textColor="#fff"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/walletAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/titleView" />
 
     <View
         android:id="@+id/spacer"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="16dp"
         android:background="@color/colorAccent"
         app:layout_constraintTop_toBottomOf="@+id/messageView" />
@@ -41,6 +43,7 @@
         android:id="@+id/addressView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:background="?attr/selectableItemBackground"
@@ -68,5 +71,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addressView" />
+
+    <Button
+        android:id="@+id/buttonImport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/import_"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addressView" />
+
+    <Button
+        android:id="@+id/buttonExport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/export"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/buttonImport"
+        app:layout_constraintTop_toBottomOf="@+id/addressView" />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -6,9 +6,22 @@
     <string name="textHint">Type text</string>
     <string name="get_qr_code">Get QR-code</string>
 
+    <string name="permissionRequired">Permissions required</string>
+    <string name="writePermissionRequired">File write permissions are required to write file</string>
+    <string name="readPermissionRequired">File read permissions are required to read file</string>
+
     <string name="info">Info</string>
     <string name="addressCopied">Address copied to clipboard</string>
     <string name="accountInfoMessage">IMPORTANT: DO NOT SEND TOKENS TO THIS ADDRESS!\n\nSend only Ropsten Testnet ether to this deposit address. Sending tokens or any other currency, including Mainnet ether, to this address will result in the permanent loss of your deposit.</string>
     <string name="walletAddress">Wallet address</string>
     <string name="requestingQrCode">Requesting QR-Code</string>
+
+    <string name="import_">Import</string>
+    <string name="export">Export</string>
+    <string name="password">Password</string>
+    <string name="exportWallet">Export wallet</string>
+    <string name="importWallet">Import wallet</string>
+    <string name="fileNotExist">File does not exist</string>
+    <string name="keystore_json_file">Keystore / JSON File</string>
+    <string name="open">Open</string>
 </resources>

@@ -12,7 +12,7 @@ import java.io.File;
 import io.prover.common.permissions.PermissionManager;
 import io.prover.provermvp.camera.CameraUtil;
 import io.prover.provermvp.camera.MyCamera;
-import io.prover.provermvp.camera.ScreenOrientationLock;
+import io.prover.common.util.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.controller.CameraController;
 

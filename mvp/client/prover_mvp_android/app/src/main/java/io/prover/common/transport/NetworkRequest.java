@@ -128,6 +128,10 @@ public abstract class NetworkRequest<T> implements Runnable {
         cancelled = true;
     }
 
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
     public interface NetworkRequestListener {
         void onNetworkRequestStart(NetworkRequest request);
 

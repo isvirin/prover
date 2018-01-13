@@ -3,8 +3,8 @@ package io.prover.clapperboardmvp.controller;
 import android.os.Handler;
 import android.os.Looper;
 
-import io.prover.clapperboardmvp.transport.NetworkRequest;
 import io.prover.clapperboardmvp.viewholder.ScreenLogger;
+import io.prover.common.transport.NetworkRequest;
 
 /**
  * Created by babay on 11.12.2017.

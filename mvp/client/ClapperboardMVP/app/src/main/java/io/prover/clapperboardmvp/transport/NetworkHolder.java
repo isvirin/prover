@@ -1,5 +1,6 @@
 package io.prover.clapperboardmvp.transport;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -9,12 +10,20 @@ import org.ethereum.crypto.ECKey;
 import java.util.ArrayList;
 
 import io.prover.clapperboardmvp.controller.Controller;
-import io.prover.clapperboardmvp.transport.responce.HashResponce;
-import io.prover.clapperboardmvp.transport.responce.HelloResponce;
-import io.prover.clapperboardmvp.transport.responce.SwypeResponce1;
-import io.prover.clapperboardmvp.transport.responce.TemporaryDenyException;
+import io.prover.common.transport.HelloRequest;
+import io.prover.common.transport.NetworkRequest;
+import io.prover.common.transport.NetworkSession;
+import io.prover.common.transport.RequestQrCodeFromText1;
+import io.prover.common.transport.RequestQrCodeFromText2;
+import io.prover.common.transport.RequestSwypeCode1;
+import io.prover.common.transport.RequestSwypeCode2;
+import io.prover.common.transport.responce.HashResponce;
+import io.prover.common.transport.responce.HelloResponce;
+import io.prover.common.transport.responce.SwypeResponce1;
+import io.prover.common.transport.responce.TemporaryDenyException;
+import io.prover.common.util.Etherium;
 
-import static io.prover.clapperboardmvp.transport.NetworkRequest.TAG;
+import static io.prover.common.transport.NetworkRequest.TAG;
 
 /**
  * Created by babay on 14.11.2017.
@@ -26,30 +35,19 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Controller controller;
     private final ArrayList<NetworkRequest> requests = new ArrayList<>();
-    public ECKey key;
+    private final Etherium etherium;
     private NetworkSession networkSession;
     private SwypeResponce1 swypeRequestHash;
 
-    public NetworkHolder(ECKey key, Controller controller) {
-        this.key = key;
+    public NetworkHolder(Context context, Controller controller) {
+        etherium = Etherium.getInstance(context);
         this.controller = controller;
         controller.onNetworkRequestDone.add(this);
         controller.onNetworkRequestError.add(this);
     }
 
-    public void setKey(ECKey key) {
-        if (key != null && !key.equals(this.key)) {
-            this.key = key;
-            synchronized (requests) {
-                for (NetworkRequest request : requests) {
-                    request.cancel();
-                }
-                requests.clear();
-            }
-        }
-    }
-
     public void doHello() {
+        ECKey key = etherium.getKey();
         if (key != null) {
             execNetworkRequest(new HelloRequest(key, controller.networkDelegate));
         }
@@ -70,10 +68,11 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
 
     @Override
     public void onNetworkRequestDone(NetworkRequest request, Object responce) {
-        if (request.cancelled)
+        if (request.isCancelled())
             return;
         onNetworkRequestFinished(request);
         if (request instanceof HelloRequest) {
+            ECKey key = etherium.getKey();
             if (networkSession != null && networkSession.key.equals(key)) {
                 networkSession.onNewHelloResponce((HelloResponce) responce);
             } else {
@@ -94,7 +93,7 @@ public class NetworkHolder implements Controller.NetworkRequestDoneListener,
 
     @Override
     public void onNetworkRequestError(NetworkRequest request, Exception e) {
-        if (request.cancelled)
+        if (request.isCancelled())
             return;
         if (e instanceof TemporaryDenyException) {
             handler.postDelayed(request::execute, REPEAT_CHECK_TRANSACTION_TIMEOUT);

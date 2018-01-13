@@ -21,7 +21,7 @@ import java.io.IOException;
 import io.prover.common.permissions.PermissionManager;
 import io.prover.provermvp.R;
 import io.prover.provermvp.camera.CameraUtil;
-import io.prover.provermvp.camera.ScreenOrientationLock;
+import io.prover.common.util.ScreenOrientationLock;
 import io.prover.provermvp.camera.Size;
 import io.prover.provermvp.camera2.AutoFitTextureView;
 import io.prover.provermvp.camera2.MyCamera2;
