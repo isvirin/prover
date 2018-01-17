@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
@@ -37,6 +38,10 @@ public class WalletFile {
 
     public WalletFile(File file) throws JSONException {
         this(UtilFile.readFully(file));
+    }
+
+    public WalletFile(InputStream inputStream) throws JSONException {
+        this(UtilFile.readFully(inputStream));
     }
 
     public JSONObject toJson() throws JSONException {

@@ -2,7 +2,6 @@ package io.prover.provermvp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -155,21 +154,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void showExportDialog() {
-        new ExportDialog(this, findViewById(R.id.contentRoot)).show();
+        PermissionManager.ensureHaveWriteSdcardPermission(this, () -> {
+            new ExportDialog(this, findViewById(R.id.contentRoot)).show();
+        });
     }
 
     @Override
     public void showImportDialog() {
-        ImportDialog importDialog = new ImportDialog(this, cameraController, this);
-        importDialog.show();
-        importDialogRef = new WeakReference<>(importDialog);
+        PermissionManager.ensureHaveReadSdcardPermission(this, () -> {
+            ImportDialog importDialog = new ImportDialog(this, cameraController, this);
+            importDialog.show();
+            importDialogRef = new WeakReference<>(importDialog);
+        });
     }
 
     @Override
     public void onRequestImportFile(String currentPath) {
         Intent intent = new Intent()
-                .setType("file/*")
+                .setType("*/*")
                 .setAction(Intent.ACTION_GET_CONTENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
                 .putExtra(EXTRA_LOCAL_ONLY, true);
 
         startActivityForResult(Intent.createChooser(intent, "Select a file"), REQUEST_CODE_FOR_IMPORT_WALLET);
@@ -180,17 +184,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case REQUEST_CODE_FOR_IMPORT_WALLET:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedfile = data.getData();
-                    if (selectedfile == null || selectedfile.getPath() == null)
-                        return;
                     ImportDialog importDialog = importDialogRef.get();
-                    if (importDialog != null) {
-                        importDialog.setFilePath(selectedfile.getPath());
-                    } else {
+                    if (importDialog == null) {
                         showImportDialog();
                         importDialog = importDialogRef.get();
-                        importDialog.setFilePath(selectedfile.getPath());
                     }
+                    if (importDialog != null)
+                        importDialog.setFileUri(data.getData());
                 }
                 return;
         }

@@ -57,7 +57,7 @@ public class RequestQrCodeFromText1 extends TransactionNetworkRequest<HashRespon
 
         BigInteger availGas = session.getMaxGasLimit(price);
         int estimateGas = (data.length - 68) * 80 + 23715;
-        BigInteger maxGas = BigInteger.valueOf(estimateGas * 3 / 2);
+        BigInteger maxGas = BigInteger.valueOf(estimateGas * 3);
         if (availGas.compareTo(maxGas) < 0)
             maxGas = availGas;
         byte[] gasLimit = BigIntegers.asUnsignedByteArray(maxGas);

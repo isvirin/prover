@@ -40,7 +40,7 @@ public class RequestSwypeCode1 extends TransactionNetworkRequest<SwypeResponce1>
         byte[] data = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(GENERATE_SWYPECODE_DATA));
         byte[] nonce = BigIntegers.asUnsignedByteArray(session.getNonce());
 
-        BigInteger price = session.getGasPriceBigInt().multiply(BigInteger.valueOf(3)).divide(BigInteger.valueOf(2));
+        BigInteger price = session.getGasPriceBigInt().multiply(BigInteger.valueOf(3));
         byte[] gasPrice = BigIntegers.asUnsignedByteArray(price);
 
         Transaction transaction = new Transaction(nonce, gasPrice, gasLimit, session.getContractAddress(), new byte[]{0}, data);

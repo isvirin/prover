@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.prover.common.Const;
 import io.prover.provermvp.R;
 
 import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
@@ -24,6 +26,10 @@ public class PermissionManager {
 
     public static boolean ensureHaveWriteSdcardPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
         return ensureHavePermissions(activity, getRequest(WRITE_EXTERNAL_STORAGE, runAfterGrant));
+    }
+
+    public static boolean ensureHaveReadSdcardPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
+        return ensureHavePermissions(activity, getRequest(READ_EXTERNAL_STORAGE, runAfterGrant));
     }
 
     public static boolean ensureHaveCameraPermission(final Activity activity, final IRunAfterPermissionsGranted runAfterGrant) {
@@ -55,7 +61,7 @@ public class PermissionManager {
         for (int i = 0; i < expectedPermissions.size(); i++) {
             PermissionRequestSet set = expectedPermissions.get(i);
             if (set.getRequestCode() == requestCode) {
-                set.onPermissionRequestDone(activity, io.prover.common.Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
+                set.onPermissionRequestDone(activity, Const.REQUEST_CODE_FOR_REQUEST_PERMISSIONS, permissions, grantResults);
                 expectedPermissions.remove(i--);
             }
         }
@@ -66,6 +72,11 @@ public class PermissionManager {
             case WRITE_EXTERNAL_STORAGE:
                 return new PermissionRequestSet(WRITE_EXTERNAL_STORAGE)
                         .addExplainer(new SimplePermissionExplainer(R.string.permissionRequired, R.string.writePermissionRequired))
+                        .runAfterGrant(runAfterGrant);
+
+            case READ_EXTERNAL_STORAGE:
+                return new PermissionRequestSet(READ_EXTERNAL_STORAGE)
+                        .addExplainer(new SimplePermissionExplainer(R.string.permissionRequired, R.string.readPermissionRequired))
                         .runAfterGrant(runAfterGrant);
 
             case CAMERA:

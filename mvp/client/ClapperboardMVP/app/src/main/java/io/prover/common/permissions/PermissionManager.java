@@ -1,18 +1,18 @@
 package io.prover.common.permissions;
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
+        import android.app.Activity;
+        import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import io.prover.clapperboardmvp.R;
-import io.prover.common.Const;
+        import io.prover.clapperboardmvp.R;
+        import io.prover.common.Const;
 
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.RECORD_AUDIO;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        import static android.Manifest.permission.CAMERA;
+        import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+        import static android.Manifest.permission.RECORD_AUDIO;
+        import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * Created by babay on 30.09.2016.

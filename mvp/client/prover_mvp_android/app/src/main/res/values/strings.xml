@@ -5,6 +5,7 @@
     <!-- permissions -->
     <string name="permissionRequired">Permissions required</string>
     <string name="writePermissionRequired">File write permissions are required to write file</string>
+    <string name="readPermissionRequired">File read permissions are required to read file</string>
     <string name="cantFindApp">Cant find app to open file</string>
     <string name="camera_error">Camera error</string>
     <string name="info">Info</string>

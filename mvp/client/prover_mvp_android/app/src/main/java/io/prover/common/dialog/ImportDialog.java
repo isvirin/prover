@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -21,8 +22,10 @@ import org.ethereum.crypto.ECKey;
 import org.spongycastle.util.encoders.Hex;
 
 import java.io.File;
+import java.io.InputStream;
 
 import io.prover.common.util.Etherium;
+import io.prover.common.util.PathUtil;
 import io.prover.common.util.Util;
 import io.prover.common.wallet.ECKeyPair;
 import io.prover.common.wallet.Wallet;
@@ -47,6 +50,8 @@ public class ImportDialog extends Dialog implements View.OnClickListener {
     private final ImportFileListener importFileListener;
     private final CameraController cameraController;
     private ECKey keyPair;
+    private Uri fileUri;
+    private String filePath;
 
     public ImportDialog(@NonNull Context context, CameraController cameraController, ImportFileListener importFileListener) {
         super(context);
@@ -100,7 +105,10 @@ public class ImportDialog extends Dialog implements View.OnClickListener {
                     if (!file.exists()) {
                         Toast.makeText(getContext(), R.string.fileNotExist, Toast.LENGTH_SHORT).show();
                     } else {
-                        openWalletFile(file, password);
+                        if (fileUri != null && fileInputLayout.getEditText().getText().toString().equalsIgnoreCase(filePath))
+                            openWalletUri(fileUri, password);
+                        else
+                            openWalletUri(Uri.fromFile(new File(fileInputLayout.getEditText().getText().toString())), password);
                     }
                 } else {
                     Etherium.getInstance(getContext()).setKey(keyPair, getContext());
@@ -119,10 +127,11 @@ public class ImportDialog extends Dialog implements View.OnClickListener {
         }
     }
 
-    private void openWalletFile(File file, String password) {
+    private void openWalletUri(Uri uri, String password) {
         Runnable r = () -> {
             try {
-                WalletFile walletFile = new WalletFile(file);
+                InputStream iStream = getContext().getContentResolver().openInputStream(uri);
+                WalletFile walletFile = new WalletFile(iStream);
                 ECKeyPair ecKeyPair = Wallet.decrypt(password, walletFile);
                 keyPair = ECKey.fromPrivate(ecKeyPair.getPrivateKey());
                 String address = "0x" + Hex.toHexString(keyPair.getAddress());
@@ -149,8 +158,15 @@ public class ImportDialog extends Dialog implements View.OnClickListener {
         new Thread(r).start();
     }
 
-    public void setFilePath(String path) {
-        fileInputLayout.getEditText().setText(path);
+    public void setFileUri(Uri fileUri) {
+        this.fileUri = fileUri;
+        filePath = PathUtil.getExistingFilePath(getContext(), fileUri);
+        if (filePath != null) {
+            fileInputLayout.getEditText().setText(filePath);
+        } else {
+            fileInputLayout.getEditText().setText(fileUri.toString());
+        }
+
         resetAddress();
         passwordInputLayout.getEditText().requestFocus();
     }
