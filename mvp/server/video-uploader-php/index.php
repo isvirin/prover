@@ -130,7 +130,7 @@ saveClientInfo('index');
                             <p class="time_hash">Submit media hash on <span></span></p>
                             <p class="swype-code">Swype-code: <span></span></p>
                             <p class="swype-begin-end">Swype begin/end: <span></span></p>
-                            <!--                            <a href="#">Download .pdf certificate</a>-->
+<!--                            <a target="_blank" href="" class="download-pdf">Download .pdf certificate</a>-->
                             <strong>Try another file</strong>
                         </div>
                     </div>

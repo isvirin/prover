@@ -1,5 +1,6 @@
 <?php
 require('utils.php');
+require('generation-pdf.php');
 $loadConfig_result = loadConfig();
 if (!$loadConfig_result[0]) {
     echo $loadConfig_result[1];
@@ -13,9 +14,10 @@ define('USER_ADDRESS_FILTER', null);
 define('EXAMPLE_FILE_HASH', 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855');
 define('TRANSACTIONBYHASH_CORRECT_INPUT', '0x74305b38');
 
-function uploadResult($isSuccess, $transactions, $hash, $error, $debug = false)
+function uploadResult($isSuccess, $fileName, $transactions, $hash, $error, $debug = false)
 {
     return json_encode([
+        'fileName' => '/pdf/' . $fileName . '.pdf',
         'success' => $isSuccess,
         'transactions' => $transactions,
         'hash' => $hash,
@@ -91,9 +93,10 @@ function getBlockByHash(&$gethClient, $hash)
 
 /**
  * @param string $file
+ * @param string $fileName
  * @return array
  */
-function worker($file)
+function worker($file, $fileName)
 {
     $isSuccess = false;
     $transactions = [];
@@ -213,7 +216,9 @@ function worker($file)
             $error = $gethClient->error;
         }
     }
+    generationPdf($fileName);
     return [
+        'fileName' => $fileName,
         'isSuccess' => $isSuccess,
         'transactions' => $transactions,
         'hash' => '0x' . $hash,
@@ -222,11 +227,13 @@ function worker($file)
 }
 
 $file = '';
+$fileName = '';
 if (!empty($_FILES['file'])) {
     $file = $_FILES['file']['tmp_name'];
+    $fileName = $_FILES['file']['name'];
 } else if (isset($argv[1])) {
     $file = $argv[1];
 }
 
-$workerResult = worker($file);
-die(uploadResult($workerResult['isSuccess'], $workerResult['transactions'], $workerResult['hash'], $workerResult['error']));
+$workerResult = worker($file, $fileName);
+die(uploadResult($workerResult['isSuccess'], $workerResult['fileName'], $workerResult['transactions'], $workerResult['hash'], $workerResult['error']));
