@@ -3,7 +3,7 @@
 const namePDFConstructor = 'Constructor';
 const pathLibPDFConstructor = '/usr/local/lib';
 
-function generationPdf($fileName) {
+function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
 
     $pdfPath = __DIR__ . '/pdf/';
     $tmpPath = __DIR__ . '/pdf/tmp/';
@@ -13,7 +13,9 @@ function generationPdf($fileName) {
             mkdir($tmpPath, 0777);
     }
 
-    $htmlPage = templateHTML();
+    $startTime = date("d-m-Y H:i:s", strtotime($startTime + 0));
+    $endTime = date("d-m-Y H:i:s", strtotime($endTime + 0));
+    $htmlPage = templateHTML($fileName, $hash, $swype, $startTime, $endTime);
     $nameConfigFileHTML = $tmpPath . $fileName . '.html';
     file_put_contents($nameConfigFileHTML, $htmlPage);
     chmod($nameConfigFileHTML, 0777);
@@ -37,7 +39,7 @@ function generationPdf($fileName) {
     shell_exec($commandStartPDFConstructor);
 }
 
-function templateHTML() {
+function templateHTML($fileName, $hash, $swype, $startTime, $endTime) {
     $html = <<<EOD
         <style>
     * {
@@ -158,23 +160,23 @@ function templateHTML() {
         <img class="logo" src="https://prover.io/assets/images/pdf_template/logo@3x.png">
         <h1>Certificate <br> of authenticity</h1>
         <p class="content__filename">Video file name</p>
-        <h3>VID_20171213_191433.mp4</h3>
+        <h3>$fileName</h3>
         <div class="characteristics">
             <div style="width:100%;margin:30px 0 15px">
                 <h4>File hash</h4>
-                <p>0xf7523509a911628973c0cc52c18ae19e90c453b81342ee487b1a955803bd01f6</p>
+                <p>$hash</p>
             </div>
             <div style="width:220px;">
                 <h4>Swype code</h4>
-                <p>1234567</p>
+                <p>$swype</p>
             </div>
             <div style="width:220px;">
                 <h4>Refference start time</h4>
-                <p>15.12.2017 01:58:29</p>
+                <p>$startTime</p>
             </div>
             <div style="width:220px;">
                 <h4>Refference end time</h4>
-                <p>15.12.2017 02:16:54</p>
+                <p>$endTime</p>
             </div>
         </div>
         <div class="content-text">

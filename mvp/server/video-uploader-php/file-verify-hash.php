@@ -216,7 +216,7 @@ function worker($file, $fileName)
             $error = $gethClient->error;
         }
     }
-    generationPdf($fileName);
+    generationPdf($fileName, '0x' . $hash, $swype, $submitMediaHash_block->timestamp, $requestSwypeCode_block->timestamp);
     return [
         'fileName' => $fileName,
         'isSuccess' => $isSuccess,
