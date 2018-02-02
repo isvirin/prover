@@ -13,8 +13,11 @@ function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
             mkdir($tmpPath, 0777);
     }
 
-    $startTime = date("d-m-Y H:i:s", strtotime($startTime + 0));
-    $endTime = date("d-m-Y H:i:s", strtotime($endTime + 0));
+    $date = new DateTime();
+    $date->setTimestamp(hexdec($startTime));
+    $startTime = $date->format("d-m-Y H:i:s");
+    $date->setTimestamp(hexdec($endTime));
+    $endTime = $date->format("d-m-Y H:i:s");
     $htmlPage = templateHTML($fileName, $hash, $swype, $startTime, $endTime);
     $nameConfigFileHTML = $tmpPath . $fileName . '.html';
     file_put_contents($nameConfigFileHTML, $htmlPage);
@@ -32,9 +35,9 @@ function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
     $commandStartPDFConstructor =
         'LD_LIBRARY_PATH=' . pathLibPDFConstructor .
         ' xvfb-run ' . namePDFConstructor . ' ' .
-        $config . '/config.json ' .
-        $pdfPath . '/' .
-        $fileName;
+        $tmpPath . 'config.json ' .
+        $pdfPath .
+        $fileName . '.pdf';
 
     shell_exec($commandStartPDFConstructor);
 }
@@ -186,14 +189,7 @@ function templateHTML($fileName, $hash, $swype, $startTime, $endTime) {
             <p style="float:left;margin:60px 0 60px 115px;">www.prover.io</p>
             <p style="float:right;margin: 60px 115px 60px 0;">mvp.prover.io</p>
         </div>
-        <div class="qr-code left">
-            <img src="https://prover.io/assets/images/pdf_template/qr.png">
-            <h5>Reference block<br>with swype-code</h5>
-        </div>
-        <div class="qr-code right">
-            <img src="https://prover.io/assets/images/pdf_template/qr.png">
-            <h5>Reference block<br>with hash</h5>
-        </div>
+        <p>$commandStartPDFConstructor</p>
     </div>
 </div>
 EOD;
