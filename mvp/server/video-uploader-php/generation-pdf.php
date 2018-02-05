@@ -6,12 +6,11 @@ const pathLibPDFConstructor = '/usr/local/lib';
 function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
 
     $pdfPath = __DIR__ . '/pdf/';
-    $tmpPath = __DIR__ . '/pdf/tmp/';
-    if(!file_exists($pdfPath)) {
+    $tmpPath = __DIR__ . '/pdf/'. md5(md5($fileName) . md5(date("H:i:s"))) .'/';
+    if(!file_exists($pdfPath))
         mkdir($pdfPath, 0777);
-        if(!file_exists($tmpPath))
-            mkdir($tmpPath, 0777);
-    }
+    if(!file_exists($tmpPath))
+        mkdir($tmpPath, 0777);
 
     $date = new DateTime();
     $date->setTimestamp(hexdec($startTime));
@@ -40,6 +39,14 @@ function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
         $fileName . '.pdf';
 
     shell_exec($commandStartPDFConstructor);
+
+    if ($files = glob($tmpPath . '*')) {
+        foreach ($files as $file) {
+            unlink($file);
+        }
+    }
+
+    rmdir($tmpPath);
 }
 
 function templateHTML($fileName, $hash, $swype, $startTime, $endTime) {
@@ -189,7 +196,6 @@ function templateHTML($fileName, $hash, $swype, $startTime, $endTime) {
             <p style="float:left;margin:60px 0 60px 115px;">www.prover.io</p>
             <p style="float:right;margin: 60px 115px 60px 0;">mvp.prover.io</p>
         </div>
-        <p>$commandStartPDFConstructor</p>
     </div>
 </div>
 EOD;

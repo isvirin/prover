@@ -83,6 +83,7 @@ Array.prototype.forEach.call(forms, function (form) {
         successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
         successSwypeCode = form.querySelector('.swype-code span'),
+        // successDownloadPdf = form.querySelector('.download-pdf'),
         successSwypeBeginEnd = form.querySelector('.swype-begin-end span'),
         successTimeHash = form.querySelector('.time_hash span'),
         restart = form.querySelectorAll('.box__restart'),
@@ -201,6 +202,7 @@ Array.prototype.forEach.call(forms, function (form) {
                     successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
                     successTimeHash.innerHTML = msgTimeHash;
                     successSwypeCode.innerHTML = msgSwypeCode;
+                    // successDownloadPdf.setAttribute('href', response.fileName);
                     successSwypeBeginEnd.innerHTML = msgSwypeBeginEnd;
                 }
             }
