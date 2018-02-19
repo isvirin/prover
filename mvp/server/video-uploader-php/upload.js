@@ -29,7 +29,6 @@
                 uploadBackground = form.querySelector('.upload-background');
             xhr.open('POST', 'index.php');
             xhr.upload.addEventListener('progress', function (e) {
-                console.log('p1', e);
                 uploadBackground.style.width = e.loaded / e.total * 100 + '%';
                 uploadBackground.style.max = e.total + '%';
                 remind = e.loaded / e.total * 100;
@@ -83,7 +82,7 @@ Array.prototype.forEach.call(forms, function (form) {
         successTimeSwypeCode = form.querySelector('.time_swype-code span'),
         successHash = form.querySelector('.hash span'),
         successSwypeCode = form.querySelector('.swype-code span'),
-        // successDownloadPdf = form.querySelector('.download-pdf'),
+        successDownloadPdf = form.querySelector('.download-pdf'),
         successSwypeBeginEnd = form.querySelector('.swype-begin-end span'),
         successTimeHash = form.querySelector('.time_hash span'),
         restart = form.querySelectorAll('.box__restart'),
@@ -98,6 +97,8 @@ Array.prototype.forEach.call(forms, function (form) {
             event.initEvent('submit', true, false);
             form.dispatchEvent(event);
         };
+
+    console.log(successDownloadPdf);
 
     // letting the server side to know we are going to make an Ajax request
     var ajaxFlag = document.createElement('input');
@@ -143,6 +144,7 @@ Array.prototype.forEach.call(forms, function (form) {
     }
 
     function updateOnResponse(response) {
+        console.log(response);
         //todo: remove console.log
         form.classList.remove('is-error');
         form.classList.remove('is-success');
@@ -168,7 +170,6 @@ Array.prototype.forEach.call(forms, function (form) {
                         '>' + transaction.senderAddress + '</span>';
                 });
                 if (response.transactions.length) {
-                    console.log(response);
                     if (response.transactions[0].swype) {
                         msgSwypeCode = response.transactions[0].swype;
                         msgSwypeBeginEnd =
@@ -202,13 +203,13 @@ Array.prototype.forEach.call(forms, function (form) {
                     successTimeSwypeCode.innerHTML = msgTimeSwypeCode;
                     successTimeHash.innerHTML = msgTimeHash;
                     successSwypeCode.innerHTML = msgSwypeCode;
-                    // successDownloadPdf.setAttribute('href', response.fileName);
                     successSwypeBeginEnd.innerHTML = msgSwypeBeginEnd;
                 }
             }
             if (response.hash)
                 msgHash = response.hash;
             successHash.innerHTML = msgHash;
+            successDownloadPdf.setAttribute('href', response.fileName);
 
             if (response.typeText) {
                 msgTypeText = response.typeText;

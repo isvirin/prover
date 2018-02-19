@@ -95,9 +95,8 @@ saveClientInfo('index');
                 </div>
             </section>
             <section id="upload-file" class="upload-file">
-                <form method="post" id="uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
-                      onclick="document.getElementById('file').click()">
-                    <div class="box__input">
+                <form method="post" id="uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box">
+                    <div class="box__input" onclick="document.getElementById('file').click()">
                         <div class="red-line"></div>
                         <h3 class="box__verification">File verification</h3>
                         <input type="file" name="file" id="file" class="box__file">
@@ -130,11 +129,11 @@ saveClientInfo('index');
                             <p class="time_hash">Submit media hash on <span></span></p>
                             <p class="swype-code">Swype-code: <span></span></p>
                             <p class="swype-begin-end">Swype begin/end: <span></span></p>
-<!--                            <a target="_blank" href="" class="download-pdf">Download .pdf certificate</a>-->
-                            <strong>Try another file</strong>
+                            <a target="_blank" href="" class="download-pdf">Download .pdf certificate</a>
+                            <strong onclick="document.getElementById('file').click()">Try another file</strong>
                         </div>
                     </div>
-                    <div class="box__error">
+                    <div class="box__error" onclick="document.getElementById('file').click()">
                         <div class="red-line"></div>
                         <p>nothing found</p>
                         <h3 class="box__verification">Failed to verify</h3>
@@ -273,9 +272,8 @@ saveClientInfo('index');
                     </div>
                 </section>
                 <section id="clapperboard-upload-file" class="upload-file">
-                    <form method="post" id="clapperboard-uploadForm" action="file-verify-qr.php" enctype="multipart/form-data" novalidate class="box"
-                          onclick="document.getElementById('clapperboard-file').click()">
-                        <div class="box__input">
+                    <form method="post" id="clapperboard-uploadForm" action="file-verify-qr.php" enctype="multipart/form-data" novalidate class="box">
+                        <div class="box__input" onclick="document.getElementById('clapperboard-file').click()">
                             <div class="red-line"></div>
                             <h3 class="box__verification">File verification</h3>
                             <input type="file" name="file" id="clapperboard-file" class="box__file">
@@ -305,11 +303,11 @@ saveClientInfo('index');
                             <div class="success_information">
                                 <p class="hash">File hash: <span></span></p>
                                 <p class="swype-code">Type text: <span></span></p>
-<!--                                <a href="#">Download .pdf certificate</a>-->
-                                <strong>Try another file</strong>
+                                <a target="_blank" href="" class="download-pdf">Download .pdf certificate</a>
+                                <strong onclick="document.getElementById('clapperboard-file').click()">Try another file</strong>
                             </div>
                         </div>
-                        <div class="box__error">
+                        <div class="box__error" onclick="document.getElementById('clapperboard-file').click()">
                             <div class="red-line"></div>
                             <p>nothing found</p>
                             <h3 class="box__verification">Failed to verify</h3>

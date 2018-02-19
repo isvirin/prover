@@ -1,5 +1,6 @@
 <?php
 require('utils.php');
+require('generation-pdf.php');
 $loadConfig_result = loadConfig();
 if (!$loadConfig_result[0]) {
     echo $loadConfig_result[1];
@@ -8,9 +9,10 @@ if (!$loadConfig_result[0]) {
 
 DEFINE('SUBMIT_HASH', '0x708b34fe');
 
-function uploadResult($isSuccess, $typeText, $hash, $error, $debug = false)
+function uploadResult($isSuccess, $fileName, $typeText, $hash, $error, $debug = false)
 {
     return json_encode([
+        'fileName' => '/pdf/' . $fileName . '.pdf',
         'success' => $isSuccess,
         'typeText' => $typeText,
         'hash' => $hash,
@@ -23,7 +25,7 @@ function uploadResult($isSuccess, $typeText, $hash, $error, $debug = false)
  * @param string $file
  * @return array
  */
-function worker($file)
+function worker($file, $fileName)
 {
     $mvpHelloInfo = json_decode(httpPost(MVP_CGI_BIN_URL . '/hello'), true);
     if (!$mvpHelloInfo['contractAddress']) {
@@ -91,7 +93,9 @@ function worker($file)
         $inputStrLength = hexdec(substr($gethClient->result->input, 2 + (4 + 32) * 2, 64));
         $inputStrHex = substr($gethClient->result->input, 2 + (4 + 32 + 32) * 2, $inputStrLength * 2);
         $inputStr = hexToStr($inputStrHex);
+        generationPdf($fileName, '0x' . $hash, $inputStr, "0x5a68437f", "0x5a6844f6");
         return [
+            'fileName' => $fileName,
             'isSuccess' => true,
             'typeText' => $inputStr,
             'hash' => '0x' . $hash,
@@ -108,13 +112,15 @@ function worker($file)
 }
 
 $file = '';
+$fileName = '';
 if (!empty($_FILES['file'])) {
     $file = $_FILES['file']['tmp_name'];
+    $fileName = $_FILES['file']['name'];
 } else if (isset($argv[1])) {
     $file = $argv[1];
 }
 
-$workerResult = worker($file);
-die(uploadResult($workerResult['isSuccess'], $workerResult['typeText'], $workerResult['hash'], $workerResult['error']));
+$workerResult = worker($file, $fileName);
+die(uploadResult($workerResult['isSuccess'], $workerResult['fileName'], $workerResult['typeText'], $workerResult['hash'], $workerResult['error']));
 
 

@@ -427,7 +427,6 @@ input[type='search']::-webkit-search-results-decoration {
     background-color: transparent;
     position: relative;
     overflow: auto;
-    cursor: pointer;
     color: #ffffff;
 }
 #clapperboard .box.has-advanced-upload {
@@ -652,9 +651,14 @@ input[type='search']::-webkit-search-results-decoration {
     max-width: 80%;
     text-overflow: ellipsis;
     white-space: nowrap;
-    cursor: pointer;
     display: inline;
     overflow: hidden;
+}
+.js .box__file + label,
+#upload-file .box__input,
+#upload-file .box__success strong,
+#upload-file .box__error {
+    cursor: pointer;
 }
 
 .js .box__file + label:hover strong,
