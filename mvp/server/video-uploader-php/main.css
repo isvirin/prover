@@ -6,6 +6,7 @@ body {
     background: url('upload.jpg') #100520;
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
     box-sizing: border-box;
     font: 1rem/1.5 Open Sans, sans-serif;
     height: 100%;
@@ -18,6 +19,7 @@ body.clapperboard {
     background: url('images/background.png') #ffffff;
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
 }
 .switch {
     top: 125px;
@@ -162,13 +164,22 @@ body.clapperboard .switch p.switch-prover {
     height: 130px;
     float: right;
 }
-.container section {
+.container section.upload-file {
     padding: 90px 0 0;
+}
+.container section.get-ether,
+.container section.how-it-works,
+.container section.use-cases,
+.container section.faq {
+    margin-top: 150px;
 }
 .container section h3 {
     font-size: 30px;
-    margin: 35px 0 25px;
+    margin: 0 0 50px 0;
     font-weight: 300;
+}
+.container section.main {
+    padding-top: 160px;
 }
 #clapperboard {
     color: rgba(0, 0, 0, 1);
@@ -182,8 +193,16 @@ body.clapperboard .switch p.switch-prover {
     width: 33.33%;
     float: left;
 }
+.main .main-image img {
+    width: 100%;
+    margin-left: -50%;
+}
+#clapperboard-main .main-image img {
+    margin-right: -50%;
+    margin-left: 0;
+}
 .main .menu {
-    padding: 71px 0;
+    padding: 65px 0;
 }
 .main .menu .menu-list {
     margin: 0;
@@ -203,16 +222,28 @@ body.clapperboard .switch p.switch-prover {
     border-bottom: none;
 }
 #clapperboard .main .menu .menu-list .menu-list__item a {
-    color: rgba(0, 0, 0, 1);
-}
-#clapperboard .main .menu .menu-list .menu-list__item a:hover {
+    -webkit-transition: color 0.25s ease;
+    -o-transition: color 0.25s ease;
+    transition: color 0.25s ease;
     color: rgba(0, 0, 0, 0.5);
 }
+#clapperboard .main .menu .menu-list .menu-list__item a:hover {
+    -webkit-transition: color 0.25s ease;
+    -o-transition: color 0.25s ease;
+    transition: color 0.25s ease;
+    color: rgba(0, 0, 0, 1);
+}
 .main .menu .menu-list .menu-list__item a {
+    -webkit-transition: color 0.25s ease;
+    -o-transition: color 0.25s ease;
+    transition: color 0.25s ease;
     color: #ffffff;
     text-decoration: none;
 }
 .main .menu .menu-list .menu-list__item a:hover {
+    -webkit-transition: color 0.25s ease;
+    -o-transition: color 0.25s ease;
+    transition: color 0.25s ease;
     color: rgba(255, 255, 255, 0.5);
 }
 .main .menu .menu-list .menu-list__item .google__play {
@@ -220,6 +251,9 @@ body.clapperboard .switch p.switch-prover {
 }
 .main .main-description {
     padding: 60.5px 0;
+}
+body.clapperboard .main .main-description {
+    padding: 117px 0;
 }
 body.clapperboard .main .main-description p,
 .main .main-description p {
@@ -297,7 +331,10 @@ input[type='search']::-webkit-search-results-decoration {
     display: none;
 }
 .how-it-works .row {
-    margin: 0 0 40px;
+    margin: 0 0 50px;
+}
+.how-it-works .row:last-child {
+    margin: 0;
 }
 .how-it-works .row:after {
     content: "";
@@ -314,29 +351,26 @@ input[type='search']::-webkit-search-results-decoration {
     float: right;
 }
 #clapperboard .how-it-works .info-block .img-background {
-    background: rgba(236, 238, 240, 1);
+    background: rgba(193, 201, 207, 0.5);
 }
 .how-it-works .info-block .img-background {
     background: rgba(135, 150, 232, 0.1);
     border-radius: 100px;
     width: 200px;
     height: 200px;
+    line-height: 100px;
     margin: 0 auto;
     padding: 50px;
     box-sizing: border-box;
 }
 .how-it-works .info-block .img-background img {
-    max-width: 100px;
-    height: 100px;
+    vertical-align: middle;
 }
 .how-it-works .info-block .info {
     font-size: 18px;
 }
 .how-it-works .info-block .info p {
     margin: 15px 0 0 0;
-}
-#clapperboard .use-cases {
-    padding: 90px 0;
 }
 .use-cases .use-case__block {
     margin-bottom: 20px;
@@ -384,9 +418,6 @@ input[type='search']::-webkit-search-results-decoration {
 }
 .faq h4 span.red-line {
     margin: 9px 15px 9px 0;
-}
-.container .faq {
-    padding: 90px 0;
 }
 .faq h4 {
     font-size: 24px;
@@ -714,16 +745,10 @@ body.clapperboard footer {
     color: rgba(0, 0, 0, 0.5);
 }
 footer {
+    margin-top: 250px;
     font-size: .8rem;
     text-align: center;
-    position: absolute;
-    left: 25%;
-    bottom: 20px;
-    width: 50%;
-    height: auto;
     color: rgba(255, 255, 255, 0.5);
-    margin: 0 auto;
-    z-index: 10;
 }
 
 footer .link {
@@ -1206,14 +1231,6 @@ footer a {
 }
 
 @media screen and (max-width: 768px) {
-    /*.container,*/
-    /*.container .content,*/
-    /*footer {*/
-        /*width: 100%;*/
-    /*}*/
-    /*.wrapper {*/
-        /*padding: 0 25px;*/
-    /*}*/
     .main .main-image {
         display: none;
     }
@@ -1284,12 +1301,10 @@ footer a {
         width: auto;
     }
     footer {
-        box-sizing: border-box;
-        width: 560px;
-        left: 50%;
-        margin-left: -280px;
-        bottom: 10px;
-        height: auto;
+        width: 100%;
+        margin-left: 0;
+        bottom: 0;
+        margin-top: 150px;
     }
 }
 
@@ -1323,9 +1338,6 @@ footer a {
         box-sizing: border-box;
         padding-left: 10px;
         padding-right: 10px;
-    }
-    .container section {
-        padding: 50px 0 0;
     }
     .switch {
         width: 300px;
@@ -1474,10 +1486,6 @@ footer a {
     input[type='search'].btn::-moz-placeholder          {text-align: center;}
     input[type='search'].btn:-moz-placeholder           {text-align: center;}
     input[type='search'].btn:-ms-input-placeholder      {text-align: center;}
-    footer {
-        width: 400px;
-        margin-left: -200px;
-    }
 }
 
 @media screen and (max-width: 450px) {
@@ -1501,11 +1509,6 @@ footer a {
     }
     input[type='search'].btn {
         width: 100%;
-    }
-    footer {
-        width: 320px;
-        margin-left: -160px;
-        bottom: 0;
     }
     footer .link {
         width: 100% !important;
