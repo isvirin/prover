@@ -13,10 +13,14 @@ function generationPdf($fileName, $hash, $swype, $startTime, $endTime) {
         mkdir($tmpPath, 0777);
 
     $date = new DateTime();
-    $date->setTimestamp(hexdec($startTime));
-    $startTime = $date->format("d-m-Y H:i:s");
-    $date->setTimestamp(hexdec($endTime));
-    $endTime = $date->format("d-m-Y H:i:s");
+    if (!empty($startTime)) {
+        $date->setTimestamp(hexdec($startTime));
+        $startTime = $date->format("d-m-Y H:i:s");
+    }
+    if (!empty($endTime)) {
+        $date->setTimestamp(hexdec($endTime));
+        $endTime = $date->format("d-m-Y H:i:s");
+    }
     $htmlPage = templateHTML($fileName, $hash, $swype, $startTime, $endTime);
     $nameConfigFileHTML = $tmpPath . $fileName . '.html';
     file_put_contents($nameConfigFileHTML, $htmlPage);

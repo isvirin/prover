@@ -466,7 +466,7 @@ input[type='search']::-webkit-search-results-decoration {
 .box.has-advanced-upload {
     overflow: hidden;
     border-radius: 15px;
-    height: 330px;
+    height: 360px;
     background: rgba(255, 255, 255, 0.1);
 }
 .box.has-advanced-upload .box__input {
@@ -475,7 +475,7 @@ input[type='search']::-webkit-search-results-decoration {
 .box.has-advanced-upload .box__input .box__verification {
     display: block;
     margin: 0;
-    padding: 70px 0 50px;
+    padding: 85px 0 50px;
 }
 .box.has-advanced-upload .box__error p {
     color: #ff0000;
