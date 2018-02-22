@@ -688,7 +688,10 @@ input[type='search']::-webkit-search-results-decoration {
 .js .box__file + label,
 #upload-file .box__input,
 #upload-file .box__success strong,
-#upload-file .box__error {
+#upload-file .box__error,
+#clapperboard-upload-file .box__input,
+#clapperboard-upload-file .box__success strong,
+#clapperboard-upload-file .box__error {
     cursor: pointer;
 }
 
