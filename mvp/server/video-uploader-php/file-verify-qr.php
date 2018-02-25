@@ -93,7 +93,6 @@ function worker($file, $fileName)
         $inputStrLength = hexdec(substr($gethClient->result->input, 2 + (4 + 32) * 2, 64));
         $inputStrHex = substr($gethClient->result->input, 2 + (4 + 32 + 32) * 2, $inputStrLength * 2);
         $inputStr = hexToStr($inputStrHex);
-        generationPdf($fileName, '0x' . $hash, $inputStr, '', '');
         return [
             'fileName' => $fileName,
             'isSuccess' => true,

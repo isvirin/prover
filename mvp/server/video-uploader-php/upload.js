@@ -98,8 +98,6 @@ Array.prototype.forEach.call(forms, function (form) {
             form.dispatchEvent(event);
         };
 
-    console.log(successDownloadPdf);
-
     // letting the server side to know we are going to make an Ajax request
     var ajaxFlag = document.createElement('input');
     ajaxFlag.setAttribute('type', 'hidden');
