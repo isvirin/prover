@@ -10,13 +10,16 @@ import org.ethereum.crypto.ECKey;
 import java.io.File;
 import java.util.ArrayList;
 
+import io.prover.common.transport.FastRequestSwypeCode;
 import io.prover.common.transport.HelloRequest;
 import io.prover.common.transport.NetworkRequest;
 import io.prover.common.transport.NetworkSession;
 import io.prover.common.transport.RequestSwypeCode1;
 import io.prover.common.transport.RequestSwypeCode2;
 import io.prover.common.transport.SubmitVideoHashRequest;
+import io.prover.common.transport.responce.FastSwypeCodeResponce;
 import io.prover.common.transport.responce.HelloResponce;
+import io.prover.common.transport.responce.SwypeCodeInfo;
 import io.prover.common.transport.responce.SwypeResponce1;
 import io.prover.common.transport.responce.SwypeResponce2;
 import io.prover.common.util.Etherium;
@@ -41,7 +44,8 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
     private final Etherium etherium;
     private NetworkSession networkSession;
     private SwypeResponce1 swypeRequestHash;
-    private SwypeResponce2 swypeResponce2;
+    private SwypeCodeInfo swypeCodeInfo;
+
 
     public NetworkHolder(Context context, CameraController cameraController) {
         etherium = Etherium.getInstance(context);
@@ -77,11 +81,17 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
                 }
             }, 10000);
         } else if (request instanceof RequestSwypeCode2) {
-            swypeResponce2 = (SwypeResponce2) responce;
-            cameraController.setSwypeCode(swypeResponce2.swypeCode);
+            SwypeResponce2 swypeResponce2 = (SwypeResponce2) responce;
+            swypeCodeInfo = new SwypeCodeInfo(swypeRequestHash, swypeResponce2);
+            cameraController.setSwypeCode(swypeCodeInfo.swypeCode);
             handler.postDelayed(this::doHello, 30_000);
         } else if (request instanceof SubmitVideoHashRequest) {
             handler.postDelayed(this::doHello, 30_000);
+        } else if (request instanceof FastRequestSwypeCode) {
+            FastSwypeCodeResponce responce1 = (FastSwypeCodeResponce) responce;
+            swypeCodeInfo = new SwypeCodeInfo(responce1);
+            cameraController.setSwypeCode(swypeCodeInfo.swypeCode);
+            handler.postDelayed(this::doHello, 60_000);
         }
     }
 
@@ -103,19 +113,19 @@ public class NetworkHolder implements CameraController.OnRecordingStopListener,
 
     @Override
     public void onRecordingStop(File file, boolean isVideoConfirmed) {
-        if (swypeResponce2 == null) {
+        if (swypeCodeInfo == null) {
             swypeRequestHash = null;
         } else if (file != null && isVideoConfirmed) {
-            execNetworkRequest(new SubmitVideoHashRequest(networkSession, swypeRequestHash, file, cameraController.networkDelegate));
+            execNetworkRequest(new SubmitVideoHashRequest(networkSession, swypeCodeInfo, file, cameraController.networkDelegate));
         }
     }
 
     @Override
     public void onRecordingStart() {
-        swypeResponce2 = null;
+        swypeCodeInfo = null;
         swypeRequestHash = null;
         if (networkSession != null && REQUEST_SWYPE) {
-            execNetworkRequest(new RequestSwypeCode1(networkSession, cameraController.networkDelegate));
+            execNetworkRequest(new FastRequestSwypeCode(networkSession.key, cameraController.networkDelegate));
         } else if (FAKE_SWYPE_CODE) {
             genFakeSwypeCode();
         }

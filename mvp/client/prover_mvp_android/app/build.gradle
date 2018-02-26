@@ -4,10 +4,12 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "io.prover.provermvp"
+        //applicationId "io.prover.provermvp.demo"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 62
-        versionName "1.2.6"
+        versionCode 63
+        versionName "1.2.7"
+        //versionName "1.2.6_demo_2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {

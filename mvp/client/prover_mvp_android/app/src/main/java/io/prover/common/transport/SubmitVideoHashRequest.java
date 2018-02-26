@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 
 import io.prover.common.transport.responce.SubmitVideoHashResponce;
-import io.prover.common.transport.responce.SwypeResponce1;
+import io.prover.common.transport.responce.SwypeCodeInfo;
 
 /**
  * Created by babay on 15.11.2017.
@@ -25,14 +25,14 @@ public class SubmitVideoHashRequest extends TransactionNetworkRequest<SubmitVide
     protected static final int GAS_LIMIT = 80_000;
     private static final int SUDMIT_VIDEO_FILE_DATA = 0xa0ee3ecf;
     private static final String METHOD = "submit-media-hash";
-    private final SwypeResponce1 responce1;
+    private final SwypeCodeInfo swypeCodeInfo;
     private final File videoFile;
 
     private byte[] videoFileHash;
 
-    public SubmitVideoHashRequest(NetworkSession session, SwypeResponce1 responce1, File videoFile, NetworkRequestListener listener) {
+    public SubmitVideoHashRequest(NetworkSession session, SwypeCodeInfo swypeCodeInfo, File videoFile, NetworkRequestListener listener) {
         super(session, METHOD, listener);
-        this.responce1 = responce1;
+        this.swypeCodeInfo = swypeCodeInfo;
         this.videoFile = videoFile;
     }
 
@@ -53,7 +53,7 @@ public class SubmitVideoHashRequest extends TransactionNetworkRequest<SubmitVide
 
         byte[] gasLimit = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(GAS_LIMIT));
         byte[] operation = BigIntegers.asUnsignedByteArray(BigInteger.valueOf(SUDMIT_VIDEO_FILE_DATA));
-        byte[] data = Arrays.concatenate(operation, videoFileHash, responce1.hashBytes);
+        byte[] data = Arrays.concatenate(operation, videoFileHash, swypeCodeInfo.hashBytes);
         byte[] nonce = BigIntegers.asUnsignedByteArray(session.getNonce());
         Transaction transaction = new Transaction(nonce, session.getGasPrice(), gasLimit, session.getContractAddress(), new byte[]{0}, data);
         transaction.sign(session.key);
