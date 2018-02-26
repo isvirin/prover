@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="77px" height="77px" viewBox="0 0 77 77" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.1 (47250) - http://www.bohemiancoding.com/sketch -->
+    <title>144</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="100%" x2="50%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#EAEAEA" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="113.147807%" cy="83.3353678%" fx="113.147807%" fy="83.3353678%" r="100%" gradientTransform="translate(1.131478,0.833354),scale(0.815534,1.000000),rotate(90.000000),translate(-1.131478,-0.833354)" id="radialGradient-2">
+            <stop stop-color="#E31E24" offset="0%"></stop>
+            <stop stop-color="#03063A" offset="100%"></stop>
+        </radialGradient>
+        <path d="M27.2207031,25.8671875 L42.2597656,25.8671875 C48.2753906,25.8671875 52.7871094,29.9277344 52.7871094,35.9433594 C52.7871094,41.9589844 48.2753906,45.71875 42.2597656,45.71875 L33.9882812,45.71875 L33.9882812,51.1328125 L27.2207031,51.1328125 L27.2207031,45.71875 L21.8066406,45.71875 L21.8066406,39.5527344 L27.2207031,39.5527344 L27.2207031,25.8671875 Z M33.9882812,31.8828125 L33.9882812,39.5527344 L41.9589844,39.5527344 C44.3652344,39.5527344 46.0195312,38.3496094 46.0195312,35.9433594 C46.0195312,33.5371094 44.3652344,31.8828125 41.9589844,31.8828125 L33.9882812,31.8828125 Z" id="path-3"></path>
+        <filter x="-3.2%" y="-4.0%" width="106.5%" height="115.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 1 0" type="matrix" in="shadowOffsetOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="144">
+            <g id="icon-android">
+                <circle id="Combined-Shape" fill="url(#linearGradient-1)" fill-rule="evenodd" cx="38.5" cy="38.5" r="38.5"></circle>
+                <g id="Combined-Shape">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="url(#radialGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+                <path d="M52.7871094,46.921875 C52.7871094,49.328125 54.7421875,51.1328125 56.9980469,51.1328125 C59.2539062,51.1328125 61.2089844,49.328125 61.2089844,46.921875 C61.2089844,44.6660156 59.2539062,42.8613281 56.9980469,42.8613281 C54.7421875,42.8613281 52.7871094,44.6660156 52.7871094,46.921875 Z" id="bpath7" fill="#E31E24" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>

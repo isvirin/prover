@@ -41,7 +41,7 @@ saveClientInfo('index');
         <div id="prover">
             <div class="container">
             <div class="logo">
-                <a href="https://prover.io"><img class="logo__img" src="images/logo.svg"></a>
+                <a href="https://prover.io"><img class="logo__img" src="images/logo_bw.svg"></a>
     <!--            <a target="_blank" href="https://play.google.com/store/apps/details?id=io.prover.provermvp"><img class="google__play" src="images/gplay_eng.svg"></a>-->
             </div>
     <!--        <div class="content">-->
@@ -84,7 +84,7 @@ saveClientInfo('index');
                     <img src="images/phone.png" alt="Prover app">
                 </div>
                 <div class="main-description">
-                    <img src="images/icon_prover.png" alt="Prover icon">
+                    <img src="images/icon_prover.svg" alt="Prover icon">
                     <p>
                         Prover is an independent assistant that helps authenticate and verify video content.
                     </p>
@@ -95,9 +95,8 @@ saveClientInfo('index');
                 </div>
             </section>
             <section id="upload-file" class="upload-file">
-                <form method="post" id="uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box"
-                      onclick="document.getElementById('file').click()">
-                    <div class="box__input">
+                <form method="post" id="uploadForm" action="file-verify-hash.php" enctype="multipart/form-data" novalidate class="box">
+                    <div class="box__input" onclick="document.getElementById('file').click()">
                         <div class="red-line"></div>
                         <h3 class="box__verification">File verification</h3>
                         <input type="file" name="file" id="file" class="box__file">
@@ -130,11 +129,11 @@ saveClientInfo('index');
                             <p class="time_hash">Submit media hash on <span></span></p>
                             <p class="swype-code">Swype-code: <span></span></p>
                             <p class="swype-begin-end">Swype begin/end: <span></span></p>
-                            <!--                            <a href="#">Download .pdf certificate</a>-->
-                            <strong>Try another file</strong>
+                            <a target="_blank" href="" class="download-pdf">Download .pdf certificate</a>
+                            <strong onclick="document.getElementById('file').click()">Try another file</strong>
                         </div>
                     </div>
-                    <div class="box__error">
+                    <div class="box__error" onclick="document.getElementById('file').click()">
                         <div class="red-line"></div>
                         <p>nothing found</p>
                         <h3 class="box__verification">Failed to verify</h3>
@@ -218,12 +217,21 @@ saveClientInfo('index');
                 <h4><span class="red-line"></span>How much does it cost to verify one video?</h4>
                 <p>In the demo mode, the payment for video confirmation is performed by the Ropsten Testnet ether, and therefore, it costs nothing. In the final implementation, the user will use service in exchange for the PROOF tokens, while paying the cost of the gas necessary for the performing of Ethereum transactions.</p>
             </section>
+            <footer>
+                <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
+                <div class="link social_networks">
+                    <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="images/facebook.svg"></a>
+                    <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
+                    <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
+                </div>
+                <div class="link copyright">Prover © 2018</div>
+            </footer>
         </div>
         </div>
         <div id="clapperboard" style="display:none; opacity:0">
             <div class="container">
                 <div class="logo">
-                    <a href="https://prover.io"><img class="logo__img" src="images/logo.png"></a>
+                    <a href="https://prover.io"><img class="logo__img" src="images/logo_cp.svg"></a>
                     <!--            <a target="_blank" href="https://play.google.com/store/apps/details?id=io.prover.provermvp"><img class="google__play" src="images/gplay_eng.svg"></a>-->
                 </div>
                 <!--        <div class="content">-->
@@ -250,7 +258,7 @@ saveClientInfo('index');
                 <!--        <div class="block_client_address_info"></div>-->
                 <section id="clapperboard-main" class="main">
                     <div class="main-description">
-                        <img src="images/icon_prover_clapperboard.png" alt="Prover icon">
+                        <img src="images/icon_prover_clapperboard.svg" alt="Prover icon">
                         <p>
                             Blockchain based app for creation of time stamps and the digital signature for fixed  cameras and cameras without internet connection.
                         </p>
@@ -273,9 +281,8 @@ saveClientInfo('index');
                     </div>
                 </section>
                 <section id="clapperboard-upload-file" class="upload-file">
-                    <form method="post" id="clapperboard-uploadForm" action="file-verify-qr.php" enctype="multipart/form-data" novalidate class="box"
-                          onclick="document.getElementById('clapperboard-file').click()">
-                        <div class="box__input">
+                    <form method="post" id="clapperboard-uploadForm" action="file-verify-qr.php" enctype="multipart/form-data" novalidate class="box">
+                        <div class="box__input" onclick="document.getElementById('clapperboard-file').click()">
                             <div class="red-line"></div>
                             <h3 class="box__verification">File verification</h3>
                             <input type="file" name="file" id="clapperboard-file" class="box__file">
@@ -305,11 +312,11 @@ saveClientInfo('index');
                             <div class="success_information">
                                 <p class="hash">File hash: <span></span></p>
                                 <p class="swype-code">Type text: <span></span></p>
-<!--                                <a href="#">Download .pdf certificate</a>-->
-                                <strong>Try another file</strong>
+                                <a target="_blank" href="" class="download-pdf" style="display: none;">Download .pdf certificate</a>
+                                <strong onclick="document.getElementById('clapperboard-file').click()">Try another file</strong>
                             </div>
                         </div>
-                        <div class="box__error">
+                        <div class="box__error" onclick="document.getElementById('clapperboard-file').click()">
                             <div class="red-line"></div>
                             <p>nothing found</p>
                             <h3 class="box__verification">Failed to verify</h3>
@@ -381,17 +388,17 @@ saveClientInfo('index');
                         <p><span class="red-line"></span>Cases, when period of recording is too short and does not fit for using SWYPE ID technology (KYC)</p>
                     </div>
                 </section>
+                <footer>
+                    <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
+                    <div class="link social_networks">
+                        <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="images/facebook.svg"></a>
+                        <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
+                        <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
+                    </div>
+                    <div class="link copyright">Prover © 2018</div>
+                </footer>
             </div>
         </div>
-        <footer>
-            <div class="link mail"><a href="mailto:info@prover.io">info@prover.io</a></div>
-            <div class="link social_networks">
-                <a target="_blank" href="https://www.facebook.com/prover.blockchain/"><img src="images/facebook.svg"></a>
-                <a target="_blank" href="https://twitter.com/prover_io"><img src="images/twitter.svg"></a>
-                <a target="_blank" href="https://t.me/joinchat/AAHHrURp4xhK-RuCYhtPlA"><img src="images/telegram.svg"></a>
-            </div>
-            <div class="link copyright">Prover © 2018</div>
-        </footer>
     </div>
 
     <script type="text/javascript" src="jquery-3.2.1.min.js"></script>

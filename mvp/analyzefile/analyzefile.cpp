@@ -98,12 +98,12 @@ std::string rotateSwypeCode(const std::string &swype, int rotation)
         abort();
 }
 
-bool parseHash(std::string hashstr, uint8_t *outbuf)
+bool parseHash(std::string hashstr, size_t requiredSize, uint8_t *outbuf)
 {
     if(hashstr.compare(0, 2, "0x")==0)
         hashstr=hashstr.substr(2);
 
-    if(hashstr.size()!=64)
+    if(hashstr.size()!=requiredSize*2)
         return false;
 
     for(const char *p=hashstr.c_str(); *p; p+=2)
@@ -118,17 +118,8 @@ bool parseHash(std::string hashstr, uint8_t *outbuf)
     return true;
 }
 
-std::string calculateSwypeCode(const std::string &txhash, const std::string &blockhash, unsigned int modulo)
+std::string hashToSwypeCode(const uint8_t hash[32], unsigned int modulo)
 {
-    uint8_t bytes[32+32];
-    if(!parseHash(txhash, bytes+32) || !parseHash(blockhash, bytes+0))
-    {
-        return std::string();
-    }
-
-    uint8_t hash[32];
-    sha256_simple(hash, bytes, 64);
-
     unsigned int swypeid=0;
     for(unsigned int i=0; i<32; ++i)
     {
@@ -165,6 +156,34 @@ std::string calculateSwypeCode(const std::string &txhash, const std::string &blo
     return swypecode;
 }
 
+std::string calculateSwypeCode(const std::string &txhash, const std::string &blockhash, unsigned int modulo)
+{
+    uint8_t bytes[32+32];
+    if(!parseHash(txhash, 32, bytes+32) || !parseHash(blockhash, 32, bytes+0))
+    {
+        return std::string();
+    }
+
+    uint8_t hash[32];
+    sha256_simple(hash, bytes, 64);
+
+    return hashToSwypeCode(hash, modulo);
+}
+
+std::string calculateSwypeCodeFastMode(const std::string &blockhash, const std::string &address, unsigned int modulo)
+{
+    uint8_t bytes[32+20];
+    if(!parseHash(blockhash, 32, bytes+0) || !parseHash(address, 20, bytes+32))
+    {
+        return std::string();
+    }
+
+    uint8_t hash[32];
+    sha256_simple(hash, bytes, 32+20);
+
+    return hashToSwypeCode(hash, modulo);
+}
+
 int main(int argc, char *argv[])
 {
     static const struct option long_options[]=
@@ -175,6 +194,7 @@ int main(int argc, char *argv[])
         {"txhash",    required_argument, 0,  0 }, // #3
         {"blockhash", required_argument, 0,  0 }, // #4
         {"png",       no_argument,       0,  0 }, // #5
+        {"user",      required_argument, 0,  0 }, // #6
         {"verbose",   no_argument,       0, 'v'},
         {0,           0,                 0,  0 }
     };
@@ -188,6 +208,7 @@ int main(int argc, char *argv[])
     std::string swypecode;
     std::string txhash;
     std::string blockhash;
+    std::string user;
     bool savePng=false;
     ::logLevel=0;
 
@@ -219,6 +240,9 @@ int main(int argc, char *argv[])
             case 5:
                 savePng=true;
                 break;
+            case 6:
+                user=optarg;
+                break;
             }
             break;
         case '?':
@@ -226,7 +250,10 @@ int main(int argc, char *argv[])
         }
     }
 
-    if(swypecode.empty() && (txhash.empty() || blockhash.empty()))
+    if(swypecode.empty() && ((user.empty() && txhash.empty()) || blockhash.empty()))
+        return 1;
+
+    if(!user.empty() && !txhash.empty())
         return 1;
 
     if(optind>=argc)
@@ -236,7 +263,10 @@ int main(int argc, char *argv[])
 
     if(swypecode.empty())
     {
-        swypecode=calculateSwypeCode(txhash, blockhash, 27000);
+        if(!txhash.empty())
+            swypecode=calculateSwypeCode(txhash, blockhash, 27000);
+        else
+            swypecode=calculateSwypeCodeFastMode(blockhash, user, 27000);
     }
 
 //    av_log_set_level(48);

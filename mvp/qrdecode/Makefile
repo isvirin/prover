@@ -1,12 +1,14 @@
 TARGET := searchqrcode
 CFLAGS := -Wall -pipe
-CXXFLAGS := $(CFLAGS) -std=c++11
-# -O0 -ggdb
-LFLAGS := -lavformat -lavcodec -lavutil -lavfilter -lpng -lzbar
+CXXFLAGS := $(CFLAGS) -std=c++11 $(shell pkg-config --cflags libjpeg) $(shell pkg-config --cflags libpng) $(shell pkg-config --cflags zbar) -O0 -ggdb
+LFLAGS := -lavformat -lavcodec -lavutil -lavfilter $(shell pkg-config --libs libjpeg) $(shell pkg-config --libs libpng) $(shell pkg-config --libs zbar)
 OBJECTS := \
     .obj/searchqrcode.cpp.o \
     .obj/VideoFileReader.cpp.o \
-    .obj/ImageProcessor.cpp.o
+    .obj/ImageProcessor.cpp.o \
+    .obj/Analyzer.cpp.o \
+    .obj/VideoAnalyzer.cpp.o \
+    .obj/JpegAnalyzer.cpp.o
 
 .PHONY: prepare all clean
 
