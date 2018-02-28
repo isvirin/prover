@@ -5,8 +5,11 @@ html {
 body {
     background: url('upload.jpg') #100520;
     background-repeat: no-repeat;
-    background-size: cover;
     background-attachment: fixed;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
     box-sizing: border-box;
     font: 1rem/1.5 Open Sans, sans-serif;
     height: 100%;
@@ -18,8 +21,39 @@ body {
 body.clapperboard {
     background: url('images/background.png') #ffffff;
     background-repeat: no-repeat;
-    background-size: cover;
     background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+body:after{
+    content:"";
+    position:fixed;
+    top:0;
+    height:100vh;
+    left:0;
+    right:0;
+    z-index:-1;
+    background: url('upload.jpg') #100520;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+body.clapperboard:after{
+    content:"";
+    position:fixed;
+    top:0;
+    height:100vh;
+    left:0;
+    right:0;
+    z-index:-1;
+    background: url('images/background.png') #ffffff;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 .switch {
     top: 125px;
