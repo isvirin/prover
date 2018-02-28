@@ -216,7 +216,8 @@ function worker($file, $fileName)
                 if (!$transaction2_details) {
                     $fastBlock = getBlockByHash($gethClient, $data);
                     if ($fastBlock) {
-                        $analyticResult = callAnalyticProgramm($file, $data, '', $senderAddress);
+                        $user = preg_replace('/(0x)[0]*(.*)/', '$1$2', $senderAddress);
+                        $analyticResult = callAnalyticProgramm($file, $data, '', $user);
                         $call = $analyticResult['cmd'];
                         $validated = $analyticResult['validated'];
                         $swype = $analyticResult['swype'];
