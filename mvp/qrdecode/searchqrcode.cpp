@@ -16,11 +16,12 @@ int main(int argc, char *argv[])
     int savePng=0;
     static const struct option long_options[]=
     {
-        {"width",     required_argument, 0,        'w'},
-        {"height",    required_argument, 0,        'h'},
-        {"png",       no_argument,       &savePng,  1 },
-        {"verbose",   no_argument,       0,        'v'},
-        {0,           0,                 0,         0 }
+        {"width",          required_argument, 0,        'w'},
+        {"height",         required_argument, 0,        'h'},
+        {"png",            no_argument,       &savePng,  1 },
+        {"verbose",        no_argument,       0,        'v'},
+        {"orig-file-name", required_argument, 0,        'n' },
+        {0,                0,                 0,         0 }
     };
 
     int opt;
@@ -29,8 +30,9 @@ int main(int argc, char *argv[])
     int scaleWidth=320;
     int scaleHeight=240;
     int verbosity=0;
+    std::string origFileName;
 
-    while((opt=getopt_long(argc, argv, "w:h:v", long_options, &option_index))!=-1)
+    while((opt=getopt_long(argc, argv, "w:h:vn:", long_options, &option_index))!=-1)
     {
         switch(opt)
         {
@@ -43,6 +45,9 @@ int main(int argc, char *argv[])
         case 'v':
             ++verbosity;
             break;
+        case 'n':
+            origFileName=optarg;
+            break;
         case '?':
             break;
         }
@@ -53,12 +58,15 @@ int main(int argc, char *argv[])
 
     std::string filename=argv[optind];
 
+    if(origFileName.empty())
+        origFileName=filename;
+
     auto config=Analyzer::Config();
     config.setScale(scaleWidth, scaleHeight);
     config.setVerbosity(verbosity);
     config.setSaveToPng(savePng);
 
-    auto analyzer=Analyzer::Factory::createAnalyzer(filename, config);
+    auto analyzer=Analyzer::Factory::createAnalyzer(origFileName, filename, config);
     if(!analyzer)
     {
         fprintf(stderr, "File format is not supported\n");

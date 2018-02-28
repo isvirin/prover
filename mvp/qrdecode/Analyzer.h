@@ -45,6 +45,7 @@ class Analyzer::Factory
 {
 public:
     static std::unique_ptr<Analyzer> createAnalyzer(
+        const std::string      &origFileName,
         const std::string      &filename,
         const Analyzer::Config &config);
 };

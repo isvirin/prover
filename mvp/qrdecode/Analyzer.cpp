@@ -120,17 +120,18 @@ void Analyzer::analyzeGrayscaleImage(
 
 
 std::unique_ptr<Analyzer> Analyzer::Factory::createAnalyzer(
+    const std::string      &origFileName,
     const std::string      &filename,
     const Analyzer::Config &config)
 {
-    auto dotpos=filename.rfind('.');
+    auto dotpos=origFileName.rfind('.');
     if(dotpos==std::string::npos)
         return {};
 
-    if(filename.compare(dotpos, std::string::npos, ".jpg")==0 ||
-       filename.compare(dotpos, std::string::npos, ".JPG")==0 ||
-       filename.compare(dotpos, std::string::npos, ".jpeg")==0 ||
-       filename.compare(dotpos, std::string::npos, ".JPEG")==0)
+    if(origFileName.compare(dotpos, std::string::npos, ".jpg")==0 ||
+       origFileName.compare(dotpos, std::string::npos, ".JPG")==0 ||
+       origFileName.compare(dotpos, std::string::npos, ".jpeg")==0 ||
+       origFileName.compare(dotpos, std::string::npos, ".JPEG")==0)
     {
         return std::unique_ptr<Analyzer>(new JpegAnalyzer(filename, config));
     }
