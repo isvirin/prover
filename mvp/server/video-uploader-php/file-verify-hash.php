@@ -29,13 +29,26 @@ function uploadResult($isSuccess, $fileName, $transactions, $hash, $error, $debu
 // для вывода результата строго в JSON делаем фокус
 error_reporting(0); //show all errors
 
-function callAnalyticProgramm($file, $blockHash, $txHash)
+function callAnalyticProgramm($file, $blockHash, $txHash, $user)
 {
     $validated = false;
     $swype = 0;
     $beginSwypeTime = 0;
     $endSwypeTime = 0;
-    $resultJson = exec("analyzefile $file --txhash $txHash --blockhash $blockHash 2> /dev/null", $output, $return_code);
+
+    $cmd = '';
+    if ($txHash) {
+        $cmd = "analyzefile $file --txhash $txHash --blockhash $blockHash 2> /dev/null";
+    } else if ($user) {
+        $cmd = "analyzefile $file --user $user --blockhash $blockHash 2> /dev/null";
+    }
+
+    $resultJson = [];
+    $return_code = 999;
+    if ($cmd) {
+        $resultJson = exec($cmd, $output, $return_code);
+    }
+
     if ($return_code === 0) {
         $result = @json_decode($resultJson, true);
         if ($result && isset($result['result'])) {
@@ -48,7 +61,8 @@ function callAnalyticProgramm($file, $blockHash, $txHash)
         'validated' => $validated,
         'swype' => $swype,
         'beginSwypeTime' => $beginSwypeTime,
-        'endSwypeTime' => $endSwypeTime
+        'endSwypeTime' => $endSwypeTime,
+        'cmd' => $cmd
     ];
 }
 
@@ -122,7 +136,7 @@ function worker($file, $fileName)
         ]];
 
         if ($gethClient->call('eth_getLogs', $params)) {
-            $eth_getLogs_result = $gethClient->result;
+            $eth_getLogs_result = $gethClient->result; // ищем верхнии транзакции
             foreach ($eth_getLogs_result as $transaction) {
                 /* EXAMPLE transaction
                 object(stdClass)#5 (9) {
@@ -141,8 +155,8 @@ function worker($file, $fileName)
                   ["removed"]=> bool(false)
                 }
                 */
-                $data = $transaction->data;
-                $senderAddress = $transaction->topics[1];
+                $data = $transaction->data; // хэш нижней транзакции
+                $senderAddress = $transaction->topics[1]; // адрес пользователя
                 $validated = false;
                 $swype = '';
                 $beginSwypeTime = 0;
@@ -183,16 +197,33 @@ function worker($file, $fileName)
                     ) {
                         if ($transactionDetails->input === TRANSACTIONBYHASH_CORRECT_INPUT) {
                             if ($transactionDetails->blockHash) {
-                                $transaction2_details = json_decode(json_encode($transactionDetails));
-                                $analyticResult = callAnalyticProgramm($file, $transactionDetails->blockHash, $transactionDetails->hash);
-                                $call = "analyzefile $file --txhash {$transactionDetails->hash} --blockhash {$transactionDetails->blockHash} 2> /dev/null";
+                                $transaction2_details = json_decode(json_encode($requestSwypeCode_block));
+                                $analyticResult = callAnalyticProgramm($file, $transactionDetails->blockHash, $transactionDetails->hash, '');
+                                $call = $analyticResult['cmd'];
                                 $validated = $analyticResult['validated'];
                                 $swype = $analyticResult['swype'];
                                 $beginSwypeTime = $analyticResult['beginSwypeTime'];
                                 $endSwypeTime = $analyticResult['endSwypeTime'];
-                                if ($beginSwypeTime && $endSwypeTime)
+                                if ($beginSwypeTime && $endSwypeTime) {
                                     $isSuccess = true;
+                                }
                             }
+                        }
+                    }
+                }
+
+                // try fast mode
+                if (!$transaction2_details) {
+                    $fastBlock = getBlockByHash($gethClient, $data);
+                    if ($fastBlock) {
+                        $analyticResult = callAnalyticProgramm($file, $data, '', $senderAddress);
+                        $call = $analyticResult['cmd'];
+                        $validated = $analyticResult['validated'];
+                        $swype = $analyticResult['swype'];
+                        $beginSwypeTime = $analyticResult['beginSwypeTime'];
+                        $endSwypeTime = $analyticResult['endSwypeTime'];
+                        if ($beginSwypeTime && $endSwypeTime) {
+                            $isSuccess = true;
                         }
                     }
                 }
@@ -216,6 +247,8 @@ function worker($file, $fileName)
             $error = $gethClient->error;
         }
     }
+
+    // todo: нужно явно определить $swype, $requestSwypeCode_block->timestamp и $submitMediaHash_block->timestamp, потому что они могут оказаться пустыми
     generationPdf($fileName, '0x' . $hash, $swype, $requestSwypeCode_block->timestamp, $submitMediaHash_block->timestamp);
     return [
         'fileName' => $fileName,
