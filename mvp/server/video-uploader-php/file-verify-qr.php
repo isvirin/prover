@@ -22,7 +22,8 @@ function uploadResult($isSuccess, $fileName, $typeText, $hash, $error, $debug = 
 }
 
 /**
- * @param string $file
+ * @param string $file full path to temporary location of uploaded file
+ * @param string $fileName original filename
  * @return array
  */
 function worker($file, $fileName)
@@ -39,7 +40,7 @@ function worker($file, $fileName)
     $contract = $mvpHelloInfo['contractAddress'];
 
     $hash = hash_file('sha256', $file);
-    $result = exec("searchqrcode $file 2> /dev/null", $output, $return_code);
+    $result = exec("searchqrcode $file --orig-file-name $fileName 2> /dev/null", $output, $return_code);
 
     if ($return_code !== 0) {
         return [
