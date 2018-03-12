@@ -1,9 +1,8 @@
 import Foundation
 
-struct Hexadecimal {
+struct Hexadecimal: Codable {
   
   // Class functions
-  
   // Validate hex string
   private static func validate(_ text: String) -> Bool {
     

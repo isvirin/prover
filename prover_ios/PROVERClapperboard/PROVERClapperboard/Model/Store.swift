@@ -5,51 +5,31 @@ class Store {
 
   // MARK: - Dependencies
   let ethereumService = EthereumService.shared
-  let provider = MoyaProvider<ProverAPI>()
+  let apiService = APIService()
 
   // MARK: - Istanse properties
-  var nonce: Hexadecimal? {
+  var info: Info? {
     didSet {
-      print("nonce \(nonce?.withPrefix ?? "")")
-    }
-  }
-  var contractAddress: Hexadecimal? {
-    didSet {
-      print("contractAddress \(contractAddress?.withPrefix ?? "")")
-    }
-  }
-  var gasPrice: Hexadecimal? {
-    didSet {
-      print("gasPrice \(gasPrice?.withPrefix ?? "")")
-    }
-  }
-  var ethBalance: Hexadecimal? {
-    didSet {
-      print("ethBalance \(ethBalance?.withPrefix ?? "")")
+      if info != nil {
+        print("Start submit request")
+        submit(message: "test")
+      }
     }
   }
 
   // MARK: - Initializaton
   init() {
+    updateInfo()
   }
   
   // MARK: - Network request
-  func updateBalance() {
+  func updateInfo() {
     
-    provider.request(.hello(hex: ethereumService.hexAddress)) { result in
-      
+    apiService.getInfo(hex: ethereumService.hexAddress) { (result) in
       switch result {
-      case let .success(responce):
-        do {
-          let result = try JSONDecoder().decode(HelloResult.self, from: responce.data)
-          self.nonce = Hexadecimal(result.nonce)
-          self.contractAddress = Hexadecimal(result.contractAddress)
-          self.gasPrice = Hexadecimal(result.gasPrice)
-          self.ethBalance = Hexadecimal(result.ethBalance)
-        } catch {
-          print(error.localizedDescription)
-        }
-      case let .failure(error):
+      case .success(let data):
+        self.info = data
+      case .failure(let error):
         print(error)
       }
     }
@@ -58,48 +38,28 @@ class Store {
   func submit(message: String) {
     
     let transactionHex = ethereumService.getTransactionHex(from: message,
-                                                           nonce: nonce!,
-                                                           contractAddress: contractAddress!,
-                                                           gasPrice: gasPrice!)
-    print("transactionHex \(transactionHex)")
+                                                           nonce: info!.nonce,
+                                                           contractAddress: info!.contractAddress,
+                                                           gasPrice: info!.gasPrice)
     
-    provider.request(.submit(hex: transactionHex.withPrefix)) { result in
-      
+    apiService.submit(hex: transactionHex.withPrefix) { (result) in
       switch result {
-      case let .success(responce):
-        do {
-          guard let json = try JSONSerialization.jsonObject(with: responce.data, options: .allowFragments)
-            as? [String: Any] else {
-            print("Can't create dictionary from response data in submit request")
-            return
-          }
-          print(json)
-        } catch {
-          print(error.localizedDescription)
-        }
-      case let .failure(error):
+      case .success(let text):
+        print("Start check request")
+        self.check(txhash: text)
+      case .failure(let error):
         print(error)
       }
     }
   }
   
-  func check() {
+  func check(txhash: String) {
     
-    let txhash = "0xcb300e9aeff7ecba16017b661ac1a0d14a33137e92d3707b45c5f6d68e419892"
-    provider.request(.check(txhash: txhash)) { result in
+    apiService.check(txhash: txhash) { (result) in
       switch result {
-      case let .success(responce):
-        do {
-          guard let json = try JSONSerialization.jsonObject(with: responce.data, options: .allowFragments)
-            as? [String: Any] else {
-              print("Can't create dictionary from response data in check request")
-              return
-          }
-          print(json)
-        } catch {
-          print(error.localizedDescription)
-        }
-      case let .failure(error):
+      case .success(let data):
+        print(data)
+      case .failure(let error):
         print(error)
       }
     }
