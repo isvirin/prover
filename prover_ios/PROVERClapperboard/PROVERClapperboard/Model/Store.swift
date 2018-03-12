@@ -3,8 +3,7 @@ import Moya
 import Repeat
 
 class Store {
-  
-  var timer: Repeater?
+
   var txHash: String? {
     didSet {
       if let value = txHash {
@@ -12,11 +11,14 @@ class Store {
       }
     }
   }
+  
+  var repeater: Repeater?
+  
   var blockHash: String? {
     didSet {
       if let value = blockHash {
         print("Current blockHash: \(value)")
-        timer = nil
+        repeater = nil
       }
     }
   }
@@ -30,47 +32,53 @@ class Store {
 
   // MARK: - Initializaton
   init() {
-    getQRCodedata(from: "test")
+    getQRCodeData(from: "test")
   }
   
   // MARK: - Network request
-  func getQRCodedata(from text: String) {
+  func getQRCodeData(from text: String) {
     
     print("Start getInfo")
-    apiService.getInfo(hex: ethereumService.hexAddress) { [weak self] (result) in
+    apiService.getInfo(hex: ethereumService.hexAddress) { [unowned self] (result) in
       switch result {
       case .success(let info):
         
         print("nonce: \(info.nonce.withPrefix)")
         
-        guard let transactionHex =
-          self?.ethereumService.getTransactionHex(from: text,
-                                                  nonce: info.nonce,
-                                                  contractAddress: info.contractAddress,
-                                                  gasPrice: info.gasPrice) else {
-                                                    fatalError("Found nil instead of Store")
-        }
+        let transactionHex = self.ethereumService.getTransactionHex(from: text,
+                                                                    nonce: info.nonce,
+                                                                    contractAddress: info.contractAddress,
+                                                                    gasPrice: info.gasPrice)
         
         print("Start submit request")
-        self?.apiService.submit(hex: transactionHex.withPrefix) { (result) in
+        self.apiService.submit(hex: transactionHex.withPrefix) { (result) in
           switch result {
           case .success(let txhash):
             
-            self?.txHash = txhash
+            self.txHash = txhash
             
-            self?.timer = Repeater(interval: .seconds(10), mode: .infinite) { _ in
-              print("Start check request")
-              self?.apiService.check(txhash: txhash) { (result) in
-                switch result {
-                case .success(let blockHash):
-                  print("Success")
-                  self?.blockHash = blockHash
-                case .failure(let error):
-                  print(error)
+            if self.repeater == nil {
+              
+              self.repeater = Repeater(interval: .seconds(10), mode: .infinite) { _ in
+                print("Start check request")
+                guard let txHash = self.txHash else {
+                  print("txhash equal nil")
+                  return
+                }
+                
+                self.apiService.check(txhash: txHash) { (result) in
+                  switch result {
+                  case .success(let blockHash):
+                    print("Success")
+                    self.blockHash = blockHash
+                  case .failure(let error):
+                    print(error)
+                  }
                 }
               }
+              
+              self.repeater?.start()
             }
-            self?.timer?.start()
             
           case .failure(let error):
             print(error)
