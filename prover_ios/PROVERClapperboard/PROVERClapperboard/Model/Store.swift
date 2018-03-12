@@ -8,7 +8,7 @@ class Store {
   let provider = MoyaProvider<ProverAPI>()
 
   // MARK: - Istanse properties
-  var info: Info? {
+  var info: InfoReslut? {
     didSet {
       print(info)
     }
@@ -26,7 +26,7 @@ class Store {
       
       switch result {
       case let .success(responce):
-        self.info = try? JSONDecoder().decode(Info.self, from: responce.data)
+        self.info = try? JSONDecoder().decode(InfoReslut.self, from: responce.data)
       case let .failure(error):
         print(error)
       }
