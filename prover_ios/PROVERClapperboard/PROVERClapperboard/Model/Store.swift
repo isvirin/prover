@@ -44,6 +44,19 @@ class Store {
     
     apiService.submit(hex: transactionHex.withPrefix) { (result) in
       switch result {
+      case .success(let text):
+        print("Start check request")
+        self.check(txhash: text)
+      case .failure(let error):
+        print(error)
+      }
+    }
+  }
+  
+  func check(txhash: String) {
+    
+    apiService.check(txhash: txhash) { (result) in
+      switch result {
       case .success(let data):
         print(data)
       case .failure(let error):
@@ -51,28 +64,4 @@ class Store {
       }
     }
   }
-  
-  /*
-  func check() {
-    
-    let txhash = "0xcb300e9aeff7ecba16017b661ac1a0d14a33137e92d3707b45c5f6d68e419892"
-    provider.request(.check(txhash: txhash)) { result in
-      switch result {
-      case let .success(responce):
-        do {
-          guard let json = try JSONSerialization.jsonObject(with: responce.data, options: .allowFragments)
-            as? [String: Any] else {
-              print("Can't create dictionary from response data in check request")
-              return
-          }
-          print(json)
-        } catch {
-          print(error.localizedDescription)
-        }
-      case let .failure(error):
-        print(error)
-      }
-    }
-  }
- */
 }
