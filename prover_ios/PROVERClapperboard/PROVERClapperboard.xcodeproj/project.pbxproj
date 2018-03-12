@@ -11,6 +11,7 @@
 		9A0E848E2056BB8100624995 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E848D2056BB8100624995 /* AsyncOperation.swift */; };
 		9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */; };
 		9A0E84922056C1C500624995 /* SubmitOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E84912056C1C500624995 /* SubmitOperation.swift */; };
+		9A0E84942056C6A100624995 /* CheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E84932056C6A100624995 /* CheckOperation.swift */; };
 		9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB341204E80240090C3CF /* Hexadecimal.swift */; };
 		9A2EB344204E984D0090C3CF /* QRCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB343204E984D0090C3CF /* QRCoder.swift */; };
 		9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A44D52220566F3F0027A2D0 /* InfoReslut.swift */; };
@@ -47,6 +48,7 @@
 		9A0E848D2056BB8100624995 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetInfoOperation.swift; sourceTree = "<group>"; };
 		9A0E84912056C1C500624995 /* SubmitOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitOperation.swift; sourceTree = "<group>"; };
+		9A0E84932056C6A100624995 /* CheckOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOperation.swift; sourceTree = "<group>"; };
 		9A2EB341204E80240090C3CF /* Hexadecimal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hexadecimal.swift; sourceTree = "<group>"; };
 		9A2EB343204E984D0090C3CF /* QRCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCoder.swift; sourceTree = "<group>"; };
 		9A44D52220566F3F0027A2D0 /* InfoReslut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoReslut.swift; sourceTree = "<group>"; };
@@ -116,6 +118,7 @@
 				9A0E848D2056BB8100624995 /* AsyncOperation.swift */,
 				9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */,
 				9A0E84912056C1C500624995 /* SubmitOperation.swift */,
+				9A0E84932056C6A100624995 /* CheckOperation.swift */,
 			);
 			path = Operation;
 			sourceTree = "<group>";
@@ -424,6 +427,7 @@
 				9AC6AD1420568376007C6BBF /* SubmitRequestError.swift in Sources */,
 				9A0E848E2056BB8100624995 /* AsyncOperation.swift in Sources */,
 				9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */,
+				9A0E84942056C6A100624995 /* CheckOperation.swift in Sources */,
 				9A0E84922056C1C500624995 /* SubmitOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

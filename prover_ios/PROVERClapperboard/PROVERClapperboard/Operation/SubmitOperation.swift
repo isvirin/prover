@@ -11,11 +11,7 @@ class SubmitOperation: AsyncOperation {
   let text: String
   
   var inputInfoResult: APIInfoResult?
-  var result: APIStringResult? {
-    didSet {
-      print(result)
-    }
-  }
+  var result: APIStringResult?
   
   init(apiService: APIService, ethereumService: EthereumService, text: String) {
     self.apiService = apiService
@@ -51,5 +47,10 @@ class SubmitOperation: AsyncOperation {
       self.state = .finished
     }
   }
-  
+}
+
+extension SubmitOperation: CheckOperationDataProvider {
+  var txHashResult: APIStringResult? {
+    return result
+  }
 }

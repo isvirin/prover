@@ -45,8 +45,14 @@ class Store {
                                           text: text)
     submitOperation.addDependency(getInfoOperation)
     
+    let checkOperation = CheckOperation(apiService: apiService)
+    checkOperation.addDependency(submitOperation)
+    checkOperation.completionBlock = {
+      print(checkOperation.result)
+    }
+    
     let queue = OperationQueue()
-    queue.addOperations([getInfoOperation, submitOperation], waitUntilFinished: false)
+    queue.addOperations([getInfoOperation, submitOperation, checkOperation], waitUntilFinished: false)
   }
   
   private func updateInfo() {
