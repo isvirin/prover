@@ -1,11 +1,11 @@
 import Foundation
 
-struct HelloResult: Decodable {
+struct Info: Decodable {
 
-  let nonce: String
+  let nonce: String?
   let contractAddress: String
   let gasPrice: String
-  let ethBalance: String
+  let ethBalance: String?
 
   enum CodingKeys: String, CodingKey {
     case nonce
