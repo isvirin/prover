@@ -10,7 +10,10 @@ class Store {
   // MARK: - Istanse properties
   var info: Info? {
     didSet {
-      print(info)
+      if info != nil {
+        print("Start submit request")
+        submit(message: "test")
+      }
     }
   }
 
@@ -23,7 +26,6 @@ class Store {
   func updateInfo() {
     
     apiService.getInfo(hex: ethereumService.hexAddress) { (result) in
-      
       switch result {
       case .success(let data):
         self.info = data
@@ -33,35 +35,24 @@ class Store {
     }
   }
   
-  /*
   func submit(message: String) {
     
     let transactionHex = ethereumService.getTransactionHex(from: message,
-                                                           nonce: Hexadecimal(info!.nonce!)!,
-                                                           contractAddress: Hexadecimal(info!.contractAddress)!,
-                                                           gasPrice: Hexadecimal(info!.gasPrice)!)
-    print("transactionHex \(transactionHex)")
+                                                           nonce: info!.nonce,
+                                                           contractAddress: info!.contractAddress,
+                                                           gasPrice: info!.gasPrice)
     
-    provider.request(.submit(hex: transactionHex.withPrefix)) { result in
-      
+    apiService.submit(hex: transactionHex.withPrefix) { (result) in
       switch result {
-      case let .success(responce):
-        do {
-          guard let json = try JSONSerialization.jsonObject(with: responce.data, options: .allowFragments)
-            as? [String: Any] else {
-            print("Can't create dictionary from response data in submit request")
-            return
-          }
-          print(json)
-        } catch {
-          print(error.localizedDescription)
-        }
-      case let .failure(error):
+      case .success(let data):
+        print(data)
+      case .failure(let error):
         print(error)
       }
     }
   }
   
+  /*
   func check() {
     
     let txhash = "0xcb300e9aeff7ecba16017b661ac1a0d14a33137e92d3707b45c5f6d68e419892"
