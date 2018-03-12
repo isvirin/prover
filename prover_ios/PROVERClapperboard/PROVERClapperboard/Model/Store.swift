@@ -15,7 +15,8 @@ class Store {
   var blockHash: String? {
     didSet {
       if let value = blockHash {
-        print("Current blockHash: \(blockHash)")
+        print("Current blockHash: \(value)")
+        timer = nil
       }
     }
   }
@@ -36,36 +37,40 @@ class Store {
   func getQRCodedata(from text: String) {
     
     print("Start getInfo")
-    apiService.getInfo(hex: ethereumService.hexAddress) { (result) in
+    apiService.getInfo(hex: ethereumService.hexAddress) { [weak self] (result) in
       switch result {
       case .success(let info):
         
         print("nonce: \(info.nonce.withPrefix)")
         
-        let transactionHex = self.ethereumService.getTransactionHex(from: text,
-                                                               nonce: info.nonce,
-                                                               contractAddress: info.contractAddress,
-                                                               gasPrice: info.gasPrice)
+        guard let transactionHex =
+          self?.ethereumService.getTransactionHex(from: text,
+                                                  nonce: info.nonce,
+                                                  contractAddress: info.contractAddress,
+                                                  gasPrice: info.gasPrice) else {
+                                                    fatalError("Found nil instead of Store")
+        }
         
         print("Start submit request")
-        self.apiService.submit(hex: transactionHex.withPrefix) { (result) in
+        self?.apiService.submit(hex: transactionHex.withPrefix) { (result) in
           switch result {
           case .success(let txhash):
             
-            self.timer = Repeater.every(.seconds(2), count: 10) { _ in
-              print("Start timer")
+            self?.txHash = txhash
+            
+            self?.timer = Repeater(interval: .seconds(10), mode: .infinite) { _ in
               print("Start check request")
-              self.apiService.check(txhash: txhash) { (result) in
+              self?.apiService.check(txhash: txhash) { (result) in
                 switch result {
                 case .success(let blockHash):
-                  print("txhash: \(txhash)")
-                  print("blockHash: \(blockHash)")
+                  print("Success")
+                  self?.blockHash = blockHash
                 case .failure(let error):
                   print(error)
                 }
               }
             }
-            self.timer?.start()
+            self?.timer?.start()
             
           case .failure(let error):
             print(error)
