@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -113,13 +114,31 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Z2u-ZQ-MzY">
                                 <rect key="frame" x="95.5" y="35" width="183" height="42"/>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uqX-z7-sCN">
+                                <rect key="frame" x="43" y="189.5" width="288" height="288"/>
+                                <color key="backgroundColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="288" id="lmh-b5-3eD"/>
+                                    <constraint firstAttribute="width" secondItem="uqX-z7-sCN" secondAttribute="height" multiplier="1:1" id="mhq-QK-elq"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="text from previous screen" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8vH-7L-GIO">
+                                <rect key="frame" x="115" y="506" width="144.5" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="8vH-7L-GIO" firstAttribute="top" secondItem="uqX-z7-sCN" secondAttribute="bottom" constant="28" id="0fB-ay-kM6"/>
                             <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="top" secondItem="RaI-Je-Djf" secondAttribute="top" constant="15" id="5OT-TO-ejl"/>
                             <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="7aJ-bW-HT6"/>
                             <constraint firstItem="wxe-kk-KGG" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="AA3-F8-Vze"/>
                             <constraint firstItem="RaI-Je-Djf" firstAttribute="bottom" secondItem="wxe-kk-KGG" secondAttribute="bottom" constant="24" id="GbI-rA-luZ"/>
+                            <constraint firstItem="uqX-z7-sCN" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="Puw-bC-xvx"/>
+                            <constraint firstItem="8vH-7L-GIO" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="nwa-7r-Iax"/>
+                            <constraint firstItem="uqX-z7-sCN" firstAttribute="centerY" secondItem="pO1-sw-3rS" secondAttribute="centerY" id="pFY-Ro-Gph"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RaI-Je-Djf"/>
                     </view>
