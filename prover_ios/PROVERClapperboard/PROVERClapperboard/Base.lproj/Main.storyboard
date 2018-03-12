@@ -39,7 +39,7 @@
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="XSb-8l-TGd" kind="presentation" id="x10-AZ-5dA"/>
+                                    <segue destination="XSb-8l-TGd" kind="presentation" modalTransitionStyle="flipHorizontal" id="x10-AZ-5dA"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="glg-U7-ru5">
@@ -110,9 +110,14 @@
                                     <action selector="closeButtonAction:" destination="XSb-8l-TGd" eventType="touchUpInside" id="kJK-Yd-mNp"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Z2u-ZQ-MzY">
+                                <rect key="frame" x="95.5" y="35" width="183" height="42"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="top" secondItem="RaI-Je-Djf" secondAttribute="top" constant="15" id="5OT-TO-ejl"/>
+                            <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="7aJ-bW-HT6"/>
                             <constraint firstItem="wxe-kk-KGG" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="AA3-F8-Vze"/>
                             <constraint firstItem="RaI-Je-Djf" firstAttribute="bottom" secondItem="wxe-kk-KGG" secondAttribute="bottom" constant="24" id="GbI-rA-luZ"/>
                         </constraints>
@@ -125,6 +130,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Logo" width="183" height="42"/>
         <image name="QRButton" width="64" height="64"/>
         <image name="close_button" width="64" height="64"/>
         <image name="prover" width="40" height="40"/>
