@@ -10,8 +10,7 @@ enum APIError: Error {
 }
 
 typealias APIInfoResult = Result<Info, APIError>
-typealias APISubmitResult = Result<String, APIError>
-typealias APICheckResult = Result<String, APIError>
+typealias APIStringResult = Result<String, APIError>
 
 class APIService {
   
@@ -40,7 +39,7 @@ class APIService {
   }
   
   // send transaction in hexadecimal form and get hash this transaction
-  func submit(hex: String, handler: @escaping (APISubmitResult) -> Void) {
+  func submit(hex: String, handler: @escaping (APIStringResult) -> Void) {
     
     provider.request(.submit(hex: hex)) { result in
       
@@ -63,7 +62,7 @@ class APIService {
   }
   
   // check status of transaction
-  func check(txhash: String, handler: @escaping (APICheckResult) -> Void) {
+  func check(txhash: String, handler: @escaping (APIStringResult) -> Void) {
     
     provider.request(.check(txhash: txhash)) { result in
       switch result {

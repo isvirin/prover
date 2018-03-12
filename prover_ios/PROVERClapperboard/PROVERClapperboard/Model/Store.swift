@@ -40,8 +40,13 @@ class Store {
     
     let getInfoOperation = GetInfoOperation(apiService: apiService, hex: ethereumService.hexAddress)
     
+    let submitOperation = SubmitOperation(apiService: apiService,
+                                          ethereumService: ethereumService,
+                                          text: text)
+    submitOperation.addDependency(getInfoOperation)
+    
     let queue = OperationQueue()
-    queue.addOperations([getInfoOperation], waitUntilFinished: false)
+    queue.addOperations([getInfoOperation, submitOperation], waitUntilFinished: false)
   }
   
   private func updateInfo() {

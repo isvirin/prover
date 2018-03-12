@@ -4,11 +4,7 @@ class GetInfoOperation: AsyncOperation {
   
   let apiService: APIService
   let hex: String
-  var result: APIInfoResult? {
-    didSet {
-      print(result)
-    }
-  }
+  var result: APIInfoResult?
   
   init(apiService: APIService, hex: String) {
     self.apiService = apiService
@@ -20,5 +16,11 @@ class GetInfoOperation: AsyncOperation {
       self.result = result
       self.state = .finished
     }
+  }
+}
+
+extension GetInfoOperation: SubmitOperationInfoProvider {
+  var outputInfoResult: APIInfoResult? {
+    return result
   }
 }
