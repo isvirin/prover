@@ -8,29 +8,15 @@ class Store {
   let provider = MoyaProvider<ProverAPI>()
 
   // MARK: - Istanse properties
-  var nonce: Hexadecimal? {
+  var info: Info? {
     didSet {
-      print("nonce \(nonce?.withPrefix ?? "")")
-    }
-  }
-  var contractAddress: Hexadecimal? {
-    didSet {
-      print("contractAddress \(contractAddress?.withPrefix ?? "")")
-    }
-  }
-  var gasPrice: Hexadecimal? {
-    didSet {
-      print("gasPrice \(gasPrice?.withPrefix ?? "")")
-    }
-  }
-  var ethBalance: Hexadecimal? {
-    didSet {
-      print("ethBalance \(ethBalance?.withPrefix ?? "")")
+      print(info)
     }
   }
 
   // MARK: - Initializaton
   init() {
+    updateBalance()
   }
   
   // MARK: - Network request
@@ -40,27 +26,20 @@ class Store {
       
       switch result {
       case let .success(responce):
-        do {
-          let result = try JSONDecoder().decode(HelloResult.self, from: responce.data)
-          self.nonce = Hexadecimal(result.nonce)
-          self.contractAddress = Hexadecimal(result.contractAddress)
-          self.gasPrice = Hexadecimal(result.gasPrice)
-          self.ethBalance = Hexadecimal(result.ethBalance)
-        } catch {
-          print(error.localizedDescription)
-        }
+        self.info = try? JSONDecoder().decode(Info.self, from: responce.data)
       case let .failure(error):
         print(error)
       }
     }
   }
   
+  /*
   func submit(message: String) {
     
     let transactionHex = ethereumService.getTransactionHex(from: message,
-                                                           nonce: nonce!,
-                                                           contractAddress: contractAddress!,
-                                                           gasPrice: gasPrice!)
+                                                           nonce: Hexadecimal(info!.nonce!)!,
+                                                           contractAddress: Hexadecimal(info!.contractAddress)!,
+                                                           gasPrice: Hexadecimal(info!.gasPrice)!)
     print("transactionHex \(transactionHex)")
     
     provider.request(.submit(hex: transactionHex.withPrefix)) { result in
@@ -104,4 +83,5 @@ class Store {
       }
     }
   }
+ */
 }
