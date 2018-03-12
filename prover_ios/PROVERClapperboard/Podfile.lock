@@ -1,0 +1,26 @@
+PODS:
+  - Alamofire (4.6.0)
+  - Geth (1.8.1)
+  - KeychainSwift (10.0.0)
+  - Moya (11.0.1):
+    - Moya/Core (= 11.0.1)
+  - Moya/Core (11.0.1):
+    - Alamofire (~> 4.1)
+    - Result (~> 3.0)
+  - Result (3.2.4)
+
+DEPENDENCIES:
+  - Geth
+  - KeychainSwift
+  - Moya
+
+SPEC CHECKSUMS:
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  Geth: b39574e8d037c7752f73f3e5320855581e1cf75a
+  KeychainSwift: f9f7910449a0c0fd2cabc889121530dd2c477c33
+  Moya: 3d594ada51a21cc02b18739ab578a1984f900c8a
+  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
+
+PODFILE CHECKSUM: 54d46813e86d3dff4eba6e3d1fee86c7b1f50c4f
+
+COCOAPODS: 1.4.0

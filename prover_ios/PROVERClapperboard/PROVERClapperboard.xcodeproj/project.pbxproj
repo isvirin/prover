@@ -1,0 +1,632 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2D62A08A32A6AE996B5932AA /* Pods_PROVERClapperboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCC2262B3C52F795DA2A04F2 /* Pods_PROVERClapperboard.framework */; };
+		9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB341204E80240090C3CF /* Hexadecimal.swift */; };
+		9A2EB344204E984D0090C3CF /* QRCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB343204E984D0090C3CF /* QRCoder.swift */; };
+		9A5B9BD0204D5E0800DB29AE /* Data+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5B9BCF204D5E0800DB29AE /* Data+extension.swift */; };
+		9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */; };
+		BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B42046CA5900364A1D /* AppDelegate.swift */; };
+		BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B62046CA5900364A1D /* InputTextViewController.swift */; };
+		BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747B82046CA5900364A1D /* Main.storyboard */; };
+		BA2747BC2046CA5900364A1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA2747BB2046CA5900364A1D /* Assets.xcassets */; };
+		BA2747BF2046CA5900364A1D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747BD2046CA5900364A1D /* LaunchScreen.storyboard */; };
+		BA8F5DB1204824370083BAD2 /* HelloResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F5DB0204824370083BAD2 /* HelloResult.swift */; };
+		BA8F5DB420482B830083BAD2 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F5DB320482B830083BAD2 /* Store.swift */; };
+		BACE32E02047F1C2007B8FF9 /* EthereumServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32DF2047F1C2007B8FF9 /* EthereumServiceProtocol.swift */; };
+		BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32F32047F5DD007B8FF9 /* EthereumService.swift */; };
+		BACE32F920481414007B8FF9 /* ProverAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32F820481414007B8FF9 /* ProverAPI.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BACE32EC2047F33C007B8FF9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BA2747A92046CA5900364A1D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BA2747B02046CA5900364A1D;
+			remoteInfo = PROVERClapperboard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		7E544281C44D61F26F00ED3F /* Pods-PROVERClapperboard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.debug.xcconfig"; sourceTree = "<group>"; };
+		9A2EB341204E80240090C3CF /* Hexadecimal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hexadecimal.swift; sourceTree = "<group>"; };
+		9A2EB343204E984D0090C3CF /* QRCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCoder.swift; sourceTree = "<group>"; };
+		9A5B9BCF204D5E0800DB29AE /* Data+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+extension.swift"; sourceTree = "<group>"; };
+		9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.release.xcconfig"; sourceTree = "<group>"; };
+		BA2747B12046CA5900364A1D /* PROVERClapperboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROVERClapperboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA2747B42046CA5900364A1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BA2747B62046CA5900364A1D /* InputTextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputTextViewController.swift; sourceTree = "<group>"; };
+		BA2747B92046CA5900364A1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BA2747BB2046CA5900364A1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BA2747BE2046CA5900364A1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BA2747C02046CA5900364A1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA8F5DB0204824370083BAD2 /* HelloResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelloResult.swift; sourceTree = "<group>"; };
+		BA8F5DB320482B830083BAD2 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		BACE32DF2047F1C2007B8FF9 /* EthereumServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumServiceProtocol.swift; sourceTree = "<group>"; };
+		BACE32E72047F33B007B8FF9 /* PROVERClapperboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PROVERClapperboardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BACE32EB2047F33C007B8FF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BACE32F32047F5DD007B8FF9 /* EthereumService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumService.swift; sourceTree = "<group>"; };
+		BACE32F820481414007B8FF9 /* ProverAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProverAPI.swift; sourceTree = "<group>"; };
+		BCC2262B3C52F795DA2A04F2 /* Pods_PROVERClapperboard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PROVERClapperboard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA2747AE2046CA5900364A1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D62A08A32A6AE996B5932AA /* Pods_PROVERClapperboard.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACE32E42047F33B007B8FF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0654FA56A3DE13446939756B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCC2262B3C52F795DA2A04F2 /* Pods_PROVERClapperboard.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3FB3B82E8DE7C3DA0B06BB06 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7E544281C44D61F26F00ED3F /* Pods-PROVERClapperboard.debug.xcconfig */,
+				A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		9A5B9BCE204D5DF600DB29AE /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				9A5B9BCF204D5E0800DB29AE /* Data+extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		9ACA53F2205022C8007FBAD9 /* InputText */ = {
+			isa = PBXGroup;
+			children = (
+				BA2747B62046CA5900364A1D /* InputTextViewController.swift */,
+			);
+			path = InputText;
+			sourceTree = "<group>";
+		};
+		9ACA53F3205022D5007FBAD9 /* QRCode */ = {
+			isa = PBXGroup;
+			children = (
+				9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */,
+			);
+			path = QRCode;
+			sourceTree = "<group>";
+		};
+		BA2747A82046CA5900364A1D = {
+			isa = PBXGroup;
+			children = (
+				BA2747B32046CA5900364A1D /* PROVERClapperboard */,
+				BACE32E82047F33C007B8FF9 /* PROVERClapperboardTests */,
+				BA2747B22046CA5900364A1D /* Products */,
+				3FB3B82E8DE7C3DA0B06BB06 /* Pods */,
+				0654FA56A3DE13446939756B /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		BA2747B22046CA5900364A1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BA2747B12046CA5900364A1D /* PROVERClapperboard.app */,
+				BACE32E72047F33B007B8FF9 /* PROVERClapperboardTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BA2747B32046CA5900364A1D /* PROVERClapperboard */ = {
+			isa = PBXGroup;
+			children = (
+				9A5B9BCE204D5DF600DB29AE /* Extension */,
+				BA8F5DB220482B590083BAD2 /* Model */,
+				BACE32F720480CB3007B8FF9 /* Network */,
+				BACE32DE2047F19A007B8FF9 /* Ethereum */,
+				BA2747B42046CA5900364A1D /* AppDelegate.swift */,
+				9ACA53F2205022C8007FBAD9 /* InputText */,
+				9ACA53F3205022D5007FBAD9 /* QRCode */,
+				BA2747B82046CA5900364A1D /* Main.storyboard */,
+				BA2747BB2046CA5900364A1D /* Assets.xcassets */,
+				BA2747BD2046CA5900364A1D /* LaunchScreen.storyboard */,
+				BA2747C02046CA5900364A1D /* Info.plist */,
+			);
+			path = PROVERClapperboard;
+			sourceTree = "<group>";
+		};
+		BA8F5DB220482B590083BAD2 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BA8F5DB320482B830083BAD2 /* Store.swift */,
+				9A2EB341204E80240090C3CF /* Hexadecimal.swift */,
+				9A2EB343204E984D0090C3CF /* QRCoder.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		BACE32DE2047F19A007B8FF9 /* Ethereum */ = {
+			isa = PBXGroup;
+			children = (
+				BACE32DF2047F1C2007B8FF9 /* EthereumServiceProtocol.swift */,
+				BACE32F32047F5DD007B8FF9 /* EthereumService.swift */,
+			);
+			path = Ethereum;
+			sourceTree = "<group>";
+		};
+		BACE32E82047F33C007B8FF9 /* PROVERClapperboardTests */ = {
+			isa = PBXGroup;
+			children = (
+				BACE32EB2047F33C007B8FF9 /* Info.plist */,
+			);
+			path = PROVERClapperboardTests;
+			sourceTree = "<group>";
+		};
+		BACE32F720480CB3007B8FF9 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				BACE32F820481414007B8FF9 /* ProverAPI.swift */,
+				BA8F5DB0204824370083BAD2 /* HelloResult.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BA2747B02046CA5900364A1D /* PROVERClapperboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BA2747C32046CA5900364A1D /* Build configuration list for PBXNativeTarget "PROVERClapperboard" */;
+			buildPhases = (
+				155301334D30D3DC135EC01A /* [CP] Check Pods Manifest.lock */,
+				BA2747AD2046CA5900364A1D /* Sources */,
+				BA2747AE2046CA5900364A1D /* Frameworks */,
+				BA2747AF2046CA5900364A1D /* Resources */,
+				BA2747C62046CA6700364A1D /* ShellScript */,
+				8990BAF9D10AC368093795E3 /* [CP] Embed Pods Frameworks */,
+				DD7B5D18D476455DDFC31903 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PROVERClapperboard;
+			productName = PROVERClapperboard;
+			productReference = BA2747B12046CA5900364A1D /* PROVERClapperboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BACE32E62047F33B007B8FF9 /* PROVERClapperboardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BACE32EE2047F33C007B8FF9 /* Build configuration list for PBXNativeTarget "PROVERClapperboardTests" */;
+			buildPhases = (
+				BACE32E32047F33B007B8FF9 /* Sources */,
+				BACE32E42047F33B007B8FF9 /* Frameworks */,
+				BACE32E52047F33B007B8FF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BACE32ED2047F33C007B8FF9 /* PBXTargetDependency */,
+			);
+			name = PROVERClapperboardTests;
+			productName = PROVERClapperboardTests;
+			productReference = BACE32E72047F33B007B8FF9 /* PROVERClapperboardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BA2747A92046CA5900364A1D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = Nordavind;
+				TargetAttributes = {
+					BA2747B02046CA5900364A1D = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					BACE32E62047F33B007B8FF9 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = BA2747B02046CA5900364A1D;
+					};
+				};
+			};
+			buildConfigurationList = BA2747AC2046CA5900364A1D /* Build configuration list for PBXProject "PROVERClapperboard" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BA2747A82046CA5900364A1D;
+			productRefGroup = BA2747B22046CA5900364A1D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BA2747B02046CA5900364A1D /* PROVERClapperboard */,
+				BACE32E62047F33B007B8FF9 /* PROVERClapperboardTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BA2747AF2046CA5900364A1D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BA2747BF2046CA5900364A1D /* LaunchScreen.storyboard in Resources */,
+				BA2747BC2046CA5900364A1D /* Assets.xcassets in Resources */,
+				BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACE32E52047F33B007B8FF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		155301334D30D3DC135EC01A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PROVERClapperboard-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8990BAF9D10AC368093795E3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BA2747C62046CA6700364A1D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
+		};
+		DD7B5D18D476455DDFC31903 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BA2747AD2046CA5900364A1D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BACE32F920481414007B8FF9 /* ProverAPI.swift in Sources */,
+				9A5B9BD0204D5E0800DB29AE /* Data+extension.swift in Sources */,
+				9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */,
+				9A2EB344204E984D0090C3CF /* QRCoder.swift in Sources */,
+				BACE32E02047F1C2007B8FF9 /* EthereumServiceProtocol.swift in Sources */,
+				9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */,
+				BA8F5DB420482B830083BAD2 /* Store.swift in Sources */,
+				BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */,
+				BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */,
+				BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */,
+				BA8F5DB1204824370083BAD2 /* HelloResult.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BACE32E32047F33B007B8FF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BACE32ED2047F33C007B8FF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BA2747B02046CA5900364A1D /* PROVERClapperboard */;
+			targetProxy = BACE32EC2047F33C007B8FF9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		BA2747B82046CA5900364A1D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA2747B92046CA5900364A1D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BA2747BD2046CA5900364A1D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BA2747BE2046CA5900364A1D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BA2747C12046CA5900364A1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BA2747C22046CA5900364A1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BA2747C42046CA5900364A1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7E544281C44D61F26F00ED3F /* Pods-PROVERClapperboard.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U7F7PVJTDH;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = PROVERClapperboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nordavind.kshakhansky.PROVERClapperboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BA2747C52046CA5900364A1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = U7F7PVJTDH;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = PROVERClapperboard/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nordavind.kshakhansky.PROVERClapperboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BACE32EF2047F33C007B8FF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y3R3Z3JF3Q;
+				INFOPLIST_FILE = PROVERClapperboardTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nordavind.kshakhansky.PROVERClapperboardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PROVERClapperboard.app/PROVERClapperboard";
+			};
+			name = Debug;
+		};
+		BACE32F02047F33C007B8FF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y3R3Z3JF3Q;
+				INFOPLIST_FILE = PROVERClapperboardTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nordavind.kshakhansky.PROVERClapperboardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PROVERClapperboard.app/PROVERClapperboard";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BA2747AC2046CA5900364A1D /* Build configuration list for PBXProject "PROVERClapperboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA2747C12046CA5900364A1D /* Debug */,
+				BA2747C22046CA5900364A1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BA2747C32046CA5900364A1D /* Build configuration list for PBXNativeTarget "PROVERClapperboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BA2747C42046CA5900364A1D /* Debug */,
+				BA2747C52046CA5900364A1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BACE32EE2047F33C007B8FF9 /* Build configuration list for PBXNativeTarget "PROVERClapperboardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BACE32EF2047F33C007B8FF9 /* Debug */,
+				BACE32F02047F33C007B8FF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BA2747A92046CA5900364A1D /* Project object */;
+}
