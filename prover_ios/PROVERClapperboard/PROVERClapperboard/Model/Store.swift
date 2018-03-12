@@ -5,10 +5,10 @@ class Store {
 
   // MARK: - Dependencies
   let ethereumService = EthereumService.shared
-  let provider = MoyaProvider<ProverAPI>()
+  let apiService = APIService()
 
   // MARK: - Istanse properties
-  var info: InfoReslut? {
+  var info: Info? {
     didSet {
       print(info)
     }
@@ -16,18 +16,18 @@ class Store {
 
   // MARK: - Initializaton
   init() {
-    updateBalance()
+    updateInfo()
   }
   
   // MARK: - Network request
-  func updateBalance() {
+  func updateInfo() {
     
-    provider.request(.hello(hex: ethereumService.hexAddress)) { result in
+    apiService.getInfo(hex: ethereumService.hexAddress) { (result) in
       
       switch result {
-      case let .success(responce):
-        self.info = try? JSONDecoder().decode(InfoReslut.self, from: responce.data)
-      case let .failure(error):
+      case .success(let data):
+        self.info = data
+      case .failure(let error):
         print(error)
       }
     }

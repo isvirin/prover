@@ -13,6 +13,7 @@
 		9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A44D52220566F3F0027A2D0 /* InfoReslut.swift */; };
 		9A5B9BD0204D5E0800DB29AE /* Data+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5B9BCF204D5E0800DB29AE /* Data+extension.swift */; };
 		9AC6AD102056784B007C6BBF /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD0F2056784B007C6BBF /* Info.swift */; };
+		9AC6AD1220567A0A007C6BBF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD1120567A0A007C6BBF /* APIService.swift */; };
 		9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */; };
 		BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B42046CA5900364A1D /* AppDelegate.swift */; };
 		BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B62046CA5900364A1D /* InputTextViewController.swift */; };
@@ -42,6 +43,7 @@
 		9A44D52220566F3F0027A2D0 /* InfoReslut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoReslut.swift; sourceTree = "<group>"; };
 		9A5B9BCF204D5E0800DB29AE /* Data+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+extension.swift"; sourceTree = "<group>"; };
 		9AC6AD0F2056784B007C6BBF /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
+		9AC6AD1120567A0A007C6BBF /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.release.xcconfig"; sourceTree = "<group>"; };
 		BA2747B12046CA5900364A1D /* PROVERClapperboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROVERClapperboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,6 +193,7 @@
 			children = (
 				9A44D52220566F3F0027A2D0 /* InfoReslut.swift */,
 				BACE32F820481414007B8FF9 /* ProverAPI.swift */,
+				9AC6AD1120567A0A007C6BBF /* APIService.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				BA8F5DB420482B830083BAD2 /* Store.swift in Sources */,
 				BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */,
 				BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */,
+				9AC6AD1220567A0A007C6BBF /* APIService.swift in Sources */,
 				9AC6AD102056784B007C6BBF /* Info.swift in Sources */,
 				BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */,
 				9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */,
