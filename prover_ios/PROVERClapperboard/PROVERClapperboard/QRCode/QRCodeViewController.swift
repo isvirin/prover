@@ -86,8 +86,10 @@ class QRCodeViewController: UIViewController {
         switch error {
         case .networkError:
           self.state = .failure("Issue with network connection")
+        case .submitError(let submitError):
+          self.state = .failure(submitError.message)
         default:
-          print("Other error")
+          print(error)
         }
       }
     }
