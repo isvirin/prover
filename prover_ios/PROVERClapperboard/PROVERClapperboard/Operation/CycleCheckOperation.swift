@@ -32,7 +32,7 @@ class CycleCheckOperation: AsyncOperation {
       var isContinue = true
       
       while isContinue && !isCancelled {
-        sleep(5)
+        sleep(10)
         let checkOperation = CheckOperation(apiService: apiService, txHash: txHash)
         checkOperation.completionBlock = { [unowned self, unowned operation = checkOperation] in
           if let result = operation.result {
