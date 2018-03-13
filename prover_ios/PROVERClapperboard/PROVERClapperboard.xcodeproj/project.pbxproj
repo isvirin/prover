@@ -24,6 +24,7 @@
 		9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */; };
 		9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */; };
 		9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */; };
+		9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D63020580F1400D9E1FE /* WalletViewController.swift */; };
 		BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B42046CA5900364A1D /* AppDelegate.swift */; };
 		BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B62046CA5900364A1D /* InputTextViewController.swift */; };
 		BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747B82046CA5900364A1D /* Main.storyboard */; };
@@ -63,6 +64,7 @@
 		9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleCheckOperation.swift; sourceTree = "<group>"; };
 		9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDataOperation.swift; sourceTree = "<group>"; };
+		9AD6D63020580F1400D9E1FE /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.release.xcconfig"; sourceTree = "<group>"; };
 		BA2747B12046CA5900364A1D /* PROVERClapperboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROVERClapperboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA2747B42046CA5900364A1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -153,6 +155,24 @@
 			path = QRCode;
 			sourceTree = "<group>";
 		};
+		9AD6D62E20580EB400D9E1FE /* Screeens */ = {
+			isa = PBXGroup;
+			children = (
+				9AD6D62F20580EBC00D9E1FE /* Wallet */,
+				9ACA53F2205022C8007FBAD9 /* InputText */,
+				9ACA53F3205022D5007FBAD9 /* QRCode */,
+			);
+			path = Screeens;
+			sourceTree = "<group>";
+		};
+		9AD6D62F20580EBC00D9E1FE /* Wallet */ = {
+			isa = PBXGroup;
+			children = (
+				9AD6D63020580F1400D9E1FE /* WalletViewController.swift */,
+			);
+			path = Wallet;
+			sourceTree = "<group>";
+		};
 		BA2747A82046CA5900364A1D = {
 			isa = PBXGroup;
 			children = (
@@ -182,8 +202,7 @@
 				BACE32F720480CB3007B8FF9 /* Network */,
 				BACE32DE2047F19A007B8FF9 /* Ethereum */,
 				BA2747B42046CA5900364A1D /* AppDelegate.swift */,
-				9ACA53F2205022C8007FBAD9 /* InputText */,
-				9ACA53F3205022D5007FBAD9 /* QRCode */,
+				9AD6D62E20580EB400D9E1FE /* Screeens */,
 				BA2747B82046CA5900364A1D /* Main.storyboard */,
 				BA2747BB2046CA5900364A1D /* Assets.xcassets */,
 				BA2747BD2046CA5900364A1D /* LaunchScreen.storyboard */,
@@ -422,6 +441,7 @@
 				BACE32E02047F1C2007B8FF9 /* EthereumServiceProtocol.swift in Sources */,
 				9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */,
 				9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */,
+				9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */,
 				9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */,
 				BA8F5DB420482B830083BAD2 /* Store.swift in Sources */,
 				9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */,

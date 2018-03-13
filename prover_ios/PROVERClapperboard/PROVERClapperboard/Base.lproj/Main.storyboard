@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="XyI-RR-Bq9">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -20,13 +20,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Type text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jHB-Wt-a6x">
-                                <rect key="frame" x="16" y="250" width="343" height="14.5"/>
+                                <rect key="frame" x="16" y="294" width="343" height="14.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="62U-d3-56H">
-                                <rect key="frame" x="16" y="270.5" width="343" height="20"/>
+                                <rect key="frame" x="16" y="314.5" width="343" height="20"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
@@ -44,24 +44,24 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="glg-U7-ru5">
-                                <rect key="frame" x="16" y="299.5" width="343" height="1"/>
+                                <rect key="frame" x="16" y="343.5" width="343" height="1"/>
                                 <color key="backgroundColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="upv-SY-YAe"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIZ-z2-GnR">
-                                <rect key="frame" x="146" y="36" width="84" height="48"/>
+                                <rect key="frame" x="146" y="80" width="84" height="48"/>
                                 <state key="normal" backgroundImage="wallet"/>
                                 <connections>
                                     <action selector="walletButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBr-PE-IgB"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="prover" translatesAutoresizingMaskIntoConstraints="NO" id="vqJ-cd-vL2">
-                                <rect key="frame" x="150" y="40" width="40" height="40"/>
+                                <rect key="frame" x="150" y="84" width="40" height="40"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 P" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfL-qq-RYb">
-                                <rect key="frame" x="200" y="52" width="20" height="16"/>
+                                <rect key="frame" x="200" y="96" width="20" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -94,17 +94,17 @@
                     <connections>
                         <outlet property="qrTextField" destination="62U-d3-56H" id="5zd-qi-gcR"/>
                         <segue destination="XSb-8l-TGd" kind="presentation" identifier="createQRSegue" modalTransitionStyle="flipHorizontal" id="akH-Z3-WVn"/>
-                        <segue destination="chg-v2-pqW" kind="show" identifier="walletSegue" id="sab-Ch-e4g"/>
+                        <segue destination="aem-L1-qbK" kind="show" identifier="walletSegue" id="6Gp-79-bNo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="86" y="34"/>
+            <point key="canvasLocation" x="424.80000000000001" y="33.733133433283363"/>
         </scene>
-        <!--View Controller-->
+        <!--Wallet View Controller-->
         <scene sceneID="gKa-Vo-FIg">
             <objects>
-                <viewController id="aem-L1-qbK" sceneMemberID="viewController">
+                <viewController id="aem-L1-qbK" customClass="WalletViewController" customModule="PROVERClapperboard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="B3k-q4-9fg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -115,7 +115,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Efb-dc-m4n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1673" y="-337"/>
+            <point key="canvasLocation" x="1247.2" y="-348.57571214392806"/>
         </scene>
         <!--Code View Controller-->
         <scene sceneID="5ie-Hl-qMj">
@@ -176,25 +176,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n21-09-UT0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="354"/>
+            <point key="canvasLocation" x="1247.2" y="353.9730134932534"/>
         </scene>
         <!--Navigation Controller-->
-        <scene sceneID="6DY-uD-45G">
+        <scene sceneID="83a-EH-xWX">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="chg-v2-pqW" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="XyI-RR-Bq9" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0r9-7f-e8F">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ut5-WS-R1V">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="aem-L1-qbK" kind="relationship" relationship="rootViewController" id="8y7-9U-Ecc"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="tm5-my-t80"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gD3-YE-sjH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i9m-A0-wcd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="907.20000000000005" y="-336.43178410794604"/>
+            <point key="canvasLocation" x="-342" y="34"/>
         </scene>
     </scenes>
     <resources>

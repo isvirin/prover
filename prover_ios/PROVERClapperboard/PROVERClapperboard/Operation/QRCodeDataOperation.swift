@@ -12,11 +12,7 @@ class QRCodeDataOperation: AsyncOperation {
   
   let queue = OperationQueue()
   
-  var result: DataResult? {
-    didSet {
-      print("QRCodeDataOperation result: \(result)")
-    }
-  }
+  var result: DataResult?
   var txHash: Hexadecimal?
   var blockHash: Hexadecimal?
   

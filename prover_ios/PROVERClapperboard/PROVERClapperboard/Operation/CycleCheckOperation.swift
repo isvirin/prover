@@ -9,11 +9,7 @@ class CycleCheckOperation: AsyncOperation {
   let apiService: APIService
   
   var input: APIStringResult?
-  var result: APIStringResult? {
-    didSet {
-      print("CycleCheckOperation result: \(result)")
-    }
-  }
+  var result: APIStringResult?
   
   init(apiService: APIService) {
     self.apiService = apiService
