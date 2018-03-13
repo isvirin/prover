@@ -50,6 +50,7 @@ class SubmitOperation: AsyncOperation {
 
 extension SubmitOperation: CycleCheckOperationDataProvider {
   var outputToCycleCheck: APIStringResult? {
+    print("SubmitOperation result: \(result)")
     return result
   }
 }

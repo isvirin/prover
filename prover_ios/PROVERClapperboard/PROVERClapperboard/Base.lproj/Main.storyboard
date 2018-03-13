@@ -129,21 +129,27 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2mT-RC-RnZ">
+                                <rect key="frame" x="177" y="324" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="2mT-RC-RnZ" firstAttribute="centerY" secondItem="uqX-z7-sCN" secondAttribute="centerY" id="0MO-Q4-m1a"/>
                             <constraint firstItem="8vH-7L-GIO" firstAttribute="top" secondItem="uqX-z7-sCN" secondAttribute="bottom" constant="28" id="0fB-ay-kM6"/>
                             <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="top" secondItem="RaI-Je-Djf" secondAttribute="top" constant="15" id="5OT-TO-ejl"/>
                             <constraint firstItem="Z2u-ZQ-MzY" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="7aJ-bW-HT6"/>
                             <constraint firstItem="wxe-kk-KGG" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="AA3-F8-Vze"/>
                             <constraint firstItem="RaI-Je-Djf" firstAttribute="bottom" secondItem="wxe-kk-KGG" secondAttribute="bottom" constant="24" id="GbI-rA-luZ"/>
                             <constraint firstItem="uqX-z7-sCN" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="Puw-bC-xvx"/>
+                            <constraint firstItem="2mT-RC-RnZ" firstAttribute="centerX" secondItem="uqX-z7-sCN" secondAttribute="centerX" id="jBl-MS-IZK"/>
                             <constraint firstItem="8vH-7L-GIO" firstAttribute="centerX" secondItem="pO1-sw-3rS" secondAttribute="centerX" id="nwa-7r-Iax"/>
                             <constraint firstItem="uqX-z7-sCN" firstAttribute="centerY" secondItem="pO1-sw-3rS" secondAttribute="centerY" id="pFY-Ro-Gph"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RaI-Je-Djf"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="2mT-RC-RnZ" id="ymK-47-0Ol"/>
                         <outlet property="qrImage" destination="uqX-z7-sCN" id="YdH-iA-FhP"/>
                         <outlet property="qrText" destination="8vH-7L-GIO" id="KWM-I9-BUY"/>
                     </connections>

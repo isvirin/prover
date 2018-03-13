@@ -21,6 +21,7 @@ class GetInfoOperation: AsyncOperation {
 
 extension GetInfoOperation: SubmitOperationDataProvider {
   var outputToSubmit: APIInfoResult? {
+    print("GetInfoOperation result: \(result)")
     return result
   }
 }
