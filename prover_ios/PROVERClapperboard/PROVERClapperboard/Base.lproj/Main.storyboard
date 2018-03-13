@@ -31,7 +31,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                 <connections>
-                                    <action selector="endInputTesx:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="a3D-Kj-P7X"/>
+                                    <action selector="endInputText:" destination="BYZ-38-t0r" eventType="editingDidEndOnExit" id="Zmf-eW-oEa"/>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M1b-hk-nPd">
@@ -40,7 +40,7 @@
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="XSb-8l-TGd" kind="presentation" modalTransitionStyle="flipHorizontal" id="x10-AZ-5dA"/>
+                                    <action selector="qrButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wxz-ui-X2u"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="glg-U7-ru5">
@@ -90,6 +90,7 @@
                     <navigationItem key="navigationItem" id="JBK-Ph-Ws1"/>
                     <connections>
                         <outlet property="qrTextField" destination="62U-d3-56H" id="5zd-qi-gcR"/>
+                        <segue destination="XSb-8l-TGd" kind="presentation" identifier="createQRSegue" modalTransitionStyle="flipHorizontal" id="akH-Z3-WVn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -142,6 +143,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="RaI-Je-Djf"/>
                     </view>
+                    <connections>
+                        <outlet property="qrImage" destination="uqX-z7-sCN" id="YdH-iA-FhP"/>
+                        <outlet property="qrText" destination="8vH-7L-GIO" id="KWM-I9-BUY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n21-09-UT0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

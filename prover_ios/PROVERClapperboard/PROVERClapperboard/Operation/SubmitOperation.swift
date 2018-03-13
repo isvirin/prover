@@ -39,11 +39,11 @@ class SubmitOperation: AsyncOperation {
       
       apiService.submit(hex: transactionHex.withPrefix) { (result) in
         self.result = result
-        self.state = .finished
+        self.state = .isFinished
       }
     case .failure(let error):
       result = .failure(error)
-      self.state = .finished
+      self.state = .isFinished
     }
   }
 }
