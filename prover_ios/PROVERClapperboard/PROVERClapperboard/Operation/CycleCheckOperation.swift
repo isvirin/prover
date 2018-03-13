@@ -31,8 +31,8 @@ class CycleCheckOperation: AsyncOperation {
       let queue = OperationQueue()
       var isContinue = true
       
-      while isContinue {
-        sleep(10)
+      while isContinue && !isCancelled {
+        sleep(5)
         let checkOperation = CheckOperation(apiService: apiService, txHash: txHash)
         checkOperation.completionBlock = { [unowned self, unowned operation = checkOperation] in
           if let result = operation.result {
@@ -45,11 +45,11 @@ class CycleCheckOperation: AsyncOperation {
         queue.addOperations([checkOperation], waitUntilFinished: true)
       }
       
-      state = .finished
+      state = .isFinished
       
     case .failure(let error):
       result = .failure(error)
-      self.state = .finished
+      self.state = .isFinished
     }
   }
 }

@@ -17,7 +17,7 @@ class CheckOperation: AsyncOperation {
     print("Start check operation on time \(Date())")
     apiService.check(txhash: txHash) { (result) in
       self.result = result
-      self.state = .finished
+      self.state = .isFinished
     }
   }
 }

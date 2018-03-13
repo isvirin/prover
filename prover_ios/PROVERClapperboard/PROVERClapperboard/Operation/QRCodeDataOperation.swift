@@ -10,6 +10,8 @@ class QRCodeDataOperation: AsyncOperation {
   let ethereumService: EthereumService
   let text: String
   
+  let queue = OperationQueue()
+  
   var result: DataResult?
   var txHash: Hexadecimal?
   var blockHash: Hexadecimal?
@@ -21,8 +23,6 @@ class QRCodeDataOperation: AsyncOperation {
   }
   
   override func main() {
-    
-    let queue = OperationQueue()
     
     let getInfoOperation = GetInfoOperation(apiService: apiService, hex: ethereumService.hexAddress)
     
@@ -57,6 +57,11 @@ class QRCodeDataOperation: AsyncOperation {
     queue.addOperations([getInfoOperation, submitOperation, cycleCheckOperation, outputOperation],
                         waitUntilFinished: true)
     
-    state = .finished
+    state = .isFinished
+  }
+  
+  override func cancel() {
+    queue.cancelAllOperations()
+    super.cancel()
   }
 }

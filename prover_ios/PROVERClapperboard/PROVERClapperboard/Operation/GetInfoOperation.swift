@@ -14,7 +14,7 @@ class GetInfoOperation: AsyncOperation {
   override func main() {
     apiService.getInfo(hex: hex) { (result) in
       self.result = result
-      self.state = .finished
+      self.state = .isFinished
     }
   }
 }

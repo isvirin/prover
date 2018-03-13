@@ -12,14 +12,18 @@ class QRCodeViewController: UIViewController {
   
   // MARK: - IBAction
   @IBAction func closeButtonAction(_ sender: UIButton) {
+    queue.cancelAllOperations()
     dismiss(animated: true, completion: nil)
   }
   
   // MARK: - Dependency
   var store: Store!
   
-  // MARK: - Instance properties
+  // MARK: - Public properties
   var text: String?
+  
+  // MARK: - Private properties
+  private let queue = OperationQueue()
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -33,7 +37,6 @@ class QRCodeViewController: UIViewController {
     
     guard let text = text else { return }
     
-    let queue = OperationQueue()
     let qrDataOperation = QRCodeDataOperation(apiService: store.apiService,
                                               ethereumService: store.ethereumService,
                                               text: text)

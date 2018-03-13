@@ -1,59 +1,40 @@
 import Foundation
 
 class AsyncOperation: Operation {
-  // DONE: State enum with keyPath property
   enum State: String {
-    case ready = "Ready"
-    case executing = "Executing"
-    case finished = "Finished"
-    
-    fileprivate var keyPath: String {
-      return "is" + rawValue
-    }
-  }
-  
-  // DONE: state property
-  var state = State.ready {
-    willSet {
-      willChangeValue(forKey: newValue.keyPath)
-      willChangeValue(forKey: state.keyPath)
-    }
-    didSet {
-      didChangeValue(forKey: oldValue.keyPath)
-      didChangeValue(forKey: state.keyPath)
-    }
-  }
-}
-
-extension AsyncOperation {
-  // DONE: Operation Overrides
-  override var isReady: Bool {
-    return super.isReady && state == .ready
-  }
-  
-  override var isExecuting: Bool {
-    return state == .executing
-  }
-  
-  override var isFinished: Bool {
-    return state == .finished
+    case isReady, isExecuting, isFinished
   }
   
   override var isAsynchronous: Bool {
     return true
   }
   
+  var state = State.isReady {
+    willSet {
+      willChangeValue(forKey: state.rawValue)
+      willChangeValue(forKey: newValue.rawValue)
+    }
+    didSet {
+      didChangeValue(forKey: oldValue.rawValue)
+      didChangeValue(forKey: state.rawValue)
+    }
+  }
+  
+  override var isExecuting: Bool {
+    return state == .isExecuting
+  }
+  
+  override var isFinished: Bool {
+    return state == .isFinished
+  }
+  
   override func start() {
-    if isCancelled {
-      state = .finished
+    guard !self.isCancelled else {
+      state = .isFinished
       return
     }
+    
+    state = .isExecuting
     main()
-    state = .executing
   }
-  
-  override func cancel() {
-    state = .finished
-  }
-  
 }
