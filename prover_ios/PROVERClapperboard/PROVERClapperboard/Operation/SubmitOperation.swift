@@ -47,6 +47,10 @@ class SubmitOperation: AsyncOperation {
       self.state = .finished
     }
   }
+  
+  deinit {
+    print("Deinit submit operaiton")
+  }
 }
 
 extension SubmitOperation: CycleCheckOperationDataProvider {

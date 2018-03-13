@@ -37,9 +37,9 @@ class Store {
     
     let qrCodeOperation = QRCodeOperation(apiService: apiService,
                                           ethereumService: ethereumService,
-                                          text: "test")
-    qrCodeOperation.completionBlock = {
-      print(qrCodeOperation.result)
+                                          text: "ccc")
+    qrCodeOperation.completionBlock = { [unowned operation = qrCodeOperation] in
+      print(operation.result)
     }
     
     queue.addOperations([qrCodeOperation], waitUntilFinished: false)

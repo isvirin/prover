@@ -14,10 +14,14 @@ class CheckOperation: AsyncOperation {
   }
   
   override func main() {
-    
+    print("Start new check operation")
     apiService.check(txhash: txHash) { (result) in
       self.result = result
       self.state = .finished
     }
+  }
+  
+  deinit {
+    print("Deinit check operation")
   }
 }

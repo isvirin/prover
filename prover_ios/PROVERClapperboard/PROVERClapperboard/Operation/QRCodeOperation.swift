@@ -25,13 +25,18 @@ class QRCodeOperation: AsyncOperation {
     
     let cycleCheckOperation = CycleCheckOperation(apiService: apiService)
     cycleCheckOperation.addDependency(submitOperation)
-    cycleCheckOperation.completionBlock = {
-      self.result = cycleCheckOperation.result
+    cycleCheckOperation.completionBlock = { [unowned self, unowned operation = cycleCheckOperation ] in
+      print("Cycle check operation completion block")
+      self.result = operation.result
     }
     
     let queue = OperationQueue()
     queue.addOperations([getInfoOperation, submitOperation, cycleCheckOperation], waitUntilFinished: true)
     
     state = .finished
+  }
+  
+  deinit {
+    print("Deinit QRCode operation")
   }
 }

@@ -18,6 +18,10 @@ class GetInfoOperation: AsyncOperation {
       self.state = .finished
     }
   }
+  
+  deinit {
+    print("Deinit get info operation")
+  }
 }
 
 extension GetInfoOperation: SubmitOperationDataProvider {

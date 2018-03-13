@@ -29,23 +29,38 @@ class CycleCheckOperation: AsyncOperation {
     switch input {
     case .success(let txHash):
       
-      let isFailure = true
+      print("Start check cycle for txHash: \(txHash)")
       
-      while isFailure {
-        sleep(5)
-        
+      let queue = OperationQueue()
+      var isContinue = true
+      
+      while isContinue {
+        sleep(10)
+        print("Start new check cycle")
         let checkOperation = CheckOperation(apiService: apiService, txHash: txHash)
-        checkOperation.completionBlock = {
-          print(checkOperation.result)
+        checkOperation.completionBlock = { [unowned self, unowned operation = checkOperation] in
+          print("Check operation completion block")
+          if let result = operation.result {
+            if let blockHash = result.value {
+              print(blockHash)
+              self.result = .success(blockHash)
+              isContinue = false
+            }
+          }
         }
-        checkOperation.start()
-        
+        queue.addOperations([checkOperation], waitUntilFinished: true)
+        print("queue finish")
       }
+      
+      state = .finished
       
     case .failure(let error):
       result = .failure(error)
       self.state = .finished
     }
-    
+  }
+  
+  deinit {
+    print("Deinit cycle check operation")
   }
 }
