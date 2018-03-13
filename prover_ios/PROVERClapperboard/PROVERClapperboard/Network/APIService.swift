@@ -3,7 +3,7 @@ import Moya
 import Result
 
 enum APIError: Error {
-  case convertationError
+  case convertInfoError
   case networkError
   case submitError(SubmitRequestError)
   case chechTransactionReturnNilError
@@ -23,11 +23,11 @@ class APIService {
       switch result {
       case .success(let responce):
         guard let infoResult = try? JSONDecoder().decode(InfoReslut.self, from: responce.data) else {
-          handler(.failure(.convertationError))
+          handler(.failure(.convertInfoError))
           return
         }
         guard let info = Info(from: infoResult) else {
-          handler(.failure(.convertationError))
+          handler(.failure(.convertInfoError))
           return
         }
         handler(.success(info))
@@ -45,7 +45,7 @@ class APIService {
       switch result {
       case .success(let responce):
         guard let submitResult = try? JSONDecoder().decode(SubmitResult.self, from: responce.data) else {
-          handler(.failure(.convertationError))
+          handler(.failure(.convertInfoError))
           return
         }
         switch submitResult {
@@ -68,7 +68,7 @@ class APIService {
       case .success(let responce):
         guard let checkResult = try? JSONDecoder().decode(CheckResult.self, from: responce.data) else {
           print("Can't convert responce to checkResult")
-          handler(.failure(.convertationError))
+          handler(.failure(.convertInfoError))
           return
         }
         guard let value = checkResult.result else {

@@ -42,12 +42,19 @@ class QRCodeViewController: UIViewController {
           self.qrImage.isHidden = false
           self.qrImage.image = image
         }
+      case .failure(let text):
+        DispatchQueue.main.async {
+          self.activityIndicator.stopAnimating()
+          self.activityIndicator.isHidden = true
+          self.showAlert(with: text)
+        }
       }
     }
   }
   private enum State {
     case loading
     case load(UIImage)
+    case failure(String)
   }
   
   // MARK: - Lifecycle
@@ -61,7 +68,6 @@ class QRCodeViewController: UIViewController {
   func generateQR() {
     
     state = .loading
-    
     guard let text = text else { return }
     
     let qrDataOperation = QRCodeDataOperation(apiService: store.apiService,
@@ -77,8 +83,20 @@ class QRCodeViewController: UIViewController {
         self.state = .load(QRCoder().encode(data))
       case .failure(let error):
         print(error)
+        switch error {
+        case .networkError:
+          self.state = .failure("Issue with network connection")
+        default:
+          print("Other error")
+        }
       }
     }
     queue.addOperation(qrDataOperation)
+  }
+  
+  func showAlert(with text: String) {
+    let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    self.present(alert, animated: true, completion: nil)
   }
 }

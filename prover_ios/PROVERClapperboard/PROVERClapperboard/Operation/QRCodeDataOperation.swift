@@ -12,7 +12,11 @@ class QRCodeDataOperation: AsyncOperation {
   
   let queue = OperationQueue()
   
-  var result: DataResult?
+  var result: DataResult? {
+    didSet {
+      print("QRCodeDataOperation result: \(result)")
+    }
+  }
   var txHash: Hexadecimal?
   var blockHash: Hexadecimal?
   
@@ -41,8 +45,17 @@ class QRCodeDataOperation: AsyncOperation {
     
     let outputOperation = BlockOperation { [unowned self, unowned operation = cycleCheckOperation] in
       
-      if let value = operation.result?.value {
-        self.blockHash = Hexadecimal(value)
+      guard let result = operation.result else {
+        print("cycle check operation return nil")
+        return
+      }
+      
+      switch result {
+      case .success(let blockHash):
+        self.blockHash = Hexadecimal(blockHash)
+      case .failure(let error):
+        self.result = .failure(error)
+        return
       }
       
       guard let txHash = self.txHash, let blockHash = self.blockHash else {
