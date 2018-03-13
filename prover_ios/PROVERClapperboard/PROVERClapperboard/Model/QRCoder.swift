@@ -18,8 +18,9 @@ struct QRCoder {
     filter.setValue(data, forKey: "inputMessage")
     
     filter.setValue("H", forKey: "inputCorrectionLevel")
+    let transform = CGAffineTransform(scaleX: 5, y: 5)
     
-    let image = convert(cmage: filter.outputImage!)
+    let image = convert(cmage: filter.outputImage!.transformed(by: transform))
     
     return image
   }

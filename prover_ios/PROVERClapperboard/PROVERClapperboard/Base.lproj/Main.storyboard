@@ -144,6 +144,7 @@
                         <viewLayoutGuide key="safeArea" id="RaI-Je-Djf"/>
                     </view>
                     <connections>
+                        <outlet property="qrImage" destination="uqX-z7-sCN" id="YdH-iA-FhP"/>
                         <outlet property="qrText" destination="8vH-7L-GIO" id="KWM-I9-BUY"/>
                     </connections>
                 </viewController>

@@ -8,6 +8,7 @@ class QRCodeViewController: UIViewController {
       qrText.text = text
     }
   }
+  @IBOutlet weak var qrImage: UIImageView!
   
   // MARK: - IBAction
   @IBAction func closeButtonAction(_ sender: UIButton) {
@@ -36,8 +37,20 @@ class QRCodeViewController: UIViewController {
     let qrDataOperation = QRCodeDataOperation(apiService: store.apiService,
                                               ethereumService: store.ethereumService,
                                               text: text)
-    qrDataOperation.completionBlock = { [unowned operation = qrDataOperation] in
-      print(operation.result)
+    qrDataOperation.completionBlock = { [unowned self, unowned operation = qrDataOperation] in
+      guard let result = operation.result else {
+        print("qrDataOperation return nil")
+        return
+      }
+      switch result {
+      case .success(let data):
+        print(data)
+        DispatchQueue.main.async {
+          self.qrImage.image = QRCoder().encode(data)
+        }
+      case .failure(let error):
+        print(error)
+      }
     }
     queue.addOperation(qrDataOperation)
   }
