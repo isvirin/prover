@@ -7,11 +7,11 @@ enum APIError: Error {
   case networkError
   case submitError(SubmitRequestError)
   case chechTransactionReturnNilError
+  case convertToHexError
 }
 
 typealias APIInfoResult = Result<Info, APIError>
-typealias APISubmitResult = Result<String, APIError>
-typealias APICheckResult = Result<String, APIError>
+typealias APIStringResult = Result<String, APIError>
 
 class APIService {
   
@@ -19,9 +19,7 @@ class APIService {
   
   // Get nonce, contractAddress, gasPrice, ethBalance from service
   func getInfo(hex: String, handler: @escaping (APIInfoResult) -> Void) {
-    
     provider.request(.hello(hex: hex)) { (result) in
-      
       switch result {
       case .success(let responce):
         guard let infoResult = try? JSONDecoder().decode(InfoReslut.self, from: responce.data) else {
@@ -40,7 +38,7 @@ class APIService {
   }
   
   // send transaction in hexadecimal form and get hash this transaction
-  func submit(hex: String, handler: @escaping (APISubmitResult) -> Void) {
+  func submit(hex: String, handler: @escaping (APIStringResult) -> Void) {
     
     provider.request(.submit(hex: hex)) { result in
       
@@ -63,7 +61,7 @@ class APIService {
   }
   
   // check status of transaction
-  func check(txhash: String, handler: @escaping (APICheckResult) -> Void) {
+  func check(txhash: String, handler: @escaping (APIStringResult) -> Void) {
     
     provider.request(.check(txhash: txhash)) { result in
       switch result {

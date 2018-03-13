@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2D62A08A32A6AE996B5932AA /* Pods_PROVERClapperboard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCC2262B3C52F795DA2A04F2 /* Pods_PROVERClapperboard.framework */; };
+		9A0E848E2056BB8100624995 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E848D2056BB8100624995 /* AsyncOperation.swift */; };
+		9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */; };
+		9A0E84922056C1C500624995 /* SubmitOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E84912056C1C500624995 /* SubmitOperation.swift */; };
+		9A0E84942056C6A100624995 /* CheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A0E84932056C6A100624995 /* CheckOperation.swift */; };
 		9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB341204E80240090C3CF /* Hexadecimal.swift */; };
 		9A2EB344204E984D0090C3CF /* QRCoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2EB343204E984D0090C3CF /* QRCoder.swift */; };
 		9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A44D52220566F3F0027A2D0 /* InfoReslut.swift */; };
@@ -18,6 +22,8 @@
 		9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD1520568409007C6BBF /* SubmitResult.swift */; };
 		9AC6AD1820568CC4007C6BBF /* CheckResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD1720568CC4007C6BBF /* CheckResult.swift */; };
 		9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */; };
+		9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */; };
+		9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */; };
 		BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B42046CA5900364A1D /* AppDelegate.swift */; };
 		BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B62046CA5900364A1D /* InputTextViewController.swift */; };
 		BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747B82046CA5900364A1D /* Main.storyboard */; };
@@ -41,6 +47,10 @@
 
 /* Begin PBXFileReference section */
 		7E544281C44D61F26F00ED3F /* Pods-PROVERClapperboard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.debug.xcconfig"; sourceTree = "<group>"; };
+		9A0E848D2056BB8100624995 /* AsyncOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
+		9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetInfoOperation.swift; sourceTree = "<group>"; };
+		9A0E84912056C1C500624995 /* SubmitOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitOperation.swift; sourceTree = "<group>"; };
+		9A0E84932056C6A100624995 /* CheckOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckOperation.swift; sourceTree = "<group>"; };
 		9A2EB341204E80240090C3CF /* Hexadecimal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hexadecimal.swift; sourceTree = "<group>"; };
 		9A2EB343204E984D0090C3CF /* QRCoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCoder.swift; sourceTree = "<group>"; };
 		9A44D52220566F3F0027A2D0 /* InfoReslut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoReslut.swift; sourceTree = "<group>"; };
@@ -51,6 +61,8 @@
 		9AC6AD1520568409007C6BBF /* SubmitResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitResult.swift; sourceTree = "<group>"; };
 		9AC6AD1720568CC4007C6BBF /* CheckResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckResult.swift; sourceTree = "<group>"; };
 		9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleCheckOperation.swift; sourceTree = "<group>"; };
+		9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDataOperation.swift; sourceTree = "<group>"; };
 		A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.release.xcconfig"; sourceTree = "<group>"; };
 		BA2747B12046CA5900364A1D /* PROVERClapperboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROVERClapperboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA2747B42046CA5900364A1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +116,19 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		9A0E848C2056BB7200624995 /* Operation */ = {
+			isa = PBXGroup;
+			children = (
+				9A0E848D2056BB8100624995 /* AsyncOperation.swift */,
+				9A0E848F2056BD9E00624995 /* GetInfoOperation.swift */,
+				9A0E84912056C1C500624995 /* SubmitOperation.swift */,
+				9A0E84932056C6A100624995 /* CheckOperation.swift */,
+				9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */,
+				9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */,
+			);
+			path = Operation;
+			sourceTree = "<group>";
+		};
 		9A5B9BCE204D5DF600DB29AE /* Extension */ = {
 			isa = PBXGroup;
 			children = (
@@ -151,6 +176,7 @@
 		BA2747B32046CA5900364A1D /* PROVERClapperboard */ = {
 			isa = PBXGroup;
 			children = (
+				9A0E848C2056BB7200624995 /* Operation */,
 				9A5B9BCE204D5DF600DB29AE /* Extension */,
 				BA8F5DB220482B590083BAD2 /* Model */,
 				BACE32F720480CB3007B8FF9 /* Network */,
@@ -338,6 +364,7 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/Repeat/Repeat.framework",
 				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -345,6 +372,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Repeat.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,8 +421,11 @@
 				9A2EB344204E984D0090C3CF /* QRCoder.swift in Sources */,
 				BACE32E02047F1C2007B8FF9 /* EthereumServiceProtocol.swift in Sources */,
 				9A2EB342204E80240090C3CF /* Hexadecimal.swift in Sources */,
+				9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */,
 				9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */,
 				BA8F5DB420482B830083BAD2 /* Store.swift in Sources */,
+				9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */,
+				9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */,
 				BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */,
 				9AC6AD1820568CC4007C6BBF /* CheckResult.swift in Sources */,
 				BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */,
@@ -402,7 +433,10 @@
 				9AC6AD102056784B007C6BBF /* Info.swift in Sources */,
 				BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */,
 				9AC6AD1420568376007C6BBF /* SubmitRequestError.swift in Sources */,
+				9A0E848E2056BB8100624995 /* AsyncOperation.swift in Sources */,
 				9A44D52320566F400027A2D0 /* InfoReslut.swift in Sources */,
+				9A0E84942056C6A100624995 /* CheckOperation.swift in Sources */,
+				9A0E84922056C1C500624995 /* SubmitOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
