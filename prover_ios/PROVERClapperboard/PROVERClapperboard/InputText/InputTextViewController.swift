@@ -6,6 +6,10 @@ class InputTextViewController: UIViewController {
   @IBOutlet weak var qrTextField: UITextField!
 
   // MARK: - IBAction
+  @IBAction func walletButtonAction(_ sender: UIButton) {
+    performSegue(withIdentifier: Segue.walletSegue.rawValue, sender: nil)
+  }
+  
   @IBAction func endInputText(_ sender: UITextField) {
   }
   
@@ -24,6 +28,7 @@ class InputTextViewController: UIViewController {
   // MARK: - Segue
   enum Segue: String {
     case createQRSegue
+    case walletSegue
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -36,6 +41,8 @@ class InputTextViewController: UIViewController {
         destination.text = qrTextField.text
         destination.store = store
       }
+    case Segue.walletSegue.rawValue:
+      print("Wallet segue")
     default:
       fatalError("Unexpected segue")
     }
