@@ -18,9 +18,7 @@ class APIService {
   
   // Get nonce, contractAddress, gasPrice, ethBalance from service
   func getInfo(hex: String, handler: @escaping (APIInfoResult) -> Void) {
-    
     provider.request(.hello(hex: hex)) { (result) in
-      
       switch result {
       case .success(let responce):
         guard let infoResult = try? JSONDecoder().decode(InfoReslut.self, from: responce.data) else {

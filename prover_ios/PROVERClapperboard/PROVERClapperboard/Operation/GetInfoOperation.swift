@@ -12,6 +12,7 @@ class GetInfoOperation: AsyncOperation {
   }
   
   override func main() {
+    print("Start get info operation")
     apiService.getInfo(hex: hex) { (result) in
       self.result = result
       self.state = .finished
@@ -19,8 +20,8 @@ class GetInfoOperation: AsyncOperation {
   }
 }
 
-extension GetInfoOperation: SubmitOperationInfoProvider {
-  var outputInfoResult: APIInfoResult? {
+extension GetInfoOperation: SubmitOperationDataProvider {
+  var outputToSubmit: APIInfoResult? {
     return result
   }
 }

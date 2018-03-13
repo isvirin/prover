@@ -1,7 +1,7 @@
 import Foundation
 
-protocol SubmitOperationInfoProvider {
-  var outputInfoResult: APIInfoResult? { get }
+protocol SubmitOperationDataProvider {
+  var outputToSubmit: APIInfoResult? { get }
 }
 
 class SubmitOperation: AsyncOperation {
@@ -10,7 +10,7 @@ class SubmitOperation: AsyncOperation {
   let ethereumService: EthereumService
   let text: String
   
-  var inputInfoResult: APIInfoResult?
+  var input: APIInfoResult?
   var result: APIStringResult?
   
   init(apiService: APIService, ethereumService: EthereumService, text: String) {
@@ -20,17 +20,17 @@ class SubmitOperation: AsyncOperation {
   }
   
   override func main() {
-    
+    print("Start submit operation")
     if let dependency = dependencies
-      .filter({ $0 is SubmitOperationInfoProvider })
-      .first as? SubmitOperationInfoProvider,
-      inputInfoResult == nil {
-      inputInfoResult = dependency.outputInfoResult
+      .filter({ $0 is SubmitOperationDataProvider })
+      .first as? SubmitOperationDataProvider,
+      input == nil {
+      input = dependency.outputToSubmit
     }
     
-    guard let inputInfoResult = inputInfoResult else { return }
+    guard let input = input else { return }
     
-    switch inputInfoResult {
+    switch input {
     case .success(let info):
       
       let transactionHex = ethereumService.getTransactionHex(from: text,
@@ -49,8 +49,8 @@ class SubmitOperation: AsyncOperation {
   }
 }
 
-extension SubmitOperation: CheckOperationDataProvider {
-  var txHashResult: APIStringResult? {
+extension SubmitOperation: CycleCheckOperationDataProvider {
+  var outputToCycleCheck: APIStringResult? {
     return result
   }
 }
