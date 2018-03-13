@@ -12,15 +12,10 @@ class GetInfoOperation: AsyncOperation {
   }
   
   override func main() {
-    print("Start get info operation")
     apiService.getInfo(hex: hex) { (result) in
       self.result = result
       self.state = .finished
     }
-  }
-  
-  deinit {
-    print("Deinit get info operation")
   }
 }
 

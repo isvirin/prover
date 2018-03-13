@@ -16,7 +16,6 @@ class CycleCheckOperation: AsyncOperation {
   }
   
   override func main() {
-    print("Start cycle check operation")
     if let dependency = dependencies
       .filter({ $0 is CycleCheckOperationDataProvider })
       .first as? CycleCheckOperationDataProvider,
@@ -28,28 +27,22 @@ class CycleCheckOperation: AsyncOperation {
     
     switch input {
     case .success(let txHash):
-      
-      print("Start check cycle for txHash: \(txHash)")
-      
+            
       let queue = OperationQueue()
       var isContinue = true
       
       while isContinue {
         sleep(10)
-        print("Start new check cycle")
         let checkOperation = CheckOperation(apiService: apiService, txHash: txHash)
         checkOperation.completionBlock = { [unowned self, unowned operation = checkOperation] in
-          print("Check operation completion block")
           if let result = operation.result {
             if let blockHash = result.value {
-              print(blockHash)
               self.result = .success(blockHash)
               isContinue = false
             }
           }
         }
         queue.addOperations([checkOperation], waitUntilFinished: true)
-        print("queue finish")
       }
       
       state = .finished
@@ -58,9 +51,5 @@ class CycleCheckOperation: AsyncOperation {
       result = .failure(error)
       self.state = .finished
     }
-  }
-  
-  deinit {
-    print("Deinit cycle check operation")
   }
 }

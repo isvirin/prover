@@ -20,7 +20,6 @@ class SubmitOperation: AsyncOperation {
   }
   
   override func main() {
-    print("Start submit operation")
     if let dependency = dependencies
       .filter({ $0 is SubmitOperationDataProvider })
       .first as? SubmitOperationDataProvider,
@@ -46,10 +45,6 @@ class SubmitOperation: AsyncOperation {
       result = .failure(error)
       self.state = .finished
     }
-  }
-  
-  deinit {
-    print("Deinit submit operaiton")
   }
 }
 

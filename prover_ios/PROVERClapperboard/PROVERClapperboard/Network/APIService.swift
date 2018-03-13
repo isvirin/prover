@@ -7,6 +7,7 @@ enum APIError: Error {
   case networkError
   case submitError(SubmitRequestError)
   case chechTransactionReturnNilError
+  case convertToHexError
 }
 
 typealias APIInfoResult = Result<Info, APIError>
