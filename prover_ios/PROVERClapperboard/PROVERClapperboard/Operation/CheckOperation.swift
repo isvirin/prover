@@ -14,7 +14,7 @@ class CheckOperation: AsyncOperation {
   }
   
   override func main() {
-    
+    print("Start check operation on time \(Date())")
     apiService.check(txhash: txHash) { (result) in
       self.result = result
       self.state = .finished

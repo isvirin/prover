@@ -1,10 +1,6 @@
 import UIKit
 
 class InputTextViewController: UIViewController {
-  
-  enum Segue: String {
-    case createQRSegue
-  }
 
   // MARK: - IBOutlet
   @IBOutlet weak var qrTextField: UITextField!
@@ -17,12 +13,19 @@ class InputTextViewController: UIViewController {
     performSegue(withIdentifier: Segue.createQRSegue.rawValue, sender: nil)
   }
   
+  // MARK: - Dependency
+  var store: Store!
+  
   // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
   }
   
   // MARK: - Segue
+  enum Segue: String {
+    case createQRSegue
+  }
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     guard let identifier = segue.identifier else { return }
@@ -31,6 +34,7 @@ class InputTextViewController: UIViewController {
     case Segue.createQRSegue.rawValue:
       if let destination = segue.destination as? QRCodeViewController {
         destination.text = qrTextField.text
+        destination.store = store
       }
     default:
       fatalError("Unexpected segue")
