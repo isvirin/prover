@@ -1,13 +1,9 @@
 import Foundation
 import Moya
 
-class Store {
+class DependencyStore {
 
   // MARK: - Dependencies
   let ethereumService = EthereumService.shared
   let apiService = APIService()
-
-  // MARK: - Initializaton
-  init() {
-  }
 }
