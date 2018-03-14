@@ -40,6 +40,10 @@ class WalletViewController: UITableViewController {
     navigationController?.dismiss(animated: true, completion: nil)
   }
   
+  @IBAction func copyButtonAction(_ sender: UIButton) {
+    UIPasteboard.general.string = walletAddress.text
+  }
+  
   // MARK: - Dependency
   var store: DependencyStore! {
     didSet {

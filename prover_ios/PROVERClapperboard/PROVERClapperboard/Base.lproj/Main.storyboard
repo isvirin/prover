@@ -113,67 +113,71 @@
                         <sections>
                             <tableViewSection id="l4w-Ek-GrK">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="249" id="L9g-SR-qeO">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="249"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="200" id="L9g-SR-qeO">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L9g-SR-qeO" id="R5w-oT-uoo">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="248.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="199.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wallet address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yzN-Xe-x2v">
-                                                    <rect key="frame" x="32" y="31" width="311" height="36"/>
+                                                    <rect key="frame" x="32" y="31" width="311" height="29.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="13"/>
                                                     <color key="textColor" red="0.60784313725490191" green="0.60784313725490191" blue="0.60784313725490191" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="254" text="walletAddress" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Igm-9B-3qt">
-                                                    <rect key="frame" x="32" y="91" width="260" height="17"/>
+                                                    <rect key="frame" x="32" y="84.5" width="260" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="256" verticalCompressionResistancePriority="751" image="copy" translatesAutoresizingMaskIntoConstraints="NO" id="OLm-60-tix">
-                                                    <rect key="frame" x="324" y="89" width="19" height="22"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="22" id="JAv-D0-hvH"/>
-                                                        <constraint firstAttribute="width" constant="19" id="XzW-zU-z9h"/>
-                                                    </constraints>
-                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" text="IMPORTANT: DO NOT SEND TOKENS TO THIS ADDRESS!" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="30s-sd-zyf">
-                                                    <rect key="frame" x="32" y="138" width="311" height="14.5"/>
+                                                    <rect key="frame" x="32" y="131.5" width="311" height="14.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" red="0.8901960784313725" green="0.11764705882352941" blue="0.14117647058823529" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="257" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vh4-ML-N55">
-                                                    <rect key="frame" x="32" y="160.5" width="311" height="57.5"/>
+                                                    <rect key="frame" x="32" y="154" width="311" height="15"/>
                                                     <string key="text">Send only Ropsten Testnet ether to this deposit address. Sending tokens or any other currency, including Mainnet ether, to this address will result in the permanent loss of your deposit</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ClX-nf-TdC">
+                                                    <rect key="frame" x="324" y="82" width="19" height="22"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="22" id="dUm-J3-opY"/>
+                                                        <constraint firstAttribute="width" constant="19" id="qAL-uZ-5nN"/>
+                                                    </constraints>
+                                                    <state key="normal" image="copy"/>
+                                                    <connections>
+                                                        <action selector="copyButtonAction:" destination="itj-Yk-xIZ" eventType="touchUpInside" id="t7X-m4-ykv"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Igm-9B-3qt" firstAttribute="top" secondItem="yzN-Xe-x2v" secondAttribute="bottom" constant="24" id="1di-tT-qFX"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="OLm-60-tix" secondAttribute="trailing" constant="16" id="8zm-Cj-BnW"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="Vh4-ML-N55" secondAttribute="bottom" constant="20" id="FGg-au-cWi"/>
                                                 <constraint firstItem="30s-sd-zyf" firstAttribute="leading" secondItem="yzN-Xe-x2v" secondAttribute="leading" id="FJk-NO-Tya"/>
-                                                <constraint firstItem="Vh4-ML-N55" firstAttribute="trailing" secondItem="yzN-Xe-x2v" secondAttribute="trailing" id="Isa-0K-BJH"/>
-                                                <constraint firstItem="30s-sd-zyf" firstAttribute="trailing" secondItem="yzN-Xe-x2v" secondAttribute="trailing" id="Kov-gP-57O"/>
                                                 <constraint firstItem="Vh4-ML-N55" firstAttribute="leading" secondItem="yzN-Xe-x2v" secondAttribute="leading" id="MN0-ky-xJb"/>
-                                                <constraint firstItem="OLm-60-tix" firstAttribute="centerY" secondItem="Igm-9B-3qt" secondAttribute="centerY" id="QBR-9H-PBs"/>
+                                                <constraint firstItem="ClX-nf-TdC" firstAttribute="centerY" secondItem="Igm-9B-3qt" secondAttribute="centerY" id="PGn-OT-bGD"/>
                                                 <constraint firstItem="30s-sd-zyf" firstAttribute="top" secondItem="Igm-9B-3qt" secondAttribute="bottom" constant="30" id="Wkl-yV-kxT"/>
                                                 <constraint firstItem="Igm-9B-3qt" firstAttribute="leading" secondItem="yzN-Xe-x2v" secondAttribute="leading" id="YC1-b3-HMT"/>
+                                                <constraint firstItem="30s-sd-zyf" firstAttribute="trailing" secondItem="yzN-Xe-x2v" secondAttribute="trailing" id="eW8-Ym-Zly"/>
                                                 <constraint firstItem="yzN-Xe-x2v" firstAttribute="leading" secondItem="R5w-oT-uoo" secondAttribute="leadingMargin" constant="16" id="gzY-xx-BTo"/>
                                                 <constraint firstItem="yzN-Xe-x2v" firstAttribute="top" secondItem="R5w-oT-uoo" secondAttribute="topMargin" constant="20" id="hKX-Pp-OQx"/>
-                                                <constraint firstItem="OLm-60-tix" firstAttribute="leading" secondItem="Igm-9B-3qt" secondAttribute="trailing" constant="32" id="ljJ-vN-UbJ"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="yzN-Xe-x2v" secondAttribute="trailing" constant="16" id="qui-q4-ipM"/>
+                                                <constraint firstItem="Vh4-ML-N55" firstAttribute="trailing" secondItem="yzN-Xe-x2v" secondAttribute="trailing" id="sQL-UE-DCZ"/>
+                                                <constraint firstItem="ClX-nf-TdC" firstAttribute="trailing" secondItem="yzN-Xe-x2v" secondAttribute="trailing" id="tQI-lc-Ofs"/>
+                                                <constraint firstItem="ClX-nf-TdC" firstAttribute="leading" secondItem="Igm-9B-3qt" secondAttribute="trailing" constant="32" id="u0s-BY-IHn"/>
                                                 <constraint firstItem="Vh4-ML-N55" firstAttribute="top" secondItem="30s-sd-zyf" secondAttribute="bottom" constant="8" id="wF1-de-efy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="fTz-QJ-Hum">
-                                        <rect key="frame" x="0.0" y="249" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="200" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fTz-QJ-Hum" id="qO9-j6-zoG">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -203,7 +207,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="mhk-QN-dN8">
-                                        <rect key="frame" x="0.0" y="293" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="244" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mhk-QN-dN8" id="gE2-zm-FPg">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
@@ -233,7 +237,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="44" id="AJ1-ff-9AJ">
-                                        <rect key="frame" x="0.0" y="337" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="288" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AJ1-ff-9AJ" id="Jid-Pj-sxq">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
