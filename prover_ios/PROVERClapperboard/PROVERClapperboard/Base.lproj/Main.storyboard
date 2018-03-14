@@ -52,17 +52,17 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GIZ-z2-GnR">
-                                <rect key="frame" x="146" y="36" width="84" height="48"/>
+                                <rect key="frame" x="140.5" y="36" width="95" height="48"/>
                                 <state key="normal" backgroundImage="wallet"/>
                                 <connections>
                                     <action selector="walletButtonAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBr-PE-IgB"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="prover" translatesAutoresizingMaskIntoConstraints="NO" id="vqJ-cd-vL2">
-                                <rect key="frame" x="150" y="40" width="40" height="40"/>
+                                <rect key="frame" x="144.5" y="40" width="40" height="40"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 P" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfL-qq-RYb">
-                                <rect key="frame" x="200" y="52" width="20" height="16"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.0 P" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfL-qq-RYb">
+                                <rect key="frame" x="194.5" y="52" width="31" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -181,16 +181,18 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="paY-BC-Bx8">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="BNP-vy-8ZC">
+                        <nil key="title"/>
+                        <barButtonItem key="leftBarButtonItem" image="back" id="BNP-vy-8ZC">
                             <connections>
                                 <action selector="cancelButtonAction:" destination="itj-Yk-xIZ" id="YFg-PN-NhJ"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="refresh" id="xVw-TS-rFr"/>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CKq-o2-KJz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2026" y="-349"/>
+            <point key="canvasLocation" x="2024.8" y="-349.47526236881561"/>
         </scene>
         <!--Code View Controller-->
         <scene sceneID="5ie-Hl-qMj">
@@ -275,9 +277,11 @@
     <resources>
         <image name="Logo" width="183" height="42"/>
         <image name="QRButton" width="64" height="64"/>
+        <image name="back" width="15" height="14"/>
         <image name="close_button" width="64" height="64"/>
         <image name="copy" width="19" height="22"/>
         <image name="prover" width="40" height="40"/>
+        <image name="refresh" width="16" height="22"/>
         <image name="wallet" width="47" height="48"/>
     </resources>
 </document>
