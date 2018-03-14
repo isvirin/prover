@@ -362,7 +362,7 @@
                                                     <rect key="frame" x="32" y="134.5" width="271" height="20"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                    <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
                                                     <connections>
                                                         <action selector="endInputText:" destination="drd-Pk-olu" eventType="editingDidEndOnExit" id="iQ3-8R-2Og"/>
                                                     </connections>
