@@ -46,6 +46,8 @@ class WalletViewController: UITableViewController {
     
     configureNavigationBar()
     configureNavigationTitle()
+    
+    tableView.backgroundColor = view.backgroundColor
   }
   
   private func configureNavigationBar() {
@@ -55,6 +57,11 @@ class WalletViewController: UITableViewController {
     let image = #imageLiteral(resourceName: "background").resizedImage(newSize: size)
     navigationBar.barTintColor = UIColor(patternImage: image)
     navigationBar.tintColor = .white
+  }
+  
+  // MARK: - Segue
+  enum Segue: String {
+    case importWalletSegue
   }
   
   // MARK: - Private methods
@@ -108,6 +115,8 @@ extension WalletViewController {
     tableView.deselectRow(at: indexPath, animated: true)
     
     switch indexPath.row {
+    case 1:
+      performSegue(withIdentifier: Segue.importWalletSegue.rawValue, sender: nil)
     case 3:
       showSafariView()
     default:

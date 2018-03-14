@@ -23,6 +23,7 @@
 		9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD1520568409007C6BBF /* SubmitResult.swift */; };
 		9AC6AD1820568CC4007C6BBF /* CheckResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AC6AD1720568CC4007C6BBF /* CheckResult.swift */; };
 		9ACA53F1205021B9007FBAD9 /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */; };
+		9AD2BB7220595BFC00CD4E03 /* ImportWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BB7120595BFC00CD4E03 /* ImportWalletViewController.swift */; };
 		9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */; };
 		9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */; };
 		9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D63020580F1400D9E1FE /* WalletViewController.swift */; };
@@ -64,6 +65,7 @@
 		9AC6AD1520568409007C6BBF /* SubmitResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitResult.swift; sourceTree = "<group>"; };
 		9AC6AD1720568CC4007C6BBF /* CheckResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckResult.swift; sourceTree = "<group>"; };
 		9ACA53F0205021B9007FBAD9 /* QRCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		9AD2BB7120595BFC00CD4E03 /* ImportWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportWalletViewController.swift; sourceTree = "<group>"; };
 		9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleCheckOperation.swift; sourceTree = "<group>"; };
 		9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDataOperation.swift; sourceTree = "<group>"; };
 		9AD6D63020580F1400D9E1FE /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
@@ -158,12 +160,21 @@
 			path = QRCode;
 			sourceTree = "<group>";
 		};
+		9AD2BB7020595BAC00CD4E03 /* ImportWallet */ = {
+			isa = PBXGroup;
+			children = (
+				9AD2BB7120595BFC00CD4E03 /* ImportWalletViewController.swift */,
+			);
+			path = ImportWallet;
+			sourceTree = "<group>";
+		};
 		9AD6D62E20580EB400D9E1FE /* Screeens */ = {
 			isa = PBXGroup;
 			children = (
-				9AD6D62F20580EBC00D9E1FE /* Wallet */,
-				9ACA53F2205022C8007FBAD9 /* InputText */,
+				9AD2BB7020595BAC00CD4E03 /* ImportWallet */,
 				9ACA53F3205022D5007FBAD9 /* QRCode */,
+				9ACA53F2205022C8007FBAD9 /* InputText */,
+				9AD6D62F20580EBC00D9E1FE /* Wallet */,
 			);
 			path = Screeens;
 			sourceTree = "<group>";
@@ -447,6 +458,7 @@
 				9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */,
 				9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */,
 				9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */,
+				9AD2BB7220595BFC00CD4E03 /* ImportWalletViewController.swift in Sources */,
 				BA8F5DB420482B830083BAD2 /* DependencyStore.swift in Sources */,
 				9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */,
 				9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */,

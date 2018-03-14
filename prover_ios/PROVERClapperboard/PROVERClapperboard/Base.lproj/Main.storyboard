@@ -102,14 +102,14 @@
             </objects>
             <point key="canvasLocation" x="424.80000000000001" y="33.733133433283363"/>
         </scene>
-        <!--Wallet View Controller-->
+        <!-- -->
         <scene sceneID="uJe-Iw-OB9">
             <objects>
                 <tableViewController id="itj-Yk-xIZ" customClass="WalletViewController" customModule="PROVERClapperboard" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="tcX-hj-sMb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
                             <tableViewSection id="l4w-Ek-GrK">
                                 <cells>
@@ -274,8 +274,7 @@
                             <outlet property="delegate" destination="itj-Yk-xIZ" id="NfT-2s-sjW"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="paY-BC-Bx8">
-                        <nil key="title"/>
+                    <navigationItem key="navigationItem" title=" " id="paY-BC-Bx8">
                         <barButtonItem key="leftBarButtonItem" image="back" id="BNP-vy-8ZC">
                             <connections>
                                 <action selector="cancelButtonAction:" destination="itj-Yk-xIZ" id="YFg-PN-NhJ"/>
@@ -285,11 +284,54 @@
                     </navigationItem>
                     <connections>
                         <outlet property="walletAddress" destination="Igm-9B-3qt" id="seb-mg-wbn"/>
+                        <segue destination="drd-Pk-olu" kind="show" identifier="importWalletSegue" id="cf3-yO-Jra"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CKq-o2-KJz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2024.8" y="-349.47526236881561"/>
+        </scene>
+        <!--Import Wallet View Controller-->
+        <scene sceneID="4zV-Xp-xXN">
+            <objects>
+                <tableViewController id="drd-Pk-olu" customClass="ImportWalletViewController" customModule="PROVERClapperboard" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="yxm-fZ-MhN">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <sections>
+                            <tableViewSection id="XPt-Gh-Ahj">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="8Ua-LV-DHF">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8Ua-LV-DHF" id="WyA-Gm-haj">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="drd-Pk-olu" id="vYi-kg-ncs"/>
+                            <outlet property="delegate" destination="drd-Pk-olu" id="ure-9q-qrc"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="PBt-Y7-HXe">
+                        <barButtonItem key="leftBarButtonItem" image="back" id="bT2-Xs-RPd">
+                            <connections>
+                                <action selector="cancelButtonAction:" destination="drd-Pk-olu" id="hfg-pI-SR5"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="refresh" id="Kgk-zj-5vs"/>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="juv-eh-pnT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2908" y="-616"/>
         </scene>
         <!--Code View Controller-->
         <scene sceneID="5ie-Hl-qMj">
@@ -357,7 +399,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="4ZJ-jn-pTM" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="TuK-t2-AgY">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" backIndicatorImage="back" largeTitles="YES" backIndicatorTransitionMaskImage="back" id="TuK-t2-AgY">
                         <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
