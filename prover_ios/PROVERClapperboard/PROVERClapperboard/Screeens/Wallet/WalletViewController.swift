@@ -39,8 +39,8 @@ class WalletViewController: UITableViewController {
     configureNavigationTitle()
     
     // Set up tableview
-    tableView.rowHeight = UITableViewAutomaticDimension
-    tableView.estimatedRowHeight = 44
+//    tableView.rowHeight = UITableViewAutomaticDimension
+//    tableView.estimatedRowHeight = 44
   }
   
   private func configureNavigationBar() {
@@ -78,6 +78,11 @@ class WalletViewController: UITableViewController {
 // MARK: - UITableViewDelegate
 extension WalletViewController {
   override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return UITableViewAutomaticDimension
+    
+    if indexPath.row == 0 {
+      return UITableViewAutomaticDimension
+    } else {
+      return 48
+    }
   }
 }

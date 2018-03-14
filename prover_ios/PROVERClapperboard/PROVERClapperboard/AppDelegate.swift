@@ -9,10 +9,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     
-    if let navVC  = window?.rootViewController as? UINavigationController? {
-      if let vc = navVC?.viewControllers.first as? InputTextViewController {
-        vc.store = store
-      }
+    if let vc = window?.rootViewController as? InputTextViewController {
+      vc.store = store
     }
     
     return true
