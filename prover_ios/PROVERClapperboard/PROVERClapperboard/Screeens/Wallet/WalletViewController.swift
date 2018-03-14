@@ -1,12 +1,5 @@
-//
-//  WalletViewController.swift
-//  PROVERClapperboard
-//
-//  Created by Mac Mini on 13/03/2018.
-//  Copyright © 2018 Nordavind. All rights reserved.
-//
-
 import UIKit
+import SafariServices
 
 class WalletViewController: UITableViewController {
   
@@ -31,7 +24,7 @@ class WalletViewController: UITableViewController {
   
   @IBOutlet weak var walletAddress: UILabel! {
     didSet {
-      walletAddress.text = ethereumService.hexAddress
+      walletAddress.text = store.ethereumService.hexAddress
     }
   }
   
@@ -45,12 +38,7 @@ class WalletViewController: UITableViewController {
   }
   
   // MARK: - Dependency
-  var store: DependencyStore! {
-    didSet {
-      ethereumService = store.ethereumService
-    }
-  }
-  var ethereumService: EthereumService!
+  var store: DependencyStore!
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -91,6 +79,16 @@ class WalletViewController: UITableViewController {
     balanceLabel.rightAnchor
       .constraint(equalTo: balanceTitleLabel.rightAnchor).isActive = true
   }
+  
+  private func showSafariView() {
+    print("show safari view")
+    guard let url = URL(string: "https://mvp.prover.io/#get_ropsten_testnet_ether") else {
+      print("Can't create URL")
+      return
+    }
+    let safariView = SFSafariViewController(url: url)
+    present(safariView, animated: true, completion: nil)
+  }
 }
 
 // MARK: - UITableViewDelegate
@@ -104,4 +102,17 @@ extension WalletViewController {
       return 48
     }
   }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    tableView.deselectRow(at: indexPath, animated: true)
+    
+    switch indexPath.row {
+    case 3:
+      showSafariView()
+    default:
+      print(indexPath)
+    }
+  }
+
 }
