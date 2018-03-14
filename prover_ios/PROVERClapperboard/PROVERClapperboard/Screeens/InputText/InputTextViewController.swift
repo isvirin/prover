@@ -25,16 +25,6 @@ class InputTextViewController: UIViewController {
     super.viewDidLoad()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    navigationController?.setNavigationBarHidden(true, animated: false)
-  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
-    navigationController?.setNavigationBarHidden(false, animated: false)
-  }
-  
   // MARK: - Segue
   enum Segue: String {
     case createQRSegue
