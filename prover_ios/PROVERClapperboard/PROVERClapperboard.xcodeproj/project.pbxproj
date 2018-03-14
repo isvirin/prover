@@ -31,7 +31,7 @@
 		BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747B82046CA5900364A1D /* Main.storyboard */; };
 		BA2747BC2046CA5900364A1D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BA2747BB2046CA5900364A1D /* Assets.xcassets */; };
 		BA2747BF2046CA5900364A1D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747BD2046CA5900364A1D /* LaunchScreen.storyboard */; };
-		BA8F5DB420482B830083BAD2 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F5DB320482B830083BAD2 /* Store.swift */; };
+		BA8F5DB420482B830083BAD2 /* DependencyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA8F5DB320482B830083BAD2 /* DependencyStore.swift */; };
 		BACE32E02047F1C2007B8FF9 /* EthereumServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32DF2047F1C2007B8FF9 /* EthereumServiceProtocol.swift */; };
 		BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32F32047F5DD007B8FF9 /* EthereumService.swift */; };
 		BACE32F920481414007B8FF9 /* ProverAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = BACE32F820481414007B8FF9 /* ProverAPI.swift */; };
@@ -75,7 +75,7 @@
 		BA2747BB2046CA5900364A1D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BA2747BE2046CA5900364A1D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BA2747C02046CA5900364A1D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		BA8F5DB320482B830083BAD2 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		BA8F5DB320482B830083BAD2 /* DependencyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyStore.swift; sourceTree = "<group>"; };
 		BACE32DF2047F1C2007B8FF9 /* EthereumServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumServiceProtocol.swift; sourceTree = "<group>"; };
 		BACE32E72047F33B007B8FF9 /* PROVERClapperboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PROVERClapperboardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BACE32EB2047F33C007B8FF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -217,7 +217,7 @@
 		BA8F5DB220482B590083BAD2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				BA8F5DB320482B830083BAD2 /* Store.swift */,
+				BA8F5DB320482B830083BAD2 /* DependencyStore.swift */,
 				9A2EB341204E80240090C3CF /* Hexadecimal.swift */,
 				9A2EB343204E984D0090C3CF /* QRCoder.swift */,
 				9AC6AD0F2056784B007C6BBF /* Info.swift */,
@@ -447,7 +447,7 @@
 				9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */,
 				9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */,
 				9AC6AD1620568409007C6BBF /* SubmitResult.swift in Sources */,
-				BA8F5DB420482B830083BAD2 /* Store.swift in Sources */,
+				BA8F5DB420482B830083BAD2 /* DependencyStore.swift in Sources */,
 				9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */,
 				9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */,
 				BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */,

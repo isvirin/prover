@@ -18,7 +18,7 @@ class QRCodeViewController: UIViewController {
   }
   
   // MARK: - Dependency
-  var store: Store!
+  var store: DependencyStore!
   
   // MARK: - Public properties
   var text: String?

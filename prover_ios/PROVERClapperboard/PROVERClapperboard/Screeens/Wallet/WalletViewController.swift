@@ -10,6 +10,7 @@ import UIKit
 
 class WalletViewController: UITableViewController {
   
+  // MARK: - IBOutlet
   private let balanceTitleLabel: UILabel = {
     let label = UILabel()
     label.text = "Balance"
@@ -28,19 +29,31 @@ class WalletViewController: UITableViewController {
     return label
   }()
   
+  @IBOutlet weak var walletAddress: UILabel! {
+    didSet {
+      walletAddress.text = ethereumService.hexAddress
+    }
+  }
+  
+  // MARK: - IBAction
   @IBAction func cancelButtonAction(_ sender: UIBarButtonItem) {
     navigationController?.dismiss(animated: true, completion: nil)
   }
   
+  // MARK: - Dependency
+  var store: DependencyStore! {
+    didSet {
+      ethereumService = store.ethereumService
+    }
+  }
+  var ethereumService: EthereumService!
+  
+  // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     
     configureNavigationBar()
     configureNavigationTitle()
-    
-    // Set up tableview
-//    tableView.rowHeight = UITableViewAutomaticDimension
-//    tableView.estimatedRowHeight = 44
   }
   
   private func configureNavigationBar() {
@@ -52,6 +65,7 @@ class WalletViewController: UITableViewController {
     navigationBar.tintColor = .white
   }
   
+  // MARK: - Private methods
   private func configureNavigationTitle() {
     
     guard let bar = navigationController?.navigationBar else { return }
@@ -77,8 +91,9 @@ class WalletViewController: UITableViewController {
 
 // MARK: - UITableViewDelegate
 extension WalletViewController {
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    
+  
+  override func tableView(_ tableView: UITableView,
+                          heightForRowAt indexPath: IndexPath) -> CGFloat {
     if indexPath.row == 0 {
       return UITableViewAutomaticDimension
     } else {

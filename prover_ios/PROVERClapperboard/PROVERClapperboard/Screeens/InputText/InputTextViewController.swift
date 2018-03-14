@@ -18,7 +18,7 @@ class InputTextViewController: UIViewController {
   }
   
   // MARK: - Dependency
-  var store: Store!
+  var store: DependencyStore!
   
   // MARK: - Lifecycle
   override func viewDidLoad() {
@@ -42,7 +42,10 @@ class InputTextViewController: UIViewController {
         destination.store = store
       }
     case Segue.walletSegue.rawValue:
-      print("Wallet segue")
+      if let navigatinVC = segue.destination as? UINavigationController,
+        let destination = navigatinVC.viewControllers.first as? WalletViewController {
+        destination.store = store
+      }
     default:
       fatalError("Unexpected segue")
     }
