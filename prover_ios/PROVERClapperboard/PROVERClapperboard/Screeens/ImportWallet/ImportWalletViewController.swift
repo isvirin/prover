@@ -7,6 +7,9 @@ class ImportWalletViewController: UITableViewController {
     navigationController?.popViewController(animated: true)
   }
   
+  @IBAction func endInputText(_ sender: UITextField) {
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
   }
