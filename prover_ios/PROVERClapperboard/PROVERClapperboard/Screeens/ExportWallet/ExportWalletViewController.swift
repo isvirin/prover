@@ -38,12 +38,13 @@ class ExportWalletViewController: UITableViewController {
       return
     }
     
-    guard let wallet = store.ethereumService.exportWallet(password: password) else {
+    guard let walletData = store.ethereumService.exportWallet(password: password) else {
       showAlert(with: "Can't export new wallet") { [weak self] (_) in
         self?.passwordTextField.text = ""
       }
       return
     }
+    currentWallet = walletData
     
     self.passwordTextField.text = ""
     shareButton.isEnabled = true
@@ -54,7 +55,18 @@ class ExportWalletViewController: UITableViewController {
   }
   
   @IBAction func shareButtonAction(_ sender: UIButton) {
-    print("share button action")
+
+    guard let walletData = currentWallet else {
+      print("There is no current wallet")
+      return
+    }
+    let walletAddress = store.ethereumService.hexAddress
+    
+    let objectsToShare = [walletData, walletAddress] as [Any]
+    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+    //    activityVC.excludedActivityTypes = [.airDrop, .addToReadingList]
+    activityVC.popoverPresentationController?.sourceView = sender
+    self.present(activityVC, animated: true, completion: nil)
   }
   
   // MARK: - Private properties
@@ -69,6 +81,8 @@ class ExportWalletViewController: UITableViewController {
       }
     }
   }
+  
+  var currentWallet: Data?
   
   // MARK: - Dependency
   var store: DependencyStore!
