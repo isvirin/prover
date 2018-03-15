@@ -597,6 +597,9 @@
                         <barButtonItem key="rightBarButtonItem" image="refresh" id="nc0-Xm-hBg"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="walletAddress" destination="Cae-h7-Kh7" id="kYl-2k-kz9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eeG-WD-WCl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

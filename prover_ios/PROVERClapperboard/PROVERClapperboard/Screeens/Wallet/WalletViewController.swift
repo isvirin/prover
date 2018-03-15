@@ -75,7 +75,9 @@ class WalletViewController: UITableViewController {
         destination.store = store
       }
     case Segue.exportWalletSegue.rawValue:
-      print("exportWalletSegue")
+      if let destination = segue.destination as? ExportWalletViewController {
+        destination.store = store
+      }
     default:
       fatalError("Unexpected segue")
     }
