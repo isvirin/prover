@@ -10,7 +10,14 @@ class ExportWalletViewController: UITableViewController {
   }
   @IBOutlet weak var showHidePasswordButton: UIButton!
   @IBOutlet weak var passwordTextField: UITextField!
-  @IBOutlet weak var shareButton: UIButton!
+  @IBOutlet weak var shareButton: UIButton! {
+    didSet {
+      let color = UIColor(red: 155 / 255, green: 155 / 255,
+                          blue: 155 / 255, alpha: 1)
+      shareButton.isEnabled = false
+      shareButton.setTitleColor(color, for: .disabled)
+    }
+  }
   
   // MARK: - IBAction
   @IBAction func backButtonAction(_ sender: UIBarButtonItem) {
@@ -33,11 +40,12 @@ class ExportWalletViewController: UITableViewController {
     
     guard let wallet = store.ethereumService.exportWallet(password: password) else {
       showAlert(with: "Can't export new wallet") { [weak self] (_) in
-        self?.passwordTextField.text = nil
+        self?.passwordTextField.text = ""
       }
       return
     }
     
+    self.passwordTextField.text = ""
     shareButton.isEnabled = true
   }
   
