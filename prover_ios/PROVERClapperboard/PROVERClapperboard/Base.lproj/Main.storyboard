@@ -359,6 +359,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ffz-sx-1dT">
                                                     <rect key="frame" x="313" y="140" width="22" height="22"/>
                                                     <state key="normal" image="show"/>
+                                                    <connections>
+                                                        <action selector="showHidePasswordButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="ApJ-5I-MKS"/>
+                                                    </connections>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4e9-Jw-nIy">
                                                     <rect key="frame" x="32" y="166" width="303" height="1"/>
@@ -434,6 +437,8 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="passwordTextField" destination="V64-Sw-Irq" id="RJ1-qd-9Kt"/>
+                        <outlet property="showHidePasswordButton" destination="ffz-sx-1dT" id="NnE-i2-YOL"/>
                         <outlet property="walletFileLabel" destination="64z-nd-z1s" id="OIZ-lO-gp0"/>
                     </connections>
                 </tableViewController>

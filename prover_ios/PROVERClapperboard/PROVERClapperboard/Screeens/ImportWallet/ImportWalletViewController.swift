@@ -5,6 +5,8 @@ class ImportWalletViewController: UITableViewController {
   
   // MARK: - IBOutlet
   @IBOutlet weak var walletFileLabel: UILabel!
+  @IBOutlet weak var showHidePasswordButton: UIButton!
+  @IBOutlet weak var passwordTextField: UITextField!
   
   // MARK: - IBAction
   @IBAction func backButtonAction(_ sender: UIBarButtonItem) {
@@ -20,15 +22,29 @@ class ImportWalletViewController: UITableViewController {
     fileBrowser.didSelectFile = { (file: FBFile) in
       self.walletFileLabel.text = file.displayName
       self.walletPath = file.filePath
-//      self.dismiss(animated: true, completion: nil)
     }
     present(fileBrowser, animated: true, completion: nil)
+  }
+
+  @IBAction func showHidePasswordButtonAction(_ sender: UIButton) {
+    isPasswordSecured = !isPasswordSecured
   }
   
   // MARK: - Private properties
   var walletPath: URL? {
     didSet {
       print(walletPath)
+    }
+  }
+  var isPasswordSecured = true {
+    didSet {
+      passwordTextField.isSecureTextEntry = isPasswordSecured
+      switch isPasswordSecured {
+      case true:
+        showHidePasswordButton.setImage(#imageLiteral(resourceName: "show"), for: .normal)
+      case false:
+        showHidePasswordButton.setImage(#imageLiteral(resourceName: "hide"), for: .normal)
+      }
     }
   }
   
@@ -38,15 +54,6 @@ class ImportWalletViewController: UITableViewController {
   }
 
 }
-
-// MARK: - UITableViewDelegate
-//extension ImportWalletViewController {
-//  
-//  override func tableView(_ tableView: UITableView,
-//                          heightForRowAt indexPath: IndexPath) -> CGFloat {
-//    return UITableViewAutomaticDimension
-//  }
-//}
 
 // MARK: - UIDocumentPickerDelegate
 extension ImportWalletViewController: UIDocumentPickerDelegate {
