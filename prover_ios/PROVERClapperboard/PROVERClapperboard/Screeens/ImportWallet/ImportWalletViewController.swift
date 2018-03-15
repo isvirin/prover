@@ -50,9 +50,17 @@ class ImportWalletViewController: UITableViewController {
     let success = store.ethereumService.successImportWallet(data, password: password)
     switch success {
     case true:
-      showAlert(with: "Successfully import new wallet", title: "Success")
+      showAlert(with: "Successfully import new wallet", title: "Success") { [weak self] (_) in
+        self?.walletFileLabel.text = nil
+        self?.walletPath = nil
+        self?.passwordTextField.text = nil
+      }
     case false:
-      showAlert(with: "Can't import new wallet")
+      showAlert(with: "Can't import new wallet") { [weak self] (_) in
+        self?.walletFileLabel.text = nil
+        self?.walletPath = nil
+        self?.passwordTextField.text = nil
+      }
     }
   }
   
@@ -87,9 +95,11 @@ class ImportWalletViewController: UITableViewController {
 // MARK: - Private methods
 private extension ImportWalletViewController {
   
-  func showAlert(with text: String, title: String = "Error") {
+  func showAlert(with text: String,
+                 title: String = "Error",
+                 handler: ((UIAlertAction) -> Void)? = nil) {
     let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: handler))
     self.present(alert, animated: true, completion: nil)
   }
 }

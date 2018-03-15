@@ -8,7 +8,7 @@ class DependencyStore {
   let apiService = APIService()
   
   init() {
-    print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)
-    print(ethereumService.hexAddress)
+    print("path to documents: \(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!)")
+    print("wallet address: \(ethereumService.hexAddress)")
   }
 }
