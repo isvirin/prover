@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (4.6.0)
+  - FileBrowser (1.0.0)
   - Geth (1.8.1)
   - KeychainSwift (10.0.0)
   - Moya (11.0.1):
@@ -11,6 +12,7 @@ PODS:
   - Result (3.2.4)
 
 DEPENDENCIES:
+  - FileBrowser
   - Geth
   - KeychainSwift
   - Moya
@@ -18,12 +20,13 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  FileBrowser: 2ca91ff61c9ea09665eb3b8f9e64a7a77e66a0bf
   Geth: b39574e8d037c7752f73f3e5320855581e1cf75a
   KeychainSwift: f9f7910449a0c0fd2cabc889121530dd2c477c33
   Moya: 3d594ada51a21cc02b18739ab578a1984f900c8a
   Repeat: 6f67f2568d49ea96248dc6f3d20700031c318d8f
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
 
-PODFILE CHECKSUM: b8c525d8e10028d762613d05fd19b4f2dee6d213
+PODFILE CHECKSUM: 60b7cddc8df1f36b4c24d73a32beded94c14366b
 
 COCOAPODS: 1.4.0

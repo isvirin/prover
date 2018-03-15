@@ -11,4 +11,5 @@ target 'PROVERClapperboard' do
   pod 'Geth'
   pod 'KeychainSwift'
   pod 'Repeat'
+  pod 'FileBrowser'
 end

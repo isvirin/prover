@@ -29,7 +29,7 @@ class WalletViewController: UITableViewController {
   }
   
   // MARK: - IBAction
-  @IBAction func cancelButtonAction(_ sender: UIBarButtonItem) {
+  @IBAction func backButtonAction(_ sender: UIBarButtonItem) {
     navigationController?.dismiss(animated: true, completion: nil)
   }
   
