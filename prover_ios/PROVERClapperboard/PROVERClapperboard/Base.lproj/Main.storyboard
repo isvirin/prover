@@ -376,6 +376,9 @@
                                                     <state key="normal" title="OPEN">
                                                         <color key="titleColor" red="0.23137254901960785" green="0.23921568627450979" blue="0.27843137254901962" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="openButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="J8W-cx-zDW"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e7k-KA-BUD">
                                                     <rect key="frame" x="216" y="187" width="56" height="29"/>

@@ -73,7 +73,7 @@ class EthereumService: EthereumServiceProtocol {
     }
   }
   
-  func importWallet(_ data: Data, password: String) {
+  func successImportWallet(_ data: Data, password: String) -> Bool {
     
     guard let oldKey = try? keystore.exportKey(account, passphrase: mainPassword, newPassphrase: mainPassword) else {
       fatalError("Can't backup old account")
@@ -85,11 +85,13 @@ class EthereumService: EthereumServiceProtocol {
     
     if (try? keystore.importKey(data, passphrase: password, newPassphrase: mainPassword)) != nil {
       print("Success import")
+      return true
     } else {
       print("Fail to import")
       // swiftlint:disable force_try
       _ = try! keystore.importKey(oldKey, passphrase: mainPassword, newPassphrase: mainPassword)
       // swiftlint:enable force_try
+      return false
     }
   }
   

@@ -96,7 +96,7 @@ class QRCodeViewController: UIViewController {
     queue.addOperation(qrDataOperation)
   }
   
-  func showAlert(with text: String) {
+  private func showAlert(with text: String) {
     let alert = UIAlertController(title: "Error", message: text, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
     self.present(alert, animated: true, completion: nil)
