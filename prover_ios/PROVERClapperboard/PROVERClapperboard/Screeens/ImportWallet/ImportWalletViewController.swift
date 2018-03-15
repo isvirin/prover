@@ -44,7 +44,7 @@ extension ImportWalletViewController {
   
   override func tableView(_ tableView: UITableView,
                           heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return UITableViewAutomaticDimension
+    return 260 //UITableViewAutomaticDimension
   }
 }
 
