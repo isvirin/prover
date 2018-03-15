@@ -491,9 +491,6 @@
                                                         <constraint firstAttribute="width" constant="22" id="Zsd-iP-upV"/>
                                                     </constraints>
                                                     <state key="normal" image="copy"/>
-                                                    <connections>
-                                                        <action selector="copyButtonAction:" destination="itj-Yk-xIZ" eventType="touchUpInside" id="OTy-cx-S77"/>
-                                                    </connections>
                                                 </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Jn9-Lh-zrb">
                                                     <rect key="frame" x="32" y="142" width="249" height="20"/>
@@ -501,14 +498,14 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES" textContentType="password"/>
                                                     <connections>
-                                                        <action selector="endInputText:" destination="drd-Pk-olu" eventType="editingDidEndOnExit" id="F0v-oE-cM4"/>
+                                                        <action selector="endInputText:" destination="MRh-En-YYa" eventType="editingDidEndOnExit" id="kMf-zT-v6S"/>
                                                     </connections>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GyG-FT-10G">
                                                     <rect key="frame" x="313" y="141" width="22" height="22"/>
                                                     <state key="normal" image="show"/>
                                                     <connections>
-                                                        <action selector="showHidePasswordButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="dGz-xz-O5i"/>
+                                                        <action selector="showHidePasswordButtonAction:" destination="MRh-En-YYa" eventType="touchUpInside" id="uoK-Pd-Pvn"/>
                                                     </connections>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hkm-Hp-th2">
@@ -524,9 +521,6 @@
                                                     <state key="normal" title="OPEN">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="openButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="lpa-jT-H1g"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wsu-Gl-ugo">
                                                     <rect key="frame" x="216" y="188" width="56" height="29"/>
@@ -534,9 +528,6 @@
                                                     <state key="normal" title="CANCEL">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="cancelButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="8s0-m0-IZY"/>
-                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wgO-qS-drT">
                                                     <rect key="frame" x="32" y="188" width="47" height="29"/>
@@ -544,9 +535,6 @@
                                                     <state key="normal" title="SHARE">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
-                                                    <connections>
-                                                        <action selector="cancelButtonAction:" destination="drd-Pk-olu" eventType="touchUpInside" id="nvc-Kq-tBm"/>
-                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -598,7 +586,9 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="walletAddress" destination="Cae-h7-Kh7" id="kYl-2k-kz9"/>
+                        <outlet property="passwordTextField" destination="Jn9-Lh-zrb" id="PdR-Zl-Jw3"/>
+                        <outlet property="showHidePasswordButton" destination="GyG-FT-10G" id="CM5-BS-wyD"/>
+                        <outlet property="walletAddress" destination="Cae-h7-Kh7" id="5Nc-vJ-hXF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eeG-WD-WCl" userLabel="First Responder" sceneMemberID="firstResponder"/>
