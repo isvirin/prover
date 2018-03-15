@@ -40,13 +40,13 @@ class ImportWalletViewController: UITableViewController {
 }
 
 // MARK: - UITableViewDelegate
-extension ImportWalletViewController {
-  
-  override func tableView(_ tableView: UITableView,
-                          heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 260 //UITableViewAutomaticDimension
-  }
-}
+//extension ImportWalletViewController {
+//  
+//  override func tableView(_ tableView: UITableView,
+//                          heightForRowAt indexPath: IndexPath) -> CGFloat {
+//    return UITableViewAutomaticDimension
+//  }
+//}
 
 // MARK: - UIDocumentPickerDelegate
 extension ImportWalletViewController: UIDocumentPickerDelegate {
