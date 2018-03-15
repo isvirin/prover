@@ -29,6 +29,9 @@ class ImportWalletViewController: UITableViewController {
   @IBAction func showHidePasswordButtonAction(_ sender: UIButton) {
     isPasswordSecured = !isPasswordSecured
   }
+  @IBAction func cancelButtonAction(_ sender: UIButton) {
+    navigationController?.popViewController(animated: true)
+  }
   
   // MARK: - Private properties
   var walletPath: URL? {
