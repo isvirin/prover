@@ -62,6 +62,7 @@ class WalletViewController: UITableViewController {
   // MARK: - Segue
   enum Segue: String {
     case importWalletSegue
+    case exportWalletSegue
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,6 +74,8 @@ class WalletViewController: UITableViewController {
       if let destination = segue.destination as? ImportWalletViewController {
         destination.store = store
       }
+    case Segue.exportWalletSegue.rawValue:
+      print("exportWalletSegue")
     default:
       fatalError("Unexpected segue")
     }
@@ -131,6 +134,8 @@ extension WalletViewController {
     switch indexPath.row {
     case 1:
       performSegue(withIdentifier: Segue.importWalletSegue.rawValue, sender: nil)
+    case 2:
+      performSegue(withIdentifier: Segue.exportWalletSegue.rawValue, sender: nil)
     case 3:
       showSafariView()
     default:
