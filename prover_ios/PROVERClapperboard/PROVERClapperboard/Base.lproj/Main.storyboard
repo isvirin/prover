@@ -284,7 +284,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="walletAddress" destination="Igm-9B-3qt" id="seb-mg-wbn"/>
-                        <segue destination="drd-Pk-olu" kind="show" identifier="I" id="cf3-yO-Jra"/>
+                        <segue destination="drd-Pk-olu" kind="show" identifier="importWalletSegue" id="cf3-yO-Jra"/>
                         <segue destination="MRh-En-YYa" kind="show" identifier="exportWalletSegue" id="BD3-QG-imd"/>
                     </connections>
                 </tableViewController>
@@ -589,7 +589,11 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title=" " id="j6z-vE-aiY">
-                        <barButtonItem key="leftBarButtonItem" image="back" id="0H6-x9-gxv"/>
+                        <barButtonItem key="leftBarButtonItem" image="back" id="0H6-x9-gxv">
+                            <connections>
+                                <action selector="backButtonAction:" destination="MRh-En-YYa" id="cnx-3k-WWj"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" image="refresh" id="nc0-Xm-hBg"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
