@@ -27,6 +27,7 @@
 		9AD6D6072057A4B400D9E1FE /* CycleCheckOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6062057A4B400D9E1FE /* CycleCheckOperation.swift */; };
 		9AD6D6092057A6B700D9E1FE /* QRCodeDataOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */; };
 		9AD6D63120580F1400D9E1FE /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD6D63020580F1400D9E1FE /* WalletViewController.swift */; };
+		9AFA5DDC205A7FBB009818EA /* ExportWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFA5DDB205A7FBB009818EA /* ExportWalletViewController.swift */; };
 		BA2747B52046CA5900364A1D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B42046CA5900364A1D /* AppDelegate.swift */; };
 		BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA2747B62046CA5900364A1D /* InputTextViewController.swift */; };
 		BA2747BA2046CA5900364A1D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BA2747B82046CA5900364A1D /* Main.storyboard */; };
@@ -70,6 +71,7 @@
 		9AD6D6082057A6B700D9E1FE /* QRCodeDataOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeDataOperation.swift; sourceTree = "<group>"; };
 		9AD6D63020580F1400D9E1FE /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
 		9AFA5DD9205A533D009818EA /* PROVERClapperboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PROVERClapperboard.entitlements; sourceTree = "<group>"; };
+		9AFA5DDB205A7FBB009818EA /* ExportWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportWalletViewController.swift; sourceTree = "<group>"; };
 		A0D18F7D9F3FA28B86C15F7A /* Pods-PROVERClapperboard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PROVERClapperboard.release.xcconfig"; path = "Pods/Target Support Files/Pods-PROVERClapperboard/Pods-PROVERClapperboard.release.xcconfig"; sourceTree = "<group>"; };
 		BA2747B12046CA5900364A1D /* PROVERClapperboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PROVERClapperboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA2747B42046CA5900364A1D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 		9AD6D62E20580EB400D9E1FE /* Screeens */ = {
 			isa = PBXGroup;
 			children = (
+				9AFA5DDA205A7F9C009818EA /* ExportWallet */,
 				9AD2BB7020595BAC00CD4E03 /* ImportWallet */,
 				9ACA53F3205022D5007FBAD9 /* QRCode */,
 				9ACA53F2205022C8007FBAD9 /* InputText */,
@@ -186,6 +189,14 @@
 				9AD6D63020580F1400D9E1FE /* WalletViewController.swift */,
 			);
 			path = Wallet;
+			sourceTree = "<group>";
+		};
+		9AFA5DDA205A7F9C009818EA /* ExportWallet */ = {
+			isa = PBXGroup;
+			children = (
+				9AFA5DDB205A7FBB009818EA /* ExportWalletViewController.swift */,
+			);
+			path = ExportWallet;
 			sourceTree = "<group>";
 		};
 		BA2747A82046CA5900364A1D = {
@@ -476,6 +487,7 @@
 				9A0E84902056BD9E00624995 /* GetInfoOperation.swift in Sources */,
 				BACE32F42047F5DD007B8FF9 /* EthereumService.swift in Sources */,
 				9AC6AD1820568CC4007C6BBF /* CheckResult.swift in Sources */,
+				9AFA5DDC205A7FBB009818EA /* ExportWalletViewController.swift in Sources */,
 				BA2747B72046CA5900364A1D /* InputTextViewController.swift in Sources */,
 				9AC6AD1220567A0A007C6BBF /* APIService.swift in Sources */,
 				9AC6AD102056784B007C6BBF /* Info.swift in Sources */,

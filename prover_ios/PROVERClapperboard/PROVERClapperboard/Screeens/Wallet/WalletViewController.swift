@@ -62,6 +62,7 @@ class WalletViewController: UITableViewController {
   // MARK: - Segue
   enum Segue: String {
     case importWalletSegue
+    case exportWalletSegue
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -71,6 +72,10 @@ class WalletViewController: UITableViewController {
     switch identifier {
     case Segue.importWalletSegue.rawValue:
       if let destination = segue.destination as? ImportWalletViewController {
+        destination.store = store
+      }
+    case Segue.exportWalletSegue.rawValue:
+      if let destination = segue.destination as? ExportWalletViewController {
         destination.store = store
       }
     default:
@@ -131,6 +136,8 @@ extension WalletViewController {
     switch indexPath.row {
     case 1:
       performSegue(withIdentifier: Segue.importWalletSegue.rawValue, sender: nil)
+    case 2:
+      performSegue(withIdentifier: Segue.exportWalletSegue.rawValue, sender: nil)
     case 3:
       showSafariView()
     default:
