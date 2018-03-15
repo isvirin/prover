@@ -29,7 +29,7 @@ class WalletViewController: UITableViewController {
   }
   
   // MARK: - IBAction
-  @IBAction func cancelButtonAction(_ sender: UIBarButtonItem) {
+  @IBAction func backButtonAction(_ sender: UIBarButtonItem) {
     navigationController?.dismiss(animated: true, completion: nil)
   }
   
@@ -62,6 +62,20 @@ class WalletViewController: UITableViewController {
   // MARK: - Segue
   enum Segue: String {
     case importWalletSegue
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    guard let identifier = segue.identifier else { return }
+    
+    switch identifier {
+    case Segue.importWalletSegue.rawValue:
+      if let destination = segue.destination as? ImportWalletViewController {
+        destination.store = store
+      }
+    default:
+      fatalError("Unexpected segue")
+    }
   }
   
   // MARK: - Private methods
