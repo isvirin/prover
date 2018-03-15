@@ -23,6 +23,10 @@ class ExportWalletViewController: UITableViewController {
     isPasswordSecured = !isPasswordSecured
   }
   
+  @IBAction func cancelButtonAction(_ sender: UIButton) {
+    navigationController?.popViewController(animated: true)
+  }
+  
   // MARK: - Private properties
   var isPasswordSecured = true {
     didSet {

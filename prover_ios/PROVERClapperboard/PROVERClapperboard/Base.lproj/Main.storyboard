@@ -528,6 +528,9 @@
                                                     <state key="normal" title="CANCEL">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="cancelButtonAction:" destination="MRh-En-YYa" eventType="touchUpInside" id="iNX-bX-MFR"/>
+                                                    </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wgO-qS-drT">
                                                     <rect key="frame" x="32" y="188" width="47" height="29"/>
