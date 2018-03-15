@@ -458,10 +458,10 @@
         <scene sceneID="bcc-sC-GaZ">
             <objects>
                 <tableViewController id="MRh-En-YYa" customClass="ExportWalletViewController" customModule="PROVERClapperboard" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="bXV-11-B1p">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="bXV-11-B1p">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="551"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <sections>
                             <tableViewSection id="4ow-9I-aMv">
                                 <cells>
@@ -515,15 +515,8 @@
                                                         <constraint firstAttribute="height" constant="1" id="nXT-MW-cv9"/>
                                                     </constraints>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viH-7L-jIk">
-                                                    <rect key="frame" x="296" y="188" width="39" height="29"/>
-                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
-                                                    <state key="normal" title="OPEN">
-                                                        <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    </state>
-                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wsu-Gl-ugo">
-                                                    <rect key="frame" x="216" y="188" width="56" height="29"/>
+                                                    <rect key="frame" x="219" y="188" width="56" height="29"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                     <state key="normal" title="CANCEL">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -538,6 +531,19 @@
                                                     <state key="normal" title="SHARE">
                                                         <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="shareButtonAction:" destination="MRh-En-YYa" eventType="touchUpInside" id="ALY-Xz-eoE"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="viH-7L-jIk">
+                                                    <rect key="frame" x="299" y="188" width="36" height="29"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                    <state key="normal" title="SAVE">
+                                                        <color key="titleColor" red="0.23137254900000001" green="0.23921568630000001" blue="0.2784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="saveButtonAction:" destination="MRh-En-YYa" eventType="touchUpInside" id="2Jy-IZ-Y2A"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -590,6 +596,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="passwordTextField" destination="Jn9-Lh-zrb" id="PdR-Zl-Jw3"/>
+                        <outlet property="shareButton" destination="wgO-qS-drT" id="eNA-mN-P1K"/>
                         <outlet property="showHidePasswordButton" destination="GyG-FT-10G" id="CM5-BS-wyD"/>
                         <outlet property="walletAddress" destination="Cae-h7-Kh7" id="5Nc-vJ-hXF"/>
                     </connections>

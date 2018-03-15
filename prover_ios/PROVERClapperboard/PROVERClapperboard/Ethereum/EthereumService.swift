@@ -65,13 +65,15 @@ class EthereumService: EthereumServiceProtocol {
   }
   
   // MARK: - Methods
-  func exportWallet(password: String) {
+  func exportWallet(password: String) -> Data? {
     do {
       let key = try keystore.exportKey(account, passphrase: mainPassword, newPassphrase: password)
       let filename = documentURL.appendingPathComponent("wallet \(hexAddress)")
       try key.write(to: filename)
+      return key
     } catch {
       print(error.localizedDescription)
+      return nil
     }
   }
   

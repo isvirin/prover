@@ -10,6 +10,7 @@ class ExportWalletViewController: UITableViewController {
   }
   @IBOutlet weak var showHidePasswordButton: UIButton!
   @IBOutlet weak var passwordTextField: UITextField!
+  @IBOutlet weak var shareButton: UIButton!
   
   // MARK: - IBAction
   @IBAction func backButtonAction(_ sender: UIBarButtonItem) {
@@ -23,8 +24,29 @@ class ExportWalletViewController: UITableViewController {
     isPasswordSecured = !isPasswordSecured
   }
   
+  @IBAction func saveButtonAction(_ sender: UIButton) {
+    
+    guard let password = passwordTextField.text, password != "" else {
+      showAlert(with: "Please type password")
+      return
+    }
+    
+    guard let wallet = store.ethereumService.exportWallet(password: password) else {
+      showAlert(with: "Can't export new wallet") { [weak self] (_) in
+        self?.passwordTextField.text = nil
+      }
+      return
+    }
+    
+    shareButton.isEnabled = true
+  }
+  
   @IBAction func cancelButtonAction(_ sender: UIButton) {
     navigationController?.popViewController(animated: true)
+  }
+  
+  @IBAction func shareButtonAction(_ sender: UIButton) {
+    print("share button action")
   }
   
   // MARK: - Private properties
@@ -42,4 +64,16 @@ class ExportWalletViewController: UITableViewController {
   
   // MARK: - Dependency
   var store: DependencyStore!
+}
+
+// MARK: - Private methods
+private extension ExportWalletViewController {
+  
+  func showAlert(with text: String,
+                 title: String = "Error",
+                 handler: ((UIAlertAction) -> Void)? = nil) {
+    let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: handler))
+    self.present(alert, animated: true, completion: nil)
+  }
 }
