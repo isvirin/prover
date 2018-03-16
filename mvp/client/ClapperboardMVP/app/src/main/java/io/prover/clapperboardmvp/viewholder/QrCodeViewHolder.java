@@ -61,9 +61,9 @@ public class QrCodeViewHolder {
 
         VectorDrawableCompat dr = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_prover_qrcode, null);
         dr.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-        VectorDrawableCompat dr2 = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_prover_qrcode_light, null);
-        dr2.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
-        Bitmap bitmap = code.toImage(scale, border, Bitmap.Config.ARGB_8888, dr, dr2);
+        //VectorDrawableCompat dr2 = VectorDrawableCompat.create(root.getResources(), R.drawable.ic_prover_qrcode_light, null);
+        //dr2.setBounds(0, 0, dr.getIntrinsicWidth(), dr.getIntrinsicHeight());
+        Bitmap bitmap = code.toImage(scale, border, Bitmap.Config.ARGB_8888, dr, null);
         qrCodeImage.setImageBitmap(bitmap);
 
         if (BuildConfig.DEBUG) {

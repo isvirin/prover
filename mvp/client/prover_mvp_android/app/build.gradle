@@ -7,8 +7,8 @@ android {
         //applicationId "io.prover.provermvp.demo"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 63
-        versionName "1.2.7"
+        versionCode 68
+        versionName "1.2.7_speed_1.75"
         //versionName "1.2.6_demo_2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

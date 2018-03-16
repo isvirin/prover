@@ -6,9 +6,9 @@
 //#define RECT_DEFECT
 #define DEFECT 0.3
 #define DEFECT_CLIENT 0.3
-#define MS_PER_SWIPE_STEP 2000
+#define MS_PER_SWIPE_STEP 2500
 #define PAUSE_TO_ST3_MS_PER_STEP 300
-#define SWYPE_SPEED 1.25
+#define SWYPE_SPEED 1.5
 
 #ifdef __ANDROID_API__
 
