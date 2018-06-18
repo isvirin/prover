@@ -56,12 +56,12 @@ function loadConfig()
         DEFINE('GETH_NODE_URL', $config['gethNodeUrl']);
     }
 
-    if (!isset($config['mvpCgiBinUrl'])) {
+    if (!isset($config['contract_address'])) {
         $needConfigure = true;
-        $config['!_mvpCgiBinUrl'] = 'http://';
+        $config['!_contract_address'] = '0x675dfc2A32683Bc4287cA6376a9613E0C68037fA';
     } else {
-        $config['mvpCgiBinUrl'] = preg_replace('/(.*)\/$/', '$1', $config['mvpCgiBinUrl']);
-        DEFINE('MVP_CGI_BIN_URL', $config['mvpCgiBinUrl']);
+        $config['contract_address'] = preg_replace('/(.*)\/$/', '$1', $config['contract_address']);
+        DEFINE('CONTRACT_ADDRESS', $config['contract_address']);
     }
 
     if (!isset($config['sendEthPassword'])) {
